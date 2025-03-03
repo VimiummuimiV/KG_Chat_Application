@@ -577,13 +577,18 @@ document.addEventListener('mousemove', (e) => {
   // Get browser viewport dimensions
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
+  
+  // Get minimum dimensions from CSS variables
+  const computedStyle = getComputedStyle(document.documentElement);
+  const minWidth = parseInt(computedStyle.getPropertyValue('--min-chat-width')) || 250;
+  const minHeight = parseInt(computedStyle.getPropertyValue('--min-chat-height')) || 200;
 
   // Get current chat state
   let chatState = getChatState();
 
   switch (resizeType) {
     case 'top':
-      const newHeight = Math.max(200, startHeight - deltaY);
+      const newHeight = Math.max(minHeight, startHeight - deltaY);
       // Ensure chat doesn't exceed viewport height
       if (newHeight <= viewportHeight) {
         chat.style.height = newHeight + 'px';
@@ -592,28 +597,28 @@ document.addEventListener('mousemove', (e) => {
       break;
 
     case 'left': {
-      const newWidth = Math.max(750, startWidth - deltaX);
-      const newLeft = startLeft + deltaX;
+      const newWidth = Math.max(minWidth, startWidth - deltaX);
+      const newLeft = Math.min(
+        viewportWidth - minWidth,  // Don't go beyond right edge minus min width
+        Math.max(0, startLeft + deltaX)  // Don't go beyond left edge
+      );
 
-      // Ensure chat doesn't go beyond left edge and stays within viewport
-      if (newLeft >= 0 && newLeft + newWidth <= viewportWidth) {
-        chat.style.width = newWidth + 'px';
-        chat.style.left = newLeft + 'px';
-
-        chatState.left = newLeft;
-      }
+      chat.style.width = newWidth + 'px';
+      chat.style.left = newLeft + 'px';
+      chatState.width = newWidth;
+      chatState.left = newLeft;
       break;
     }
 
     case 'right': {
-      const newWidth = Math.max(750, startWidth + deltaX);
+      const maxWidth = viewportWidth - chat.getBoundingClientRect().left;
+      const newWidth = Math.min(
+        maxWidth,  // Don't exceed viewport
+        Math.max(minWidth, startWidth + deltaX)  // Don't go below min width
+      );
 
-      // Ensure chat doesn't exceed viewport width
-      const rightEdge = chat.getBoundingClientRect().left + newWidth;
-      if (rightEdge <= viewportWidth) {
-        chat.style.width = newWidth + 'px';
-        chatState.right = viewportWidth - rightEdge;
-      }
+      chat.style.width = newWidth + 'px';
+      chatState.width = newWidth;
       break;
     }
   }
@@ -626,9 +631,9 @@ document.addEventListener('mousemove', (e) => {
 function getChatState() {
   const savedState = localStorage.getItem('chatState');
   return savedState ? JSON.parse(savedState) : {
-    height: 400,
-    left: 0,
-    right: 0
+    height: 300,
+    width: window.innerWidth,
+    left: 0
   };
 }
 
@@ -642,38 +647,83 @@ function restoreChatState() {
   const chat = document.getElementById('chat-container');
   const state = getChatState();
   const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+  
+  // Get minimum dimensions from CSS variables
+  const computedStyle = getComputedStyle(document.documentElement);
+  const minWidth = parseInt(computedStyle.getPropertyValue('--min-chat-width')) || 250;
+  const minHeight = parseInt(computedStyle.getPropertyValue('--min-chat-height')) || 200;
 
-  // Apply saved values
-  if (state.height) chat.style.height = state.height + 'px';
-  if (state.left) chat.style.left = state.left + 'px';
-
-  // For right property, calculate width based on right distance
-  if (state.right !== undefined) {
-    const calculatedWidth = viewportWidth - state.right - chat.getBoundingClientRect().left;
-    if (calculatedWidth >= 750) {
-      chat.style.width = calculatedWidth + 'px';
-    }
+  // Apply saved values with constraints
+  if (state.height) {
+    const safeHeight = Math.min(viewportHeight, Math.max(minHeight, state.height));
+    chat.style.height = safeHeight + 'px';
+  }
+  
+  if (state.left !== undefined) {
+    const safeLeft = Math.min(viewportWidth - minWidth, Math.max(0, state.left));
+    chat.style.left = safeLeft + 'px';
+  }
+  
+  if (state.width) {
+    const maxWidth = viewportWidth - chat.getBoundingClientRect().left;
+    const safeWidth = Math.min(maxWidth, Math.max(minWidth, state.width));
+    chat.style.width = safeWidth + 'px';
   }
 }
 
 // Call restore function when document is loaded
 restoreChatState();
 
-// Handle window resize to maintain right positioning
+// Handle window resize to maintain proper positioning and size
 window.addEventListener('resize', () => {
-  const chat = document.getElementById('chat-container');
-  const state = getChatState();
-
-  if (state.right !== undefined) {
-    const viewportWidth = window.innerWidth;
-    const calculatedWidth = viewportWidth - state.right - chat.getBoundingClientRect().left;
-    if (calculatedWidth >= 750) {
-      chat.style.width = calculatedWidth + 'px';
-    }
-  }
+  restoreChatState();
 });
 
 document.addEventListener('mouseup', () => {
   isResizing = false;
+  document.body.style.userSelect = '';
+});
+
+// ======================== Drag Handlers ========================
+let isDragging = false;
+let dragStartX, dragStartLeft;
+
+document.addEventListener('mousedown', (e) => {
+  const dragArea = e.target.closest('.chat-drag-area');
+  if (dragArea) {
+    isDragging = true;
+    const chat = document.getElementById('chat-container');
+
+    dragStartX = e.clientX;
+    dragStartLeft = chat.offsetLeft;
+
+    document.body.style.userSelect = 'none';
+  }
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isDragging) return;
+
+  const chat = document.getElementById('chat-container');
+  const deltaX = e.clientX - dragStartX;
+
+  const viewportWidth = window.innerWidth;
+  const computedStyle = getComputedStyle(document.documentElement);
+  const minWidth = parseInt(computedStyle.getPropertyValue('--min-chat-width')) || 250;
+
+  // Ensure the chat stays within viewport bounds
+  const newLeft = Math.min(viewportWidth - minWidth, Math.max(0, dragStartLeft + deltaX));
+
+  chat.style.left = newLeft + 'px';
+
+  // Save updated position
+  const chatState = getChatState();
+  chatState.left = newLeft;
+  saveChatState(chatState);
+});
+
+document.addEventListener('mouseup', () => {
+  isDragging = false;
   document.body.style.userSelect = '';
 });
