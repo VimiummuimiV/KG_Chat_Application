@@ -1,0 +1,88 @@
+:root {
+  --border-radius: 0.2em;
+}
+
+#user-list {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4em;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  background: #1e1e1e;
+  padding: 1em;
+  border-radius: var(--border-radius) !important;
+  min-width: 250px;
+  color: #e0e0e0;
+  font-family: sans-serif;
+  z-index: 1000;
+}
+
+.user-item {
+  display: flex;
+  align-items: center;
+  padding: 0.2em;
+  border-radius: var(--border-radius) !important;
+}
+
+.user-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 24px;
+  height: 24px;
+  font-size: 18px;
+  border-radius: 0.1em !important;
+  margin-right: 1em;
+  text-align: center;
+  line-height: 24px;
+}
+
+.user-avatar.image-avatar {
+  cursor: pointer;
+  transform-origin: left;
+  transition: transform 0.15s ease-out;
+}
+
+.user-avatar.image-avatar:hover {
+  transform: scale(2);
+}
+
+.user-avatar.svg-avatar {
+  filter: grayscale(0.5);
+}
+
+/* Additional user info */
+.user-info {
+  flex: 1;
+}
+
+.user-meta {
+  font-size: 0.8em;
+  color: #b0b0b0;
+}
+
+/* Game link styling */
+.game-link {
+  color: burlywood !important;
+  text-decoration: none !important;
+  transition: color 0.15s !important;
+}
+
+.game-link:hover {
+  color: bisque !important;
+}
+
+/* Role colors */
+.role-moderator {
+  color: #ff7e7e;
+}
+
+.role-participant {
+  color: #7ed4ff;
+}
+
+.role-visitor {
+  color: #b0b0b0;
+}
