@@ -6,7 +6,8 @@ import {
   emojiFaces,
   BASE_URL,
   GAME_URL,
-  XMPP_BIND_URL
+  XMPP_BIND_URL,
+  userListDelay
 } from "./src/definitions"; // definitions
 
 // ------------------------- Helper Functions -------------------------
@@ -640,7 +641,7 @@ const xmppClient = {
         `<body rid='${this.nextRid()}' sid='${this.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
       );
       this.handleIncomingMessages(xmlResponse);
-    }, 5000);
+    }, userListDelay);
   },
   async sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

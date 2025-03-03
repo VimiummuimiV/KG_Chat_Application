@@ -7,6 +7,7 @@ export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 
 // Sleep time (ms)
 export const delay = 200;
+export const userListDelay = 5000;
 
 // Configuration
 export const username = '748754#Душа_Чата';
