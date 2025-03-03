@@ -1,3 +1,5 @@
+import { closeSVG, openSVG, sendSVG } from "./src/icons"; // icons
+
 import {
   delay,
   username,
@@ -64,12 +66,10 @@ function createUserListUI(users) {
   }).join('');
 }
 
-// USER MANAGER (with complete refresh approach)
+// USER MANAGER class
 class UserManager {
   constructor() {
-    this.container = document.createElement('div');
-    this.container.id = 'user-list';
-    document.body.appendChild(this.container);
+    this.container = document.getElementById('user-list');
     this.activeUsers = new Map(); // Store currently active users
   }
 
@@ -169,9 +169,110 @@ class UserManager {
   }
 }
 
-// MAIN CLIENT
+// ======================== Chat UI Creation ========================
+// Function to add smooth close/open functionality to the chat
+function addChatToggleFeature() {
+  const chatContainer = document.getElementById('chat-container');
+
+  // Set the initial chat state as visible and display the close icon.
+  chatContainer.classList.add('visible-chat');
+
+  // Create the toggle button and set its initial icon to closeSVG.
+  const toggleButton = document.createElement('button');
+  toggleButton.className = 'filled-button header-button chat-toggle-button';
+  toggleButton.innerHTML = closeSVG;
+
+  // Function to toggle chat visibility and update the button icon accordingly.
+  function toggleChatVisibility() {
+    if (chatContainer.classList.contains('visible-chat')) {
+      chatContainer.classList.remove('visible-chat');
+      chatContainer.classList.add('hidden-chat');
+      toggleButton.innerHTML = openSVG; // Show openSVG when chat is hidden.
+      console.log('💬 Chat hidden');
+    } else {
+      chatContainer.classList.remove('hidden-chat');
+      chatContainer.classList.add('visible-chat');
+      toggleButton.innerHTML = closeSVG; // Show closeSVG when chat is visible.
+      console.log('💬 Chat visible');
+    }
+  }
+
+  // Attach a keyboard shortcut (Ctrl+Space) for toggling chat visibility.
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.code === 'Space') {
+      e.preventDefault();
+      toggleChatVisibility();
+    }
+  });
+
+  // Add the toggle button click event to change chat visibility.
+  toggleButton.addEventListener('click', toggleChatVisibility);
+  chatContainer.appendChild(toggleButton);
+
+  // Create and add a top area that also toggles the chat on double-click.
+  const topArea = document.createElement('div');
+  topArea.className = 'chat-drag-area';
+  topArea.addEventListener('dblclick', toggleChatVisibility);
+  chatContainer.appendChild(topArea);
+
+  console.log('🔗 Chat toggle feature added. Use Ctrl+Space to toggle visibility.');
+}
+
+function createChatUI() {
+  const chatContainer = document.createElement('div');
+  chatContainer.id = 'chat-container';
+
+  // Create resize handles
+  ['top', 'left', 'right'].forEach(type => {
+    const handle = document.createElement('div');
+    handle.className = `resize-handle ${type}`;
+    chatContainer.appendChild(handle);
+  });
+
+  // Main chat areas
+  const chatMain = document.createElement('div');
+  chatMain.className = 'chat-main';
+
+  const messagesPanel = document.createElement('div');
+  messagesPanel.id = 'messages-panel';
+  messagesPanel.className = 'messages-panel';
+
+  const inputContainer = document.createElement('div');
+  inputContainer.className = 'input-container';
+
+  const messageInput = document.createElement('input');
+  messageInput.type = 'text';
+  messageInput.id = 'message-input';
+  messageInput.placeholder = 'Type your message...';
+
+  const sendButton = document.createElement('button');
+  sendButton.id = 'send-button';
+  sendButton.className = 'filled-button send-button';
+  sendButton.innerHTML = sendSVG;
+
+  inputContainer.appendChild(messageInput);
+  inputContainer.appendChild(sendButton);
+
+  chatMain.appendChild(messagesPanel);
+  chatMain.appendChild(inputContainer);
+
+  // User list container
+  const userListContainer = document.createElement('div');
+  userListContainer.className = 'user-list-container';
+  const userList = document.createElement('div');
+  userList.id = 'user-list';
+  userListContainer.appendChild(userList);
+
+  chatContainer.appendChild(chatMain);
+  chatContainer.appendChild(userListContainer);
+  document.body.appendChild(chatContainer);
+}
+
+// MAIN XMPP CLIENT
 const xmppClient = {
-  userManager: new UserManager(),
+  userManager: null,
+  messages: [],
+  messageIdCounter: 0,
   sid: null,
   rid: Math.floor(Date.now() / 1000),
 
@@ -192,7 +293,7 @@ const xmppClient = {
       );
       this.sid = initResponse.match(/sid='(.*?)'/)[1];
       console.log(`🔑 Step 2: Session ID received: ${this.sid}`);
-      await this.sleep(delay / 3);
+      await this.sleep(delay / 8);
 
       // Step 2: Authentication
       console.log('🔐 Step 3: Authenticating...');
@@ -207,7 +308,7 @@ const xmppClient = {
         throw new Error('🚫 Authentication failed');
       }
       console.log('✅ Step 4: Authentication successful!');
-      await this.sleep(delay / 3);
+      await this.sleep(delay / 8);
 
       // Step 3: Restart stream
       console.log('🔄 Step 5: Restarting stream...');
@@ -218,7 +319,7 @@ const xmppClient = {
                xmpp:restart='true'
                xmlns:xmpp='urn:xmpp:xbosh'/>`
       );
-      await this.sleep(delay / 3);
+      await this.sleep(delay / 8);
 
       // Step 4: Resource binding
       console.log('📦 Step 6: Binding resource...');
@@ -232,7 +333,7 @@ const xmppClient = {
           </iq>
         </body>`
       );
-      await this.sleep(delay / 3);
+      await this.sleep(delay / 8);
 
       // Step 5: Initialize session
       console.log('🔌 Step 7: Establishing session...');
@@ -244,7 +345,7 @@ const xmppClient = {
           </iq>
         </body>`
       );
-      await this.sleep(delay / 3);
+      await this.sleep(delay / 8);
 
       // Step 6: Join chat room with correct room and nickname
       console.log('💬 Step 8: Joining chat room...');
@@ -258,7 +359,7 @@ const xmppClient = {
       );
       console.log('📥 Join response:', joinResponse);
       this.userManager.updatePresence(joinResponse);
-      await this.sleep(delay / 3);
+      await this.sleep(delay / 8);
 
       // Step 7: Request room information 
       console.log('📋 Step 9: Requesting room information...');
@@ -278,6 +379,65 @@ const xmppClient = {
     } catch (error) {
       console.error(`💥 Error: ${error.message}`);
     }
+  },
+
+  sendMessage(text) {
+    const messageId = `msg_${Date.now()}`;
+    const messageStanza = `
+      <body rid='${this.nextRid()}' sid='${this.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+        <message to='general@conference.jabber.klavogonki.ru'
+                 type='groupchat'
+                 id='${messageId}'
+                 xmlns='jabber:client'>
+          <body>${text}</body>
+        </message>
+      </body>
+    `;
+
+    this.sendRequestWithRetry(messageStanza)
+      .then(response => this.handleIncomingMessages(response))
+      .catch(console.error);
+  },
+
+  handleIncomingMessages(xmlResponse) {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlResponse, "text/xml");
+
+    // Handle presence updates
+    const presences = doc.getElementsByTagName("presence");
+    if (presences.length > 0) {
+      this.userManager.updatePresence(xmlResponse);
+    }
+
+    // Handle messages
+    const messages = doc.getElementsByTagName("message");
+    for (const msg of messages) {
+      const body = msg.getElementsByTagName("body")[0]?.textContent;
+      const from = msg.getAttribute('from')?.split('/')[1];
+
+      if (body && from && from !== username) {
+        this.messages.push({
+          id: `msg_${this.messageIdCounter++}`,
+          from,
+          text: body,
+          timestamp: new Date().toISOString()
+        });
+        this.updateChatUI();
+      }
+    }
+  },
+
+  updateChatUI() {
+    const panel = document.getElementById('messages-panel');
+    panel.innerHTML = this.messages.map(msg => `
+      <div class="message ${msg.from === username ? 'sent' : ''}">
+        <div class="message-info">
+          ${msg.from} • ${new Date(msg.timestamp).toLocaleTimeString()}
+        </div>
+        <div class="message-text">${msg.text}</div>
+      </div>
+    `).join('');
+    panel.scrollTop = panel.scrollHeight;
   },
 
   base64Encode(str) {
@@ -333,11 +493,10 @@ const xmppClient = {
   startPresencePolling() {
     setInterval(async () => {
       const xmlResponse = await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}' xmlns='http://jabber.org/protocol/httpbind'/>
-        `
+        `<body rid='${this.nextRid()}' sid='${this.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
       );
-      this.userManager.updatePresence(xmlResponse);
-    }, 2000); // Poll every 2 seconds
+      this.handleIncomingMessages(xmlResponse);
+    }, 5000); // Poll
   },
 
   async sleep(ms) {
@@ -345,4 +504,176 @@ const xmppClient = {
   },
 };
 
-xmppClient.connect(); // Start the connection process
+// ======================== Event Listeners ========================
+function initializeApp() {
+  // Create the chat UI
+  createChatUI();
+
+  // Add toggle functionality
+  addChatToggleFeature();
+
+  // Initialize the user manager after the UI is created
+  xmppClient.userManager = new UserManager();
+
+  const input = document.getElementById('message-input');
+  const sendButton = document.getElementById('send-button');
+
+  sendButton.addEventListener('click', () => {
+    const text = input.value.trim();
+    if (text) {
+      xmppClient.messages.push({
+        id: `msg_${xmppClient.messageIdCounter++}`,
+        from: username,
+        text,
+        timestamp: new Date().toISOString()
+      });
+      xmppClient.updateChatUI();
+      xmppClient.sendMessage(text);
+      input.value = '';
+    }
+  });
+
+  input.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') sendButton.click();
+  });
+
+  // Start the client
+  xmppClient.connect();
+}
+
+// For Tampermonkey, we should call this function directly
+// This will run when the script is injected rather than waiting for an event
+initializeApp();
+
+// ======================== Resize Handlers ========================
+let isResizing = false;
+let resizeType = null;
+let startX, startY, startWidth, startHeight, startLeft;
+
+document.addEventListener('mousedown', (e) => {
+  const handle = e.target.closest('.resize-handle');
+  if (!handle) return;
+
+  isResizing = true;
+  resizeType = handle.classList[1];
+  const chat = document.getElementById('chat-container');
+
+  startX = e.clientX;
+  startY = e.clientY;
+  startWidth = chat.offsetWidth;
+  startHeight = chat.offsetHeight;
+  startLeft = chat.offsetLeft;
+
+  document.body.style.userSelect = 'none';
+});
+
+document.addEventListener('mousemove', (e) => {
+  if (!isResizing) return;
+
+  const chat = document.getElementById('chat-container');
+  const deltaX = e.clientX - startX;
+  const deltaY = e.clientY - startY;
+
+  // Get browser viewport dimensions
+  const viewportWidth = window.innerWidth;
+  const viewportHeight = window.innerHeight;
+
+  // Get current chat state
+  let chatState = getChatState();
+
+  switch (resizeType) {
+    case 'top':
+      const newHeight = Math.max(200, startHeight - deltaY);
+      // Ensure chat doesn't exceed viewport height
+      if (newHeight <= viewportHeight) {
+        chat.style.height = newHeight + 'px';
+        chatState.height = newHeight;
+      }
+      break;
+
+    case 'left': {
+      const newWidth = Math.max(750, startWidth - deltaX);
+      const newLeft = startLeft + deltaX;
+
+      // Ensure chat doesn't go beyond left edge and stays within viewport
+      if (newLeft >= 0 && newLeft + newWidth <= viewportWidth) {
+        chat.style.width = newWidth + 'px';
+        chat.style.left = newLeft + 'px';
+
+        chatState.left = newLeft;
+      }
+      break;
+    }
+
+    case 'right': {
+      const newWidth = Math.max(750, startWidth + deltaX);
+
+      // Ensure chat doesn't exceed viewport width
+      const rightEdge = chat.getBoundingClientRect().left + newWidth;
+      if (rightEdge <= viewportWidth) {
+        chat.style.width = newWidth + 'px';
+        chatState.right = viewportWidth - rightEdge;
+      }
+      break;
+    }
+  }
+
+  // Save the updated state
+  saveChatState(chatState);
+});
+
+// Function to get chat state from localStorage
+function getChatState() {
+  const savedState = localStorage.getItem('chatState');
+  return savedState ? JSON.parse(savedState) : {
+    height: 400,
+    left: 0,
+    right: 0
+  };
+}
+
+// Function to save chat state to localStorage
+function saveChatState(state) {
+  localStorage.setItem('chatState', JSON.stringify(state));
+}
+
+// Function to restore chat size/position on page load
+function restoreChatState() {
+  const chat = document.getElementById('chat-container');
+  const state = getChatState();
+  const viewportWidth = window.innerWidth;
+
+  // Apply saved values
+  if (state.height) chat.style.height = state.height + 'px';
+  if (state.left) chat.style.left = state.left + 'px';
+
+  // For right property, calculate width based on right distance
+  if (state.right !== undefined) {
+    const calculatedWidth = viewportWidth - state.right - chat.getBoundingClientRect().left;
+    if (calculatedWidth >= 750) {
+      chat.style.width = calculatedWidth + 'px';
+    }
+  }
+}
+
+// Call restore function when document is loaded
+restoreChatState();
+
+// Handle window resize to maintain right positioning
+window.addEventListener('resize', () => {
+  const chat = document.getElementById('chat-container');
+  const state = getChatState();
+
+  if (state.right !== undefined) {
+    const viewportWidth = window.innerWidth;
+    const calculatedWidth = viewportWidth - state.right - chat.getBoundingClientRect().left;
+    if (calculatedWidth >= 750) {
+      chat.style.width = calculatedWidth + 'px';
+    }
+  }
+});
+
+document.addEventListener('mouseup', () => {
+  isResizing = false;
+  document.body.style.userSelect = '';
+});

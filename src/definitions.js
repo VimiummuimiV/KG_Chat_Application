@@ -6,7 +6,7 @@ export const GAME_URL = `${BASE_URL}/g/?gmid=`;
 export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 
 // Sleep time (ms)
-export const delay = 500;
+export const delay = 200;
 
 // Configuration
 export const username = '773950#Солнцеликий';
