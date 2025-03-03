@@ -1,3 +1,6 @@
+import { BASE_URL } from "./definitions";
+import { colorHelpers, getRandomEmojiAvatar, parseUsername } from "./helpers";
+
 export default class UserManager {
   constructor(containerId = 'user-list') {
     this.container = document.getElementById(containerId);
@@ -45,13 +48,19 @@ export default class UserManager {
         console.log(`⚠️ No user node found in klavogonki:userdata for presence from: ${from}`);
         continue;
       }
-      const login = userNode.getElementsByTagName("login")[0]?.textContent || 'Anonymous';
+      // Get the raw login and strip out the numeric prefix and '#' if present.
+      const loginRaw = userNode.getElementsByTagName("login")[0]?.textContent || 'Anonymous';
+      const login = parseUsername(loginRaw);
       const avatar = userNode.getElementsByTagName("avatar")[0]?.textContent;
       const background = userNode.getElementsByTagName("background")[0]?.textContent || '#777';
       const gameNode = xData.getElementsByTagName("game_id")[0];
       const game = gameNode ? gameNode.textContent : null;
       const role = presence.getElementsByTagName("item")[0]?.getAttribute("role") || 'participant';
-      const user = { jid: from, login, avatar, color: background, role, game };
+      
+      // Generate a consistent color for this username
+      const usernameColor = colorHelpers.getUsernameColor(login);
+      
+      const user = { jid: from, login, avatar, color: background, role, game, usernameColor };
       const existingUser = this.activeUsers.get(from);
       if (!existingUser || JSON.stringify(existingUser) !== JSON.stringify(user)) {
         console.log(`👤 User ${existingUser ? 'updated' : 'joined'}: ${login}`);
@@ -72,9 +81,20 @@ export default class UserManager {
 
   updateUI() {
     console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
-    // Example: Simply list the user logins.
     this.container.innerHTML = Array.from(this.activeUsers.values())
-      .map(user => `<div class="user" style="color: ${user.color}">${user.login}</div>`)
-      .join('');
+      .map(user => {
+        const cleanLogin = parseUsername(user.login);
+        const avatarHTML = user.avatar 
+          ? `<img class="user-avatar image-avatar" src="${BASE_URL}${user.avatar.replace('.png', '_big.png')}" alt="${cleanLogin}'s avatar">`
+          : `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
+        return `
+          <div class="user-item" style="color: ${user.color}">
+            ${avatarHTML}
+            <div class="user-info">
+              <div class="username" style="color: ${user.usernameColor}">${cleanLogin}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
   }
 }

@@ -16,7 +16,7 @@
   border-radius: var(--border-radius) !important;
   display: flex;
   font-family: sans-serif;
-  color: #e0e0e0 !important;
+  color: burlywood !important;
   z-index: 999;
   min-width: var(--min-chat-width) !important;
   min-height: var(--min-chat-height) !important;
@@ -123,7 +123,7 @@
 #chat-container #message-input {
   flex: 1 !important;
   background: #2a2a2a !important;
-  color: #e0e0e0 !important;
+  color: burlywood !important;
   padding: 0.5em !important;
   border-radius: var(--border-radius) !important;
   min-width: 0 !important;
@@ -187,7 +187,7 @@
 #chat-container .message {
   display: flex;
   flex-direction: row;
-  padding: 0.08em !important;
+  padding: 0.08em 0.8em !important;
   border-radius: var(--border-radius) !important;
   width: fit-content !important;
   max-width: 100% !important;
@@ -201,10 +201,15 @@
 
 #chat-container .message-info {
   white-space: nowrap !important;
-  font-size: 0.8em !important;
-  color: #b0b0b0 !important;
+  font-size: 0.9em !important;
   line-height: 1.5em !important;
-  margin-right: 1.5em !important;
+  margin-right: 1em !important;
+}
+
+#chat-container .message-info .time {
+  margin-right: 1em !important;
+  font-size: 0.9em !important;
+  color: lightgreen !important;
 }
 
 /* User list item styles */
