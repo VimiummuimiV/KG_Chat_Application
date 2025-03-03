@@ -1,3 +1,4 @@
+// main.js
 import { closeSVG, openSVG, sendSVG } from "./src/icons"; // icons
 import {
   delay,
@@ -10,9 +11,12 @@ import {
   userListDelay
 } from "./src/definitions"; // definitions
 
+import XMPPConnection from './src/xmppConnection';
+import UserManager from './src/userManager';
+import MessageManager from './src/messageManager';
+
 // ------------------------- Helper Functions -------------------------
 
-// Returns a random emoji avatar ensuring it's not the same as the last one used.
 let lastEmojiAvatar = null;
 function getRandomEmojiAvatar() {
   let newEmoji;
@@ -23,7 +27,6 @@ function getRandomEmojiAvatar() {
   return newEmoji;
 }
 
-// Returns a numeric priority for user roles.
 function getRolePriority(role) {
   switch (role.toLowerCase()) {
     case 'moderator': return 1;
@@ -33,7 +36,6 @@ function getRolePriority(role) {
   }
 }
 
-// Creates the HTML for the user list.
 function createUserListUI(users) {
   const sortedUsers = [...users].sort((a, b) => getRolePriority(a.role) - getRolePriority(b.role));
   return sortedUsers.map(user => {
@@ -56,13 +58,11 @@ function createUserListUI(users) {
   }).join('');
 }
 
-// Compact function to wrap links and emoticons in a message.
 const parseMessageText = text =>
   text
     .replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1" target="_blank">$1</a>')
     .replace(/:(\w+):/g, (m, e) => `<img src="https://klavogonki.ru/img/smilies/${e}.gif" alt="${e}" />`);
 
-// Clamp a value between min and max.
 function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
@@ -116,15 +116,15 @@ function saveChatHistory(messages) {
 }
 
 // ------------------------- Compact Helper -------------------------
+
 function handleElementsBehavior() {
   const wrapper = document.querySelector('#chat-container .chat-wrapper');
   if (!wrapper) return;
-
-  const isNarrow = wrapper.offsetWidth <= 750;
   
+  const isNarrow = wrapper.offsetWidth <= 750;
   const userList = document.querySelector('#chat-container .user-list-container');
   if (userList) userList.style.display = isNarrow ? 'none' : '';
-
+  
   document.querySelectorAll('#chat-container .message').forEach(msg => {
     msg.style.flexDirection = isNarrow ? 'column' : 'row';
     msg.style.marginBottom = isNarrow ? '1em' : '0';
@@ -139,11 +139,11 @@ function restoreChatState() {
   const computedStyle = getComputedStyle(document.documentElement);
   const minWidth = parseInt(computedStyle.getPropertyValue('--min-chat-width')) || 250;
   const minHeight = parseInt(computedStyle.getPropertyValue('--min-chat-height')) || 200;
-
+  
   chat.style.width = Math.min(viewportWidth, Math.max(minWidth, state.width)) + 'px';
   chat.style.height = Math.min(viewportHeight, Math.max(minHeight, state.height)) + 'px';
   chat.style.left = clamp(state.left, 0, viewportWidth - chat.offsetWidth) + 'px';
-
+  
   if (state.floating) {
     chat.style.top = clamp(state.top, 0, viewportHeight - chat.offsetHeight) + 'px';
     chat.style.bottom = '';
@@ -223,6 +223,45 @@ function createChatUI() {
 
   document.body.appendChild(chatContainer);
   restoreChatState();
+}
+
+// ------------------------- Toggle & Chat Features -------------------------
+
+function toggleChatVisibility() {
+  const chatContainer = document.getElementById('chat-container');
+  const toggleButton = document.querySelector('.chat-toggle-button');
+  if (!chatContainer) return;
+  const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
+  const isFloating = chatState.floating || false;
+  if (isFloating) {
+    chatContainer.style.opacity = chatContainer.style.opacity === '0' ? '1' : '0';
+    setTimeout(() => {
+      chatContainer.style.display = chatContainer.style.opacity === '0' ? 'none' : 'flex';
+      toggleButton.innerHTML = chatContainer.style.display === 'none' ? openSVG : closeSVG;
+    }, 300);
+  } else {
+    chatContainer.classList.toggle('visible-chat');
+    chatContainer.classList.toggle('hidden-chat');
+    const isChatVisible = chatContainer.classList.contains('visible-chat');
+    toggleButton.innerHTML = isChatVisible ? closeSVG : openSVG;
+  }
+}
+
+function addChatToggleFeature() {
+  const chatContainer = document.getElementById('chat-container');
+  const closeButton = document.getElementById('chat-close-btn');
+  const draggableHeader = document.getElementById('chat-header');
+  if (!chatContainer) return;
+  chatContainer.classList.add('visible-chat');
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.code === 'Space') toggleChatVisibility();
+  });
+  if (closeButton) {
+    closeButton.addEventListener('click', toggleChatVisibility);
+  }
+  if (draggableHeader) {
+    draggableHeader.addEventListener('dblclick', toggleChatVisibility);
+  }
 }
 
 // ------------------------- Drag Handlers (Floating) -------------------------
@@ -370,336 +409,103 @@ document.addEventListener('mouseup', () => {
   document.body.style.userSelect = '';
 });
 
-// ------------------------- XMPP Client & User Manager -------------------------
-
-class UserManager {
-  constructor() {
-    this.container = document.getElementById('user-list');
-    this.activeUsers = new Map();
-  }
-  updatePresence(xmlResponse) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlResponse, "text/xml");
-    const presences = doc.getElementsByTagName("presence");
-    if (xmlResponse.includes('<presence id="pres_1"')) {
-      console.log("🔄 Initial room join detected, requesting full roster");
-      this.requestFullRoster();
-      return;
-    }
-    let changes = false;
-    for (let i = 0; i < presences.length; i++) {
-      const presence = presences[i];
-      const from = presence.getAttribute('from');
-      const type = presence.getAttribute('type');
-      if (type === 'unavailable') {
-        if (this.activeUsers.has(from)) {
-          console.log(`🚪 User left: ${this.activeUsers.get(from).login || from}`);
-          this.activeUsers.delete(from);
-          changes = true;
-        }
-        continue;
-      }
-      let xData = null;
-      const xElements = presence.getElementsByTagName("x");
-      for (let j = 0; j < xElements.length; j++) {
-        if (xElements[j].namespaceURI === "klavogonki:userdata") {
-          xData = xElements[j];
-          break;
-        }
-      }
-      if (!xData) {
-        console.log(`⚠️ No klavogonki:userdata found for presence from: ${from}`);
-        continue;
-      }
-      const userNode = xData.getElementsByTagName("user")[0];
-      if (!userNode) {
-        console.log(`⚠️ No user node found in klavogonki:userdata for presence from: ${from}`);
-        continue;
-      }
-      const login = userNode.getElementsByTagName("login")[0]?.textContent || 'Anonymous';
-      const avatar = userNode.getElementsByTagName("avatar")[0]?.textContent;
-      const background = userNode.getElementsByTagName("background")[0]?.textContent || '#777';
-      const gameNode = xData.getElementsByTagName("game_id")[0];
-      const game = gameNode ? gameNode.textContent : null;
-      const role = presence.getElementsByTagName("item")[0]?.getAttribute("role") || 'participant';
-      const user = { jid: from, login, avatar, color: background, role, game };
-      const existingUser = this.activeUsers.get(from);
-      if (!existingUser || JSON.stringify(existingUser) !== JSON.stringify(user)) {
-        console.log(`👤 User ${existingUser ? 'updated' : 'joined'}: ${login}`);
-        this.activeUsers.set(from, user);
-        changes = true;
-      }
-    }
-    if (changes) {
-      console.log(`📋 Current active users: ${this.activeUsers.size}`);
-      this.updateUI();
-    }
-  }
-  async requestFullRoster() {
-    console.log("📑 Would request full roster here (using existing data for now)");
-    this.updateUI();
-  }
-  updateUI() {
-    console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
-    this.container.innerHTML = createUserListUI(Array.from(this.activeUsers.values()));
-  }
-}
-
-const xmppClient = {
-  userManager: null,
-  messages: loadChatHistory(), // Load persisted messages (if any) from today's session.
-  messageIdCounter: 0,
-  sid: null,
-  rid: Math.floor(Date.now() / 1000),
-  async connect() {
-    try {
-      console.log('🌐 Step 1: Connecting to XMPP server...');
-      const initResponse = await this.sendRequestWithRetry(
-        `<body xmlns='http://jabber.org/protocol/httpbind'
-               rid='${this.nextRid()}'
-               to='jabber.klavogonki.ru'
-               xml:lang='en'
-               wait='60'
-               hold='1'
-               ver='1.6'
-               xmpp:version='1.0'
-               xmlns:xmpp='urn:xmpp:xbosh'/>`
-      );
-      this.sid = initResponse.match(/sid='(.*?)'/)[1];
-      console.log(`🔑 Step 2: Session ID received: ${this.sid}`);
-      await this.sleep(delay / 8);
-      console.log('🔐 Step 3: Authenticating...');
-      const authString = this.base64Encode('\x00' + username + '\x00' + password);
-      const authResponse = await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}'
-               xmlns='http://jabber.org/protocol/httpbind'>
-          <auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'>${authString}</auth>
-        </body>`
-      );
-      if (!authResponse.includes('<success')) {
-        throw new Error('🚫 Authentication failed');
-      }
-      console.log('✅ Step 4: Authentication successful!');
-      await this.sleep(delay / 8);
-      console.log('🔄 Step 5: Restarting stream...');
-      await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}'
-               xmlns='http://jabber.org/protocol/httpbind'
-               to='jabber.klavogonki.ru'
-               xmpp:restart='true'
-               xmlns:xmpp='urn:xmpp:xbosh'/>`
-      );
-      await this.sleep(delay / 8);
-      console.log('📦 Step 6: Binding resource...');
-      await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}'
-               xmlns='http://jabber.org/protocol/httpbind'>
-          <iq type='set' id='bind_1' xmlns='jabber:client'>
-            <bind xmlns='urn:ietf:params:xml:ns:xmpp-bind'>
-              <resource>web</resource>
-            </bind>
-          </iq>
-        </body>`
-      );
-      await this.sleep(delay / 8);
-      console.log('🔌 Step 7: Establishing session...');
-      await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}'
-               xmlns='http://jabber.org/protocol/httpbind'>
-          <iq type='set' id='session_1' xmlns='jabber:client'>
-            <session xmlns='urn:ietf:params:xml:ns:xmpp-session'/>
-          </iq>
-        </body>`
-      );
-      await this.sleep(delay / 8);
-      console.log('💬 Step 8: Joining chat room...');
-      const joinResponse = await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}'
-               xmlns='http://jabber.org/protocol/httpbind'>
-          <presence id='pres_1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru/${username}'>
-            <x xmlns='http://jabber.org/protocol/muc'/>
-          </presence>
-        </body>`
-      );
-      console.log('📥 Join response:', joinResponse);
-      this.userManager.updatePresence(joinResponse);
-      await this.sleep(delay / 8);
-      console.log('📋 Step 9: Requesting room information...');
-      await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}'
-               xmlns='http://jabber.org/protocol/httpbind'>
-          <iq type='get' id='info1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru'>
-            <query xmlns='http://jabber.org/protocol/disco#info'/>
-          </iq>
-        </body>`
-      );
-      await this.sleep(delay);
-      this.startPresencePolling();
-      console.log('🚀 Step 10: Connected! Starting presence updates...');
-    } catch (error) {
-      console.error(`💥 Error: ${error.message}`);
-    }
-  },
-  sendMessage(text) {
-    const messageId = `msg_${Date.now()}`;
-    const messageStanza = `
-      <body rid='${this.nextRid()}' sid='${this.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-        <message to='general@conference.jabber.klavogonki.ru'
-                 type='groupchat'
-                 id='${messageId}'
-                 xmlns='jabber:client'>
-          <body>${text}</body>
-        </message>
-      </body>
-    `;
-    this.sendRequestWithRetry(messageStanza)
-      .then(response => this.handleIncomingMessages(response))
-      .catch(console.error);
-  },
-  handleIncomingMessages(xmlResponse) {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlResponse, "text/xml");
-    const presences = doc.getElementsByTagName("presence");
-    if (presences.length > 0) {
-      this.userManager.updatePresence(xmlResponse);
-    }
-    const messages = doc.getElementsByTagName("message");
-    for (const msg of messages) {
-      const body = msg.getElementsByTagName("body")[0]?.textContent;
-      const from = msg.getAttribute('from')?.split('/')[1];
-      if (body && from && from !== username) {
-        this.messages.push({
-          id: `msg_${this.messageIdCounter++}`,
-          from,
-          text: body,
-          timestamp: new Date().toISOString()
-        });
-        this.updateChatUI();
-      }
-    }
-  },
-  updateChatUI() {
-    const panel = document.getElementById('messages-panel');
-    panel.innerHTML = this.messages.map(msg => `
-      <div class="message ${msg.from === username ? 'sent' : ''}">
-        <div class="message-info">
-          ${msg.from} • ${new Date(msg.timestamp).toLocaleTimeString()}
-        </div>
-        <div class="message-text">${parseMessageText(msg.text)}</div>
-      </div>
-    `).join('');
-    panel.scrollTop = panel.scrollHeight;
-    // Save the latest messages to localStorage.
-    saveChatHistory(this.messages);
-  },
-  base64Encode(str) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(str);
-    return btoa(String.fromCharCode(...data));
-  },
-  nextRid() {
-    this.rid++;
-    return this.rid;
-  },
-  async sendRequest(payload) {
-    const response = await fetch(XMPP_BIND_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'text/xml; charset=UTF-8',
-        'User-Agent': 'Mozilla/5.0'
-      },
-      body: payload
-    });
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-    return await response.text();
-  },
-  async sendRequestWithRetry(payload, maxRetries = 5) {
-    let lastError;
-    let baseWaitTime = delay;
-    for (let attempt = 1; attempt <= maxRetries; attempt++) {
-      try {
-        return await this.sendRequest(payload);
-      } catch (error) {
-        lastError = error;
-        if (error.message.includes('429')) {
-          const waitTime = baseWaitTime * Math.pow(2, attempt);
-          console.log(`⏱️ Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`);
-          await this.sleep(waitTime);
-        } else {
-          throw error;
-        }
-      }
-    }
-    throw new Error(`Max retries reached. Last error: ${lastError.message}`);
-  },
-  startPresencePolling() {
-    setInterval(async () => {
-      const xmlResponse = await this.sendRequestWithRetry(
-        `<body rid='${this.nextRid()}' sid='${this.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
-      );
-      this.handleIncomingMessages(xmlResponse);
-    }, userListDelay);
-  },
-  async sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-};
-
-// ------------------------- Chat Toggle & Initialization -------------------------
-
-function toggleChatVisibility() {
-  const chatContainer = document.getElementById('chat-container');
-  const toggleButton = document.querySelector('.chat-toggle-button');
-  if (!chatContainer) return;
-  const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
-  const isFloating = chatState.floating || false;
-  if (isFloating) {
-    chatContainer.style.opacity = chatContainer.style.opacity === '0' ? '1' : '0';
-    setTimeout(() => {
-      chatContainer.style.display = chatContainer.style.opacity === '0' ? 'none' : 'flex';
-      toggleButton.innerHTML = chatContainer.style.display === 'none' ? openSVG : closeSVG;
-    }, 300);
-  } else {
-    chatContainer.classList.toggle('visible-chat');
-    chatContainer.classList.toggle('hidden-chat');
-    const isChatVisible = chatContainer.classList.contains('visible-chat');
-    toggleButton.innerHTML = isChatVisible ? closeSVG : openSVG;
-  }
-}
-
-function addChatToggleFeature() {
-  const chatContainer = document.getElementById('chat-container');
-  const closeButton = document.getElementById('chat-close-btn');
-  const draggableHeader = document.getElementById('chat-header');
-  if (!chatContainer) return;
-  chatContainer.classList.add('visible-chat');
-  document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.code === 'Space') toggleChatVisibility();
-  });
-  closeButton?.addEventListener('click', toggleChatVisibility);
-  draggableHeader?.addEventListener('dblclick', toggleChatVisibility);
-}
+// ------------------------- XMPP Client & Message Handling -------------------------
 
 function initializeApp() {
   createChatUI();
   addChatToggleFeature();
-  xmppClient.userManager = new UserManager();
-  // Render persisted messages from localStorage
-  xmppClient.updateChatUI();
+  
+  // Instantiate managers now that the chat UI is in the DOM.
+  const userManager = new UserManager('user-list');
+  const messageManager = new MessageManager('messages-panel', username);
+  
+  // Create an instance of our XMPP connection.
+  const xmppConnection = new XMPPConnection({
+    username,
+    password,
+    bindUrl: XMPP_BIND_URL,
+    delay
+  });
+  
+  // Our overall XMPP client object.
+  const xmppClient = {
+    userManager,
+    messageManager,
+    async connect() {
+      try {
+        const session = await xmppConnection.connect();
+        
+        console.log('💬 Step 8: Joining chat room...');
+        const joinPayload = `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}'
+                 xmlns='http://jabber.org/protocol/httpbind'>
+            <presence id='pres_1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru/${username}'>
+              <x xmlns='http://jabber.org/protocol/muc'/>
+            </presence>
+          </body>`;
+        const joinResponse = await xmppConnection.sendRequestWithRetry(joinPayload);
+        console.log('📥 Join response:', joinResponse);
+        userManager.updatePresence(joinResponse);
+  
+        const infoPayload = `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}'
+                 xmlns='http://jabber.org/protocol/httpbind'>
+            <iq type='get' id='info1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru'>
+              <query xmlns='http://jabber.org/protocol/disco#info'/>
+            </iq>
+          </body>`;
+        await xmppConnection.sendRequestWithRetry(infoPayload);
+        
+        // Start polling for presence and messages.
+        setInterval(async () => {
+          const xmlResponse = await xmppConnection.sendRequestWithRetry(
+            `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
+          );
+          userManager.updatePresence(xmlResponse);
+          messageManager.processMessages(xmlResponse);
+        }, userListDelay);
+        
+        console.log('🚀 Step 10: Connected! Starting presence updates...');
+      } catch (error) {
+        console.error(`💥 Error: ${error.message}`);
+      }
+    },
+    sendMessage(text) {
+      const messageId = `msg_${Date.now()}`;
+      const messageStanza = `
+        <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+          <message to='general@conference.jabber.klavogonki.ru'
+                   type='groupchat'
+                   id='${messageId}'
+                   xmlns='jabber:client'>
+            <body>${text}</body>
+          </message>
+        </body>
+      `;
+      xmppConnection.sendRequestWithRetry(messageStanza)
+        .then(response => {
+          messageManager.processMessages(response);
+        })
+        .catch(console.error);
+    }
+  };
+  
+  // Load persisted messages and update the messages panel.
+  const persistedMessages = loadChatHistory();
+  messageManager.messages = persistedMessages;
+  messageManager.updatePanel();
+  
+  // Set up the send form events.
   const input = document.getElementById('message-input');
   const sendButton = document.getElementById('send-button');
   sendButton.addEventListener('click', () => {
     const text = input.value.trim();
     if (text) {
-      xmppClient.messages.push({
-        id: `msg_${xmppClient.messageIdCounter++}`,
+      messageManager.messages.push({
+        id: `msg_${Date.now()}`,
         from: username,
         text,
         timestamp: new Date().toISOString()
       });
-      xmppClient.updateChatUI();
+      messageManager.updatePanel();
       xmppClient.sendMessage(text);
       input.value = '';
     }
@@ -707,7 +513,12 @@ function initializeApp() {
   input.addEventListener('keypress', (e) => {
     if (e.key === 'Enter') sendButton.click();
   });
+  
+  // Start the XMPP connection.
   xmppClient.connect();
+  
+  // Optionally, expose xmppClient for debugging.
+  window.xmppClient = xmppClient;
 }
 
 initializeApp();
