@@ -156,6 +156,7 @@
 #chat-container .filled-button {
   border: none !important;
   background-color: transparent !important;
+  transition: all 0.15s ease-out;
 }
 
 #chat-container .filled-button:hover {
@@ -211,6 +212,7 @@
   display: flex !important;
   align-items: center !important;
   padding: 0.2em !important;
+  margin-bottom: 0.2em !important;
   border-radius: var(--border-radius) !important;
   max-width: 100% !important;
   text-overflow: ellipsis !important;
@@ -253,6 +255,7 @@
 }
 
 #chat-container .user-meta {
+  cursor: default;
   font-size: 0.8em !important;
   color: #b0b0b0 !important;
   overflow: hidden !important;
