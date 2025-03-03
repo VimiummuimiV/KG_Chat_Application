@@ -9,8 +9,8 @@ export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 export const delay = 200;
 
 // Configuration
-export const username = '773950#Солнцеликий';
-export const password = '05cc94fc3e9587964545c6c52d7276bf';
+export const username = '748754#Душа_Чата';
+export const password = 'eb8896e029bd79010ba4f6cbae914a13';
 
 export const emojiFaces = [
   // People Emojis (Facial expressions)
