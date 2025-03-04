@@ -15,16 +15,27 @@ import { observeMessagesPanel } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
 
 // ------------------------- Auth Check ---------------------------
-// Ensure checkAuth() clears invalid credentials and redirects
 function checkAuth() {
-  getAuthData();
-  if (window.location.href.includes('/gamelist/')) return false;
+  // Check if on a race page
+  const params = new URLSearchParams(window.location.search);
+  if (window.location.pathname === '/g/' && params.has('gmid')) {
+    return false;
+  }
 
-  if (!config.username || !config.password) {
-    localStorage.removeItem('klavoauth'); // Uncommented to clear stale data
+  // If on gamelist, fetch auth data and return false to halt initialization
+  if (window.location.href.includes('/gamelist/')) {
+    getAuthData();
+    return false;
+  }
+
+  // On other pages, check if auth data exists in localStorage
+  const authData = localStorage.getItem('klavoauth');
+  if (!authData || !config.username || !config.password) {
+    localStorage.removeItem('klavoauth');
     window.location.href = 'https://klavogonki.ru/gamelist/';
     return false;
   }
+
   return true;
 }
 
