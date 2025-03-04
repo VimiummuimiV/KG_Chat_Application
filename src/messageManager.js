@@ -21,7 +21,7 @@ export default class MessageManager {
     let newMessagesAdded = false;
 
     Array.from(messageElements).forEach(msg => {
-      // Generate a message ID if one isn’t provided
+      // Generate a message ID if one isn't provided
       const messageId = msg.getAttribute("id") || `msg_${this.messageIdCounter++}`;
 
       // Skip if we've already processed this message
@@ -123,7 +123,24 @@ export default class MessageManager {
     `;
     }).join('');
 
+    // Add username click listeners after rendering
+    this.addUsernameClickListeners();
     scrollToBottom();
+  }
+
+  // New method to add click listeners to usernames
+  addUsernameClickListeners() {
+    const usernames = this.panel.querySelectorAll('.username');
+    const messageInput = document.getElementById('message-input');
+    
+    usernames.forEach(username => {
+      username.addEventListener('click', () => {
+        // Set input value to the username with a colon and space
+        messageInput.value = username.textContent + ': ';
+        // Optional: focus the input after setting the value
+        messageInput.focus();
+      });
+    });
   }
 
   // Optional: Retrieve the in-memory chat history as an array
