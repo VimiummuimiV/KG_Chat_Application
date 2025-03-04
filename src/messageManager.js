@@ -1,5 +1,4 @@
 import { colorHelpers, parseUsername, parseMessageText } from './helpers.js';
-import { saveChatHistory, loadChatHistory } from './storage.js';
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
@@ -9,6 +8,7 @@ export default class MessageManager {
     this.currentUsername = currentUsername;
     this.sentMessageTexts = new Set(); // Track recently sent messages
     this.processedMessageIds = new Set(); // Track message IDs to prevent duplicates
+    this.chatHistory = new Map(); // Local in-memory map for chat history
   }
 
   // Process incoming XML response and extract message bodies
@@ -21,7 +21,7 @@ export default class MessageManager {
     let newMessagesAdded = false;
 
     Array.from(messageElements).forEach(msg => {
-      // Extract message ID to prevent duplicates
+      // Generate a message ID if one isn’t provided
       const messageId = msg.getAttribute("id") || `msg_${this.messageIdCounter++}`;
 
       // Skip if we've already processed this message
@@ -32,6 +32,12 @@ export default class MessageManager {
       const bodyNode = msg.getElementsByTagName("body")[0];
       if (bodyNode && bodyNode.textContent) {
         const text = bodyNode.textContent;
+        
+        // Exclude the specific unwanted message text
+        if (text.trim() === "This room is not anonymous") {
+          return;
+        }
+        
         const fromAttr = msg.getAttribute("from");
 
         // Extract username from Jabber ID format and clean it
@@ -45,18 +51,19 @@ export default class MessageManager {
           timestamp = delayNodes[0].getAttribute("stamp");
         }
 
-        // Skip if this is a message we just sent (to avoid duplicates)
+        // Skip if this is a duplicate of a message we just sent
         const isDuplicate = cleanFrom === this.currentUsername && this.sentMessageTexts.has(text);
 
         if (!isDuplicate) {
-          this.messages.push({
+          const messageObj = {
             id: messageId,
-            from: cleanFrom, // Use the cleaned username
+            from: cleanFrom,
             text,
             timestamp
-          });
+          };
 
-          // Mark this message ID as processed
+          this.messages.push(messageObj);
+          this.chatHistory.set(messageId, messageObj); // Save in the local memory map
           this.processedMessageIds.add(messageId);
           newMessagesAdded = true;
         }
@@ -66,28 +73,25 @@ export default class MessageManager {
     // Update the panel only if new messages were added
     if (newMessagesAdded) {
       this.updatePanel();
-      // Optionally save to localStorage for persistence between page reloads
-      saveChatHistory(this.messages);
     }
   }
 
-  // Add a method to track sent messages
+  // Method to add a sent message
   addSentMessage(text) {
     this.sentMessageTexts.add(text);
     const messageId = `msg_${Date.now()}`;
-    this.messages.push({
+    const messageObj = {
       id: messageId,
-      from: this.currentUsername, // Already clean
+      from: this.currentUsername,
       text,
       timestamp: new Date().toISOString()
-    });
+    };
+    this.messages.push(messageObj);
+    this.chatHistory.set(messageId, messageObj); // Save in the local memory map
     this.processedMessageIds.add(messageId);
     this.updatePanel();
 
-    // Optionally save to localStorage
-    saveChatHistory(this.messages);
-
-    // Clean up sentMessageTexts if it gets too large
+    // Keep the sent messages set from growing too large
     if (this.sentMessageTexts.size > 20) {
       const entries = Array.from(this.sentMessageTexts);
       for (let i = 0; i < entries.length - 20; i++) {
@@ -123,19 +127,8 @@ export default class MessageManager {
     this.panel.scrollTop = this.panel.scrollHeight;
   }
 
-  // New function to load recent messages from localStorage (runs once on page load)
-  loadRecentMessages() {
-    const savedMessages = loadChatHistory();
-    if (savedMessages && savedMessages.length > 0) {
-      savedMessages.forEach(msg => {
-        msg.from = parseUsername(msg.from);
-        // Only add if not already processed
-        if (!this.processedMessageIds.has(msg.id)) {
-          this.messages.push(msg);
-          this.processedMessageIds.add(msg.id);
-        }
-      });
-      this.updatePanel(); // Updates with sorted messages
-    }
+  // Optional: Retrieve the in-memory chat history as an array
+  getChatHistory() {
+    return Array.from(this.chatHistory.values());
   }
 }

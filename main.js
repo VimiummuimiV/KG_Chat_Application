@@ -71,8 +71,7 @@ async function initializeApp() {
     // Connect to XMPP and join the room first
     await xmppClient.connect();
 
-    // After joining, load additional messages from localStorage
-    messageManager.loadRecentMessages();
+    // Since we're not using localStorage, we don't load previous messages
 
     window.xmppClient = xmppClient; // For debugging
 
