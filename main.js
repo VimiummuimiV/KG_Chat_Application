@@ -1,8 +1,7 @@
 import {
   delay,
   XMPP_BIND_URL,
-} from "./src/definitions.js"; // definitions
-
+} from "./src/definitions.js";
 import XMPPConnection from './src/xmppConnection.js';
 import UserManager from './src/userManager.js';
 import MessageManager from './src/messageManager.js';
@@ -16,26 +15,20 @@ import { getAuthData } from "./src/auth.js";
 
 // ------------------------- Auth Check ---------------------------
 function checkAuth() {
-  // Check if on a race page
   const params = new URLSearchParams(window.location.search);
   if (window.location.pathname === '/g/' && params.has('gmid')) {
     return false;
   }
-
-  // If on gamelist, fetch auth data and return false to halt initialization
   if (window.location.href.includes('/gamelist/')) {
     getAuthData();
     return false;
   }
-
-  // On other pages, check if auth data exists in localStorage
   const authData = localStorage.getItem('klavoauth');
   if (!authData || !config.username || !config.password) {
     localStorage.removeItem('klavoauth');
     window.location.href = 'https://klavogonki.ru/gamelist/';
     return false;
   }
-
   return true;
 }
 
@@ -51,16 +44,18 @@ async function initializeApp() {
     setupResizeHandlers();
     setupWindowResizeHandler();
 
+    // Set up the messages panel observer
+    observeMessagesPanel();
+
+    // Initialize managers and XMPP connection
     const userManager = new UserManager('user-list');
     const messageManager = new MessageManager('messages-panel', config.username);
-
     const xmppConnection = new XMPPConnection({
       username: config.username,
       password: config.password,
       bindUrl: XMPP_BIND_URL,
       delay
     });
-
     const xmppClient = createXMPPClient(
       xmppConnection,
       userManager,
@@ -78,17 +73,13 @@ async function initializeApp() {
         input.focus();
       }
     };
-
     document.getElementById('send-button').addEventListener('click', sendMessage);
     input.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
 
-    // Connect to XMPP and join the room first
+    // Connect to XMPP and join the room
     await xmppClient.connect();
 
-    // Since we're not using localStorage, we don't load previous messages
-
     window.xmppClient = xmppClient; // For debugging
-
   } catch (error) {
     console.error('App init error:', error);
     localStorage.removeItem('klavoauth');
@@ -96,8 +87,5 @@ async function initializeApp() {
   }
 }
 
-// Start the app only if NOT on gamelist page
+// Start the app
 initializeApp();
-
-// Initialize the observer when the script loads
-observeMessagesPanel();

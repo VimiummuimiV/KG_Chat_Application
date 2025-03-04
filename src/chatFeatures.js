@@ -1,7 +1,7 @@
 import { closeSVG, openSVG } from "./icons.js";
 
 export function toggleChatVisibility() {
-  const chatContainer = document.getElementById('chat-container');
+  const chatContainer = document.getElementById('app-chat-container');
   const toggleButton = document.querySelector('.chat-toggle-button');
   if (!chatContainer) return;
   const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
@@ -21,7 +21,7 @@ export function toggleChatVisibility() {
 }
 
 export function addChatToggleFeature() {
-  const chatContainer = document.getElementById('chat-container');
+  const chatContainer = document.getElementById('app-chat-container');
   const closeButton = document.getElementById('chat-close-btn');
   const draggableHeader = document.getElementById('chat-header');
   if (!chatContainer) return;

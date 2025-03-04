@@ -8,7 +8,7 @@ export function setupDragHandlers() {
     const dragArea = e.target.closest('.chat-drag-area');
     if (!dragArea) return;
     isDragging = true;
-    const chat = document.getElementById('chat-container');
+    const chat = document.getElementById('app-chat-container');
     let chatState = getChatState();
     if (!chatState.floating) {
       const newTop = window.innerHeight - chat.offsetHeight;
@@ -28,7 +28,7 @@ export function setupDragHandlers() {
 
   document.addEventListener('mousemove', (e) => {
     if (!isDragging) return;
-    const chat = document.getElementById('chat-container');
+    const chat = document.getElementById('app-chat-container');
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const deltaX = e.clientX - dragStartX;
@@ -47,7 +47,7 @@ export function setupDragHandlers() {
   document.addEventListener('mouseup', () => {
     if (!isDragging) return;
     isDragging = false;
-    const chat = document.getElementById('chat-container');
+    const chat = document.getElementById('app-chat-container');
     const viewportWidth = window.innerWidth;
     const viewportHeight = window.innerHeight;
     const chatRect = chat.getBoundingClientRect();
@@ -80,7 +80,7 @@ export function setupResizeHandlers() {
     if (!handle) return;
     isResizing = true;
     resizeType = handle.classList[1];
-    const chat = document.getElementById('chat-container');
+    const chat = document.getElementById('app-chat-container');
     startX = e.clientX;
     startY = e.clientY;
     startWidth = chat.offsetWidth;
@@ -95,7 +95,7 @@ export function setupResizeHandlers() {
 
   document.addEventListener('mousemove', (e) => {
     if (!isResizing) return;
-    const chat = document.getElementById('chat-container');
+    const chat = document.getElementById('app-chat-container');
     const deltaX = e.clientX - startX;
     const deltaY = e.clientY - startY;
     const viewportWidth = window.innerWidth;

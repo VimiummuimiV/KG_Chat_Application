@@ -46,14 +46,14 @@ export function getRandomEmojiAvatar() {
 }
 
 export function handleElementsBehavior() {
-  const wrapper = document.querySelector('#chat-container .chat-wrapper');
+  const wrapper = document.querySelector('#app-chat-container .chat-wrapper');
   if (!wrapper) return;
 
   const isNarrow = wrapper.offsetWidth <= 750;
-  const userList = document.querySelector('#chat-container .user-list-container');
+  const userList = document.querySelector('#app-chat-container .user-list-container');
   if (userList) userList.style.display = isNarrow ? 'none' : '';
 
-  document.querySelectorAll('#chat-container .message').forEach(msg => {
+  document.querySelectorAll('#app-chat-container .message').forEach(msg => {
     msg.style.flexDirection = isNarrow ? 'column' : 'row';
     msg.style.marginBottom = isNarrow ? '1em' : '0';
   });
@@ -73,7 +73,7 @@ export function observeMessagesPanel() {
 }
 
 export function restoreChatState() {
-  const chat = document.getElementById('chat-container');
+  const chat = document.getElementById('app-chat-container');
   const state = getChatState();
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;

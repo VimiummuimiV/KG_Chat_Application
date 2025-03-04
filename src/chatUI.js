@@ -4,7 +4,7 @@ import { sendSVG, closeSVG } from "./icons.js";
 
 export function createChatUI() {
   const chatContainer = document.createElement('div');
-  chatContainer.id = 'chat-container';
+  chatContainer.id = 'app-chat-container';
 
   // Create resize handles for top, left, and right.
   ['top', 'left', 'right'].forEach(type => {
