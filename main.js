@@ -40,9 +40,6 @@ async function initializeApp() {
     const userManager = new UserManager('user-list');
     const messageManager = new MessageManager('messages-panel', config.username);
 
-    // Load recent messages once from localStorage on page load
-    messageManager.loadRecentMessages();
-
     const xmppConnection = new XMPPConnection({
       username: config.username,
       password: config.password,
@@ -71,7 +68,12 @@ async function initializeApp() {
     document.getElementById('send-button').addEventListener('click', sendMessage);
     input.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
 
+    // Connect to XMPP and join the room first
     await xmppClient.connect();
+
+    // After joining, load additional messages from localStorage
+    messageManager.loadRecentMessages();
+
     window.xmppClient = xmppClient; // For debugging
 
   } catch (error) {

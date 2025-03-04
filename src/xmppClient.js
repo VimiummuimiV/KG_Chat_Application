@@ -26,6 +26,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         const joinResponse = await xmppConnection.sendRequestWithRetry(joinPayload);
         console.log('📥 Join response:', joinResponse);
         userManager.updatePresence(joinResponse);
+        messageManager.processMessages(joinResponse);
 
         const infoPayload = `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}'
                  xmlns='http://jabber.org/protocol/httpbind'>
