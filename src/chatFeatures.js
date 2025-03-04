@@ -1,4 +1,4 @@
-import { closeSVG, openSVG } from "./icons";
+import { closeSVG, openSVG } from "./icons.js";
 
 export function toggleChatVisibility() {
   const chatContainer = document.getElementById('chat-container');

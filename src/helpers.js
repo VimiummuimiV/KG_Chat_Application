@@ -1,4 +1,16 @@
-import { emojiFaces } from "./definitions";
+import { emojiFaces } from "./definitions.js";
+
+export const getAuthData = () => {
+  const pageData = JSON.parse([...document.scripts]
+    .find(s => s.text.includes('PageData'))
+    ?.text.match(/\.constant\('PageData', ({[\s\S]*?})\)/)?.[1]
+    .replace(/(\w+):/g, '"$1":').replace(/'/g, '"') || '{}');
+  
+  return pageData?.chatParams && {
+    username: `${pageData.chatParams.user.id}#${pageData.chatParams.user.login}`,
+    password: pageData.chatParams.pass
+  };
+};
 
 // Color generation utilities
 export const colorHelpers = {

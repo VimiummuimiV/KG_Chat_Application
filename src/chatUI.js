@@ -1,6 +1,6 @@
-import { toggleChatVisibility } from "./chatFeatures";
-import { restoreChatState } from "./helpers";
-import { sendSVG, closeSVG } from "./icons";
+import { toggleChatVisibility } from "./chatFeatures.js";
+import { restoreChatState } from "./helpers.js";
+import { sendSVG, closeSVG } from "./icons.js";
 
 export function createChatUI() {
   const chatContainer = document.createElement('div');

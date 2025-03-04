@@ -9,9 +9,17 @@ export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 export const delay = 200;
 export const userListDelay = 5000;
 
-// Configuration
-export const username = '748754#Душа_Чата';
-export const password = 'eb8896e029bd79010ba4f6cbae914a13';
+// Configuration with localStorage integration
+export const config = {
+  get username() {
+    const data = localStorage.getItem('klavoauth');
+    return data ? JSON.parse(data).username : '';
+  },
+  get password() {
+    const data = localStorage.getItem('klavoauth');
+    return data ? JSON.parse(data).password : '';
+  }
+};
 
 export const emojiFaces = [
   // People Emojis (Facial expressions)
