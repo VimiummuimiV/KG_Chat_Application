@@ -128,15 +128,24 @@ export default class MessageManager {
     scrollToBottom();
   }
 
-  // New method to add click listeners to usernames
   addUsernameClickListeners() {
     const usernames = this.panel.querySelectorAll('.username');
     const messageInput = document.getElementById('message-input');
-    
+
     usernames.forEach(username => {
-      username.addEventListener('click', () => {
-        // Set input value to the username with a colon and space
-        messageInput.value = username.textContent + ': ';
+      username.addEventListener('click', (event) => {
+        const selectedUsername = username.textContent + ', ';
+
+        if (event.ctrlKey) {
+          // Ctrl+Click: Replace input with the new username
+          messageInput.value = selectedUsername;
+        } else {
+          // Normal Click: Append username if not already present
+          if (!messageInput.value.includes(selectedUsername)) {
+            messageInput.value += selectedUsername;
+          }
+        }
+
         // Optional: focus the input after setting the value
         messageInput.focus();
       });
