@@ -199,3 +199,69 @@ export function decodeURL(url) {
   const [base] = url.split('#'); // Split at the '#' symbol and take the base part
   return decodeURIComponent(base).replace(/ /g, '_'); // Decode and replace spaces with underscores
 }
+
+export function highlightMentionWords() {
+  const container = document.getElementById('messages-panel');
+  if (!container) return;
+
+  const globalProcessed = new WeakSet();
+
+  // Select all messages, assuming they are contained within `.message-text` class
+  const messages = container.querySelectorAll('.message-text');
+
+  messages.forEach((message) => {
+    const walker = document.createTreeWalker(
+      message,
+      NodeFilter.SHOW_TEXT,
+      {
+        acceptNode: (node) => {
+          // Skip processed nodes and protected elements
+          if (globalProcessed.has(node)) return NodeFilter.FILTER_SKIP;
+
+          // Check if the node is inside excluded elements
+          const parent = node.parentElement;
+          if (parent.closest('.mention, .time, .username')) {
+            return NodeFilter.FILTER_SKIP;
+          }
+
+          return NodeFilter.FILTER_ACCEPT;
+        }
+      },
+      false
+    );
+
+    const nodes = [];
+    let currentNode;
+    while ((currentNode = walker.nextNode())) {
+      nodes.push(currentNode);
+    }
+
+    nodes.forEach((node) => {
+      if (!globalProcessed.has(node)) {
+        processNode(node);
+        globalProcessed.add(node);
+      }
+    });
+  });
+
+  function processNode(node) {
+    const regex = /[\s]+|[^\s\wа-яА-ЯёЁ]+|[\wа-яА-ЯёЁ]+/g;
+    const words = node.textContent.match(regex);
+    if (!words) return;
+
+    const fragment = document.createDocumentFragment();
+
+    words.forEach((word) => {
+      if (mentionKeywords.map(alias => alias.toLowerCase()).includes(word.toLowerCase())) {
+        const mentionSpan = document.createElement('span');
+        mentionSpan.className = 'mention';
+        mentionSpan.textContent = word;
+        fragment.appendChild(mentionSpan);
+      } else {
+        fragment.appendChild(document.createTextNode(word));
+      }
+    });
+
+    node.parentNode.replaceChild(fragment, node);
+  }
+}
