@@ -132,7 +132,7 @@
 
 /* Right column: user list container */
 #app-chat-container .user-list-container {
-  margin-top: 20px;
+  margin-top: 25px;
   width: var(--user-list-width) !important;
   min-width: var(--user-list-width) !important;
   max-width: var(--user-list-width) !important;

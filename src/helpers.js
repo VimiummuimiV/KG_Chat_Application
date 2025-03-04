@@ -277,7 +277,7 @@ export function highlightMentionWords() {
       if (isMatch) {
         const mentionSpan = document.createElement('span');
         mentionSpan.className = 'mention';
-        
+
         // Colorize each letter individually
         token.split('').forEach(char => {
           const charSpan = document.createElement('span');
@@ -294,4 +294,4 @@ export function highlightMentionWords() {
 
     node.parentNode.replaceChild(fragment, node);
   }
-}
+}        
