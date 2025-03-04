@@ -15,27 +15,41 @@ export const getAuthData = () => {
   };
 };
 
-// Color generation utilities
-export const colorHelpers = {
-  // Store username to color hue mapping
-  usernameHueMap: {},
-  hueStep: 30,
+// Color generation factory
+function colorGenerator(config) {
+  return {
+    hueMap: {},
+    hueStep: config.hueStep || 30,
+    maxHue: config.maxHue || 360,
+    saturation: config.saturation || '80%',
+    lightness: config.lightness || '50%',
 
-  // Generate a consistent color for a username
-  getUsernameColor(username) {
-    // Check if the hue for this username is already stored
-    let hueForUsername = this.usernameHueMap[username];
-
-    // If the hue is not stored, generate a new random hue with the specified step
-    if (!hueForUsername) {
-      hueForUsername = Math.floor(Math.random() * (210 / this.hueStep)) * this.hueStep; // Limit hue to a maximum of 210
-      // Store the generated hue for this username
-      this.usernameHueMap[username] = hueForUsername;
+    getColor(key) {
+      let hue = this.hueMap[key];
+      if (!hue) {
+        const maxSteps = this.maxHue / this.hueStep;
+        hue = Math.floor(Math.random() * maxSteps) * this.hueStep;
+        this.hueMap[key] = hue;
+      }
+      return `hsl(${hue}, ${this.saturation}, ${this.lightness})`;
     }
+  };
+}
 
-    return `hsl(${hueForUsername}, 80%, 50%)`;
-  }
-};
+// Specific color generators
+export const usernameColors = colorGenerator({
+  maxHue: 210, // Cooler colors for usernames
+  hueStep: 30,
+  saturation: '80%',
+  lightness: '50%'
+});
+
+export const mentionColors = colorGenerator({
+  maxHue: 210, // Full spectrum for mentions
+  hueStep: 30, // More color variation
+  saturation: '80%',
+  lightness: '50%'
+});
 
 // Avatar utilities
 let lastEmojiAvatar = null;
@@ -204,9 +218,21 @@ export function highlightMentionWords() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
 
+  // Get mention keywords from localStorage
+  const storedKeywords = localStorage.getItem('mentionKeywords');
+  if (!storedKeywords) return;
+  
+  // Parse and validate the keywords
+  let mentionKeywords;
+  try {
+    mentionKeywords = JSON.parse(storedKeywords);
+    if (!Array.isArray(mentionKeywords)) return;
+  } catch (e) {
+    return;
+  }
+
   const globalProcessed = new WeakSet();
 
-  // Select all messages, assuming they are contained within `.message-text` class
   const messages = container.querySelectorAll('.message-text');
 
   messages.forEach((message) => {
@@ -215,50 +241,54 @@ export function highlightMentionWords() {
       NodeFilter.SHOW_TEXT,
       {
         acceptNode: (node) => {
-          // Skip processed nodes and protected elements
           if (globalProcessed.has(node)) return NodeFilter.FILTER_SKIP;
-
-          // Check if the node is inside excluded elements
           const parent = node.parentElement;
           if (parent.closest('.mention, .time, .username')) {
             return NodeFilter.FILTER_SKIP;
           }
-
           return NodeFilter.FILTER_ACCEPT;
         }
-      },
-      false
+      }
     );
 
     const nodes = [];
     let currentNode;
-    while ((currentNode = walker.nextNode())) {
-      nodes.push(currentNode);
-    }
+    while ((currentNode = walker.nextNode())) nodes.push(currentNode);
 
     nodes.forEach((node) => {
       if (!globalProcessed.has(node)) {
-        processNode(node);
+        processNode(node, mentionKeywords);
         globalProcessed.add(node);
       }
     });
   });
 
-  function processNode(node) {
-    const regex = /[\s]+|[^\s\wа-яА-ЯёЁ]+|[\wа-яА-ЯёЁ]+/g;
-    const words = node.textContent.match(regex);
-    if (!words) return;
-
+  function processNode(node, keywords) {
+    const regex = /(@?[\wа-яА-ЯёЁ'-]+)|[\s]+|[^@\s\wа-яА-ЯёЁ'-]+/gu;
+    const tokens = node.textContent.match(regex) || [];
+    
     const fragment = document.createDocumentFragment();
 
-    words.forEach((word) => {
-      if (mentionKeywords.map(alias => alias.toLowerCase()).includes(word.toLowerCase())) {
+    tokens.forEach(token => {
+      const isMatch = keywords.some(keyword => 
+        keyword.localeCompare(token, undefined, { sensitivity: 'accent' }) === 0
+      );
+
+      if (isMatch) {
         const mentionSpan = document.createElement('span');
         mentionSpan.className = 'mention';
-        mentionSpan.textContent = word;
+        
+        // Colorize each letter individually
+        token.split('').forEach(char => {
+          const charSpan = document.createElement('span');
+          charSpan.style.color = mentionColors.getColor(char);
+          charSpan.textContent = char;
+          mentionSpan.appendChild(charSpan);
+        });
+
         fragment.appendChild(mentionSpan);
       } else {
-        fragment.appendChild(document.createTextNode(word));
+        fragment.appendChild(document.createTextNode(token));
       }
     });
 

@@ -194,6 +194,11 @@
   word-break: break-word !important;
 }
 
+#app-chat-container .message.system {
+  background-color: #deb88725 !important;
+  border: 1px solid #deb88750 !important;
+}
+
 #app-chat-container .message.sent {
   background: #293e2985 !important;
   border: 1px solid #293e29 !important;

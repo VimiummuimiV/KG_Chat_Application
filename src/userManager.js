@@ -1,5 +1,5 @@
 import { BASE_URL } from "./definitions";
-import { colorHelpers, getRandomEmojiAvatar, parseUsername } from "./helpers";
+import { usernameColors, getRandomEmojiAvatar, parseUsername } from "./helpers";
 
 export default class UserManager {
   constructor(containerId = 'user-list') {
@@ -60,7 +60,7 @@ export default class UserManager {
       const role = presence.getElementsByTagName("item")[0]?.getAttribute("role") || 'participant';
 
       // Generate a consistent color for this username
-      const usernameColor = colorHelpers.getUsernameColor(login);
+      const usernameColor = usernameColors.getColor(login);
 
       const user = { jid: from, login, avatar, color: background, role, game, usernameColor };
       const existingUser = this.activeUsers.get(from);

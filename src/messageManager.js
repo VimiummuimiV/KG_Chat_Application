@@ -1,4 +1,4 @@
-import { colorHelpers, parseUsername, parseMessageText, scrollToBottom } from './helpers.js';
+import { parseUsername, parseMessageText, scrollToBottom, highlightMentionWords, usernameColors } from './helpers.js';
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
@@ -116,11 +116,18 @@ export default class MessageManager {
       if (!renderedIds.has(msg.id)) {
         const date = new Date(msg.timestamp);
         const formattedTime = date.toLocaleTimeString('en-GB', { hour12: false });
-        const usernameColor = colorHelpers.getUsernameColor(msg.from);
+        const usernameColor = usernameColors.getColor(msg.from);
 
         // Create the container for the message.
         const messageDiv = document.createElement('div');
         messageDiv.className = 'message' + (msg.from === this.currentUsername ? ' sent' : '');
+
+        // Handle system messages (/me)
+        if (msg.text.startsWith('/me ')) {
+          messageDiv.classList.add('system');
+          msg.text = `${msg.from} ${msg.text.substring(msg.text.indexOf(' ') + 1)}`;
+        }
+
         messageDiv.setAttribute('data-message-id', msg.id);
 
         // Create the message info block.
@@ -147,6 +154,8 @@ export default class MessageManager {
 
     // Attach click listeners for username elements.
     this.addUsernameClickListeners();
+
+    highlightMentionWords([this.currentUsername]);
 
     // Scroll to the bottom of the messages panel.
     scrollToBottom();
