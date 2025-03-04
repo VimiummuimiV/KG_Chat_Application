@@ -30,7 +30,7 @@ async function initializeApp() {
   try {
     if (!checkAuth()) return;
 
-    // Rest of your initialization code
+    // Initialize UI and features
     createChatUI();
     addChatToggleFeature();
     setupDragHandlers();
@@ -39,6 +39,9 @@ async function initializeApp() {
 
     const userManager = new UserManager('user-list');
     const messageManager = new MessageManager('messages-panel', config.username);
+
+    // Load recent messages once from localStorage on page load
+    messageManager.loadRecentMessages();
 
     const xmppConnection = new XMPPConnection({
       username: config.username,
@@ -69,7 +72,7 @@ async function initializeApp() {
     input.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
 
     await xmppClient.connect();
-    window.xmppClient = xmppClient; // Debugging
+    window.xmppClient = xmppClient; // For debugging
 
   } catch (error) {
     console.error('App init error:', error);

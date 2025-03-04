@@ -1,5 +1,5 @@
 import { colorHelpers, parseUsername, parseMessageText } from './helpers.js';
-import { saveChatHistory } from './storage.js';
+import { saveChatHistory, loadChatHistory } from './storage.js';
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
@@ -34,9 +34,9 @@ export default class MessageManager {
         const text = bodyNode.textContent;
         const fromAttr = msg.getAttribute("from");
         
-        // Extract username from Jabber ID format
-        // Format: general@conference.jabber.klavogonki.ru/748754#Душа_Чата
+        // Extract username from Jabber ID format and clean it
         const from = fromAttr ? fromAttr.split('/')[1] || "unknown" : "unknown";
+        const cleanFrom = parseUsername(from);
         
         // Extract timestamp from delay elements if available
         let timestamp = new Date().toISOString();
@@ -46,12 +46,12 @@ export default class MessageManager {
         }
         
         // Skip if this is a message we just sent (to avoid duplicates)
-        const isDuplicate = from === this.currentUsername && this.sentMessageTexts.has(text);
+        const isDuplicate = cleanFrom === this.currentUsername && this.sentMessageTexts.has(text);
         
         if (!isDuplicate) {
           this.messages.push({
             id: messageId,
-            from,
+            from: cleanFrom, // Use the cleaned username
             text,
             timestamp
           });
@@ -77,7 +77,7 @@ export default class MessageManager {
     const messageId = `msg_${Date.now()}`;
     this.messages.push({
       id: messageId,
-      from: this.currentUsername,
+      from: this.currentUsername, // Already clean
       text,
       timestamp: new Date().toISOString()
     });
@@ -104,16 +104,15 @@ export default class MessageManager {
       // Format time as HH:MM:SS in 24-hour format
       const date = new Date(msg.timestamp);
       const formattedTime = date.toLocaleTimeString('en-GB', { hour12: false });
-      // Parse the username to remove any leading numeric id and '#'
-      const cleanLogin = parseUsername(msg.from);
+      
       // Generate consistent username color
-      const usernameColor = colorHelpers.getUsernameColor(cleanLogin);
+      const usernameColor = colorHelpers.getUsernameColor(msg.from);
       
       return `
         <div class="message ${msg.from === this.currentUsername ? 'sent' : ''}">
           <div class="message-info">
             <span class="time">${formattedTime}</span>
-            <span class="username" style="color: ${usernameColor}">${cleanLogin}</span>
+            <span class="username" style="color: ${usernameColor}">${msg.from}</span>
           </div>
           <div class="message-text">${parseMessageText(msg.text)}</div>
         </div>
@@ -122,5 +121,20 @@ export default class MessageManager {
     
     // Scroll to the bottom to show the latest messages
     this.panel.scrollTop = this.panel.scrollHeight;
+  }
+  
+  // New function to load recent messages from localStorage (runs once on page load)
+  loadRecentMessages() {
+    const savedMessages = loadChatHistory();
+    if (savedMessages && savedMessages.length > 0) {
+      // Clean the username for each saved message (remove numeric prefix and '#')
+      savedMessages.forEach(msg => {
+        msg.from = parseUsername(msg.from);
+      });
+      this.messages = savedMessages;
+      // Mark saved messages as processed to avoid duplication later
+      savedMessages.forEach(msg => this.processedMessageIds.add(msg.id));
+      this.updatePanel();
+    }
   }
 }

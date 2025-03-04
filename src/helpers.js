@@ -45,12 +45,6 @@ export function getRandomEmojiAvatar() {
   return newEmoji;
 }
 
-// Username parsing utility
-export function parseUsername(loginRaw) {
-  const loginParts = loginRaw.split('#');
-  return loginParts.length > 1 ? loginParts[1] : loginParts[0];
-}
-
 export function handleElementsBehavior() {
   const wrapper = document.querySelector('#chat-container .chat-wrapper');
   if (!wrapper) return;
@@ -112,4 +106,12 @@ export const parseMessageText = text =>
 
 export function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
+}
+
+// Cleans a username string by removing a numeric prefix and the '#' symbol.
+// For example: "12345#JohnDoe" becomes "JohnDoe".
+export function parseUsername(username) {
+  if (typeof username !== 'string') return username;
+  // This regex finds a sequence of digits followed by a '#' at the start of the string
+  return username.replace(/^\d+#/, '');
 }
