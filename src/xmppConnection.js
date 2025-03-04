@@ -80,7 +80,7 @@ export default class XMPPConnection {
         </body>`;
     const authResponse = await this.sendRequestWithRetry(authPayload);
     if (!authResponse.includes('<success')) {
-      throw new Error('🚫 Authentication failed');
+      throw new Error('❌ Authentication failed');
     }
     console.log('✅ Step 4: Authentication successful!');
     await this.sleep(this.delay / 8);
