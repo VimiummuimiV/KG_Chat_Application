@@ -12,6 +12,8 @@ import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
 import { observeMessagesPanel } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
+import { convertImageLinksToImage } from "./src/converters/image-converter.js";
+import { convertVideoLinksToPlayer } from "./src/converters/video-converter.js";
 
 // ------------------------- Auth Check ---------------------------
 function checkAuth() {

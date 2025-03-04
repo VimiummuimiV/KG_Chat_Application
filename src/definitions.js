@@ -41,3 +41,20 @@ export const emojiFaces = [
   '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵',
   '🙈', '🙉', '🙊', '🐔', '🦄'
 ];
+
+export let state = {
+  bigImageEvents: {}
+};
+
+// List of trusted domains
+export const trustedDomains = [
+  'klavogonki.ru',
+  'youtube.com', // youtube main
+  'youtu.be', // youtube share
+  'imgur.com',
+  'pikabu.ru',
+  'userapi.com', // vk.com
+  'ibb.co', // imgbb.com
+  'yaplakal.com',
+  'freepik.com'
+];

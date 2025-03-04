@@ -100,31 +100,55 @@ export default class MessageManager {
     }
   }
 
-  // Update the messages panel with the stored messages
   updatePanel() {
     if (!this.panel) return;
 
-    // Sort messages by timestamp to ensure chronological order
+    // Ensure messages are in chronological order.
     this.messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-    this.panel.innerHTML = this.messages.map(msg => {
-      const date = new Date(msg.timestamp);
-      const formattedTime = date.toLocaleTimeString('en-GB', { hour12: false });
-      const usernameColor = colorHelpers.getUsernameColor(msg.from);
+    // Build a set of IDs already rendered in the panel.
+    const renderedIds = new Set(
+      Array.from(this.panel.querySelectorAll('.message')).map(el => el.getAttribute('data-message-id'))
+    );
 
-      return `
-      <div class="message ${msg.from === this.currentUsername ? 'sent' : ''}">
-        <div class="message-info">
-          <span class="time">${formattedTime}</span>
-          <span class="username" style="color: ${usernameColor}">${msg.from}</span>
-        </div>
-        <div class="message-text">${parseMessageText(msg.text)}</div>
-      </div>
-    `;
-    }).join('');
+    // Append only messages that have not been rendered.
+    this.messages.forEach(msg => {
+      if (!renderedIds.has(msg.id)) {
+        const date = new Date(msg.timestamp);
+        const formattedTime = date.toLocaleTimeString('en-GB', { hour12: false });
+        const usernameColor = colorHelpers.getUsernameColor(msg.from);
 
-    // Add username click listeners after rendering
+        // Create the container for the message.
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message' + (msg.from === this.currentUsername ? ' sent' : '');
+        messageDiv.setAttribute('data-message-id', msg.id);
+
+        // Create the message info block.
+        const messageInfoDiv = document.createElement('div');
+        messageInfoDiv.className = 'message-info';
+        messageInfoDiv.innerHTML = `
+        <span class="time">${formattedTime}</span>
+        <span class="username" style="color: ${usernameColor}">${msg.from}</span>
+      `;
+
+        // Create the message text block.
+        const messageTextDiv = document.createElement('div');
+        messageTextDiv.className = 'message-text';
+        messageTextDiv.innerHTML = parseMessageText(msg.text);
+
+        // Append info and text to the message container.
+        messageDiv.appendChild(messageInfoDiv);
+        messageDiv.appendChild(messageTextDiv);
+
+        // Append the new message to the messages panel.
+        this.panel.appendChild(messageDiv);
+      }
+    });
+
+    // Attach click listeners for username elements.
     this.addUsernameClickListeners();
+
+    // Scroll to the bottom of the messages panel.
     scrollToBottom();
   }
 

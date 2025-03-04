@@ -1,4 +1,7 @@
-import { emojiFaces } from "./definitions.js";
+import { convertImageLinksToImage } from "./converters/image-converter.js";
+import { convertVideoLinksToPlayer } from "./converters/video-converter.js";
+import { emojiFaces, trustedDomains } from "./definitions.js";
+import { state } from "./definitions.js";
 
 export const getAuthData = () => {
   const pageData = JSON.parse([...document.scripts]
@@ -66,6 +69,8 @@ export function observeMessagesPanel() {
 
   const observer = new MutationObserver(() => {
     handleElementsBehavior();
+    convertVideoLinksToPlayer();
+    convertImageLinksToImage();
     scrollToBottom()
   });
 
@@ -135,4 +140,62 @@ export function scrollToBottom() {
   if (messagesPanel) {
     messagesPanel.scrollTop = messagesPanel.scrollHeight;
   }
+}
+
+export function addBigImageEventListeners() {
+  Object.entries(state.bigImageEvents).forEach(([event, handler]) => {
+    document.addEventListener(event, handler);
+  });
+}
+
+export function removeBigImageEventListeners() {
+  Object.entries(state.bigImageEvents).forEach(([event, handler]) => {
+    document.removeEventListener(event, handler);
+  });
+}
+
+// Adjust element visibility with smooth opacity transition
+export function adjustVisibility(element, action, opacity) {
+  if (!element) return; // Exit if element doesn't exist
+
+  // Force reflow to ensure initial state is recognized
+  void element.offsetHeight;
+
+  element.style.transition = 'opacity 0.3s'; // Apply smooth transition for both show and hide
+  element.style.opacity = action === 'show' ? opacity : '0'; // Set target opacity
+
+  // If hiding, wait for transition to finish before removing the element
+  if (action === 'hide') {
+    element.addEventListener(
+      'transitionend',
+      () => {
+        if (element.style.opacity === '0') element.remove();
+      },
+      { once: true }
+    );
+  }
+}
+
+export const isTrustedDomain = url => {
+  try {
+    const { hostname } = new URL(url);
+    const domain = hostname.toLowerCase().split('.').slice(-2).join('.');
+    return { isTrusted: trustedDomains.includes(domain), domain };
+  } catch (err) {
+    console.error("Error in isTrustedDomain:", err.message);
+    return { isTrusted: false, domain: url };
+  }
+};
+
+// Function to check if a URL is valid and contains encoded characters
+export function isEncodedURL(url) {
+  const urlPattern = /^https?:\/\//; // Regex pattern to check if the value is a URL
+  const encodedPattern = /%[0-9A-Fa-f]{2}/; // Regex pattern to check if the URL is encoded
+  return urlPattern.test(url) && encodedPattern.test(url);
+}
+
+// Function to decode a URL and replace spaces with underscores
+export function decodeURL(url) {
+  const [base] = url.split('#'); // Split at the '#' symbol and take the base part
+  return decodeURIComponent(base).replace(/ /g, '_'); // Decode and replace spaces with underscores
 }
