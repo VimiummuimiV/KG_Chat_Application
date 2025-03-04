@@ -5,7 +5,7 @@ export const getAuthData = () => {
     .find(s => s.text.includes('PageData'))
     ?.text.match(/\.constant\('PageData', ({[\s\S]*?})\)/)?.[1]
     .replace(/(\w+):/g, '"$1":').replace(/'/g, '"') || '{}');
-  
+
   return pageData?.chatParams && {
     username: `${pageData.chatParams.user.id}#${pageData.chatParams.user.login}`,
     password: pageData.chatParams.pass
@@ -17,19 +17,19 @@ export const colorHelpers = {
   // Store username to color hue mapping
   usernameHueMap: {},
   hueStep: 30,
-  
+
   // Generate a consistent color for a username
   getUsernameColor(username) {
     // Check if the hue for this username is already stored
     let hueForUsername = this.usernameHueMap[username];
-    
+
     // If the hue is not stored, generate a new random hue with the specified step
     if (!hueForUsername) {
       hueForUsername = Math.floor(Math.random() * (210 / this.hueStep)) * this.hueStep; // Limit hue to a maximum of 210
       // Store the generated hue for this username
       this.usernameHueMap[username] = hueForUsername;
     }
-    
+
     return `hsl(${hueForUsername}, 80%, 50%)`;
   }
 };
@@ -57,6 +57,19 @@ export function handleElementsBehavior() {
     msg.style.flexDirection = isNarrow ? 'column' : 'row';
     msg.style.marginBottom = isNarrow ? '1em' : '0';
   });
+}
+
+// Observe DOM changes in #messages-panel
+export function observeMessagesPanel() {
+  const messagesPanel = document.getElementById('messages-panel');
+  if (!messagesPanel) return;
+
+  const observer = new MutationObserver(() => {
+    handleElementsBehavior();
+    scrollToBottom()
+  });
+
+  observer.observe(messagesPanel, { childList: true, subtree: true });
 }
 
 export function restoreChatState() {
@@ -114,4 +127,12 @@ export function parseUsername(username) {
   if (typeof username !== 'string') return username;
   // This regex finds a sequence of digits followed by a '#' at the start of the string
   return username.replace(/^\d+#/, '');
+}
+
+
+export function scrollToBottom() {
+  const messagesPanel = document.getElementById('messages-panel');
+  if (messagesPanel) {
+    messagesPanel.scrollTop = messagesPanel.scrollHeight;
+  }
 }

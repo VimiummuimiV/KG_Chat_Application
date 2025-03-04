@@ -19,6 +19,9 @@ export default class UserManager {
     }
 
     let changes = false;
+    // Array to keep track of newly created users (their unique IDs)
+    const newUserJIDs = [];
+
     for (let i = 0; i < presences.length; i++) {
       const presence = presences[i];
       const from = presence.getAttribute('from');
@@ -48,7 +51,6 @@ export default class UserManager {
         console.log(`⚠️ No user node found in klavogonki:userdata for presence from: ${from}`);
         continue;
       }
-      // Get the raw login and strip out the numeric prefix and '#' if present.
       const loginRaw = userNode.getElementsByTagName("login")[0]?.textContent || 'Anonymous';
       const login = parseUsername(loginRaw);
       const avatar = userNode.getElementsByTagName("avatar")[0]?.textContent;
@@ -56,21 +58,28 @@ export default class UserManager {
       const gameNode = xData.getElementsByTagName("game_id")[0];
       const game = gameNode ? gameNode.textContent : null;
       const role = presence.getElementsByTagName("item")[0]?.getAttribute("role") || 'participant';
-      
+
       // Generate a consistent color for this username
       const usernameColor = colorHelpers.getUsernameColor(login);
-      
+
       const user = { jid: from, login, avatar, color: background, role, game, usernameColor };
       const existingUser = this.activeUsers.get(from);
-      if (!existingUser || JSON.stringify(existingUser) !== JSON.stringify(user)) {
-        console.log(`👤 User ${existingUser ? 'updated' : 'joined'}: ${login}`);
+      // Only treat it as a "join" if the user was not already present
+      if (!existingUser) {
+        console.log(`👤 User joined: ${login}`);
         this.activeUsers.set(from, user);
         changes = true;
+        newUserJIDs.push(from);
+      } else if (JSON.stringify(existingUser) !== JSON.stringify(user)) {
+        console.log(`👤 User updated: ${login}`);
+        this.activeUsers.set(from, user);
+        changes = true;
+        // For updates we aren’t adding the shake effect
       }
     }
     if (changes) {
       console.log(`📋 Current active users: ${this.activeUsers.size}`);
-      this.updateUI();
+      this.updateUI(newUserJIDs);
     }
   }
 
@@ -79,16 +88,18 @@ export default class UserManager {
     this.updateUI();
   }
 
-  updateUI() {
+  // Accept an optional parameter (array of new user JIDs) so we only shake those items
+  updateUI(newUserJIDs = []) {
     console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
     this.container.innerHTML = Array.from(this.activeUsers.values())
       .map(user => {
         const cleanLogin = parseUsername(user.login);
-        const avatarHTML = user.avatar 
+        const avatarHTML = user.avatar
           ? `<img class="user-avatar image-avatar" src="${BASE_URL}${user.avatar.replace('.png', '_big.png')}" alt="${cleanLogin}'s avatar">`
           : `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
+        // Add a data attribute for identifying the user item later
         return `
-          <div class="user-item" style="color: ${user.color}">
+          <div class="user-item" data-jid="${user.jid}" style="color: ${user.color}">
             ${avatarHTML}
             <div class="user-info">
               <div class="username" style="color: ${user.usernameColor}">${cleanLogin}</div>

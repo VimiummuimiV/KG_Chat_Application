@@ -11,6 +11,7 @@ import { addChatToggleFeature } from "./src/chatFeatures.js";
 import { setupDragHandlers, setupResizeHandlers, setupWindowResizeHandler } from './src/events.js';
 import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
+import { observeMessagesPanel } from "./src/helpers.js";
 
 // ------------------------- Auth Check ---------------------------
 function checkAuth() {
@@ -84,3 +85,6 @@ async function initializeApp() {
 
 // Start the app only if NOT on gamelist page
 initializeApp();
+
+// Initialize the observer when the script loads
+observeMessagesPanel();

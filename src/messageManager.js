@@ -1,4 +1,4 @@
-import { colorHelpers, parseUsername, parseMessageText } from './helpers.js';
+import { colorHelpers, parseUsername, parseMessageText, scrollToBottom } from './helpers.js';
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
@@ -32,12 +32,12 @@ export default class MessageManager {
       const bodyNode = msg.getElementsByTagName("body")[0];
       if (bodyNode && bodyNode.textContent) {
         const text = bodyNode.textContent;
-        
+
         // Exclude the specific unwanted message text
         if (text.trim() === "This room is not anonymous") {
           return;
         }
-        
+
         const fromAttr = msg.getAttribute("from");
 
         // Extract username from Jabber ID format and clean it
@@ -123,8 +123,7 @@ export default class MessageManager {
     `;
     }).join('');
 
-    // Scroll to the bottom
-    this.panel.scrollTop = this.panel.scrollHeight;
+    scrollToBottom();
   }
 
   // Optional: Retrieve the in-memory chat history as an array
