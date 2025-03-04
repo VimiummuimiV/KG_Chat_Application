@@ -12,14 +12,16 @@ import { setupDragHandlers, setupResizeHandlers, setupWindowResizeHandler } from
 import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
 import { observeMessagesPanel } from "./src/helpers.js";
+import { getAuthData } from "./src/auth.js";
 
 // ------------------------- Auth Check ---------------------------
+// Ensure checkAuth() clears invalid credentials and redirects
 function checkAuth() {
-  // If on gamelist page, don't initialize main app
+  getAuthData();
   if (window.location.href.includes('/gamelist/')) return false;
 
   if (!config.username || !config.password) {
-    localStorage.removeItem('klavoauth');
+    localStorage.removeItem('klavoauth'); // Uncommented to clear stale data
     window.location.href = 'https://klavogonki.ru/gamelist/';
     return false;
   }
