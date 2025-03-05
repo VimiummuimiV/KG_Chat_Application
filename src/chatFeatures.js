@@ -1,5 +1,6 @@
 import { closeSVG, openSVG } from "./icons.js";
 import { saveChatState, showChatAlert } from "./helpers.js";
+import { toggleChatMaximize } from "./chatUI.js";
 
 export function toggleChatVisibility() {
   const chatContainer = document.getElementById('app-chat-container');
@@ -70,6 +71,8 @@ export function addChatToggleFeature() {
       } else {
         toggleChatVisibility();
       }
+    } else if (e.ctrlKey && e.shiftKey && e.code === 'Space') {
+      toggleChatMaximize(); // Expand or Minimize the chat by Ctrl + Shift + Space
     }
   });
 
