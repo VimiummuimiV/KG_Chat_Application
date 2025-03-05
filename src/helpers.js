@@ -437,3 +437,15 @@ export function showChatAlert(message, options = {}) {
   // Start animation
   animateAlert();
 }
+
+export function focusTextInput() {
+  const element = document.getElementById('message-input');
+  
+  if (element && element.offsetParent !== null && !element.disabled) {
+    element.focus();
+    if (element.select && element.value) element.select();
+    return true;
+  }
+
+  return false;
+}
