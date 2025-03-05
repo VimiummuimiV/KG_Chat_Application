@@ -10,9 +10,9 @@ export default class UserManager {
 
     // Define role-based icons/emojis for each user role:
     this.roleIcons = {
-      'visitor': '🐥', // Visitor role icon
-      'participant': '🗿', // Participant role icon
-      'moderator': '⚔️️' // Moderator role icon
+      'visitor': '🐥',       // Visitor role icon
+      'participant': '🗿',   // Participant role icon
+      'moderator': '⚔️️'     // Moderator role icon
     };
 
     // Define role priority for sorting:
@@ -148,7 +148,7 @@ export default class UserManager {
       return a.login.localeCompare(b.login);
     });
 
-    // Use a document fragment to minimize reflows
+    // Use a document fragment to build the updated list
     const fragment = document.createDocumentFragment();
 
     sortedUsers.forEach(user => {
@@ -187,10 +187,22 @@ export default class UserManager {
             </div>
           </div>
         `;
-        fragment.appendChild(userElement);
       } else {
-        // Remove from the map so remaining items are those to be removed later
+        // Remove from the map so that remaining elements are those to be removed later.
         existingElements.delete(user.jid);
+
+        // Update role icon if the role has changed
+        const roleElement = userElement.querySelector('.role');
+        const newRoleIcon = this.roleIcons[user.role] || '👤';
+        if (roleElement) {
+          if (roleElement.textContent !== newRoleIcon) {
+            roleElement.textContent = newRoleIcon;
+          }
+          // Also update the class if needed
+          if (!roleElement.classList.contains(user.role)) {
+            roleElement.className = `role ${user.role}`;
+          }
+        }
       }
 
       // Handle the game indicator update:
@@ -212,9 +224,13 @@ export default class UserManager {
       } else if (gameIndicatorElement) {
         gameIndicatorElement.remove();
       }
+
+      // Append or move the user element to the fragment
+      fragment.appendChild(userElement);
     });
 
-    // Append any new elements from the fragment to the container.
+    // Clear the container and append the sorted fragment
+    this.container.innerHTML = '';
     this.container.appendChild(fragment);
 
     // Remove DOM elements for users that are no longer active.
