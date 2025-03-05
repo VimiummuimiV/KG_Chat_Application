@@ -10,12 +10,13 @@ export default class UserManager {
 
     // Define role-based icons/emojis for each user role:
     this.roleIcons = {
-      'visitor': '🐥', // Baby chick icon representing a visitor role
-      'participant': '🗿', // Generic person icon representing a participant role | alternative
-      'moderator': '⚔️️' // Crossed swords icon representing a moderator role
+      'visitor': '🐥', // Visitor role icon
+      'participant': '🗿', // Participant role icon
+      'moderator': '⚔️️' // Moderator role icon
     };
 
-    // Define role priority for sorting
+    // Define role priority for sorting:
+    // Moderators (1) at the top, participants (2) in the middle, visitors (3) at the bottom.
     this.rolePriority = {
       'moderator': 1,
       'participant': 2,
@@ -53,7 +54,7 @@ export default class UserManager {
         continue;
       }
 
-      // Find user data
+      // Find user data in the klavogonki:userdata namespace
       let xData = null;
       const xElements = presence.getElementsByTagName("x");
       for (let j = 0; j < xElements.length; j++) {
@@ -87,19 +88,17 @@ export default class UserManager {
       const moderatorNode = userNode.getElementsByTagName("moderator")[0];
       const isModerator = moderatorNode && moderatorNode.textContent === '1';
 
-      // Determine role from XML
+      // Determine role from XML (default to participant)
       const itemNode = presence.getElementsByTagName("item")[0];
       let role = itemNode?.getAttribute("role") || 'participant';
-
-      // Override role if moderator flag is set
       if (isModerator) {
         role = 'moderator';
       }
 
-      // Generate a consistent color for this username
+      // Generate a consistent color for the username
       const usernameColor = usernameColors.getColor(login);
 
-      // Include the gameId in the user object
+      // Create the user object including the dynamic game id
       const user = {
         jid: from,
         login,
@@ -107,12 +106,12 @@ export default class UserManager {
         color: background,
         role,
         usernameColor,
-        gameId  // new property for dynamic game id
+        gameId
       };
 
       const existingUser = this.activeUsers.get(from);
 
-      // Check if user is new or updated
+      // Determine if the user is new or updated
       if (!existingUser) {
         console.log(`👤 User joined: ${login}`);
         this.activeUsers.set(from, user);
@@ -135,29 +134,41 @@ export default class UserManager {
   updateUI(newUserJIDs = [], updatedUserJIDs = []) {
     console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
 
-    // Sort users with moderators at the top and visitors at the bottom
+    // Build a map of existing DOM elements by user JID
+    const existingElements = new Map();
+    this.container.querySelectorAll('.user-item').forEach(el => {
+      existingElements.set(el.getAttribute('data-jid'), el);
+    });
+
+    // Sort users by role priority (moderators first, then participants, then visitors)
+    // and alphabetically by username within each role.
     const sortedUsers = Array.from(this.activeUsers.values()).sort((a, b) => {
-      // First, sort by role priority
       const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
       if (priorityDiff !== 0) return priorityDiff;
-
-      // For users with the same role, sort alphabetically by username
       return a.login.localeCompare(b.login);
     });
 
-    this.container.innerHTML = sortedUsers
-      .map(user => {
+    // Use a document fragment to minimize reflows
+    const fragment = document.createDocumentFragment();
+
+    sortedUsers.forEach(user => {
+      let userElement = existingElements.get(user.jid);
+
+      // If the element doesn't exist, create it
+      if (!userElement) {
+        userElement = document.createElement('div');
+        userElement.classList.add('user-item');
+        userElement.setAttribute('data-jid', user.jid);
+
         const cleanLogin = parseUsername(user.login);
-
-        // Determine icon based on role
         const roleIcon = this.roleIcons[user.role] || '👤';
+        let avatarHTML = '';
 
-        // Handle avatar
-        let avatarHTML;
         if (user.avatar) {
           try {
             const avatarUrl = `${BASE_URL}${user.avatar.replace('.png', '_big.png')}`;
-            avatarHTML = `<img class="user-avatar image-avatar" src="${avatarUrl}" alt="${cleanLogin}'s avatar" onerror="this.onerror=null; this.classList.add('fallback-avatar'); this.innerHTML='${getRandomEmojiAvatar()}'">`;
+            avatarHTML = `<img class="user-avatar image-avatar" src="${avatarUrl}" alt="${cleanLogin}'s avatar" 
+              onerror="this.onerror=null; this.classList.add('fallback-avatar'); this.innerHTML='${getRandomEmojiAvatar()}'">`;
           } catch (error) {
             console.error(`Error loading avatar for ${cleanLogin}:`, error);
             avatarHTML = `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
@@ -166,46 +177,65 @@ export default class UserManager {
           avatarHTML = `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
         }
 
-        // Add game indicator if user has a game_id (dynamic) - icon only (traffic light)
-        // The title and data attribute are set to the game id.
-        const gameIndicatorHTML = user.gameId
-          ? `<span class="game-indicator" title="${user.gameId}" data-game-id="${user.gameId}"><span class="traffic-icon">🚦</span></span>`
-          : '';
-
-        // HTML with clickable username and role icon, plus game indicator
-        return `
-        <div class="user-item" data-jid="${user.jid}" style="color: ${user.color}">
+        // Create the static part of the user element (without the game indicator)
+        userElement.innerHTML = `
           ${avatarHTML}
           <div class="user-info">
             <div class="username" style="color: ${user.usernameColor}">
               <span class="username-clickable" data-user-id="${user.jid}">${cleanLogin}</span>
               <span class="role ${user.role}">${roleIcon}</span>
-              ${gameIndicatorHTML}
             </div>
           </div>
-        </div>
-      `;
-      }).join('');
+        `;
+        fragment.appendChild(userElement);
+      } else {
+        // Remove from the map so remaining items are those to be removed later
+        existingElements.delete(user.jid);
+      }
 
-    // Add event listener to each username for navigating to profile
-    const usernameElements = this.container.querySelectorAll('.username-clickable');
-    usernameElements.forEach(usernameElement => {
+      // Handle the game indicator update:
+      // If the user is in a game (has a gameId), update or add the indicator.
+      // Otherwise, remove the game indicator if it exists.
+      let gameIndicatorElement = userElement.querySelector('.game-indicator');
+      if (user.gameId) {
+        if (!gameIndicatorElement || gameIndicatorElement.getAttribute('data-game-id') !== user.gameId) {
+          const newIndicatorHTML = `<span class="game-indicator" title="${user.gameId}" data-game-id="${user.gameId}">
+                                      <span class="traffic-icon">🚦</span>
+                                    </span>`;
+          if (gameIndicatorElement) {
+            gameIndicatorElement.outerHTML = newIndicatorHTML;
+          } else {
+            const usernameContainer = userElement.querySelector('.username');
+            usernameContainer.insertAdjacentHTML('beforeend', newIndicatorHTML);
+          }
+        }
+      } else if (gameIndicatorElement) {
+        gameIndicatorElement.remove();
+      }
+    });
+
+    // Append any new elements from the fragment to the container.
+    this.container.appendChild(fragment);
+
+    // Remove DOM elements for users that are no longer active.
+    existingElements.forEach((el, jid) => {
+      el.remove();
+    });
+
+    // Re-attach event listeners for profile and game navigation.
+    this.container.querySelectorAll('.username-clickable').forEach(usernameElement => {
       usernameElement.addEventListener('click', (event) => {
         const userId = event.target.getAttribute('data-user-id');
         if (userId) {
-          // Extract numeric ID between the '/' and '#' in the jid
           const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
-          // Navigate to the profile page
           window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
         }
       });
     });
 
-    // Add event listener to each game indicator for navigating to the game (race)
-    const gameIndicatorElements = this.container.querySelectorAll('.game-indicator');
-    gameIndicatorElements.forEach(gameIndicatorElement => {
+    this.container.querySelectorAll('.game-indicator').forEach(gameIndicatorElement => {
       gameIndicatorElement.addEventListener('click', (event) => {
-        event.stopPropagation(); // Prevent propagation to parent elements
+        event.stopPropagation();
         const gameId = gameIndicatorElement.getAttribute('data-game-id');
         if (gameId) {
           window.location.href = `https://klavogonki.ru/g/?gmid=${gameId}`;
@@ -213,9 +243,9 @@ export default class UserManager {
       });
     });
 
-    // Add shake effect to newly joined or updated users, but only if not first load
+    // For new users, apply a shake effect on the whole user-item.
     if (!this.isFirstLoad) {
-      [...newUserJIDs, ...updatedUserJIDs].forEach(jid => {
+      newUserJIDs.forEach(jid => {
         const userElement = this.container.querySelector(`.user-item[data-jid="${jid}"]`);
         if (userElement) {
           addShakeEffect(userElement);
@@ -223,7 +253,6 @@ export default class UserManager {
       });
     }
 
-    // Set first load to false after initial render
     if (this.isFirstLoad) {
       this.isFirstLoad = false;
     }
