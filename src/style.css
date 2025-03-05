@@ -31,11 +31,7 @@
 /* Chat container maximized state */
 #app-chat-container.maximized {
   position: fixed;
-  z-index: 9999;
-  left: 0;
-  top: 0;
-  width: 100vw;
-  height: 100vh;
+  z-index: 1010;
 }
 
 /* Responsive: hide user list on small screens */
@@ -57,11 +53,10 @@
   }
 }
 
-#app-chat-container:not(.visible-chat):not(.hidden-chat) {
+#app-chat-container:not(.visible-chat):not(.hidden-chat):not(.maximized) {
   display: none;
   opacity: 0;
 }
-
 
 #app-chat-container.visible-chat {
   transform: translateY(0) !important;

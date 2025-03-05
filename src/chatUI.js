@@ -86,17 +86,54 @@ export function toggleChatMaximize() {
   if (!chat) return;
 
   if (!chat.classList.contains('maximized')) {
+    // Preserve existing visibility classes
+    const hasVisibilityClass = 
+      !chat.classList.contains('visible-chat') && 
+      !chat.classList.contains('hidden-chat');
+
+    // Store the original state
     originalChatState = getChatState();
 
-    chat.style.width = '100vw';
-    chat.style.height = '90vh';
-    chat.style.left = '0';
-    chat.style.bottom = '0';
-    chat.style.top = 'auto';
+    // Calculate 90% of the viewport height, accounting for potential browser console
+    const calculateHeight = () => {
+      // Use window.innerHeight to get the actual visible viewport
+      return `${Math.floor(window.innerHeight * 0.9)}px`;
+    };
+
+    // Use CSS to ensure consistent sizing and bottom positioning
+    chat.style.cssText = `
+      width: 100vw !important;
+      height: ${calculateHeight()} !important;
+      max-width: 95vw !important;
+      min-width: 95vw !important;
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      top: auto !important;
+      margin: 0 !important;
+      transform: none !important;
+    `;
+
+    // Preserve the original visibility class condition
+    if (hasVisibilityClass) {
+      chat.classList.remove('visible-chat', 'hidden-chat');
+    }
 
     chat.classList.add('maximized');
     maximizeButton.classList.add('maximized');
     maximizeButton.innerHTML = collapseSVG;
+
+    // Add resize listener to maintain 90vh and bottom positioning
+    const resizeHandler = () => {
+      chat.style.height = calculateHeight();
+      chat.style.bottom = '0';
+      chat.style.top = 'auto';
+    };
+    window.addEventListener('resize', resizeHandler);
+
+    // Store the resize handler on the chat element for later removal
+    chat.maximizeResizeHandler = resizeHandler;
 
     handleElementsBehavior();
   } else {
@@ -105,15 +142,46 @@ export function toggleChatMaximize() {
     const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
     const shouldScrollToBottom = distanceFromBottom <= 300; // Match scrollThreshold
 
+    // Remove the resize listener
+    if (chat.maximizeResizeHandler) {
+      window.removeEventListener('resize', chat.maximizeResizeHandler);
+      delete chat.maximizeResizeHandler;
+    }
+
     // Restore original state
     if (originalChatState) {
       chat.style.width = `${originalChatState.width}px`;
       chat.style.height = `${originalChatState.height}px`;
       chat.style.left = `${originalChatState.left}px`;
+      chat.style.maxWidth = '';
+      chat.style.minWidth = '';
+      chat.style.position = 'absolute';
+      chat.style.right = '';
+      chat.style.margin = '';
+      chat.style.transform = '';
+      chat.style.top = 'auto';
+
+      // Preserve the original visibility class condition
+      const hasVisibilityClass = 
+        !chat.classList.contains('visible-chat') && 
+        !chat.classList.contains('hidden-chat');
+
+      if (hasVisibilityClass) {
+        chat.classList.remove('visible-chat', 'hidden-chat');
+      }
 
       if (originalChatState.floating) {
-        chat.style.top = `${originalChatState.top}px`;
-        chat.style.bottom = '';
+        // For floating state, only set top if it's within viewport
+        const viewportHeight = window.innerHeight;
+        const proposedTop = originalChatState.top;
+        
+        if (proposedTop + originalChatState.height <= viewportHeight) {
+          chat.style.top = `${proposedTop}px`;
+        } else {
+          // If the proposed top would push the chat out of view, default to bottom
+          chat.style.bottom = '0';
+          chat.style.top = 'auto';
+        }
       } else {
         chat.style.bottom = '0';
         chat.style.top = '';
