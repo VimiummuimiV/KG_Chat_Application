@@ -67,7 +67,7 @@ export function handleElementsBehavior() {
   const wrapper = document.querySelector('#app-chat-container .chat-wrapper');
   if (!wrapper) return;
 
-  const isNarrow = wrapper.offsetWidth <= 750;
+  const isNarrow = wrapper.offsetWidth <= 780;
   const userList = document.querySelector('#app-chat-container .user-list-container');
   if (userList) userList.style.display = isNarrow ? 'none' : '';
 

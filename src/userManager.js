@@ -12,6 +12,13 @@ export default class UserManager {
       'participant': '🗿', // Generic person icon representing a participant role
       'moderator': '⚔️️' // Crossed swords icon representing a moderator role
     };
+
+    // Define role priority for sorting
+    this.rolePriority = {
+      'moderator': 1,
+      'participant': 2,
+      'visitor': 3
+    };
   }
 
   updatePresence(xmlResponse) {
@@ -118,7 +125,18 @@ export default class UserManager {
 
   updateUI(newUserJIDs = []) {
     console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
-    this.container.innerHTML = Array.from(this.activeUsers.values())
+    
+    // Sort users with moderators at the top and visitors at the bottom
+    const sortedUsers = Array.from(this.activeUsers.values()).sort((a, b) => {
+      // First, sort by role priority
+      const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
+      if (priorityDiff !== 0) return priorityDiff;
+      
+      // For users with the same role, sort alphabetically by username
+      return a.login.localeCompare(b.login);
+    });
+
+    this.container.innerHTML = sortedUsers
       .map(user => {
         const cleanLogin = parseUsername(user.login);
 
