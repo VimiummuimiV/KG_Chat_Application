@@ -1,10 +1,12 @@
 import { BASE_URL } from "./definitions";
 import { usernameColors, getRandomEmojiAvatar, parseUsername } from "./helpers";
+import { addShakeEffect } from "./animations";
 
 export default class UserManager {
   constructor(containerId = 'user-list') {
     this.container = document.getElementById(containerId);
     this.activeUsers = new Map();
+    this.isFirstLoad = true;  // Flag to track first page load
 
     // Define role-based icons/emojis for each user role:
     this.roleIcons = {
@@ -34,6 +36,7 @@ export default class UserManager {
 
     let changes = false;
     const newUserJIDs = [];
+    const updatedUserJIDs = [];
 
     for (let i = 0; i < presences.length; i++) {
       const presence = presences[i];
@@ -114,16 +117,17 @@ export default class UserManager {
         console.log(`👤 User updated: ${login}`);
         this.activeUsers.set(from, user);
         changes = true;
+        updatedUserJIDs.push(from);
       }
     }
 
     if (changes) {
       console.log(`📋 Current active users: ${this.activeUsers.size}`);
-      this.updateUI(newUserJIDs);
+      this.updateUI(newUserJIDs, updatedUserJIDs);
     }
   }
 
-  updateUI() {
+  updateUI(newUserJIDs = [], updatedUserJIDs = []) {
     console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
 
     // Sort users with moderators at the top and visitors at the bottom
@@ -186,6 +190,21 @@ export default class UserManager {
         }
       });
     });
+
+    // Add shake effect to newly joined or updated users, but only if not first load
+    if (!this.isFirstLoad) {
+      [...newUserJIDs, ...updatedUserJIDs].forEach(jid => {
+        const userElement = this.container.querySelector(`.user-item[data-jid="${jid}"]`);
+        if (userElement) {
+          addShakeEffect(userElement);
+        }
+      });
+    }
+
+    // Set first load to false after initial render
+    if (this.isFirstLoad) {
+      this.isFirstLoad = false;
+    }
   }
 
   async requestFullRoster() {
