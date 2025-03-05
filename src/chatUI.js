@@ -155,7 +155,7 @@ export function toggleChatMaximize() {
       chat.style.left = `${originalChatState.left}px`;
       chat.style.maxWidth = '';
       chat.style.minWidth = '';
-      chat.style.position = 'absolute';
+      chat.style.position = 'fixed';
       chat.style.right = '';
       chat.style.margin = '';
       chat.style.transform = '';

@@ -60,7 +60,14 @@ export function addChatToggleFeature() {
   }
 
   document.addEventListener('keydown', (e) => {
-    // Only toggle visibility if chat is not maximized
+    // First, check for the most specific combination (Ctrl + Shift + Space)
+    if (e.ctrlKey && e.shiftKey && e.code === 'Space') {
+      e.preventDefault(); // Prevent default space bar behavior
+      toggleChatMaximize(); // Expand or Minimize the chat
+      return; // Exit the event handler
+    }
+
+    // Then check for the less specific combination (Ctrl + Space)
     if (e.ctrlKey && e.code === 'Space') {
       if (chatContainer.classList.contains('maximized')) {
         // Show alert that chat is maximized
@@ -71,8 +78,6 @@ export function addChatToggleFeature() {
       } else {
         toggleChatVisibility();
       }
-    } else if (e.ctrlKey && e.shiftKey && e.code === 'Space') {
-      toggleChatMaximize(); // Expand or Minimize the chat by Ctrl + Shift + Space
     }
   });
 
