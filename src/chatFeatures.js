@@ -1,5 +1,5 @@
 import { closeSVG, openSVG } from "./icons.js";
-import { saveChatState, showChatAlert } from "./helpers.js";
+import { focusTextInput, saveChatState, showChatAlert } from "./helpers.js";
 import { toggleChatMaximize } from "./chatUI.js";
 
 export function toggleChatVisibility() {
@@ -7,7 +7,7 @@ export function toggleChatVisibility() {
   const toggleButton = document.querySelector('.chat-toggle-button');
   if (!chatContainer) return;
 
-  // Check if chat is maximized before allowing toggle
+  // Prevent toggling visibility if chat is maximized
   if (chatContainer.classList.contains('maximized')) {
     showChatAlert('Chat is currently maximized', {
       type: 'warning',
@@ -20,28 +20,32 @@ export function toggleChatVisibility() {
   const isFloating = chatState.floating || false;
 
   if (isFloating) {
-    // For floating chat, toggle opacity and display
-    chatContainer.style.opacity = chatContainer.style.opacity === '0' ? '1' : '0';
+    const isBecomingVisible = chatContainer.style.opacity === '0';
+    chatContainer.style.opacity = isBecomingVisible ? '1' : '0';
     setTimeout(() => {
-      chatContainer.style.display = chatContainer.style.opacity === '0' ? 'none' : 'flex';
-      toggleButton.innerHTML = chatContainer.style.display === 'none' ? openSVG : closeSVG;
-      // Update the chat state in localStorage
+      chatContainer.style.display = isBecomingVisible ? 'flex' : 'none';
+      toggleButton.innerHTML = isBecomingVisible ? closeSVG : openSVG;
       saveChatState({
         ...chatState,
-        isVisible: chatContainer.style.display !== 'none'
+        isVisible: isBecomingVisible
       });
+      if (isBecomingVisible) {
+        focusTextInput(); // Focus input after chat becomes visible
+      }
     }, 300);
   } else {
-    // For non-floating chat, toggle visibility classes
     const isCurrentlyVisible = chatContainer.classList.contains('visible-chat');
+    const isBecomingVisible = !isCurrentlyVisible;
     chatContainer.classList.remove('visible-chat', 'hidden-chat');
-    chatContainer.classList.add(isCurrentlyVisible ? 'hidden-chat' : 'visible-chat');
-    toggleButton.innerHTML = isCurrentlyVisible ? openSVG : closeSVG;
-    // Update the chat state in localStorage
+    chatContainer.classList.add(isBecomingVisible ? 'visible-chat' : 'hidden-chat');
+    toggleButton.innerHTML = isBecomingVisible ? closeSVG : openSVG;
     saveChatState({
       ...chatState,
-      isVisible: !isCurrentlyVisible
+      isVisible: isBecomingVisible
     });
+    if (isBecomingVisible) {
+      focusTextInput(); // Focus input immediately when shown
+    }
   }
 }
 
@@ -51,11 +55,11 @@ export function addChatToggleFeature() {
   const draggableHeader = document.getElementById('chat-header');
   if (!chatContainer) return;
 
-  // Restore initial visibility based on saved state
+  // Restore initial visibility from saved state
   const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
   const isFloating = chatState.floating || false;
-  const isVisible = chatState.isVisible !== false; // default to true if not explicitly set to false
-  
+  const isVisible = chatState.isVisible !== false;
+
   if (isFloating) {
     chatContainer.style.display = isVisible ? 'flex' : 'none';
     chatContainer.style.opacity = isVisible ? '1' : '0';
@@ -64,17 +68,13 @@ export function addChatToggleFeature() {
     chatContainer.classList.add(isVisible ? 'visible-chat' : 'hidden-chat');
   }
 
+  // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
-    // First, check for the most specific combination (Ctrl + Shift + Space)
     if (e.ctrlKey && e.shiftKey && e.code === 'Space') {
-      e.preventDefault(); // Prevent default space bar behavior
-      toggleChatMaximize(); // Expand or Minimize the chat
-      return; // Exit the event handler to prevent further actions
-    }
-
-    // Then check for the less specific combination (Ctrl + Space)
-    if (e.ctrlKey && e.code === 'Space') {
-      e.preventDefault(); // Prevent default space bar behavior
+      e.preventDefault();
+      toggleChatMaximize();
+    } else if (e.ctrlKey && e.code === 'Space') {
+      e.preventDefault();
       toggleChatVisibility();
     }
   });

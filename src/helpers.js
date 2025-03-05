@@ -2,7 +2,7 @@ import { convertImageLinksToImage } from "./converters/image-converter.js";
 import { convertVideoLinksToPlayer } from "./converters/video-converter.js";
 import { emojiFaces, trustedDomains } from "./definitions.js";
 import { state } from "./definitions.js";
-import { openSVG, closeSVG } from "./icons.js"
+import { openSVG, closeSVG } from "./icons.js";
 
 export const getAuthData = () => {
   const pageData = JSON.parse([...document.scripts]
@@ -37,22 +37,20 @@ function colorGenerator(config) {
   };
 }
 
-// Specific color generators
 export const usernameColors = colorGenerator({
-  maxHue: 210, // Cooler colors for usernames
+  maxHue: 210,
   hueStep: 30,
   saturation: '80%',
   lightness: '50%'
 });
 
 export const mentionColors = colorGenerator({
-  maxHue: 210, // Full spectrum for mentions
-  hueStep: 30, // More color variation
+  maxHue: 210,
+  hueStep: 30,
   saturation: '80%',
   lightness: '50%'
 });
 
-// Avatar utilities
 let lastEmojiAvatar = null;
 export function getRandomEmojiAvatar() {
   let newEmoji;
@@ -73,18 +71,15 @@ export function handleElementsBehavior() {
 
   const userList = document.querySelector('#app-chat-container .user-list-container');
   if (userList) {
-    // Only hide user list if narrow AND not maximized
     userList.style.display = (isNarrow && !isMaximized) ? 'none' : '';
   }
 
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
-    // Change layout only if narrow AND not maximized
     msg.style.flexDirection = (isNarrow && !isMaximized) ? 'column' : 'row';
     msg.style.marginBottom = (isNarrow && !isMaximized) ? '1em' : '0';
   });
 }
 
-// Observe DOM changes in #messages-panel
 export function observeMessagesPanel() {
   const messagesPanel = document.getElementById('messages-panel');
   if (!messagesPanel) return;
@@ -93,7 +88,7 @@ export function observeMessagesPanel() {
     handleElementsBehavior();
     convertVideoLinksToPlayer();
     convertImageLinksToImage();
-    scrollToBottom()
+    scrollToBottom();
   });
 
   observer.observe(messagesPanel, { childList: true, subtree: true });
@@ -119,21 +114,15 @@ export function restoreChatState() {
     chat.style.top = clamp(state.top, 0, viewportHeight - chat.offsetHeight) + 'px';
     chat.style.bottom = '';
     chat.classList.add("floating-chat");
-    // For floating chat, manage display based on isVisible
     chat.style.display = state.isVisible ? 'flex' : 'none';
     chat.style.opacity = state.isVisible ? '1' : '0';
-
-    // Update toggle button SVG for floating chat
     toggleButton.innerHTML = state.isVisible ? closeSVG : openSVG;
   } else {
     chat.style.bottom = '0';
     chat.style.top = '';
     chat.classList.remove("floating-chat");
-    // Explicitly remove both classes first, then add the correct one
     chat.classList.remove('visible-chat', 'hidden-chat');
     chat.classList.add(state.isVisible ? 'visible-chat' : 'hidden-chat');
-
-    // Update toggle button SVG for non-floating chat
     toggleButton.innerHTML = state.isVisible ? closeSVG : openSVG;
   }
 
@@ -148,7 +137,7 @@ export function getChatState() {
     left: 0,
     floating: false,
     top: window.innerHeight - 300,
-    isVisible: true  // Add this to persist visibility state
+    isVisible: true
   };
 
   return savedState ? { ...defaultState, ...JSON.parse(savedState) } : defaultState;
@@ -167,11 +156,8 @@ export function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
 }
 
-// Cleans a username string by removing a numeric prefix and the '#' symbol.
-// For example: "12345#JohnDoe" becomes "JohnDoe".
 export function parseUsername(username) {
   if (typeof username !== 'string') return username;
-  // This regex finds a sequence of digits followed by a '#' at the start of the string
   return username.replace(/^\d+#/, '');
 }
 
@@ -187,25 +173,17 @@ export function removeBigImageEventListeners() {
   });
 }
 
-// Adjust element visibility with smooth opacity transition
 export function adjustVisibility(element, action, opacity) {
-  if (!element) return; // Exit if element doesn't exist
+  if (!element) return;
 
-  // Force reflow to ensure initial state is recognized
   void element.offsetHeight;
+  element.style.transition = 'opacity 0.3s';
+  element.style.opacity = action === 'show' ? opacity : '0';
 
-  element.style.transition = 'opacity 0.3s'; // Apply smooth transition for both show and hide
-  element.style.opacity = action === 'show' ? opacity : '0'; // Set target opacity
-
-  // If hiding, wait for transition to finish before removing the element
   if (action === 'hide') {
-    element.addEventListener(
-      'transitionend',
-      () => {
-        if (element.style.opacity === '0') element.remove();
-      },
-      { once: true }
-    );
+    element.addEventListener('transitionend', () => {
+      if (element.style.opacity === '0') element.remove();
+    }, { once: true });
   }
 }
 
@@ -220,28 +198,24 @@ export const isTrustedDomain = url => {
   }
 };
 
-// Function to check if a URL is valid and contains encoded characters
 export function isEncodedURL(url) {
-  const urlPattern = /^https?:\/\//; // Regex pattern to check if the value is a URL
-  const encodedPattern = /%[0-9A-Fa-f]{2}/; // Regex pattern to check if the URL is encoded
+  const urlPattern = /^https?:\/\//;
+  const encodedPattern = /%[0-9A-Fa-f]{2}/;
   return urlPattern.test(url) && encodedPattern.test(url);
 }
 
-// Function to decode a URL and replace spaces with underscores
 export function decodeURL(url) {
-  const [base] = url.split('#'); // Split at the '#' symbol and take the base part
-  return decodeURIComponent(base).replace(/ /g, '_'); // Decode and replace spaces with underscores
+  const [base] = url.split('#');
+  return decodeURIComponent(base).replace(/ /g, '_');
 }
 
 export function highlightMentionWords() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
 
-  // Get mention keywords from localStorage
   const storedKeywords = localStorage.getItem('mentionKeywords');
   if (!storedKeywords) return;
 
-  // Parse and validate the keywords
   let mentionKeywords;
   try {
     mentionKeywords = JSON.parse(storedKeywords);
@@ -251,7 +225,6 @@ export function highlightMentionWords() {
   }
 
   const globalProcessed = new WeakSet();
-
   const messages = container.querySelectorAll('.message-text');
 
   messages.forEach((message) => {
@@ -296,15 +269,12 @@ export function highlightMentionWords() {
       if (isMatch) {
         const mentionSpan = document.createElement('span');
         mentionSpan.className = 'mention';
-
-        // Colorize each letter individually
         token.split('').forEach(char => {
           const charSpan = document.createElement('span');
           charSpan.style.color = mentionColors.getColor(char);
           charSpan.textContent = char;
           mentionSpan.appendChild(charSpan);
         });
-
         fragment.appendChild(mentionSpan);
       } else {
         fragment.appendChild(document.createTextNode(token));
@@ -315,25 +285,18 @@ export function highlightMentionWords() {
   }
 }
 
-// Track if the user has loaded messages for the first time
 let firstTime = true;
-// The distance from the bottom at which we should trigger auto-scrolling
 const scrollThreshold = 300;
 
-// Scrolls the messages panel to the bottom if the user has scrolled close enough
 export function scrollToBottom() {
-  // Get the messages panel container
   const container = document.getElementById('messages-panel');
-  if (!container) return; // Return if the container doesn't exist
+  if (!container) return;
 
-  // If it's the user's first time loading messages, auto-scroll to the bottom
   if (firstTime) {
     container.scrollTop = container.scrollHeight;
     firstTime = false;
   } else {
-    // Calculate how far the user is from the bottom
     const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
-    // If the user is close enough to the bottom, auto-scroll to the bottom
     if (distanceFromBottom <= scrollThreshold) {
       container.scrollTop = container.scrollHeight;
     }
@@ -341,38 +304,28 @@ export function scrollToBottom() {
 }
 
 export function showChatAlert(message, options = {}) {
-  // Find the chat drag area
   const dragArea = document.querySelector('.chat-drag-area');
   if (!dragArea) return;
 
-  // Remove existing alert if present
   const existingAlert = dragArea.querySelector('.chat-dynamic-alert');
   if (existingAlert) {
     dragArea.removeChild(existingAlert);
   }
 
-  // Default options
-  const defaultOptions = {
-    type: 'info',     // 'info', 'warning', 'error', 'success'
-    duration: 3000,   // total display time
-  };
-
+  const defaultOptions = { type: 'info', duration: 3000 };
   const settings = { ...defaultOptions, ...options };
 
-  // Color map for different alert types
   const colorMap = {
-    info: '#2196F3',     // blue
-    warning: '#FF9800',  // orange
-    error: '#F44336',    // red
-    success: '#4CAF50'   // green
+    info: '#2196F3',
+    warning: '#FF9800',
+    error: '#F44336',
+    success: '#4CAF50'
   };
 
-  // Create alert element
   const alertElement = document.createElement('div');
   alertElement.className = 'chat-dynamic-alert';
   alertElement.innerHTML = message;
 
-  // Styling for the alert
   alertElement.style.cssText = `
     position: absolute;
     top: 50%;
@@ -389,30 +342,24 @@ export function showChatAlert(message, options = {}) {
     opacity: 0;
   `;
 
-  // Append to drag area
   dragArea.appendChild(alertElement);
 
-  // Animation sequence
   function animateAlert() {
-    // Pop up with shake
     requestAnimationFrame(() => {
       alertElement.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
       alertElement.style.opacity = '1';
       alertElement.style.transform = 'translate(-50%, -50%)';
-      
-      // Enhanced shake animation with more keyframes
+
       setTimeout(() => {
         alertElement.style.transition = 'transform 0.05s ease-in-out';
-        
-        // Sequence of shake movements
         const shakeSequence = [
-          { x: 5, delay: 0 },     // Right
-          { x: -7, delay: 50 },   // Left
-          { x: 9, delay: 100 },   // Right
-          { x: -6, delay: 150 },  // Left
-          { x: 4, delay: 200 },   // Right
-          { x: -3, delay: 250 },  // Left
-          { x: 0, delay: 300 }    // Center
+          { x: 5, delay: 0 },
+          { x: -7, delay: 50 },
+          { x: 9, delay: 100 },
+          { x: -6, delay: 150 },
+          { x: 4, delay: 200 },
+          { x: -3, delay: 250 },
+          { x: 0, delay: 300 }
         ];
 
         shakeSequence.forEach((move) => {
@@ -422,11 +369,9 @@ export function showChatAlert(message, options = {}) {
         });
       }, 300);
 
-      // Hide after duration
       setTimeout(() => {
         alertElement.style.transition = 'opacity 0.3s ease-in-out';
         alertElement.style.opacity = '0';
-        
         setTimeout(() => {
           dragArea.removeChild(alertElement);
         }, 300);
@@ -434,18 +379,15 @@ export function showChatAlert(message, options = {}) {
     });
   }
 
-  // Start animation
   animateAlert();
 }
 
 export function focusTextInput() {
+  const chatContainer = document.getElementById('app-chat-container');
   const element = document.getElementById('message-input');
-  
-  if (element && element.offsetParent !== null && !element.disabled) {
+  if (element && chatContainer && chatContainer.style.display !== 'none') {
     element.focus();
-    if (element.select && element.value) element.select();
     return true;
   }
-
   return false;
 }
