@@ -2,7 +2,7 @@
   --border-radius: 0.2em;
   --min-chat-width: 400px;
   --min-chat-height: 200px;
-  --user-list-width: 250px;
+  --user-list-width: fit-content;
 }
 
 /* Main chat container */
@@ -36,6 +36,10 @@
   top: 0;
   width: 100vw;
   height: 100vh;
+}
+
+#app-chat-container.maximized .user-list-container {
+  display: flex !important;
 }
 
 /* Responsive: hide user list on small screens */
@@ -154,7 +158,7 @@
 #app-chat-container .user-list-container {
   margin-top: 25px;
   width: var(--user-list-width) !important;
-  min-width: var(--user-list-width) !important;
+  min-width: 180px !important;
   max-width: var(--user-list-width) !important;
   overflow-y: auto !important;
   overflow-x: hidden !important;
