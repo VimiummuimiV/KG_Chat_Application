@@ -38,10 +38,6 @@
   height: 100vh;
 }
 
-#app-chat-container.maximized .user-list-container {
-  display: flex !important;
-}
-
 /* Responsive: hide user list on small screens */
 @media (max-width: 780px) {
   #app-chat-container .user-list-container {

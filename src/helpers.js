@@ -67,13 +67,20 @@ export function handleElementsBehavior() {
   const wrapper = document.querySelector('#app-chat-container .chat-wrapper');
   if (!wrapper) return;
 
+  const chatContainer = document.querySelector('#app-chat-container');
   const isNarrow = wrapper.offsetWidth <= 780;
+  const isMaximized = chatContainer.classList.contains('maximized');
+
   const userList = document.querySelector('#app-chat-container .user-list-container');
-  if (userList) userList.style.display = isNarrow ? 'none' : '';
+  if (userList) {
+    // Only hide user list if narrow AND not maximized
+    userList.style.display = (isNarrow && !isMaximized) ? 'none' : '';
+  }
 
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
-    msg.style.flexDirection = isNarrow ? 'column' : 'row';
-    msg.style.marginBottom = isNarrow ? '1em' : '0';
+    // Change layout only if narrow AND not maximized
+    msg.style.flexDirection = (isNarrow && !isMaximized) ? 'column' : 'row';
+    msg.style.marginBottom = (isNarrow && !isMaximized) ? '1em' : '0';
   });
 }
 
