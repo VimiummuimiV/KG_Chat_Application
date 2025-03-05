@@ -9,7 +9,7 @@ export default class UserManager {
     // Define role-based icons/emojis for each user role:
     this.roleIcons = {
       'visitor': '🐥', // Baby chick icon representing a visitor role
-      'participant': '🗿', // Generic person icon representing a participant role
+      'participant': '🗿', // Generic person icon representing a participant role | alternative
       'moderator': '⚔️️' // Crossed swords icon representing a moderator role
     };
 
@@ -123,15 +123,15 @@ export default class UserManager {
     }
   }
 
-  updateUI(newUserJIDs = []) {
+  updateUI() {
     console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
-    
+
     // Sort users with moderators at the top and visitors at the bottom
     const sortedUsers = Array.from(this.activeUsers.values()).sort((a, b) => {
       // First, sort by role priority
       const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
       if (priorityDiff !== 0) return priorityDiff;
-      
+
       // For users with the same role, sort alphabetically by username
       return a.login.localeCompare(b.login);
     });
@@ -157,17 +157,35 @@ export default class UserManager {
           avatarHTML = `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
         }
 
+        // HTML with clickable username
         return `
-          <div class="user-item" data-jid="${user.jid}" style="color: ${user.color}">
-            ${avatarHTML}
-            <div class="user-info">
-              <div class="username" style="color: ${user.usernameColor}">
-                ${cleanLogin} ${roleIcon}
-              </div>
+        <div class="user-item" data-jid="${user.jid}" style="color: ${user.color}">
+          ${avatarHTML}
+          <div class="user-info">
+            <div class="username" style="color: ${user.usernameColor}">
+              <span class="username-clickable" data-user-id="${user.jid}">${cleanLogin}</span>
+              <span class="role ${user.role}">${roleIcon}</span>
             </div>
           </div>
-        `;
+        </div>
+      `;
       }).join('');
+
+    // Add event listener to each username for navigating to profile
+    const usernameElements = this.container.querySelectorAll('.username-clickable');
+    usernameElements.forEach(usernameElement => {
+      usernameElement.addEventListener('click', (event) => {
+        const userId = event.target.getAttribute('data-user-id');
+
+        if (userId) {
+          // Extract numeric ID between the '/' and '#' in the jid
+          const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
+
+          // Navigate to the profile page
+          window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
+        }
+      });
+    });
   }
 
   async requestFullRoster() {

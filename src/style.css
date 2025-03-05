@@ -153,6 +153,22 @@
   border-left: 1px solid #333 !important;
 }
 
+.user-item .user-info .username .role {
+  transition: filter 0.3s ease;
+}
+
+.user-item .user-info .username .role.participant {
+  filter: brightness(0.6);
+}
+
+.user-item .user-info .username .role.moderator {
+  filter: brightness(1);
+}
+
+.user-item .user-info .username .role.visitor {
+  filter: brightness(0.8);
+}
+
 /* Header toggle button */
 #app-chat-container .header-button {
   cursor: pointer !important;
@@ -222,12 +238,14 @@
 }
 
 /* Add to existing style.css content */
-#app-chat-container .message-info .username {
+#app-chat-container .message-info .username,
+#app-chat-container .user-info .username {
   cursor: pointer !important;
   transition: opacity 0.2s ease !important;
 }
 
-#app-chat-container .message-info .username:hover {
+#app-chat-container .message-info .username:hover,
+#app-chat-container .user-info .username:hover {
   opacity: 0.7 !important;
 }
 
