@@ -80,6 +80,9 @@ export default class UserManager {
       const avatar = userNode.getElementsByTagName("avatar")[0]?.textContent;
       const background = userNode.getElementsByTagName("background")[0]?.textContent || '#777';
 
+      // Extract game_id if available
+      const gameId = xData.getElementsByTagName("game_id")[0]?.textContent || null;
+
       // Check for moderator status
       const moderatorNode = userNode.getElementsByTagName("moderator")[0];
       const isModerator = moderatorNode && moderatorNode.textContent === '1';
@@ -96,13 +99,15 @@ export default class UserManager {
       // Generate a consistent color for this username
       const usernameColor = usernameColors.getColor(login);
 
+      // Include the gameId in the user object
       const user = {
         jid: from,
         login,
         avatar,
         color: background,
         role,
-        usernameColor
+        usernameColor,
+        gameId  // new property for dynamic game id
       };
 
       const existingUser = this.activeUsers.get(from);
@@ -161,7 +166,13 @@ export default class UserManager {
           avatarHTML = `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
         }
 
-        // HTML with clickable username
+        // Add game indicator if user has a game_id (dynamic) - icon only (traffic light)
+        // The title and data attribute are set to the game id.
+        const gameIndicatorHTML = user.gameId
+          ? `<span class="game-indicator" title="${user.gameId}" data-game-id="${user.gameId}"><span class="traffic-icon">🚦</span></span>`
+          : '';
+
+        // HTML with clickable username and role icon, plus game indicator
         return `
         <div class="user-item" data-jid="${user.jid}" style="color: ${user.color}">
           ${avatarHTML}
@@ -169,6 +180,7 @@ export default class UserManager {
             <div class="username" style="color: ${user.usernameColor}">
               <span class="username-clickable" data-user-id="${user.jid}">${cleanLogin}</span>
               <span class="role ${user.role}">${roleIcon}</span>
+              ${gameIndicatorHTML}
             </div>
           </div>
         </div>
@@ -180,13 +192,23 @@ export default class UserManager {
     usernameElements.forEach(usernameElement => {
       usernameElement.addEventListener('click', (event) => {
         const userId = event.target.getAttribute('data-user-id');
-
         if (userId) {
           // Extract numeric ID between the '/' and '#' in the jid
           const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
-
           // Navigate to the profile page
           window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
+        }
+      });
+    });
+
+    // Add event listener to each game indicator for navigating to the game (race)
+    const gameIndicatorElements = this.container.querySelectorAll('.game-indicator');
+    gameIndicatorElements.forEach(gameIndicatorElement => {
+      gameIndicatorElement.addEventListener('click', (event) => {
+        event.stopPropagation(); // Prevent propagation to parent elements
+        const gameId = gameIndicatorElement.getAttribute('data-game-id');
+        if (gameId) {
+          window.location.href = `https://klavogonki.ru/g/?gmid=${gameId}`;
         }
       });
     });
