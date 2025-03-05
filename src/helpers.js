@@ -108,23 +108,34 @@ export function restoreChatState() {
     chat.style.top = clamp(state.top, 0, viewportHeight - chat.offsetHeight) + 'px';
     chat.style.bottom = '';
     chat.classList.add("floating-chat");
+
+    // For floating chat, manage display based on isVisible
+    chat.style.display = state.isVisible ? 'flex' : 'none';
+    chat.style.opacity = state.isVisible ? '1' : '0';
   } else {
     chat.style.bottom = '0';
     chat.style.top = '';
     chat.classList.remove("floating-chat");
+
+    // Explicitly remove both classes first, then add the correct one
+    chat.classList.remove('visible-chat', 'hidden-chat');
+    chat.classList.add(state.isVisible ? 'visible-chat' : 'hidden-chat');
   }
   handleElementsBehavior();
 }
 
 export function getChatState() {
   const savedState = localStorage.getItem('chatState');
-  return savedState ? JSON.parse(savedState) : {
+  const defaultState = {
     height: 300,
     width: Math.min(window.innerWidth, 600),
     left: 0,
     floating: false,
-    top: window.innerHeight - 300
+    top: window.innerHeight - 300,
+    isVisible: true  // Add this to persist visibility state
   };
+  
+  return savedState ? { ...defaultState, ...JSON.parse(savedState) } : defaultState;
 }
 
 export function saveChatState(state) {

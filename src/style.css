@@ -8,7 +8,6 @@
 /* Main chat container */
 #app-chat-container {
   border-radius: 0.4em 0.4em 0 0 !important;
-  opacity: 1;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -24,7 +23,9 @@
   box-sizing: border-box;
   max-width: 100vw;
   overflow: hidden;
-  transition: transform 0.15s ease-out !important;
+  transition:
+    opacity 0.3s ease,
+    transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
 /* Responsive: hide user list on small screens */
@@ -46,12 +47,19 @@
   }
 }
 
-#app-chat-container.hidden-chat {
-  transform: translateY(calc(100% - 25px)) !important;
+#app-chat-container:not(.visible-chat):not(.hidden-chat) {
+  display: none;
+  opacity: 0;
 }
+
 
 #app-chat-container.visible-chat {
   transform: translateY(0) !important;
+}
+
+#app-chat-container.hidden-chat {
+  opacity: 1;
+  transform: translateY(calc(100% - 25px)) !important;
 }
 
 /* Resize handles */
