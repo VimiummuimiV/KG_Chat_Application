@@ -1,6 +1,6 @@
 import { toggleChatVisibility } from "./chatFeatures.js";
-import { restoreChatState } from "./helpers.js";
-import { sendSVG, closeSVG } from "./icons.js";
+import { restoreChatState, getChatState, saveChatState, scrollToBottom } from "./helpers.js";
+import { sendSVG, closeSVG, expandSVG, collapseSVG } from "./icons.js";
 
 export function createChatUI() {
   const chatContainer = document.createElement('div');
@@ -52,6 +52,13 @@ export function createChatUI() {
   chatWrapper.appendChild(userListContainer);
   chatContainer.appendChild(chatWrapper);
 
+  // Maximize button for chat
+  const maximizeButton = document.createElement('button');
+  maximizeButton.className = 'filled-button header-button chat-maximize-button';
+  maximizeButton.innerHTML = expandSVG;
+  maximizeButton.addEventListener('click', toggleChatMaximize);
+  chatContainer.appendChild(maximizeButton);
+
   // Toggle button for chat visibility.
   const toggleButton = document.createElement('button');
   toggleButton.className = 'filled-button header-button chat-toggle-button';
@@ -67,4 +74,54 @@ export function createChatUI() {
 
   document.body.appendChild(chatContainer);
   restoreChatState();
+}
+
+// Global variable to store the original chat state
+let originalChatState = null;
+
+export function toggleChatMaximize() {
+  const chat = document.getElementById('app-chat-container');
+  const maximizeButton = document.querySelector('.chat-maximize-button');
+  
+  if (!chat) return;
+
+  // If not maximized, save current state and maximize
+  if (!chat.classList.contains('maximized')) {
+    // Save current state
+    originalChatState = getChatState();
+    
+    // Set to full viewport
+    chat.style.width = '100vw';
+    chat.style.height = '100vh';
+    chat.style.left = '0';
+    chat.style.top = '0';
+    
+    chat.classList.add('maximized');
+    maximizeButton.classList.add('maximized');
+    maximizeButton.innerHTML = collapseSVG;
+  } else {
+    // Restore to previous state
+    if (originalChatState) {
+      chat.style.width = `${originalChatState.width}px`;
+      chat.style.height = `${originalChatState.height}px`;
+      chat.style.left = `${originalChatState.left}px`;
+      
+      // Restore floating or docked state
+      if (originalChatState.floating) {
+        chat.style.top = `${originalChatState.top}px`;
+        chat.style.bottom = '';
+      } else {
+        chat.style.bottom = '0';
+        chat.style.top = '';
+      }
+      
+      // Restore saved state
+      saveChatState(originalChatState);
+    }
+    
+    chat.classList.remove('maximized');
+    maximizeButton.classList.remove('maximized');
+    maximizeButton.innerHTML = expandSVG;
+    scrollToBottom();
+  }
 }

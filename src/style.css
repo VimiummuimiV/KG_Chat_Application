@@ -28,6 +28,16 @@
     transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
+/* Chat container maximized state */
+#app-chat-container.maximized {
+  position: fixed;
+  z-index: 9999;
+  left: 0;
+  top: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
 /* Responsive: hide user list on small screens */
 @media (max-width: 780px) {
   #app-chat-container .user-list-container {
@@ -191,6 +201,11 @@
 
 #app-chat-container .chat-toggle-button {
   right: 0 !important;
+}
+
+/* Maximize button positioning and styling */
+.chat-maximize-button {
+  right: 25px !important;
 }
 
 /* Drag area for floating the chat */
