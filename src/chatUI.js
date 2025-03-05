@@ -1,5 +1,5 @@
 import { toggleChatVisibility } from "./chatFeatures.js";
-import { restoreChatState, getChatState, saveChatState, scrollToBottom } from "./helpers.js";
+import { restoreChatState, getChatState, saveChatState, scrollToBottom, handleElementsBehavior } from "./helpers.js";
 import { sendSVG, closeSVG, expandSVG, collapseSVG } from "./icons.js";
 
 export function createChatUI() {
@@ -85,29 +85,26 @@ export function toggleChatMaximize() {
   
   if (!chat) return;
 
-  // If not maximized, save current state and maximize
   if (!chat.classList.contains('maximized')) {
-    // Save current state
     originalChatState = getChatState();
     
-    // Set to 90vh and position at bottom
     chat.style.width = '100vw';
     chat.style.height = '90vh';
     chat.style.left = '0';
     chat.style.bottom = '0';
-    chat.style.top = 'auto';  // Ensure top is not set
+    chat.style.top = 'auto';
     
     chat.classList.add('maximized');
     maximizeButton.classList.add('maximized');
     maximizeButton.innerHTML = collapseSVG;
+
+    handleElementsBehavior();
   } else {
-    // Restore to previous state
     if (originalChatState) {
       chat.style.width = `${originalChatState.width}px`;
       chat.style.height = `${originalChatState.height}px`;
       chat.style.left = `${originalChatState.left}px`;
       
-      // Restore floating or docked state
       if (originalChatState.floating) {
         chat.style.top = `${originalChatState.top}px`;
         chat.style.bottom = '';
@@ -116,7 +113,6 @@ export function toggleChatMaximize() {
         chat.style.top = '';
       }
       
-      // Restore saved state
       saveChatState(originalChatState);
     }
     
@@ -124,5 +120,7 @@ export function toggleChatMaximize() {
     maximizeButton.classList.remove('maximized');
     maximizeButton.innerHTML = expandSVG;
     scrollToBottom();
+
+    handleElementsBehavior();
   }
 }
