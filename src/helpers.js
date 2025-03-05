@@ -122,7 +122,7 @@ export function restoreChatState() {
     // For floating chat, manage display based on isVisible
     chat.style.display = state.isVisible ? 'flex' : 'none';
     chat.style.opacity = state.isVisible ? '1' : '0';
-    
+
     // Update toggle button SVG for floating chat
     toggleButton.innerHTML = state.isVisible ? closeSVG : openSVG;
   } else {
@@ -132,7 +132,7 @@ export function restoreChatState() {
     // Explicitly remove both classes first, then add the correct one
     chat.classList.remove('visible-chat', 'hidden-chat');
     chat.classList.add(state.isVisible ? 'visible-chat' : 'hidden-chat');
-    
+
     // Update toggle button SVG for non-floating chat
     toggleButton.innerHTML = state.isVisible ? closeSVG : openSVG;
   }
@@ -150,7 +150,7 @@ export function getChatState() {
     top: window.innerHeight - 300,
     isVisible: true  // Add this to persist visibility state
   };
-  
+
   return savedState ? { ...defaultState, ...JSON.parse(savedState) } : defaultState;
 }
 
@@ -240,7 +240,7 @@ export function highlightMentionWords() {
   // Get mention keywords from localStorage
   const storedKeywords = localStorage.getItem('mentionKeywords');
   if (!storedKeywords) return;
-  
+
   // Parse and validate the keywords
   let mentionKeywords;
   try {
@@ -285,11 +285,11 @@ export function highlightMentionWords() {
   function processNode(node, keywords) {
     const regex = /(@?[\wа-яА-ЯёЁ'-]+)|[\s]+|[^@\s\wа-яА-ЯёЁ'-]+/gu;
     const tokens = node.textContent.match(regex) || [];
-    
+
     const fragment = document.createDocumentFragment();
 
     tokens.forEach(token => {
-      const isMatch = keywords.some(keyword => 
+      const isMatch = keywords.some(keyword =>
         keyword.localeCompare(token, undefined, { sensitivity: 'accent' }) === 0
       );
 
