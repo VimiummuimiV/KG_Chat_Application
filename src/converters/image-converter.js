@@ -44,6 +44,7 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
   const imageElement = document.createElement('img');
   imageElement.src = src;
   imageElement.classList.add('scaled-thumbnail');
+
   document.body.appendChild(imageElement);
 
   currentIndex = clickedThumbnailIndex;
@@ -53,8 +54,8 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
   let isMMBPressed = false;
   let lastMouseX = 0,
       lastMouseY = 0;
-  let translateX = -50,
-      translateY = -50;
+  let translateX = 0,
+      translateY = 0;
   const movementSpeed = 5;
 
   // Get or create the dimming element
@@ -97,7 +98,9 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
     const direction = event.deltaY < 0 ? 1 : -1;
     zoomScale += direction * zoomLimits.factor * zoomScale;
     zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
-    imageElement.style.transform = `translate(${translateX}%, ${translateY}%) scale(${zoomScale})`;
+    
+    // Update transform to maintain center positioning while zooming
+    imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
   };
 
   state.bigImageEvents['mousemove'] = (event) => {
@@ -111,10 +114,13 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
       } else {
         const deltaX = (event.clientX - lastMouseX) / zoomScale * movementSpeed;
         const deltaY = (event.clientY - lastMouseY) / zoomScale * movementSpeed;
-        translateX += (deltaX / imageElement.clientWidth) * 100;
-        translateY += (deltaY / imageElement.clientHeight) * 100;
+        translateX += deltaX;
+        translateY += deltaY;
       }
-      imageElement.style.transform = `translate(${translateX}%, ${translateY}%) scale(${zoomScale})`;
+      
+      // Update transform to maintain center positioning while moving and zooming
+      imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+      
       lastMouseX = event.clientX;
       lastMouseY = event.clientY;
     }
