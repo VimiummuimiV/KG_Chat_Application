@@ -311,25 +311,12 @@ export function highlightMentionWords() {
 // Track if the user has loaded messages for the first time
 let firstTime = true;
 // The distance from the bottom at which we should trigger auto-scrolling
-const scrollThreshold = 600;
+const scrollThreshold = 300;
 
-// Scrolls the specified container to the bottom if the user has scrolled close enough
-export function scrollToBottom(containerType = 'generalMessages') {
-  // Define a mapping for container types to their respective selectors
-  const containerSelectors = {
-    generalMessages: '.messages-content', // For general chat
-    chatlogsMessages: '.chat-logs-container', // For chat logs
-    personalMessages: '.messages-container-wrapper' // For personal messages panel
-  };
-
-  // Get the container based on the passed containerType
-  const containerSelector = containerSelectors[containerType];
-
-  // If the container selector is not defined, return
-  if (!containerSelector) return;
-
-  // Get the container element
-  const container = document.querySelector(containerSelector);
+// Scrolls the messages panel to the bottom if the user has scrolled close enough
+export function scrollToBottom() {
+  // Get the messages panel container
+  const container = document.getElementById('messages-panel');
   if (!container) return; // Return if the container doesn't exist
 
   // If it's the user's first time loading messages, auto-scroll to the bottom
