@@ -195,6 +195,7 @@
 
 /* Drag area for floating the chat */
 #app-chat-container .chat-drag-area {
+  border-radius: 0.4em 0.4em 0 0 !important;
   position: absolute !important;
   top: 0 !important;
   left: 0 !important;
