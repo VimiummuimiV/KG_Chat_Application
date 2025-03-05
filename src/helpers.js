@@ -168,14 +168,6 @@ export function parseUsername(username) {
   return username.replace(/^\d+#/, '');
 }
 
-
-export function scrollToBottom() {
-  const messagesPanel = document.getElementById('messages-panel');
-  if (messagesPanel) {
-    messagesPanel.scrollTop = messagesPanel.scrollHeight;
-  }
-}
-
 export function addBigImageEventListeners() {
   Object.entries(state.bigImageEvents).forEach(([event, handler]) => {
     document.addEventListener(event, handler);
@@ -314,4 +306,42 @@ export function highlightMentionWords() {
 
     node.parentNode.replaceChild(fragment, node);
   }
-}        
+}
+
+// Track if the user has loaded messages for the first time
+let firstTime = true;
+// The distance from the bottom at which we should trigger auto-scrolling
+const scrollThreshold = 600;
+
+// Scrolls the specified container to the bottom if the user has scrolled close enough
+export function scrollToBottom(containerType = 'generalMessages') {
+  // Define a mapping for container types to their respective selectors
+  const containerSelectors = {
+    generalMessages: '.messages-content', // For general chat
+    chatlogsMessages: '.chat-logs-container', // For chat logs
+    personalMessages: '.messages-container-wrapper' // For personal messages panel
+  };
+
+  // Get the container based on the passed containerType
+  const containerSelector = containerSelectors[containerType];
+
+  // If the container selector is not defined, return
+  if (!containerSelector) return;
+
+  // Get the container element
+  const container = document.querySelector(containerSelector);
+  if (!container) return; // Return if the container doesn't exist
+
+  // If it's the user's first time loading messages, auto-scroll to the bottom
+  if (firstTime) {
+    container.scrollTop = container.scrollHeight;
+    firstTime = false;
+  } else {
+    // Calculate how far the user is from the bottom
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    // If the user is close enough to the bottom, auto-scroll to the bottom
+    if (distanceFromBottom <= scrollThreshold) {
+      container.scrollTop = container.scrollHeight;
+    }
+  }
+}
