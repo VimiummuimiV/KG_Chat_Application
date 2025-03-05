@@ -2,6 +2,7 @@ import { convertImageLinksToImage } from "./converters/image-converter.js";
 import { convertVideoLinksToPlayer } from "./converters/video-converter.js";
 import { emojiFaces, trustedDomains } from "./definitions.js";
 import { state } from "./definitions.js";
+import { openSVG, closeSVG } from "./icons.js"
 
 export const getAuthData = () => {
   const pageData = JSON.parse([...document.scripts]
@@ -93,6 +94,9 @@ export function observeMessagesPanel() {
 
 export function restoreChatState() {
   const chat = document.getElementById('app-chat-container');
+  const toggleButton = document.querySelector('.chat-toggle-button');
+  if (!chat || !toggleButton) return;
+
   const state = getChatState();
   const viewportWidth = window.innerWidth;
   const viewportHeight = window.innerHeight;
@@ -108,19 +112,24 @@ export function restoreChatState() {
     chat.style.top = clamp(state.top, 0, viewportHeight - chat.offsetHeight) + 'px';
     chat.style.bottom = '';
     chat.classList.add("floating-chat");
-
     // For floating chat, manage display based on isVisible
     chat.style.display = state.isVisible ? 'flex' : 'none';
     chat.style.opacity = state.isVisible ? '1' : '0';
+    
+    // Update toggle button SVG for floating chat
+    toggleButton.innerHTML = state.isVisible ? closeSVG : openSVG;
   } else {
     chat.style.bottom = '0';
     chat.style.top = '';
     chat.classList.remove("floating-chat");
-
     // Explicitly remove both classes first, then add the correct one
     chat.classList.remove('visible-chat', 'hidden-chat');
     chat.classList.add(state.isVisible ? 'visible-chat' : 'hidden-chat');
+    
+    // Update toggle button SVG for non-floating chat
+    toggleButton.innerHTML = state.isVisible ? closeSVG : openSVG;
   }
+
   handleElementsBehavior();
 }
 

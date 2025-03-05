@@ -15,7 +15,7 @@ export function toggleChatVisibility() {
     setTimeout(() => {
       chatContainer.style.display = chatContainer.style.opacity === '0' ? 'none' : 'flex';
       toggleButton.innerHTML = chatContainer.style.display === 'none' ? openSVG : closeSVG;
-      
+
       // Update the chat state in localStorage
       saveChatState({
         ...chatState,
@@ -25,12 +25,12 @@ export function toggleChatVisibility() {
   } else {
     // For non-floating chat, toggle visibility classes
     const isCurrentlyVisible = chatContainer.classList.contains('visible-chat');
-    
+
     chatContainer.classList.remove('visible-chat', 'hidden-chat');
     chatContainer.classList.add(isCurrentlyVisible ? 'hidden-chat' : 'visible-chat');
-    
+
     toggleButton.innerHTML = isCurrentlyVisible ? openSVG : closeSVG;
-    
+
     // Update the chat state in localStorage
     saveChatState({
       ...chatState,
