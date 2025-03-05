@@ -7,7 +7,7 @@ export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 
 // Sleep time (ms)
 export const delay = 200;
-export const userListDelay = 3000;
+export const userListDelay = 5000;
 
 // Configuration with localStorage integration
 export const config = {
