@@ -90,11 +90,12 @@ export function toggleChatMaximize() {
     // Save current state
     originalChatState = getChatState();
     
-    // Set to full viewport
+    // Set to 90vh and position at bottom
     chat.style.width = '100vw';
-    chat.style.height = '100vh';
+    chat.style.height = '90vh';
     chat.style.left = '0';
-    chat.style.top = '0';
+    chat.style.bottom = '0';
+    chat.style.top = 'auto';  // Ensure top is not set
     
     chat.classList.add('maximized');
     maximizeButton.classList.add('maximized');
