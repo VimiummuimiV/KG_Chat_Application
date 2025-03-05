@@ -158,7 +158,9 @@ export default class MessageManager {
     highlightMentionWords([this.currentUsername]);
 
     // Scroll to the bottom of the messages panel.
-    scrollToBottom();
+    requestAnimationFrame(() => {
+      scrollToBottom();
+    });
   }
 
   addUsernameClickListeners() {
