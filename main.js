@@ -69,7 +69,7 @@ async function initializeApp() {
       const text = input.value.trim();
       if (text) {
         xmppClient.sendMessage(text);
-        input.value = '';
+        input.value = null;
         input.focus();
       }
     };
