@@ -339,3 +339,101 @@ export function scrollToBottom() {
     }
   }
 }
+
+export function showChatAlert(message, options = {}) {
+  // Find the chat drag area
+  const dragArea = document.querySelector('.chat-drag-area');
+  if (!dragArea) return;
+
+  // Remove existing alert if present
+  const existingAlert = dragArea.querySelector('.chat-dynamic-alert');
+  if (existingAlert) {
+    dragArea.removeChild(existingAlert);
+  }
+
+  // Default options
+  const defaultOptions = {
+    type: 'info',     // 'info', 'warning', 'error', 'success'
+    duration: 3000,   // total display time
+  };
+
+  const settings = { ...defaultOptions, ...options };
+
+  // Color map for different alert types
+  const colorMap = {
+    info: '#2196F3',     // blue
+    warning: '#FF9800',  // orange
+    error: '#F44336',    // red
+    success: '#4CAF50'   // green
+  };
+
+  // Create alert element
+  const alertElement = document.createElement('div');
+  alertElement.className = 'chat-dynamic-alert';
+  alertElement.innerHTML = message;
+
+  // Styling for the alert
+  alertElement.style.cssText = `
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: ${colorMap[settings.type] || colorMap.info};
+    padding: 5px 10px;
+    border-radius: 3px;
+    z-index: 1000;
+    font-family: Roboto, Montserrat;
+    font-size: 14px;
+    font-weight: normal;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    opacity: 0;
+  `;
+
+  // Append to drag area
+  dragArea.appendChild(alertElement);
+
+  // Animation sequence
+  function animateAlert() {
+    // Pop up with shake
+    requestAnimationFrame(() => {
+      alertElement.style.transition = 'all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55)';
+      alertElement.style.opacity = '1';
+      alertElement.style.transform = 'translate(-50%, -50%)';
+      
+      // Enhanced shake animation with more keyframes
+      setTimeout(() => {
+        alertElement.style.transition = 'transform 0.05s ease-in-out';
+        
+        // Sequence of shake movements
+        const shakeSequence = [
+          { x: 5, delay: 0 },     // Right
+          { x: -7, delay: 50 },   // Left
+          { x: 9, delay: 100 },   // Right
+          { x: -6, delay: 150 },  // Left
+          { x: 4, delay: 200 },   // Right
+          { x: -3, delay: 250 },  // Left
+          { x: 0, delay: 300 }    // Center
+        ];
+
+        shakeSequence.forEach((move) => {
+          setTimeout(() => {
+            alertElement.style.transform = `translate(calc(-50% + ${move.x}px), -50%)`;
+          }, move.delay);
+        });
+      }, 300);
+
+      // Hide after duration
+      setTimeout(() => {
+        alertElement.style.transition = 'opacity 0.3s ease-in-out';
+        alertElement.style.opacity = '0';
+        
+        setTimeout(() => {
+          dragArea.removeChild(alertElement);
+        }, 300);
+      }, settings.duration);
+    });
+  }
+
+  // Start animation
+  animateAlert();
+}

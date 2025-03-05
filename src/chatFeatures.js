@@ -1,5 +1,5 @@
 import { closeSVG, openSVG } from "./icons.js";
-import { saveChatState } from "./helpers.js";
+import { saveChatState, showChatAlert } from "./helpers.js";
 
 export function toggleChatVisibility() {
   const chatContainer = document.getElementById('app-chat-container');
@@ -59,7 +59,18 @@ export function addChatToggleFeature() {
   }
 
   document.addEventListener('keydown', (e) => {
-    if (e.ctrlKey && e.code === 'Space') toggleChatVisibility();
+    // Only toggle visibility if chat is not maximized
+    if (e.ctrlKey && e.code === 'Space') {
+      if (chatContainer.classList.contains('maximized')) {
+        // Show alert that chat is maximized
+        showChatAlert('Chat is currently maximized', {
+          type: 'warning',
+          duration: 3000
+        });
+      } else {
+        toggleChatVisibility();
+      }
+    }
   });
 
   if (closeButton) {
