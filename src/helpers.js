@@ -150,10 +150,17 @@ export function getChatState() {
 // 2. Add a function to apply font size changes
 export function applyFontSize(multiplier) {
   const chatContainer = document.getElementById('app-chat-container');
+  const messageInput = document.getElementById('message-input');
   if (!chatContainer) return;
 
-  // Directly apply the user's chosen multiplier from localStorage
+  // Apply font size to the main container
   chatContainer.style.fontSize = `${multiplier}em`;
+
+  // Apply base font size to message input without multiplier
+  // since it inherits the multiplier from the container
+  if (messageInput) {
+    messageInput.style.fontSize = '1em';
+  }
 
   // Save the current multiplier in the chat state
   const chatState = getChatState();

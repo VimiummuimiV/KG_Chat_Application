@@ -206,7 +206,10 @@
   min-width: 0 !important;
   border: none !important;
   position: relative;
-  /* Added for lock icon positioning */
+  font-family: inherit !important;
+  /* Remove any fixed font-size to properly inherit from container */
+  line-height: normal !important;
+  transition: font-size 0.2s ease !important;
 }
 
 #app-chat-container #message-input.private-mode {
