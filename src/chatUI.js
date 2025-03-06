@@ -29,17 +29,17 @@ export function createChatUI() {
   const inputContainer = document.createElement('div');
   inputContainer.className = 'input-container';
 
-  // Create message input
-  const messageInput = document.createElement('input');
-  messageInput.type = 'text';
-  messageInput.id = 'message-input';
-
   // Create emoji button
   const emojiButton = document.createElement('button');
   emojiButton.className = 'emoji-trigger filled-button';
   emojiButton.innerHTML = null;
   emojiButton.classList.add('emoji-button');
   emojiButton.title = 'Open emoji picker';
+
+  // Create message input
+  const messageInput = document.createElement('input');
+  messageInput.type = 'text';
+  messageInput.id = 'message-input';
 
   // Create send button
   const sendButton = document.createElement('button');
@@ -48,8 +48,8 @@ export function createChatUI() {
   sendButton.innerHTML = sendSVG;
 
   // Append elements in order
-  inputContainer.appendChild(messageInput);
   inputContainer.appendChild(emojiButton);
+  inputContainer.appendChild(messageInput);
   inputContainer.appendChild(sendButton);
 
   chatContent.appendChild(messagesPanel);
