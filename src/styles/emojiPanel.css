@@ -8,14 +8,18 @@
   border-radius: 0.4em !important;
   width: 350px;
   height: 400px;
-  display: none;
+  display: flex;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.15s ease-out;
   flex-direction: column;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   z-index: 1000;
 }
 
 .emoji-panel.visible {
-  display: flex;
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .emoji-search-container {
@@ -81,7 +85,8 @@
   overflow-y: auto;
   overflow-x: hidden !important;
   padding: 8px;
-  display: block; /* Using block to allow sections stacking */
+  display: block;
+  /* Using block to allow sections stacking */
   width: 100% !important;
   max-width: 100% !important;
 }
