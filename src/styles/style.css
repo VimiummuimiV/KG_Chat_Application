@@ -449,6 +449,14 @@
   color: #b0b0b0 !important;
 }
 
+#app-chat-container .role.participant {
+  filter: brightness(0.6) !important;
+}
+
+#app-chat-container .role.visitor {
+  filter: brightness(0.8) !important;
+}
+
 /* Header toggle button */
 #app-chat-container .header-button {
   cursor: pointer !important;

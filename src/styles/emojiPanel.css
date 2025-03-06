@@ -70,10 +70,10 @@
   border-bottom: 2px solid transparent !important;
 }
 
-/* Active category button gets a 3px lightblue border */
+/* Active category button gets a 3px {color} border */
 .emoji-category-btn.active {
   opacity: 1;
-  border-bottom: 3px solid lightblue !important;
+  border-bottom: 3px solid goldenrod !important;
 }
 
 .emoji-container {
@@ -133,7 +133,7 @@
 
 /* Info panel fixed at bottom with a 50px height */
 .emoji-info-panel {
-  height: 50px !important;
+  height: 30px !important;
   padding: 8px !important;
   border-top: 1px solid #333 !important;
   display: flex !important;
