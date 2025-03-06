@@ -469,6 +469,32 @@
   filter: brightness(1.2) !important;
 }
 
+#app-chat-container .emoji-trigger {
+  height: 28px !important;
+  width: 28px !important;
+  font-size: 1.5em !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important; /* Ensure the emoji is vertically centered */
+}
+
+#app-chat-container .emoji-trigger::before {
+  transform-origin: center !important;
+  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
+  content: "🙂";
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important; /* Ensure the emoji is vertically centered */
+}
+
+/* on hover, rotate the emoji trigger smoothly */
+#app-chat-container .emoji-trigger:hover {
+  filter: none !important;
+  transform: rotate(180deg) !important;
+}
+
 #app-chat-container .chat-toggle-button {
   right: 0 !important;
 }

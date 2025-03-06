@@ -12,6 +12,8 @@ import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
 import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
+import { EmojiPanel } from './src/components/emojiPanel.js';
+import './src/styles/emojiPanel.css';
 
 // Function to detect if running in an iframe
 function isInIframe() {
@@ -94,6 +96,30 @@ async function initializeApp() {
 
     document.getElementById('send-button').addEventListener('click', sendMessage);
     input.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+
+    // Initialize emoji panel
+    const emojiPanel = new EmojiPanel({
+      container: document.querySelector('.input-container'),
+      position: 'top',
+      onEmojiSelect: (emoji) => {
+        input.value += emoji;
+        input.focus();
+        emojiPanel.hide();
+      }
+    }).init();
+
+    // Add click handler to existing emoji button
+    document.querySelector('.emoji-trigger').addEventListener('click', () => {
+      emojiPanel.toggle();
+    });
+
+    // Close emoji panel when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.emoji-panel') &&
+        !e.target.closest('.emoji-trigger')) {
+        emojiPanel.hide();
+      }
+    });
 
     // Set up private messaging events
     setupPrivateMessageEvents();

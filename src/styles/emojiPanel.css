@@ -1,0 +1,177 @@
+.emoji-panel {
+  position: absolute !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+  background: #1e1e1e !important;
+  border: 1px solid #333 !important;
+  border-radius: 0.4em !important;
+  width: 350px;
+  height: 400px;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+  z-index: 1000;
+}
+
+.emoji-panel.visible {
+  display: flex;
+}
+
+.emoji-search-container {
+  padding: 1em !important;
+  border: none !important;
+}
+
+.emoji-search {
+  width: 100%;
+  padding: 8px;
+  border-radius: 4px;
+  background: #2a2a2a !important;
+  border: none !important;
+  border-radius: 0.2em !important;
+  color: #deb887 !important;
+  caret-color: #deb887 !important;
+  font-size: 0.9em !important;
+}
+
+.emoji-search:focus {
+  outline: none;
+  border-color: #666;
+}
+
+.emoji-categories {
+  position: sticky !important;
+  top: 0 !important;
+  display: flex !important;
+  flex-direction: row !important;
+  padding: 4px 4px 6px 4px !important;
+  border-bottom: 1px solid #333 !important;
+  gap: 2px !important;
+  justify-content: center !important;
+  overflow-x: auto !important;
+  scrollbar-width: thin !important;
+}
+
+.emoji-category-btn {
+  position: relative !important;
+  background: none !important;
+  border: none !important;
+  padding: 6px !important;
+  cursor: pointer !important;
+  opacity: 0.7 !important;
+  transition: opacity 0.2s !important;
+  font-size: 16px !important;
+  min-width: 32px !important;
+  height: 32px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-bottom: 2px solid transparent !important;
+}
+
+/* Active category button gets a 3px lightblue border */
+.emoji-category-btn.active {
+  opacity: 1;
+  border-bottom: 3px solid lightblue !important;
+}
+
+.emoji-container {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden !important;
+  padding: 8px;
+  display: block; /* Using block to allow sections stacking */
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.emoji-category-section {
+  margin-bottom: 10px;
+}
+
+.emoji-category-header {
+  padding: 8px !important;
+  color: #deb887 !important;
+  font-size: 0.9em !important;
+  position: sticky !important;
+  top: -10px !important;
+  background: #1e1e1e !important;
+  z-index: 1 !important;
+  border-bottom: 1px solid #333 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 !important;
+}
+
+.emoji-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important;
+  gap: 4px;
+  align-content: start;
+}
+
+.emoji-btn {
+  background: none;
+  border: none;
+  padding: 4px !important;
+  cursor: pointer;
+  font-size: 18px !important;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  aspect-ratio: 1 !important;
+}
+
+.emoji-btn:hover {
+  background-color: #333;
+}
+
+/* Info panel fixed at bottom with a 50px height */
+.emoji-info-panel {
+  height: 50px !important;
+  padding: 8px !important;
+  border-top: 1px solid #333 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  color: #deb887 !important;
+  font-size: 0.9em !important;
+  background: #1e1e1e !important;
+}
+
+.emoji-info-icon {
+  font-size: 1.2em !important;
+}
+
+.emoji-info-keywords {
+  color: #888 !important;
+  font-style: italic !important;
+}
+
+/* Scrollbar styling */
+.emoji-container::-webkit-scrollbar,
+.emoji-categories::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.emoji-container::-webkit-scrollbar-track,
+.emoji-categories::-webkit-scrollbar-track {
+  background: #1e1e1e;
+}
+
+.emoji-container::-webkit-scrollbar-thumb,
+.emoji-categories::-webkit-scrollbar-thumb {
+  background: #444;
+  border-radius: 3px;
+}
+
+.emoji-container::-webkit-scrollbar-thumb:hover,
+.emoji-categories::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

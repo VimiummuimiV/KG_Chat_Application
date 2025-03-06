@@ -1,4 +1,4 @@
-import "./style.css"; // styles
+import "../src/styles/style.css"; // styles
 
 // URL constants
 export const BASE_URL = 'https://klavogonki.ru';
