@@ -39,10 +39,22 @@ export default class MessageManager {
         }
 
         const fromAttr = msg.getAttribute("from");
+        const toAttr = msg.getAttribute("to");
+        const type = msg.getAttribute("type");
+
+        // Determine if this is a private message
+        const isPrivate = type === 'chat';
 
         // Extract username from Jabber ID format and clean it
         const from = fromAttr ? fromAttr.split('/')[1] || "unknown" : "unknown";
         const cleanFrom = parseUsername(from);
+
+        // Extract recipient for private messages
+        let recipient = null;
+        if (isPrivate && toAttr) {
+          recipient = toAttr.split('/')[0].split('@')[0];
+          recipient = parseUsername(recipient);
+        }
 
         // Extract timestamp from delay elements if available
         let timestamp = new Date().toISOString();
@@ -51,15 +63,17 @@ export default class MessageManager {
           timestamp = delayNodes[0].getAttribute("stamp");
         }
 
-        // Skip if this is a duplicate of a message we just sent
-        const isDuplicate = cleanFrom === this.currentUsername && this.sentMessageTexts.has(text);
+        // Skip if this is a duplicate of a message we just sent (for group chat only)
+        const isDuplicate = !isPrivate && cleanFrom === this.currentUsername && this.sentMessageTexts.has(text);
 
         if (!isDuplicate) {
           const messageObj = {
             id: messageId,
             from: cleanFrom,
             text,
-            timestamp
+            timestamp,
+            isPrivate,
+            recipient
           };
 
           this.messages.push(messageObj);
@@ -77,14 +91,16 @@ export default class MessageManager {
   }
 
   // Method to add a sent message
-  addSentMessage(text) {
+  addSentMessage(text, options = {}) {
     this.sentMessageTexts.add(text);
     const messageId = `msg_${Date.now()}`;
     const messageObj = {
       id: messageId,
       from: this.currentUsername,
       text,
-      timestamp: new Date().toISOString()
+      timestamp: new Date().toISOString(),
+      isPrivate: options.isPrivate || false,
+      recipient: options.recipient || null
     };
     this.messages.push(messageObj);
     this.chatHistory.set(messageId, messageObj); // Save in the local memory map
@@ -120,7 +136,18 @@ export default class MessageManager {
 
         // Create the container for the message.
         const messageDiv = document.createElement('div');
-        messageDiv.className = 'message' + (msg.from === this.currentUsername ? ' sent' : '');
+        messageDiv.className = 'message';
+
+        // Add private message class if applicable
+        if (msg.isPrivate) {
+          messageDiv.classList.add('private-message');
+          messageDiv.classList.add(msg.from === this.currentUsername ? 'sent' : 'received');
+
+          // Add recipient info for display
+          if (msg.recipient) {
+            messageDiv.setAttribute('data-recipient', msg.recipient);
+          }
+        }
 
         // Handle system messages (/me)
         if (msg.text.startsWith('/me ')) {
@@ -133,10 +160,21 @@ export default class MessageManager {
         // Create the message info block.
         const messageInfoDiv = document.createElement('div');
         messageInfoDiv.className = 'message-info';
+
+        // Create the username display, adding private indicator if needed
+        let usernameDisplay = msg.from;
+        if (msg.isPrivate) {
+          if (msg.from === this.currentUsername && msg.recipient) {
+            usernameDisplay = `→ ${msg.recipient}`;
+          } else {
+            usernameDisplay = `${msg.from} →`;
+          }
+        }
+
         messageInfoDiv.innerHTML = `
-        <span class="time">${formattedTime}</span>
-        <span class="username" style="color: ${usernameColor}">${msg.from}</span>
-      `;
+          <span class="time">${formattedTime}</span>
+          <span class="username" style="color: ${usernameColor}">${usernameDisplay}</span>
+        `;
 
         // Create the message text block.
         const messageTextDiv = document.createElement('div');
@@ -169,19 +207,31 @@ export default class MessageManager {
 
     usernames.forEach(username => {
       username.addEventListener('click', (event) => {
-        const selectedUsername = username.textContent + ', ';
+        const usernameText = username.textContent.trim();
+        let selectedUsername = usernameText;
 
-        if (event.ctrlKey) {
-          // Ctrl+Click: Replace input with the new username
-          messageInput.value = selectedUsername;
-        } else {
-          // Normal Click: Append username if not already present
-          if (!messageInput.value.includes(selectedUsername)) {
-            messageInput.value += selectedUsername;
+        // Extract proper username if it contains arrows (for private messages)
+        if (selectedUsername.includes('→')) {
+          if (selectedUsername.startsWith('→')) {
+            selectedUsername = selectedUsername.replace('→', '').trim();
+          } else {
+            selectedUsername = selectedUsername.split('→')[0].trim();
           }
         }
 
-        // Optional: focus the input after setting the value
+        if (event.ctrlKey) {
+          // Ctrl+Click: Start private chat with user
+          messageInput.value = `<${selectedUsername}>`;
+          handlePrivateMessageInput(messageInput);
+        } else {
+          // Normal Click: Append username if not already present
+          const appendUsername = `${selectedUsername}, `;
+          if (!messageInput.value.includes(appendUsername)) {
+            messageInput.value += appendUsername;
+          }
+        }
+
+        // Focus the input after setting the value
         messageInput.focus();
       });
     });

@@ -10,7 +10,7 @@ import { addChatToggleFeature } from "./src/chatFeatures.js";
 import { setupDragHandlers, setupResizeHandlers, setupWindowResizeHandler } from './src/events.js';
 import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
-import { observeMessagesPanel } from "./src/helpers.js";
+import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
 
 // Function to detect if running in an iframe
@@ -31,7 +31,7 @@ function checkAuth() {
     console.error('Application cannot run in an iframe');
     return false;
   }
-  
+
   const params = new URLSearchParams(window.location.search);
   if (window.location.pathname === '/g/' && params.has('gmid')) {
     return false;
@@ -66,13 +66,14 @@ async function initializeApp() {
 
     // Initialize managers and XMPP connection
     const userManager = new UserManager('user-list');
-    const messageManager = new MessageManager('messages-panel', config.username);
+    const messageManager = new MessageManager('messages-panel', parseUsername(config.username));
     const xmppConnection = new XMPPConnection({
       username: config.username,
       password: config.password,
       bindUrl: XMPP_BIND_URL,
       delay
     });
+
     const xmppClient = createXMPPClient(
       xmppConnection,
       userManager,
@@ -86,17 +87,25 @@ async function initializeApp() {
       const text = input.value.trim();
       if (text) {
         xmppClient.sendMessage(text);
-        input.value = null;
+        input.value = '';
         input.focus();
       }
     };
+
     document.getElementById('send-button').addEventListener('click', sendMessage);
     input.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
 
+    // Set up private messaging events
+    setupPrivateMessageEvents();
+
     // Connect to XMPP and join the room
     await xmppClient.connect();
-
     window.xmppClient = xmppClient; // For debugging
+
+    // Detect /pm username command and activate private mode, and /exit to exit private mode
+    input.addEventListener('input', function (event) {
+      handlePrivateMessageInput(event.target);
+    });
   } catch (error) {
     console.error('App init error:', error);
     localStorage.removeItem('klavoauth');

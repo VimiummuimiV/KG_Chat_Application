@@ -1,4 +1,5 @@
 import { userListDelay } from "./definitions.js";
+import { privateMessageState } from "./helpers.js";
 
 /**
  * Creates and manages an XMPP client with user and message handling
@@ -52,16 +53,52 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     },
     sendMessage(text) {
       const messageId = `msg_${Date.now()}`;
-      const messageStanza = `
-        <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-          <message to='general@conference.jabber.klavogonki.ru'
-                   type='groupchat'
-                   id='${messageId}'
-                   xmlns='jabber:client'>
-            <body>${text}</body>
-          </message>
-        </body>
-      `;
+      let messageStanza;
+      
+      // Check if we're in private message mode
+      if (privateMessageState.isPrivateMode && privateMessageState.fullJid) {
+        // Create a private message stanza
+        messageStanza = `
+          <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+            <message from='${username}@jabber.klavogonki.ru/web' 
+                     to='${privateMessageState.fullJid}' 
+                     type='chat' 
+                     id='${messageId}' 
+                     xmlns='jabber:client'>
+              <body>${text}</body>
+              <x xmlns='klavogonki:userdata'>
+                <user>
+                  <login>${username.replace(/^\d+#/, '')}</login>
+                  <avatar>/storage/avatars/${username.split('#')[0]}.png</avatar>
+                  <background>#7788cc</background>
+                </user>
+              </x>
+            </message>
+          </body>
+        `;
+        
+        // Add message to messageManager with private flag
+        messageManager.addSentMessage(text, {
+          isPrivate: true,
+          recipient: privateMessageState.targetUsername
+        });
+      } else {
+        // Regular group chat message
+        messageStanza = `
+          <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+            <message to='general@conference.jabber.klavogonki.ru'
+                     type='groupchat'
+                     id='${messageId}'
+                     xmlns='jabber:client'>
+              <body>${text}</body>
+            </message>
+          </body>
+        `;
+        
+        // Add message to messageManager for group chat
+        messageManager.addSentMessage(text);
+      }
+      
       xmppConnection.sendRequestWithRetry(messageStanza)
         .then(response => {
           messageManager.processMessages(response);

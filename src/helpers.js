@@ -151,10 +151,10 @@ export function getChatState() {
 export function applyFontSize(multiplier) {
   const chatContainer = document.getElementById('app-chat-container');
   if (!chatContainer) return;
-  
+
   // Directly apply the user's chosen multiplier from localStorage
   chatContainer.style.fontSize = `${multiplier}em`;
-  
+
   // Save the current multiplier in the chat state
   const chatState = getChatState();
   saveChatState({
@@ -173,13 +173,13 @@ export function restoreFontSize() {
 export function createFontSizeControl() {
   const chatContainer = document.getElementById('app-chat-container');
   if (!chatContainer) return;
-  
+
   const chatState = getChatState();
-  
+
   // Create font size control container
   const fontSizeControl = document.createElement('div');
   fontSizeControl.className = 'font-size-control';
-  
+
   // Create the slider
   const fontSlider = document.createElement('input');
   fontSlider.type = 'range';
@@ -188,21 +188,21 @@ export function createFontSizeControl() {
   fontSlider.step = '0.1';
   fontSlider.value = chatState.fontSizeMultiplier;
   fontSlider.className = 'font-size-slider';
-  
+
   // Prevent dragging the chat when interacting with the slider
   fontSlider.addEventListener('mousedown', (e) => {
     e.stopPropagation();
   });
-  
+
   // Update font size on input change
   fontSlider.addEventListener('input', (e) => {
     const value = parseFloat(e.target.value);
     applyFontSize(value);
   });
-  
+
   // Append the slider to the control container
   fontSizeControl.appendChild(fontSlider);
-  
+
   // Add the control container to the chat drag area
   const dragArea = document.querySelector('.chat-drag-area');
   if (dragArea) {
@@ -457,4 +457,147 @@ export function focusTextInput() {
     return true;
   }
   return false;
+}
+
+// Helper to fetch JSON and validate response
+export async function fetchJSON(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+  return response.json();
+}
+
+// Helper function to get Exact user ID by username via the search API
+export async function getExactUserIdByName(userName) {
+  // Define the search API URL
+  const searchApiUrl = `https://klavogonki.ru/api/profile/search-users?query=${encodeURIComponent(userName)}`;
+
+  try {
+    // Get search results from the API
+    const searchResults = await fetchJSON(searchApiUrl);
+
+    // Ensure search results exist and contain data
+    if (!searchResults.all?.length) {
+      throw new Error(`User ${userName} not found.`);
+    }
+
+    // Return the ID of the user with the exact matching login
+    const user = searchResults.all.find(user => user.login === userName);
+    if (!user) {
+      throw new Error(`Exact match for user ${userName} not found.`);
+    }
+
+    return user.id;
+  } catch (error) {
+    console.error('Error getting user ID:', error);
+    showChatAlert(`Could not find user "${userName}"`, { type: 'error', duration: 5000 });
+    return null;
+  }
+}
+
+// Function to extract target username from message input
+export function extractTargetUsername(input) {
+  const match = input.match(/<([^>]+)>/);
+  return match ? match[1] : null;
+}
+
+// State management for private messaging
+export const privateMessageState = {
+  isPrivateMode: false,
+  targetUsername: null,
+  targetId: null,
+  fullJid: null,
+
+  async setPrivateTarget(username) {
+    if (!username) {
+      this.exitPrivateMode();
+      return false;
+    }
+
+    try {
+      const userId = await getExactUserIdByName(username);
+      if (!userId) return false;
+
+      this.isPrivateMode = true;
+      this.targetUsername = username;
+      this.targetId = userId;
+      this.fullJid = `${userId}#${username}@jabber.klavogonki.ru/web`;
+
+      return true;
+    } catch (error) {
+      console.error('Error setting private target:', error);
+      return false;
+    }
+  },
+
+  exitPrivateMode() {
+    this.isPrivateMode = false;
+    this.targetUsername = null;
+    this.targetId = null;
+    this.fullJid = null;
+  }
+};
+
+// Toggle private message mode based on input value
+export async function handlePrivateMessageInput(inputElement) {
+  if (!inputElement) return;
+
+  const input = inputElement.value;
+  const privateModeRegex = /^\/pm\s+([\wа-яА-ЯёЁ]+)\s/;
+  const exitPrivateModeRegex = /^\/exit\s*$/;
+  const match = input.match(privateModeRegex);
+
+  if (match) {
+    const username = match[1];
+    const success = await privateMessageState.setPrivateTarget(username);
+
+    if (success) {
+      enterPrivateMode(username);
+      inputElement.value = input.replace(privateModeRegex, ''); // Remove the /pm username part
+    } else {
+      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: 3000 });
+      exitPrivateMode();
+    }
+  } else if (exitPrivateModeRegex.test(input)) {
+    exitPrivateMode();
+    inputElement.value = ''; // Clear the input
+  }
+}
+
+export function enterPrivateMode(username) {
+  const messageInput = document.getElementById('message-input');
+  if (!messageInput.classList.contains('private-mode')) {
+    messageInput.classList.add('private-mode');
+    messageInput.placeholder = `Private message to ${username}`;
+    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
+    privateMessageState.isPrivateMode = true;
+  }
+}
+
+export function exitPrivateMode() {
+  const messageInput = document.getElementById('message-input');
+  if (messageInput.classList.contains('private-mode')) {
+    messageInput.classList.remove('private-mode');
+    messageInput.placeholder = 'Type a message...';
+    privateMessageState.exitPrivateMode();
+    showChatAlert('Exited private chat mode', { type: 'success', duration: 3000 });
+  }
+}
+
+// Handle ESC key to exit private mode
+export function setupPrivateMessageEvents() {
+  const input = document.getElementById('message-input');
+  if (!input) return;
+
+  // Add ESC key handler to exit private mode
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && privateMessageState.isPrivateMode) {
+      exitPrivateMode();
+      e.preventDefault();
+    }
+  });
+
+  // Check for private message mode on input changes
+  input.addEventListener('input', () => {
+    handlePrivateMessageInput(input);
+  });
 }
