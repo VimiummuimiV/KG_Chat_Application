@@ -152,14 +152,10 @@ export function applyFontSize(multiplier) {
   const chatContainer = document.getElementById('app-chat-container');
   if (!chatContainer) return;
   
-  // When maximized, enforce a minimum multiplier of 1
-  const isMaximized = chatContainer.classList.contains('maximized');
-  const effectiveMultiplier = isMaximized ? Math.max(1, multiplier) : multiplier;
+  // Directly apply the user's chosen multiplier from localStorage
+  chatContainer.style.fontSize = `${multiplier}em`;
   
-  // Apply the font size using the effective multiplier
-  chatContainer.style.fontSize = `${effectiveMultiplier}em`;
-  
-  // Update the chat state with the user-preferred multiplier
+  // Save the current multiplier in the chat state
   const chatState = getChatState();
   saveChatState({
     ...chatState,

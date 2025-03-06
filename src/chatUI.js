@@ -73,10 +73,10 @@ export function createChatUI() {
   chatContainer.appendChild(topArea);
 
   document.body.appendChild(chatContainer);
-  
+
   // Restore chat state and settings
   restoreChatState();
-  
+
   // Add the font size control and restore font size
   createFontSizeControl();
   restoreFontSize();
@@ -141,6 +141,7 @@ export function toggleChatMaximize() {
     }
 
     if (originalChatState) {
+      // Restore geometry properties from the original saved state
       chat.style.width = `${originalChatState.width}px`;
       chat.style.height = `${originalChatState.height}px`;
       chat.style.left = `${originalChatState.left}px`;
@@ -151,11 +152,6 @@ export function toggleChatMaximize() {
       chat.style.margin = '';
       chat.style.transform = '';
       chat.style.top = 'auto';
-
-      const hasVisibilityClass = !chat.classList.contains('visible-chat') && !chat.classList.contains('hidden-chat');
-      if (hasVisibilityClass) {
-        chat.classList.remove('visible-chat', 'hidden-chat');
-      }
 
       if (originalChatState.floating) {
         const viewportHeight = window.innerHeight;
@@ -171,7 +167,19 @@ export function toggleChatMaximize() {
         chat.style.top = '';
       }
 
-      saveChatState(originalChatState);
+      // Instead of overwriting the font size multiplier with the original value,
+      // merge the geometry from originalChatState with the current (updated) fontSizeMultiplier.
+      const currentState = getChatState(); // This should have the latest fontSizeMultiplier.
+      const newState = {
+        ...currentState, // Keeps the updated fontSizeMultiplier and other properties
+        width: originalChatState.width,
+        height: originalChatState.height,
+        left: originalChatState.left,
+        top: originalChatState.top,
+        floating: originalChatState.floating,
+        isVisible: originalChatState.isVisible,
+      };
+      saveChatState(newState);
     }
 
     chat.classList.remove('maximized');
@@ -185,7 +193,7 @@ export function toggleChatMaximize() {
       }
       focusTextInput(); // Focus after minimizing
 
-      // Reapply the user-selected font size (this will now use the non-maximized multiplier)
+      // Reapply the font size from localStorage – this now uses the updated multiplier.
       restoreFontSize();
     });
   }
