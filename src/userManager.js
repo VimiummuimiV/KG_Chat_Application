@@ -22,6 +22,33 @@ export default class UserManager {
       'participant': 2,
       'visitor': 3
     };
+
+    // Attach event listeners using delegation - only once in constructor
+    this.setupEventListeners();
+  }
+
+  setupEventListeners() {
+    // Use event delegation for both username and game indicator clicks
+    this.container.addEventListener('click', (event) => {
+      // Handle username clicks
+      if (event.target.classList.contains('username-clickable')) {
+        const userId = event.target.getAttribute('data-user-id');
+        if (userId) {
+          const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
+          window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
+        }
+      }
+      
+      // Handle game indicator clicks
+      if (event.target.closest('.game-indicator')) {
+        const gameIndicator = event.target.closest('.game-indicator');
+        const gameId = gameIndicator.getAttribute('data-game-id');
+        if (gameId) {
+          event.stopPropagation();
+          window.location.href = `https://klavogonki.ru/g/?gmid=${gameId}`;
+        }
+      }
+    });
   }
 
   updatePresence(xmlResponse) {
@@ -236,27 +263,6 @@ export default class UserManager {
     // Remove DOM elements for users that are no longer active.
     existingElements.forEach((el, jid) => {
       el.remove();
-    });
-
-    // Re-attach event listeners for profile and game navigation.
-    this.container.querySelectorAll('.username-clickable').forEach(usernameElement => {
-      usernameElement.addEventListener('click', (event) => {
-        const userId = event.target.getAttribute('data-user-id');
-        if (userId) {
-          const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
-          window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
-        }
-      });
-    });
-
-    this.container.querySelectorAll('.game-indicator').forEach(gameIndicatorElement => {
-      gameIndicatorElement.addEventListener('click', (event) => {
-        event.stopPropagation();
-        const gameId = gameIndicatorElement.getAttribute('data-game-id');
-        if (gameId) {
-          window.location.href = `https://klavogonki.ru/g/?gmid=${gameId}`;
-        }
-      });
     });
 
     // For new users, apply a shake effect on the whole user-item.
