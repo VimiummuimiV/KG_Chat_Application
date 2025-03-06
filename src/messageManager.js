@@ -1,4 +1,4 @@
-import { parseUsername, parseMessageText, scrollToBottom, highlightMentionWords, usernameColors } from './helpers.js';
+import { parseUsername, parseMessageText, scrollToBottom, highlightMentionWords, usernameColors, handlePrivateMessageInput } from './helpers.js';
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
@@ -221,7 +221,7 @@ export default class MessageManager {
 
         if (event.ctrlKey) {
           // Ctrl+Click: Start private chat with user
-          messageInput.value = `<${selectedUsername}>`;
+          messageInput.value = `/pm ${selectedUsername} `;
           handlePrivateMessageInput(messageInput);
         } else {
           // Normal Click: Append username if not already present

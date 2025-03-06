@@ -403,7 +403,7 @@ export function showChatAlert(message, options = {}) {
     border-radius: 3px;
     z-index: 1000;
     font-family: Roboto, Montserrat;
-    font-size: 14px;
+    font-size: 10px;
     font-weight: normal;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
     opacity: 0;
@@ -565,11 +565,18 @@ export async function handlePrivateMessageInput(inputElement) {
 
 export function enterPrivateMode(username) {
   const messageInput = document.getElementById('message-input');
-  if (!messageInput.classList.contains('private-mode')) {
+  if (privateMessageState.isPrivateMode && privateMessageState.targetUsername !== username) {
+    exitPrivateMode();
+  }
+  if (!messageInput.classList.contains('private-mode') || privateMessageState.targetUsername !== username) {
     messageInput.classList.add('private-mode');
-    messageInput.placeholder = `Private message to ${username}`;
+    messageInput.placeholder = `PM to ➡ ${username}`;
     showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
     privateMessageState.isPrivateMode = true;
+    privateMessageState.targetUsername = username;
+  } else if (privateMessageState.targetUsername === username) {
+    messageInput.placeholder = `️PM to ➡ ${username}`;
+    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
   }
 }
 
@@ -577,7 +584,6 @@ export function exitPrivateMode() {
   const messageInput = document.getElementById('message-input');
   if (messageInput.classList.contains('private-mode')) {
     messageInput.classList.remove('private-mode');
-    messageInput.placeholder = 'Type a message...';
     privateMessageState.exitPrivateMode();
     showChatAlert('Exited private chat mode', { type: 'success', duration: 3000 });
   }
