@@ -258,12 +258,13 @@
   border-left: 3px solid #ffa500 !important;
 }
 
-#app-chat-container .message.system .message-text {
-  color: #ffa500 !important;
-}
-
 #app-chat-container .message.system .time {
   color: #ffa50060 !important;
+}
+
+#app-chat-container .message.system .username,
+#app-chat-container .message.system .message-text {
+  color: #ffa500 !important;
 }
 
 #app-chat-container .message.sent {
@@ -276,6 +277,11 @@
   color: #00ff0060 !important;
 }
 
+#app-chat-container .message.sent .username,
+#app-chat-container .message.sent .message-text {
+  color: #00ff00 !important;
+}
+
 #app-chat-container .message.received {
   background-color: #ff4d4d20 !important;
   border: 1px solid #ff4d4d30 !important;
@@ -284,6 +290,11 @@
 
 #app-chat-container .message.received .time {
   color: #ff4d4d60 !important;
+}
+
+#app-chat-container .message.received .username,
+#app-chat-container .message.received .message-text {
+  color: #ff4d4d !important;
 }
 
 /* Private message styling */

@@ -46,13 +46,13 @@ export default class MessageManager {
         const isPrivate = type === 'chat';
 
         // Extract username from Jabber ID format and clean it
-        const from = fromAttr ? fromAttr.split('/')[1] || "unknown" : "unknown";
+        const from = fromAttr ? fromAttr.split('#')[1]?.split('@')[0] || "unknown" : "unknown";
         const cleanFrom = parseUsername(from);
 
         // Extract recipient for private messages
         let recipient = null;
         if (isPrivate && toAttr) {
-          recipient = toAttr.split('/')[0].split('@')[0];
+          recipient = toAttr.split('#')[1]?.split('@')[0] || toAttr;
           recipient = parseUsername(recipient);
         }
 
