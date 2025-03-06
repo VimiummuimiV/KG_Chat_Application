@@ -1,7 +1,8 @@
 import { toggleChatVisibility } from "./chatFeatures.js";
-import { restoreChatState, getChatState, saveChatState, handleElementsBehavior, focusTextInput } from "./helpers.js";
+import { restoreChatState, getChatState, saveChatState, handleElementsBehavior, focusTextInput, createFontSizeControl, restoreFontSize } from "./helpers.js";
 import { sendSVG, closeSVG, expandSVG, collapseSVG } from "./icons.js";
 
+// Then update the createChatUI function to include font size initialization
 export function createChatUI() {
   const chatContainer = document.createElement('div');
   chatContainer.id = 'app-chat-container';
@@ -72,7 +73,13 @@ export function createChatUI() {
   chatContainer.appendChild(topArea);
 
   document.body.appendChild(chatContainer);
+  
+  // Restore chat state and settings
   restoreChatState();
+  
+  // Add the font size control and restore font size
+  createFontSizeControl();
+  restoreFontSize();
 }
 
 let originalChatState = null;
@@ -120,6 +127,9 @@ export function toggleChatMaximize() {
 
     handleElementsBehavior();
     focusTextInput(); // Focus after maximizing
+
+    // Reapply the font size to enforce the minimum multiplier if needed
+    restoreFontSize();
   } else {
     const container = document.getElementById('messages-panel');
     const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
@@ -174,6 +184,9 @@ export function toggleChatMaximize() {
         container.scrollTop = container.scrollHeight;
       }
       focusTextInput(); // Focus after minimizing
+
+      // Reapply the user-selected font size (this will now use the non-maximized multiplier)
+      restoreFontSize();
     });
   }
 }

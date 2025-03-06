@@ -129,6 +129,9 @@ export function restoreChatState() {
   handleElementsBehavior();
 }
 
+// 1. Update helpers.js to include the font size in the getChatState function
+
+// In getChatState() function in helpers.js
 export function getChatState() {
   const savedState = localStorage.getItem('chatState');
   const defaultState = {
@@ -137,10 +140,78 @@ export function getChatState() {
     left: 0,
     floating: false,
     top: window.innerHeight - 300,
-    isVisible: true
+    isVisible: true,
+    fontSizeMultiplier: 1.0 // Add the new default font size multiplier
   };
 
   return savedState ? { ...defaultState, ...JSON.parse(savedState) } : defaultState;
+}
+
+// 2. Add a function to apply font size changes
+export function applyFontSize(multiplier) {
+  const chatContainer = document.getElementById('app-chat-container');
+  if (!chatContainer) return;
+  
+  // When maximized, enforce a minimum multiplier of 1
+  const isMaximized = chatContainer.classList.contains('maximized');
+  const effectiveMultiplier = isMaximized ? Math.max(1, multiplier) : multiplier;
+  
+  // Apply the font size using the effective multiplier
+  chatContainer.style.fontSize = `${effectiveMultiplier}em`;
+  
+  // Update the chat state with the user-preferred multiplier
+  const chatState = getChatState();
+  saveChatState({
+    ...chatState,
+    fontSizeMultiplier: multiplier
+  });
+}
+
+// 3. Add a function to restore font size from state on initialization
+export function restoreFontSize() {
+  const chatState = getChatState();
+  applyFontSize(chatState.fontSizeMultiplier);
+}
+
+// 4. Function to create the font size slider
+export function createFontSizeControl() {
+  const chatContainer = document.getElementById('app-chat-container');
+  if (!chatContainer) return;
+  
+  const chatState = getChatState();
+  
+  // Create font size control container
+  const fontSizeControl = document.createElement('div');
+  fontSizeControl.className = 'font-size-control';
+  
+  // Create the slider
+  const fontSlider = document.createElement('input');
+  fontSlider.type = 'range';
+  fontSlider.min = '0.8';
+  fontSlider.max = '1.5';
+  fontSlider.step = '0.1';
+  fontSlider.value = chatState.fontSizeMultiplier;
+  fontSlider.className = 'font-size-slider';
+  
+  // Prevent dragging the chat when interacting with the slider
+  fontSlider.addEventListener('mousedown', (e) => {
+    e.stopPropagation();
+  });
+  
+  // Update font size on input change
+  fontSlider.addEventListener('input', (e) => {
+    const value = parseFloat(e.target.value);
+    applyFontSize(value);
+  });
+  
+  // Append the slider to the control container
+  fontSizeControl.appendChild(fontSlider);
+  
+  // Add the control container to the chat drag area
+  const dragArea = document.querySelector('.chat-drag-area');
+  if (dragArea) {
+    dragArea.appendChild(fontSizeControl);
+  }
 }
 
 export function saveChatState(state) {

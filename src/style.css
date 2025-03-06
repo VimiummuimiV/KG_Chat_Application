@@ -1,6 +1,6 @@
 :root {
   --border-radius: 0.2em;
-  --min-chat-width: 400px;
+  --min-chat-width: 420px;
   --min-chat-height: 200px;
   --user-list-width: fit-content;
 }
@@ -26,6 +26,73 @@
   transition:
     opacity 0.3s ease,
     transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* Font size control */
+#app-chat-container .font-size-control {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 25px !important;
+  padding: 0 10px !important;
+  gap: 5px !important;
+  z-index: 6 !important;
+}
+
+#app-chat-container .font-size-label {
+  color: burlywood !important;
+  cursor: default !important;
+  user-select: none !important;
+}
+
+#app-chat-container .font-size-label.small {
+  font-size: 0.8em !important;
+}
+
+#app-chat-container .font-size-label.large {
+  font-size: 1.2em !important;
+}
+
+#app-chat-container .font-size-slider {
+  width: 80px !important;
+  height: 4px !important;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  background: #333 !important;
+  outline: none !important;
+  border-radius: 2px !important;
+  transition: opacity 0.2s !important;
+}
+
+#app-chat-container .font-size-slider::-webkit-slider-thumb {
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: burlywood !important;
+  cursor: pointer !important;
+}
+
+#app-chat-container .font-size-slider::-moz-range-thumb {
+  width: 10px !important;
+  height: 10px !important;
+  border-radius: 50% !important;
+  background: burlywood !important;
+  cursor: pointer !important;
+  border: none !important;
+}
+
+/* Ensure time and username elements maintain their relative sizes */
+#app-chat-container .message-info .time {
+  font-size: 0.9em !important;
+}
+
+#app-chat-container .username {
+  font-size: 1em !important;
 }
 
 /* Chat container maximized state */
@@ -121,6 +188,7 @@
 #app-chat-container .messages-panel {
   flex: 1 !important;
   overflow-y: auto !important;
+  overflow-x: hidden !important;
   padding: 1em !important;
   display: flex !important;
   flex-direction: column !important;
