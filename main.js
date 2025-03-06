@@ -13,8 +13,25 @@ import { config } from "./src/definitions.js";
 import { observeMessagesPanel } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
 
+// Function to detect if running in an iframe
+function isInIframe() {
+  try {
+    return window !== window.top;
+  } catch (e) {
+    // If there's an error when trying to access window.top, 
+    // it's likely due to cross-origin restrictions, which means we're in an iframe
+    return true;
+  }
+}
+
 // ------------------------- Auth Check ---------------------------
 function checkAuth() {
+  // First check if running in iframe
+  if (isInIframe()) {
+    console.error('Application cannot run in an iframe');
+    return false;
+  }
+  
   const params = new URLSearchParams(window.location.search);
   if (window.location.pathname === '/g/' && params.has('gmid')) {
     return false;
