@@ -279,7 +279,7 @@ export class EmojiPanel {
       }
     });
 
-    // New listener: open panel with Ctrl + Semicolon (using event.code)
+    // Open panel with Ctrl + Semicolon
     document.addEventListener('keydown', (e) => {
       if (e.ctrlKey && e.code === 'Semicolon') {
         e.preventDefault();
@@ -289,13 +289,31 @@ export class EmojiPanel {
       }
     });
 
-    // Search input
+    // Search input with class management
     this.searchInput.addEventListener('input', (e) => {
       const searchTerm = e.target.value.trim().toLowerCase();
       if (searchTerm) {
         this.searchEmojis(searchTerm);
+        this.emojiContainer.classList.add('search-active');
       } else {
         this.loadAllEmojis();
+        this.emojiContainer.classList.remove('search-active');
+      }
+    });
+
+    // Enter key to select first search result
+    this.searchInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+      e.preventDefault();
+      if (this.emojiContainer.classList.contains('search-active')) {
+        const firstEmojiBtn = this.emojiContainer.querySelector('.emoji-btn');
+        if (firstEmojiBtn) {
+        firstEmojiBtn.click();
+        this.searchInput.value = ''; // Clear the search input value
+        this.loadAllEmojis(); // Reset the panel to show all categories
+        this.emojiContainer.classList.remove('search-active'); // Remove search-active class
+        }
+      }
       }
     });
 
@@ -314,17 +332,15 @@ export class EmojiPanel {
     // Infinite scroll
     this.emojiContainer.addEventListener('scroll', () => this.handleScroll());
 
-    // Language change: update UI elements accordingly and save to localStorage
+    // Language change
     this.languageSelect.addEventListener('change', (e) => {
       this.currentLanguage = e.target.value;
-      // Remember the user's language selection in localStorage
       localStorage.setItem('emojiPanelLanguage', this.currentLanguage);
       const currentEmoji = this.infoIcon.textContent;
       if (currentEmoji) {
         this.updateInfoPanel(currentEmoji);
       }
       this.updateCategoryLabels();
-      // If a search is active, refresh the search results header with the new language
       if (this.searchInput.value.trim()) {
         this.searchEmojis(this.searchInput.value.trim().toLowerCase());
       }
