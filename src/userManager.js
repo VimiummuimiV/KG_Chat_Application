@@ -153,13 +153,13 @@ export default class UserManager {
     }
 
     if (changes) {
-      console.log(`📋 Current active users: ${this.activeUsers.size}`);
+      // console.log(`📋 Current active users: ${this.activeUsers.size}`);
       this.updateUI(newUserJIDs, updatedUserJIDs);
     }
   }
 
   updateUI(newUserJIDs = [], updatedUserJIDs = []) {
-    console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
+    // console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
 
     // Build a map of existing DOM elements by user JID
     const existingElements = new Map();
