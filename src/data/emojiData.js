@@ -1,3 +1,5 @@
+// emojiData.js
+
 export const emojiData = {
   smileys: [
     // Face smiling
@@ -117,907 +119,3034 @@ export const emojiData = {
 export const emojiKeywords = {
   //------------------------- Smileys & Emotion -------------------------
   // Face smiling
-  '😀': ['grinning', 'face', 'smile', 'happy', 'joy'],
-  '😃': ['smiley', 'face', 'happy', 'joy', 'laugh'],
-  '😄': ['laughing', 'face', 'happy', 'joy', 'grin'],
-  '😁': ['beaming', 'face', 'grin', 'smile', 'happy'],
-  '😅': ['sweat', 'nervous', 'face', 'laugh', 'relief'],
-  '😂': ['tears', 'joy', 'face', 'laugh', 'happy'],
-  '🤣': ['rolling', 'floor', 'laugh', 'funny', 'amused'],
-  '🥲': ['smiling', 'tear', 'bittersweet', 'nostalgic', 'happy'],
-  '☺️': ['smile', 'blush', 'content', 'peaceful'],
-  '😊': ['smiling', 'happy', 'blushing', 'content'],
-  '😇': ['angel', 'halo', 'innocent', 'saint', 'pure'],
-  '🙂': ['slight', 'smile', 'face', 'mild'],
-  '🙃': ['upside-down', 'silly', 'quirky', 'funny'],
-  '😉': ['wink', 'flirt', 'playful', 'smile'],
-  '😌': ['relieved', 'calm', 'content', 'satisfied'],
-  '😍': ['heart', 'love', 'smiling', 'eyes', 'adore'],
-  '🥰': ['love', 'hearts', 'affection', 'adoration', 'cuddle'],
-  '😘': ['kiss', 'love', 'affection', 'flirt'],
-  '😗': ['kiss', 'face', 'smile', 'affection'],
-  '😚': ['kiss', 'closed eyes', 'affection', 'love'],
-  '😋': ['yum', 'delicious', 'tasty', 'savor', 'lick'],
+  '😀': {
+    en: ['grinning', 'face', 'smile', 'happy', 'joy'],
+    ru: ['улыбающийся', 'лицо', 'улыбка', 'счастливый', 'радость']
+  },
+  '😃': {
+    en: ['smiley', 'face', 'happy', 'joy', 'laugh'],
+    ru: ['улыбчивый', 'лицо', 'счастливый', 'радость', 'смех']
+  },
+  '😄': {
+    en: ['laughing', 'face', 'happy', 'joy', 'grin'],
+    ru: ['смеющийся', 'лицо', 'счастливый', 'радость', 'ухмылка']
+  },
+  '😁': {
+    en: ['beaming', 'face', 'grin', 'smile', 'happy'],
+    ru: ['сияющий', 'лицо', 'улыбка', 'счастье', 'радость']
+  },
+  '😅': {
+    en: ['sweat', 'nervous', 'face', 'laugh', 'relief'],
+    ru: ['пот', 'нервный', 'лицо', 'смех', 'облегчение']
+  },
+  '😂': {
+    en: ['tears', 'joy', 'face', 'laugh', 'happy'],
+    ru: ['слёзы', 'радость', 'лицо', 'смех', 'счастье']
+  },
+  '🤣': {
+    en: ['rolling', 'floor', 'laugh', 'funny', 'amused'],
+    ru: ['катающийся', 'пол', 'смех', 'смешной', 'развлечённый']
+  },
+  '🥲': {
+    en: ['smiling', 'tear', 'bittersweet', 'nostalgic', 'happy'],
+    ru: ['улыбающийся', 'слеза', 'горько-сладкий', 'ностальгический', 'счастливый']
+  },
+  '☺️': {
+    en: ['smile', 'blush', 'content', 'peaceful'],
+    ru: ['улыбка', 'румянец', 'довольный', 'спокойный']
+  },
+  '😊': {
+    en: ['smiling', 'happy', 'blushing', 'content'],
+    ru: ['улыбающийся', 'счастливый', 'румянец', 'довольный']
+  },
+  '😇': {
+    en: ['angel', 'halo', 'innocent', 'saint', 'pure'],
+    ru: ['ангел', 'ореол', 'невинный', 'святой', 'чистый']
+  },
+  '🙂': {
+    en: ['slight', 'smile', 'face', 'mild'],
+    ru: ['слегка', 'улыбка', 'лицо', 'умеренный']
+  },
+  '🙃': {
+    en: ['upside-down', 'silly', 'quirky', 'funny'],
+    ru: ['перевернутый', 'глупый', 'странный', 'смешной']
+  },
+  '😉': {
+    en: ['wink', 'flirt', 'playful', 'smile'],
+    ru: ['подмигивание', 'флирт', 'игривый', 'улыбка']
+  },
+  '😌': {
+    en: ['relieved', 'calm', 'content', 'satisfied'],
+    ru: ['облегчённый', 'спокойный', 'довольный', 'удовлетворённый']
+  },
+  '😍': {
+    en: ['heart', 'love', 'smiling', 'eyes', 'adore'],
+    ru: ['сердце', 'любовь', 'улыбающийся', 'глаза', 'обожать']
+  },
+  '🥰': {
+    en: ['love', 'hearts', 'affection', 'adoration', 'cuddle'],
+    ru: ['любовь', 'сердца', 'нежность', 'обожание', 'обниматься']
+  },
+  '😘': {
+    en: ['kiss', 'love', 'affection', 'flirt'],
+    ru: ['поцелуй', 'любовь', 'нежность', 'флирт']
+  },
+  '😗': {
+    en: ['kiss', 'face', 'smile', 'affection'],
+    ru: ['поцелуй', 'лицо', 'улыбка', 'нежность']
+  },
+  '😚': {
+    en: ['kiss', 'closed eyes', 'affection', 'love'],
+    ru: ['поцелуй', 'закрытые глаза', 'нежность', 'любовь']
+  },
+  '😋': {
+    en: ['yum', 'delicious', 'tasty', 'savor', 'lick'],
+    ru: ['ням', 'вкусно', 'аппетитно', 'наслаждаться', 'лизать']
+  },
 
   // Face affection
-  '😛': ['tongue', 'playful', 'cheeky', 'silly'],
-  '😝': ['tongue', 'silly', 'wacky', 'fun'],
-  '😜': ['tongue', 'wink', 'playful', 'fun'],
-  '🤪': ['crazy', 'wacky', 'zany', 'quirky'],
-  '😎': ['cool', 'sunglasses', 'confident', 'chill'],
-  '🤓': ['nerd', 'geek', 'glasses', 'studious'],
-  '🧐': ['monocle', 'investigative', 'curious', 'thoughtful'],
-  '🤨': ['skeptical', 'doubtful', 'uncertain', 'raised eyebrow'],
-  '🤩': ['starstruck', 'amazed', 'excited', 'admire'],
-  '🥳': ['party', 'celebrate', 'birthday', 'festive'],
-  '😏': ['smirk', 'sly', 'mischievous', 'confident'],
-  '😒': ['unamused', 'displeased', 'bored', 'sigh'],
-  '😞': ['disappointed', 'sad', 'down', 'somber'],
-  '😔': ['pensive', 'sad', 'reflective', 'mournful'],
-  '😟': ['worried', 'concerned', 'anxious', 'upset'],
-  '😕': ['confused', 'perplexed', 'uncertain', 'baffled'],
-  '🙁': ['frowning', 'sad', 'disappointed', 'downcast'],
-  '☹️': ['frowning', 'sad', 'unhappy', 'mournful'],
-  '😣': ['strained', 'persevering', 'tired', 'discomfort'],
-  '😖': ['confounded', 'annoyed', 'distressed', 'exasperated'],
-  '😫': ['tired', 'exhausted', 'weary', 'worn out'],
+  '😛': {
+    en: ['tongue', 'playful', 'cheeky', 'silly'],
+    ru: ['язык', 'игривый', 'нахальный', 'глупый']
+  },
+  '😝': {
+    en: ['tongue', 'silly', 'wacky', 'fun'],
+    ru: ['язык', 'глупый', 'безумный', 'весёлый']
+  },
+  '😜': {
+    en: ['tongue', 'wink', 'playful', 'fun'],
+    ru: ['язык', 'подмигивание', 'игривый', 'весёлый']
+  },
+  '🤪': {
+    en: ['crazy', 'wacky', 'zany', 'quirky'],
+    ru: ['сумасшедший', 'безумный', 'чудаковатый', 'странный']
+  },
+  '😎': {
+    en: ['cool', 'sunglasses', 'confident', 'chill'],
+    ru: ['крутой', 'очки', 'уверенный', 'расслабленный']
+  },
+  '🤓': {
+    en: ['nerd', 'geek', 'glasses', 'studious'],
+    ru: ['ботан', 'задрот', 'очки', 'учёный']
+  },
+  '🧐': {
+    en: ['monocle', 'investigative', 'curious', 'thoughtful'],
+    ru: ['одноглазый', 'расследовательский', 'любопытный', 'задумчивый']
+  },
+  '🤨': {
+    en: ['skeptical', 'doubtful', 'uncertain', 'raised eyebrow'],
+    ru: ['скептический', 'сомневающийся', 'неуверенный', 'поднятая бровь']
+  },
+  '🤩': {
+    en: ['starstruck', 'amazed', 'excited', 'admire'],
+    ru: ['восхищённый', 'поражённый', 'взволнованный', 'обожать']
+  },
+  '🥳': {
+    en: ['party', 'celebrate', 'birthday', 'festive'],
+    ru: ['вечеринка', 'праздновать', 'день рождения', 'праздничный']
+  },
+  '😏': {
+    en: ['smirk', 'sly', 'mischievous', 'confident'],
+    ru: ['ухмылка', 'хитрый', 'озорной', 'уверенный']
+  },
+  '😒': {
+    en: ['unamused', 'displeased', 'bored', 'sigh'],
+    ru: ['неудовлетворённый', 'недовольный', 'скучный', 'вздох']
+  },
+  '😞': {
+    en: ['disappointed', 'sad', 'down', 'somber'],
+    ru: ['разочарованный', 'грустный', 'унылый', 'мрачный']
+  },
+  '😔': {
+    en: ['pensive', 'sad', 'reflective', 'mournful'],
+    ru: ['задумчивый', 'грустный', 'рефлексивный', 'скорбный']
+  },
+  '😟': {
+    en: ['worried', 'concerned', 'anxious', 'upset'],
+    ru: ['обеспокоенный', 'тревожный', 'беспокойный', 'расстроенный']
+  },
+  '😕': {
+    en: ['confused', 'perplexed', 'uncertain', 'baffled'],
+    ru: ['смущённый', 'озадаченный', 'неуверенный', 'в замешательстве']
+  },
+  '🙁': {
+    en: ['frowning', 'sad', 'disappointed', 'downcast'],
+    ru: ['хмурый', 'грустный', 'разочарованный', 'угнетённый']
+  },
+  '☹️': {
+    en: ['frowning', 'sad', 'unhappy', 'mournful'],
+    ru: ['хмурый', 'грустный', 'несчастный', 'скорбный']
+  },
+  '😣': {
+    en: ['strained', 'persevering', 'tired', 'discomfort'],
+    ru: ['напряжённый', 'терпеливый', 'уставший', 'дискомфорт']
+  },
+  '😖': {
+    en: ['confounded', 'annoyed', 'distressed', 'exasperated'],
+    ru: ['озадаченный', 'раздражённый', 'огорчённый', 'изнурённый']
+  },
+  '😫': {
+    en: ['tired', 'exhausted', 'weary', 'worn out'],
+    ru: ['усталый', 'измученный', 'изнурённый', 'измотанный']
+  },
 
   // Face tongue
-  '😩': ['weary', 'tired', 'exhausted', 'overwhelmed'],
-  '🥺': ['pleading', 'begging', 'cute', 'vulnerable'],
-  '😢': ['cry', 'sad', 'tear', 'sorrow'],
-  '😭': ['crying', 'tearful', 'sad', 'heartbroken'],
-  '😤': ['triumphant', 'exasperated', 'proud', 'angry'],
-  '😠': ['angry', 'mad', 'annoyed', 'irate'],
-  '😡': ['pouting', 'mad', 'furious', 'irate'],
-  '🤬': ['cursing', 'swearing', 'angry', 'foul language'],
-  '🤯': ['mind blown', 'shocked', 'amazed', 'stunned'],
-  '😳': ['flushed', 'embarrassed', 'shocked', 'awkward'],
-  '🥵': ['hot', 'overheated', 'sweaty', 'exhausted'],
-  '🥶': ['cold', 'freezing', 'chilly', 'frozen'],
-  '😱': ['screaming', 'horror', 'shock', 'fear'],
-  '😨': ['fearful', 'scared', 'anxious', 'nervous'],
-  '😰': ['anxious', 'nervous', 'sweating', 'scared'],
-  '😥': ['disappointed', 'sad', 'pensive', 'teary'],
-  '😓': ['cold sweat', 'nervous', 'anxious', 'tired'],
-  '🤗': ['hug', 'embrace', 'caring', 'love'],
-  '🤔': ['thinking', 'pondering', 'curious', 'confused'],
-  '🤭': ['guilty', 'shy', 'embarrassed', 'oops'],
-  '🤫': ['quiet', 'secret', 'hush', 'shh'],
+  '😩': {
+    en: ['weary', 'tired', 'exhausted', 'overwhelmed'],
+    ru: ['изнурённый', 'уставший', 'измученный', 'перегруженный']
+  },
+  '🥺': {
+    en: ['pleading', 'begging', 'cute', 'vulnerable'],
+    ru: ['умоляющий', 'просьба', 'милый', 'уязвимый']
+  },
+  '😢': {
+    en: ['cry', 'sad', 'tear', 'sorrow'],
+    ru: ['плакать', 'грустный', 'слеза', 'печаль']
+  },
+  '😭': {
+    en: ['crying', 'tearful', 'sad', 'heartbroken'],
+    ru: ['плачущий', 'со слезами', 'грустный', 'с разбитым сердцем']
+  },
+  '😤': {
+    en: ['triumphant', 'exasperated', 'proud', 'angry'],
+    ru: ['триумфальный', 'раздражённый', 'гордый', 'сердитый']
+  },
+  '😠': {
+    en: ['angry', 'mad', 'annoyed', 'irate'],
+    ru: ['сердитый', 'злой', 'раздражённый', 'яростный']
+  },
+  '😡': {
+    en: ['pouting', 'mad', 'furious', 'irate'],
+    ru: ['надувшийся', 'злой', 'яростный', 'взбешённый']
+  },
+  '🤬': {
+    en: ['cursing', 'swearing', 'angry', 'foul language'],
+    ru: ['ругательства', 'мат', 'сердитый', 'неприличный']
+  },
+  '🤯': {
+    en: ['mind blown', 'shocked', 'amazed', 'stunned'],
+    ru: ['взрыв мозга', 'шокированный', 'поражённый', 'ошеломлённый']
+  },
+  '😳': {
+    en: ['flushed', 'embarrassed', 'shocked', 'awkward'],
+    ru: ['покрасневший', 'смущённый', 'шокированный', 'неловкий']
+  },
+  '🥵': {
+    en: ['hot', 'overheated', 'sweaty', 'exhausted'],
+    ru: ['горячий', 'перегретый', 'потный', 'изнурённый']
+  },
+  '🥶': {
+    en: ['cold', 'freezing', 'chilly', 'frozen'],
+    ru: ['холодный', 'замерзающий', 'прохладный', 'замороженный']
+  },
+  '😱': {
+    en: ['screaming', 'horror', 'shock', 'fear'],
+    ru: ['кричащий', 'ужас', 'шок', 'страх']
+  },
+  '😨': {
+    en: ['fearful', 'scared', 'anxious', 'nervous'],
+    ru: ['боязливый', 'испуганный', 'тревожный', 'нервный']
+  },
+  '😰': {
+    en: ['anxious', 'nervous', 'sweating', 'scared'],
+    ru: ['тревожный', 'нервный', 'потеющий', 'испуганный']
+  },
+  '😥': {
+    en: ['disappointed', 'sad', 'pensive', 'teary'],
+    ru: ['разочарованный', 'грустный', 'задумчивый', 'со слезами']
+  },
+  '😓': {
+    en: ['cold sweat', 'nervous', 'anxious', 'tired'],
+    ru: ['холодный пот', 'нервный', 'тревожный', 'усталый']
+  },
+  '🤗': {
+    en: ['hug', 'embrace', 'caring', 'love'],
+    ru: ['объятие', 'принимать', 'заботливый', 'любовь']
+  },
+  '🤔': {
+    en: ['thinking', 'pondering', 'curious', 'confused'],
+    ru: ['думающий', 'размышляющий', 'любопытный', 'смущённый']
+  },
+  '🤭': {
+    en: ['guilty', 'shy', 'embarrassed', 'oops'],
+    ru: ['виноватый', 'застенчивый', 'смущённый', 'упс']
+  },
+  '🤫': {
+    en: ['quiet', 'secret', 'hush', 'shh'],
+    ru: ['тихий', 'секрет', 'тишина', 'ш-ш']
+  },
 
   // Face negative
-  '🤥': ['lying', 'fib', 'deceitful', 'dishonest'],
-  '😶': ['speechless', 'mute', 'quiet', 'blank'],
-  '😐': ['neutral', 'expressionless', 'indifferent', 'flat'],
-  '😑': ['deadpan', 'expressionless', 'blank', 'unemotional'],
-  '😬': ['grimace', 'awkward', 'nervous', 'tense'],
-  '🙄': ['eye roll', 'sarcastic', 'disdain', 'bored'],
-  '😯': ['hushed', 'surprised', 'shocked', 'amazed'],
-  '😦': ['frowning', 'dismayed', 'shocked', 'surprised'],
-  '😧': ['astonished', 'stunned', 'surprised', 'speechless'],
-  '😮': ['open mouth', 'surprised', 'shocked', 'amazed'],
-  '😲': ['astonished', 'stunned', 'shocked', 'in awe'],
-  '🥱': ['yawning', 'sleepy', 'tired', 'bored'],
-  '😴': ['sleeping', 'tired', 'napping', 'dozing'],
-  '🤤': ['drooling', 'desire', 'craving', 'hungry'],
-  '😪': ['sleepy', 'drowsy', 'tired', 'nodding'],
-  '😵': ['dizzy', 'knocked out', 'stunned', 'confused'],
-  '🤐': ['zipper-mouth', 'secretive', 'quiet', 'mute'],
-  '🥴': ['woozy', 'tipsy', 'dizzy', 'unsteady'],
-  '🤢': ['nauseated', 'sick', 'disgusted', 'vomit'],
-  '🤮': ['vomiting', 'nauseous', 'sick', 'disgust'],
-  '🤧': ['sneezing', 'ill', 'sick', 'allergy'],
+  '🤥': {
+    en: ['lying', 'fib', 'deceitful', 'dishonest'],
+    ru: ['врущий', 'ложь', 'обманчивый', 'нечестный']
+  },
+  '😶': {
+    en: ['speechless', 'mute', 'quiet', 'blank'],
+    ru: ['безмолвный', 'немой', 'тихий', 'пустой']
+  },
+  '😐': {
+    en: ['neutral', 'expressionless', 'indifferent', 'flat'],
+    ru: ['нейтральный', 'без выражения', 'безразличный', 'плоский']
+  },
+  '😑': {
+    en: ['deadpan', 'expressionless', 'blank', 'unemotional'],
+    ru: ['без эмоций', 'без выражения', 'пустой', 'неэмоциональный']
+  },
+  '😬': {
+    en: ['grimace', 'awkward', 'nervous', 'tense'],
+    ru: ['гримаса', 'неловко', 'нервный', 'напряжённый']
+  },
+  '🙄': {
+    en: ['eye roll', 'sarcastic', 'disdain', 'bored'],
+    ru: ['закатывание глаз', 'саркастичный', 'пренебрежительный', 'скучный']
+  },
+  '😯': {
+    en: ['hushed', 'surprised', 'shocked', 'amazed'],
+    ru: ['тихий', 'удивлённый', 'шокированный', 'поражённый']
+  },
+  '😦': {
+    en: ['frowning', 'dismayed', 'shocked', 'surprised'],
+    ru: ['хмурый', 'огорчённый', 'шокированный', 'удивлённый']
+  },
+  '😧': {
+    en: ['astonished', 'stunned', 'surprised', 'speechless'],
+    ru: ['изумлённый', 'ошеломлённый', 'удивлённый', 'безмолвный']
+  },
+  '😮': {
+    en: ['open mouth', 'surprised', 'shocked', 'amazed'],
+    ru: ['открытый рот', 'удивлённый', 'шокированный', 'поражённый']
+  },
+  '😲': {
+    en: ['astonished', 'stunned', 'shocked', 'in awe'],
+    ru: ['изумлённый', 'ошеломлённый', 'шокированный', 'в благоговении']
+  },
+  '🥱': {
+    en: ['yawning', 'sleepy', 'tired', 'bored'],
+    ru: ['зевота', 'сонный', 'усталый', 'скучный']
+  },
+  '😴': {
+    en: ['sleeping', 'tired', 'napping', 'dozing'],
+    ru: ['спящий', 'усталый', 'дремлющий', 'засыпающий']
+  },
+  '🤤': {
+    en: ['drooling', 'desire', 'craving', 'hungry'],
+    ru: ['слюнявый', 'желание', 'тяга', 'голодный']
+  },
+  '😪': {
+    en: ['sleepy', 'drowsy', 'tired', 'nodding'],
+    ru: ['сонный', 'вялый', 'усталый', 'кивающий']
+  },
+  '😵': {
+    en: ['dizzy', 'knocked out', 'stunned', 'confused'],
+    ru: ['головокружительный', 'вырубленный', 'ошеломлённый', 'сбитый с толку']
+  },
+  '🤐': {
+    en: ['zipper-mouth', 'secretive', 'quiet', 'mute'],
+    ru: ['закрытый рот', 'секретный', 'тихий', 'немой']
+  },
+  '🥴': {
+    en: ['woozy', 'tipsy', 'dizzy', 'unsteady'],
+    ru: ['ошеломлённый', 'подошедший', 'головокружительный', 'неустойчивый']
+  },
+  '🤢': {
+    en: ['nauseated', 'sick', 'disgusted', 'vomit'],
+    ru: ['тошнотворный', 'больной', 'отвратительный', 'рвота']
+  },
+  '🤮': {
+    en: ['vomiting', 'nauseous', 'sick', 'disgust'],
+    ru: ['рвота', 'тошнотворный', 'больной', 'отвратительный']
+  },
+  '🤧': {
+    en: ['sneezing', 'ill', 'sick', 'allergy'],
+    ru: ['чихание', 'болен', 'больной', 'аллергия']
+  },
 
   // Face costume
-  '😷': ['mask', 'sick', 'ill', 'health'],
-  '🤒': ['fever', 'sick', 'ill', 'unwell'],
-  '🤕': ['injured', 'hurt', 'bandaged', 'pain'],
-  '🤑': ['money', 'rich', 'greedy', 'cash'],
-  '🤠': ['cowboy', 'hat', 'western', 'fun'],
-  '😈': ['devil', 'mischievous', 'naughty', 'sinister'],
-  '👿': ['angry', 'devil', 'evil', 'fiendish'],
-  '👹': ['ogre', 'demon', 'monster', 'scary'],
-  '👺': ['goblin', 'troll', 'spooky', 'creepy'],
-  '🤡': ['clown', 'silly', 'funny', 'circus'],
-  '💩': ['poop', 'crap', 'feces', 'funny'],
-  '👻': ['ghost', 'spirit', 'haunted', 'scary'],
-  '💀': ['skull', 'death', 'creepy', 'spooky'],
-  '☠️': ['skull', 'danger', 'death', 'poison'],
-  '👽': ['alien', 'extraterrestrial', 'space', 'ufo'],
-  '👾': ['alien', 'monster', 'video game', 'retro'],
-  '🤖': ['robot', 'machine', 'tech', 'android'],
-  '🎃': ['pumpkin', 'halloween', 'spooky', 'festive'],
+  '😷': {
+    en: ['mask', 'sick', 'ill', 'health'],
+    ru: ['маска', 'больной', 'нездоровый', 'здоровье']
+  },
+  '🤒': {
+    en: ['fever', 'sick', 'ill', 'unwell'],
+    ru: ['лихорадка', 'больной', 'нездоровый', 'неважно']
+  },
+  '🤕': {
+    en: ['injured', 'hurt', 'bandaged', 'pain'],
+    ru: ['раненый', 'повреждённый', 'забинтованный', 'боль']
+  },
+  '🤑': {
+    en: ['money', 'rich', 'greedy', 'cash'],
+    ru: ['деньги', 'богатый', 'жадный', 'наличные']
+  },
+  '🤠': {
+    en: ['cowboy', 'hat', 'western', 'fun'],
+    ru: ['ковбой', 'шляпа', 'вестерн', 'веселье']
+  },
+  '😈': {
+    en: ['devil', 'mischievous', 'naughty', 'sinister'],
+    ru: ['дьявол', 'озорной', 'непослушный', 'зловещий']
+  },
+  '👿': {
+    en: ['angry', 'devil', 'evil', 'fiendish'],
+    ru: ['сердитый', 'дьявол', 'злой', 'зловещий']
+  },
+  '👹': {
+    en: ['ogre', 'demon', 'monster', 'scary'],
+    ru: ['огр', 'демон', 'монстр', 'страшный']
+  },
+  '👺': {
+    en: ['goblin', 'troll', 'spooky', 'creepy'],
+    ru: ['гоблин', 'тролль', 'жуткий', 'страшный']
+  },
+  '🤡': {
+    en: ['clown', 'silly', 'funny', 'circus'],
+    ru: ['клоун', 'глупый', 'смешной', 'цирк']
+  },
+  '💩': {
+    en: ['poop', 'crap', 'feces', 'funny'],
+    ru: ['какашка', 'дерьмо', 'фекалии', 'смешной']
+  },
+  '👻': {
+    en: ['ghost', 'spirit', 'haunted', 'scary'],
+    ru: ['призрак', 'дух', 'обитающий', 'страшный']
+  },
+  '💀': {
+    en: ['skull', 'death', 'creepy', 'spooky'],
+    ru: ['череп', 'смерть', 'жуткий', 'страшный']
+  },
+  '☠️': {
+    en: ['skull', 'danger', 'death', 'poison'],
+    ru: ['череп', 'опасность', 'смерть', 'яд']
+  },
+  '👽': {
+    en: ['alien', 'extraterrestrial', 'space', 'ufo'],
+    ru: ['инопланетянин', 'внеземной', 'космос', 'НЛО']
+  },
+  '👾': {
+    en: ['alien', 'monster', 'video game', 'retro'],
+    ru: ['инопланетянин', 'монстр', 'видеоигра', 'ретро']
+  },
+  '🤖': {
+    en: ['robot', 'machine', 'tech', 'android'],
+    ru: ['робот', 'машина', 'технология', 'андроид']
+  },
+  '🎃': {
+    en: ['pumpkin', 'halloween', 'spooky', 'festive'],
+    ru: ['тыква', 'Хэллоуин', 'жуткий', 'праздничный']
+  },
 
   // Cat faces
-  '😺': ['smiling', 'cat', 'happy', 'playful'],
-  '😸': ['grinning', 'cat', 'joyful', 'cheerful'],
-  '😹': ['tearful', 'joy', 'cat', 'laughing'],
-  '😻': ['heart', 'cat', 'love', 'adorable'],
-  '😼': ['smirking', 'cat', 'mischievous', 'sly'],
-  '😽': ['kissing', 'cat', 'affection', 'cute'],
-  '🙀': ['surprised', 'cat', 'scared', 'shocked'],
-  '😿': ['crying', 'cat', 'sad', 'tearful'],
-  '😾': ['angry', 'cat', 'annoyed', 'displeased'],
+  '😺': {
+    en: ['smiling', 'cat', 'happy', 'playful'],
+    ru: ['улыбающийся', 'кот', 'счастливый', 'игривый']
+  },
+  '😸': {
+    en: ['grinning', 'cat', 'joyful', 'cheerful'],
+    ru: ['широко улыбающийся', 'кот', 'радостный', 'весёлый']
+  },
+  '😹': {
+    en: ['tearful', 'joy', 'cat', 'laughing'],
+    ru: ['со слезами', 'радость', 'кот', 'смеющийся']
+  },
+  '😻': {
+    en: ['heart', 'cat', 'love', 'adorable'],
+    ru: ['сердце', 'кот', 'любовь', 'милый']
+  },
+  '😼': {
+    en: ['smirking', 'cat', 'mischievous', 'sly'],
+    ru: ['ухмыляющийся', 'кот', 'озорной', 'хитрый']
+  },
+  '😽': {
+    en: ['kissing', 'cat', 'affection', 'cute'],
+    ru: ['целующий', 'кот', 'нежность', 'милый']
+  },
+  '🙀': {
+    en: ['surprised', 'cat', 'scared', 'shocked'],
+    ru: ['испуганный', 'кот', 'испуганный', 'шокированный']
+  },
+  '😿': {
+    en: ['crying', 'cat', 'sad', 'tearful'],
+    ru: ['плачущий', 'кот', 'грустный', 'со слезами']
+  },
+  '😾': {
+    en: ['angry', 'cat', 'annoyed', 'displeased'],
+    ru: ['сердитый', 'кот', 'раздражённый', 'недовольный']
+  },
 
   //------------------------- People & Body -------------------------
   // Hand gestures
-  '👋': ['wave', 'hello', 'goodbye', 'greeting'],
-  '🤚': ['raised hand', 'stop', 'palm'],
-  '🖐️': ['hand', 'high five', 'greeting'],
-  '✋': ['stop', 'palm', 'high five'],
-  '🖖': ['vulcan salute', 'live long', 'sci-fi'],
-  '👌': ['okay', 'perfect', 'good'],
-  '🤌': ['pinched', 'precise', 'delicious'],
-  '🤏': ['small', 'tiny', 'minuscule'],
-  '✌️': ['peace', 'victory', 'v sign'],
-  '🤞': ['fingers crossed', 'hope', 'luck'],
-  '🤟': ['I love you', 'rock on', 'sign language'],
-  '🤘': ['rock', 'metal', 'horns'],
-  '🤙': ['call me', 'hang loose', 'shaka'],
-  '👈': ['point left', 'direction', 'arrow'],
-  '👉': ['point right', 'direction', 'arrow'],
-  '👆': ['point up', 'direction', 'up'],
-  '🖕': ['middle finger', 'offensive', 'rude'],
-  '👇': ['point down', 'direction', 'down'],
-  '☝️': ['point up', 'number one', 'important'],
-  '👍': ['thumbs up', 'good', 'approve'],
-  '👎': ['thumbs down', 'bad', 'disapprove'],
+  '👋': {
+    en: ['wave', 'hello', 'goodbye', 'greeting'],
+    ru: ['махание', 'привет', 'прощание', 'приветствие']
+  },
+  '🤚': {
+    en: ['raised hand', 'stop', 'palm'],
+    ru: ['поднятая рука', 'стой', 'ладонь']
+  },
+  '🖐️': {
+    en: ['hand', 'high five', 'greeting'],
+    ru: ['рука', 'дай пять', 'приветствие']
+  },
+  '✋': {
+    en: ['stop', 'palm', 'high five'],
+    ru: ['стой', 'ладонь', 'дай пять']
+  },
+  '🖖': {
+    en: ['vulcan salute', 'live long', 'sci-fi'],
+    ru: ['салют Вулканцев', 'живи долго', 'научная фантастика']
+  },
+  '👌': {
+    en: ['okay', 'perfect', 'good'],
+    ru: ['ок', 'идеально', 'хорошо']
+  },
+  '🤌': {
+    en: ['pinched', 'precise', 'delicious'],
+    ru: ['сжатый', 'точный', 'вкусный']
+  },
+  '🤏': {
+    en: ['small', 'tiny', 'minuscule'],
+    ru: ['маленький', 'крошечный', 'микроскопический']
+  },
+  '✌️': {
+    en: ['peace', 'victory', 'v sign'],
+    ru: ['мир', 'победа', 'знак победы']
+  },
+  '🤞': {
+    en: ['fingers crossed', 'hope', 'luck'],
+    ru: ['скрещенные пальцы', 'надежда', 'удача']
+  },
+  '🤟': {
+    en: ['I love you', 'rock on', 'sign language'],
+    ru: ['я тебя люблю', 'рок он', 'язык жестов']
+  },
+  '🤘': {
+    en: ['rock', 'metal', 'horns'],
+    ru: ['рок', 'металл', 'рога']
+  },
+  '🤙': {
+    en: ['call me', 'hang loose', 'shaka'],
+    ru: ['позвони мне', 'расслабься', 'шак']
+  },
+  '👈': {
+    en: ['point left', 'direction', 'arrow'],
+    ru: ['указание влево', 'направление', 'стрелка']
+  },
+  '👉': {
+    en: ['point right', 'direction', 'arrow'],
+    ru: ['указание вправо', 'направление', 'стрелка']
+  },
+  '👆': {
+    en: ['point up', 'direction', 'up'],
+    ru: ['указание вверх', 'направление', 'вверх']
+  },
+  '🖕': {
+    en: ['middle finger', 'offensive', 'rude'],
+    ru: ['средний палец', 'оскорбительный', 'грубый']
+  },
+  '👇': {
+    en: ['point down', 'direction', 'down'],
+    ru: ['указание вниз', 'направление', 'вниз']
+  },
+  '☝️': {
+    en: ['point up', 'number one', 'important'],
+    ru: ['указание вверх', 'номер один', 'важный']
+  },
+  '👍': {
+    en: ['thumbs up', 'good', 'approve'],
+    ru: ['палец вверх', 'хорошо', 'одобрить']
+  },
+  '👎': {
+    en: ['thumbs down', 'bad', 'disapprove'],
+    ru: ['палец вниз', 'плохо', 'не одобрять']
+  },
 
   // Hand symbols
-  '✊': ['fist', 'power', 'solidarity'],
-  '👊': ['punch', 'fist bump', 'hit'],
-  '🤛': ['left fist', 'punch', 'strike'],
-  '🤜': ['right fist', 'punch', 'strike'],
-  '👏': ['clap', 'applause', 'bravo'],
-  '🙌': ['celebrate', 'praise', 'hooray'],
-  '👐': ['open hands', 'embrace', 'welcome'],
-  '🤲': ['palms', 'offering', 'receive'],
-  '🤝': ['handshake', 'agreement', 'cooperation'],
-  '🙏': ['pray', 'thanks', 'please'],
+  '✊': {
+    en: ['fist', 'power', 'solidarity'],
+    ru: ['кулак', 'сила', 'солидарность']
+  },
+  '👊': {
+    en: ['punch', 'fist bump', 'hit'],
+    ru: ['удар', 'кулачок', 'ударить']
+  },
+  '🤛': {
+    en: ['left fist', 'punch', 'strike'],
+    ru: ['левая рука', 'удар', 'нанести удар']
+  },
+  '🤜': {
+    en: ['right fist', 'punch', 'strike'],
+    ru: ['правая рука', 'удар', 'нанести удар']
+  },
+  '👏': {
+    en: ['clap', 'applause', 'bravo'],
+    ru: ['хлопки', 'аплодисменты', 'браво']
+  },
+  '🙌': {
+    en: ['celebrate', 'praise', 'hooray'],
+    ru: ['торжествовать', 'хвалить', 'ура']
+  },
+  '👐': {
+    en: ['open hands', 'embrace', 'welcome'],
+    ru: ['раскрытые руки', 'объятие', 'добро пожаловать']
+  },
+  '🤲': {
+    en: ['palms', 'offering', 'receive'],
+    ru: ['ладони', 'предложение', 'получать']
+  },
+  '🤝': {
+    en: ['handshake', 'agreement', 'cooperation'],
+    ru: ['рукопожатие', 'соглашение', 'сотрудничество']
+  },
+  '🙏': {
+    en: ['pray', 'thanks', 'please'],
+    ru: ['молиться', 'спасибо', 'пожалуйста']
+  },
 
   // Body parts
-  '✍️': ['writing', 'pen', 'signature'],
-  '💅': ['nail polish', 'beauty', 'manicure'],
-  '🤳': ['selfie', 'photo', 'camera'],
-  '💪': ['flex', 'strong', 'muscle'],
-  '🦾': ['mechanical arm', 'robotic', 'cyborg'],
-  '🦿': ['mechanical leg', 'prosthetic', 'robotic'],
-  '🦵': ['leg', 'limb', 'lower body'],
-  '🦶': ['foot', 'toes', 'step'],
-  '👂': ['ear', 'listening', 'sound'],
-  '🦻': ['hearing aid', 'listening', 'assistive'],
-  '👃': ['nose', 'smell', 'scent'],
-  '🧠': ['brain', 'intelligence', 'mind'],
-  '🫀': ['heart (organ)', 'anatomy', 'biology'],
-  '🫁': ['lungs', 'breath', 'organ'],
-  '🦷': ['tooth', 'dental', 'smile'],
-  '🦴': ['bone', 'skeleton', 'hard'],
-  '👀': ['eyes', 'look', 'see'],
-  '👁️': ['eye', 'vision', 'watch'],
-  '👅': ['tongue', 'taste', 'lick'],
-  '👄': ['lips', 'kiss', 'mouth'],
+  '✍️': {
+    en: ['writing', 'pen', 'signature'],
+    ru: ['письмо', 'ручка', 'подпись']
+  },
+  '💅': {
+    en: ['nail polish', 'beauty', 'manicure'],
+    ru: ['лак для ногтей', 'красота', 'маникюр']
+  },
+  '🤳': {
+    en: ['selfie', 'photo', 'camera'],
+    ru: ['селфи', 'фото', 'камера']
+  },
+  '💪': {
+    en: ['flex', 'strong', 'muscle'],
+    ru: ['сгибать', 'сильный', 'мышцы']
+  },
+  '🦾': {
+    en: ['mechanical arm', 'robotic', 'cyborg'],
+    ru: ['механическая рука', 'роботизированный', 'киборг']
+  },
+  '🦿': {
+    en: ['mechanical leg', 'prosthetic', 'robotic'],
+    ru: ['механическая нога', 'протез', 'роботизированный']
+  },
+  '🦵': {
+    en: ['leg', 'limb', 'lower body'],
+    ru: ['нога', 'конечность', 'нижняя часть тела']
+  },
+  '🦶': {
+    en: ['foot', 'toes', 'step'],
+    ru: ['нога', 'пальцы ноги', 'шаг']
+  },
+  '👂': {
+    en: ['ear', 'listening', 'sound'],
+    ru: ['ухо', 'слушание', 'звук']
+  },
+  '🦻': {
+    en: ['hearing aid', 'listening', 'assistive'],
+    ru: ['слуховой аппарат', 'слушание', 'помощь']
+  },
+  '👃': {
+    en: ['nose', 'smell', 'scent'],
+    ru: ['нос', 'запах', 'аромат']
+  },
+  '🧠': {
+    en: ['brain', 'intelligence', 'mind'],
+    ru: ['мозг', 'интеллект', 'ум']
+  },
+  '🫀': {
+    en: ['heart (organ)', 'anatomy', 'biology'],
+    ru: ['сердце (орган)', 'анатомия', 'биология']
+  },
+  '🫁': {
+    en: ['lungs', 'breath', 'organ'],
+    ru: ['легкие', 'дыхание', 'орган']
+  },
+  '🦷': {
+    en: ['tooth', 'dental', 'smile'],
+    ru: ['зуб', 'стоматология', 'улыбка']
+  },
+  '🦴': {
+    en: ['bone', 'skeleton', 'hard'],
+    ru: ['кость', 'скелет', 'твердый']
+  },
+  '👀': {
+    en: ['eyes', 'look', 'see'],
+    ru: ['глаза', 'смотреть', 'видеть']
+  },
+  '👁️': {
+    en: ['eye', 'vision', 'watch'],
+    ru: ['глаз', 'зрение', 'наблюдать']
+  },
+  '👅': {
+    en: ['tongue', 'taste', 'lick'],
+    ru: ['язык', 'вкус', 'лизать']
+  },
+  '👄': {
+    en: ['lips', 'kiss', 'mouth'],
+    ru: ['губы', 'поцелуй', 'рот']
+  },
 
   // Person
-  '👶': ['baby', 'infant', 'cute'],
-  '🧒': ['child', 'kid', 'youth'],
-  '👦': ['boy', 'child', 'kid'],
-  '👧': ['girl', 'child', 'kid'],
-  '🧑': ['person', 'human', 'individual'],
-  '👱': ['blonde', 'person', 'light hair'],
-  '👨': ['man', 'male', 'guy'],
-  '🧔': ['bearded', 'man', 'facial hair'],
-  '👩': ['woman', 'female', 'lady'],
-  '🧓': ['elderly', 'senior', 'aged'],
-  '👴': ['old man', 'elderly', 'senior'],
-  '👵': ['old woman', 'elderly', 'senior'],
-  '🙍': ['frowning', 'sad', 'displeased'],
-  '🙎': ['pouting', 'angry', 'displeased'],
-  '🙅': ['no', 'prohibited', 'refusal'],
-  '🙆': ['ok', 'acceptable', 'okay'],
-  '💁': ['information', 'help', 'assistance'],
-  '🙋': ['raising hand', 'question', 'volunteer'],
-  '🧏': ['deaf', 'listening', 'silent'],
-  '🙇': ['bowing', 'apologetic', 'respect'],
-  '🤦': ['facepalm', 'disbelief', 'oops'],
-  '🤷': ['shrug', 'uncertain', 'indifferent'],
+  '👶': {
+    en: ['baby', 'infant', 'cute'],
+    ru: ['младенец', 'ребенок', 'милый']
+  },
+  '🧒': {
+    en: ['child', 'kid', 'youth'],
+    ru: ['ребенок', 'малыш', 'юный']
+  },
+  '👦': {
+    en: ['boy', 'child', 'kid'],
+    ru: ['мальчик', 'ребенок', 'малыш']
+  },
+  '👧': {
+    en: ['girl', 'child', 'kid'],
+    ru: ['девочка', 'ребенок', 'малышка']
+  },
+  '🧑': {
+    en: ['person', 'human', 'individual'],
+    ru: ['человек', 'личность', 'индивид']
+  },
+  '👱': {
+    en: ['blonde', 'person', 'light hair'],
+    ru: ['блондин', 'человек', 'светлые волосы']
+  },
+  '👨': {
+    en: ['man', 'male', 'guy'],
+    ru: ['мужчина', 'мужской', 'парень']
+  },
+  '🧔': {
+    en: ['bearded', 'man', 'facial hair'],
+    ru: ['бородатый', 'мужчина', 'борода']
+  },
+  '👩': {
+    en: ['woman', 'female', 'lady'],
+    ru: ['женщина', 'женский', 'дама']
+  },
+  '🧓': {
+    en: ['elderly', 'senior', 'aged'],
+    ru: ['пожилой', 'старший', 'в преклонном возрасте']
+  },
+  '👴': {
+    en: ['old man', 'elderly', 'senior'],
+    ru: ['старик', 'пожилой', 'старший']
+  },
+  '👵': {
+    en: ['old woman', 'elderly', 'senior'],
+    ru: ['старуха', 'пожилая', 'старшая']
+  },
+  '🙍': {
+    en: ['frowning', 'sad', 'displeased'],
+    ru: ['хмурый', 'грустный', 'недовольный']
+  },
+  '🙎': {
+    en: ['pouting', 'angry', 'displeased'],
+    ru: ['надувшийся', 'сердитый', 'недовольный']
+  },
+  '🙅': {
+    en: ['no', 'prohibited', 'refusal'],
+    ru: ['нет', 'запрещено', 'отказ']
+  },
+  '🙆': {
+    en: ['ok', 'acceptable', 'okay'],
+    ru: ['ок', 'приемлемо', 'хорошо']
+  },
+  '💁': {
+    en: ['information', 'help', 'assistance'],
+    ru: ['информация', 'помощь', 'поддержка']
+  },
+  '🙋': {
+    en: ['raising hand', 'question', 'volunteer'],
+    ru: ['поднимающая руку', 'вопрос', 'доброволец']
+  },
+  '🧏': {
+    en: ['deaf', 'listening', 'silent'],
+    ru: ['глухой', 'слушающий', 'безмолвный']
+  },
+  '🙇': {
+    en: ['bowing', 'apologetic', 'respect'],
+    ru: ['наклон', 'извиняющийся', 'уважение']
+  },
+  '🤦': {
+    en: ['facepalm', 'disbelief', 'oops'],
+    ru: ['лицо ладонь', 'недоверие', 'упс']
+  },
+  '🤷': {
+    en: ['shrug', 'uncertain', 'indifferent'],
+    ru: ['пожимание плечами', 'неуверенный', 'безразличный']
+  },
 
   // Professional
-  '👮': ['police', 'officer', 'law'],
-  '🕵️': ['detective', 'spy', 'investigate'],
-  '💂': ['guard', 'soldier', 'military'],
-  '🥷': ['ninja', 'stealth', 'assassin'],
-  '👷': ['construction', 'worker', 'helmet'],
-  '🤴': ['prince', 'royalty', 'king'],
-  '👸': ['princess', 'royalty', 'queen'],
-  '👳': ['turban', 'cultural', 'tradition'],
-  '👲': ['man with cap', 'cultural', 'traditional'],
-  '🧕': ['woman with headscarf', 'cultural', 'modest'],
-  '🤵': ['tuxedo', 'groom', 'formal'],
-  '👰': ['bride', 'wedding', 'formal'],
-  '🤰': ['pregnant', 'expecting', 'mother'],
-  '🤱': ['nursing', 'mother', 'baby'],
-  '👼': ['angel', 'cherub', 'divine'],
-  '🎅': ['santa', 'christmas', 'jolly'],
-  '🤶': ['mrs claus', 'christmas', 'holiday'],
-  '🦸': ['superhero', 'power', 'hero'],
-  '🦹': ['villain', 'bad', 'criminal'],
-  '🧙': ['wizard', 'magic', 'sorcery'],
-  '🧚': ['fairy', 'magic', 'mystical'],
-  '🧛': ['vampire', 'dracula', 'undead'],
-  '🧜': ['mermaid', 'mythical', 'ocean'],
+  '👮': {
+    en: ['police', 'officer', 'law'],
+    ru: ['полицейский', 'офицер', 'закон']
+  },
+  '🕵️': {
+    en: ['detective', 'spy', 'investigate'],
+    ru: ['детектив', 'шпион', 'расследование']
+  },
+  '💂': {
+    en: ['guard', 'soldier', 'military'],
+    ru: ['страж', 'солдат', 'военный']
+  },
+  '🥷': {
+    en: ['ninja', 'stealth', 'assassin'],
+    ru: ['ниндзя', 'скрытность', 'ассассин']
+  },
+  '👷': {
+    en: ['construction', 'worker', 'helmet'],
+    ru: ['строитель', 'рабочий', 'шлем']
+  },
+  '🤴': {
+    en: ['prince', 'royalty', 'king'],
+    ru: ['принц', 'королевская семья', 'король']
+  },
+  '👸': {
+    en: ['princess', 'royalty', 'queen'],
+    ru: ['принцесса', 'королевская семья', 'королева']
+  },
+  '👳': {
+    en: ['turban', 'cultural', 'tradition'],
+    ru: ['тюрбан', 'культура', 'традиция']
+  },
+  '👲': {
+    en: ['man with cap', 'cultural', 'traditional'],
+    ru: ['мужчина в кепке', 'культура', 'традиционный']
+  },
+  '🧕': {
+    en: ['woman with headscarf', 'cultural', 'modest'],
+    ru: ['женщина в платке', 'культурная', 'скромная']
+  },
+  '🤵': {
+    en: ['tuxedo', 'groom', 'formal'],
+    ru: ['смокинг', 'жених', 'официальный']
+  },
+  '👰': {
+    en: ['bride', 'wedding', 'formal'],
+    ru: ['невеста', 'свадьба', 'официальный']
+  },
+  '🤰': {
+    en: ['pregnant', 'expecting', 'mother'],
+    ru: ['беременная', 'ожидающая', 'мать']
+  },
+  '🤱': {
+    en: ['nursing', 'mother', 'baby'],
+    ru: ['кормящая', 'мать', 'ребенок']
+  },
+  '👼': {
+    en: ['angel', 'cherub', 'divine'],
+    ru: ['ангел', 'херувим', 'божественный']
+  },
+  '🎅': {
+    en: ['santa', 'christmas', 'jolly'],
+    ru: ['Санта', 'Рождество', 'радостный']
+  },
+  '🤶': {
+    en: ['mrs claus', 'christmas', 'holiday'],
+    ru: ['миссис Клаус', 'Рождество', 'праздник']
+  },
+  '🦸': {
+    en: ['superhero', 'power', 'hero'],
+    ru: ['супергерой', 'сила', 'герой']
+  },
+  '🦹': {
+    en: ['villain', 'bad', 'criminal'],
+    ru: ['злодей', 'плохой', 'преступник']
+  },
+  '🧙': {
+    en: ['wizard', 'magic', 'sorcery'],
+    ru: ['волшебник', 'магия', 'колдовство']
+  },
+  '🧚': {
+    en: ['fairy', 'magic', 'mystical'],
+    ru: ['фея', 'магия', 'мистический']
+  },
+  '🧛': {
+    en: ['vampire', 'dracula', 'undead'],
+    ru: ['вампир', 'Дракула', 'нежить']
+  },
+  '🧜': {
+    en: ['mermaid', 'mythical', 'ocean'],
+    ru: ['русалка', 'мифическая', 'океан']
+  },
 
   //------------------------- Animals & Nature -------------------------
   // Mammals
-  '🐵': ['monkey', 'ape', 'funny', 'mammal'],
-  '🐒': ['monkey', 'primate', 'curious'],
-  '🦍': ['gorilla', 'ape', 'strong', 'wild'],
-  '🦧': ['orangutan', 'ape', 'wild', 'mammal'],
-  '🐶': ['dog', 'puppy', 'pet', 'mammal'],
-  '🐕': ['dog', 'canine', 'pet'],
-  '🦮': ['guide dog', 'service', 'assistance'],
-  '🐕‍🦺': ['service dog', 'working', 'assistance'],
-  '🐩': ['poodle', 'dog', 'pet', 'fancy'],
-  '🐺': ['wolf', 'wild', 'howl'],
-  '🦊': ['fox', 'cunning', 'wild'],
-  '🦝': ['raccoon', 'mischievous', 'wild'],
-  '🐱': ['cat', 'pet', 'feline'],
-  '🐈': ['cat', 'feline', 'pet'],
-  '🐈‍⬛': ['black cat', 'mysterious', 'feline'],
-  '🦁': ['lion', 'king', 'wild', 'courage'],
-  '🐯': ['tiger', 'wild', 'stripes', 'fierce'],
-  '🐅': ['tiger', 'stripes', 'wild'],
-  '🐆': ['leopard', 'spots', 'wild', 'fast'],
-  '🐴': ['horse', 'ride', 'equine'],
-  '🐎': ['horse', 'racing', 'equine'],
-  '🦄': ['unicorn', 'magical', 'fantasy'],
-  '🦓': ['zebra', 'stripes', 'wild'],
-  '🦌': ['deer', 'antlers', 'forest'],
-  '🦬': ['bison', 'buffalo', 'wild'],
-  '🐮': ['cow', 'farm', 'bovine'],
-  '🐂': ['ox', 'bull', 'bovine'],
-  '🐃': ['water buffalo', 'bovine', 'farm'],
-  '🐄': ['cow', 'bovine', 'farm'],
-  '🐷': ['pig', 'farm', 'oink'],
-  '🐖': ['pig', 'swine', 'farm'],
-  '🐗': ['boar', 'wild', 'pig'],
-  '🐽': ['pig nose', 'snout'],
-  '🐏': ['ram', 'sheep', 'male'],
-  '🐑': ['sheep', 'wool', 'farm'],
-  '🐐': ['goat', 'farm', 'bleat'],
-  '🐪': ['camel', 'desert', 'hump'],
-  '🐫': ['camel', 'two-hump', 'desert'],
-  '🦙': ['llama', 'alpaca', 'cute'],
-  '🦒': ['giraffe', 'tall', 'spots'],
-  '🐘': ['elephant', 'trunk', 'large'],
-  '🦏': ['rhinoceros', 'horn', 'tough'],
-  '🦛': ['hippopotamus', 'water', 'large'],
+  '🐵': {
+    en: ['monkey', 'ape', 'funny', 'mammal'],
+    ru: ['обезьяна', 'примат', 'смешной', 'млекопитающее']
+  },
+  '🐒': {
+    en: ['monkey', 'primate', 'curious'],
+    ru: ['обезьяна', 'примат', 'любопытный']
+  },
+  '🦍': {
+    en: ['gorilla', 'ape', 'strong', 'wild'],
+    ru: ['горилла', 'обезьяна', 'сильный', 'дикий']
+  },
+  '🦧': {
+    en: ['orangutan', 'ape', 'wild', 'mammal'],
+    ru: ['орангутан', 'обезьяна', 'дикий', 'млекопитающее']
+  },
+  '🐶': {
+    en: ['dog', 'puppy', 'pet', 'mammal'],
+    ru: ['собака', 'щенок', 'домашний питомец', 'млекопитающее']
+  },
+  '🐕': {
+    en: ['dog', 'canine', 'pet'],
+    ru: ['собака', 'псовой', 'домашний питомец']
+  },
+  '🦮': {
+    en: ['guide dog', 'service', 'assistance'],
+    ru: ['собака-поводырь', 'служебная', 'помощь']
+  },
+  '🐕‍🦺': {
+    en: ['service dog', 'working', 'assistance'],
+    ru: ['служебная собака', 'рабочая', 'помощь']
+  },
+  '🐩': {
+    en: ['poodle', 'dog', 'pet', 'fancy'],
+    ru: ['пудель', 'собака', 'домашний питомец', 'элегантный']
+  },
+  '🐺': {
+    en: ['wolf', 'wild', 'howl'],
+    ru: ['волк', 'дикий', 'воет']
+  },
+  '🦊': {
+    en: ['fox', 'cunning', 'wild'],
+    ru: ['лиса', 'хитрая', 'дикая']
+  },
+  '🦝': {
+    en: ['raccoon', 'mischievous', 'wild'],
+    ru: ['енот', 'озорной', 'дикий']
+  },
+  '🐱': {
+    en: ['cat', 'pet', 'feline'],
+    ru: ['кот', 'домашний питомец', 'кошачий']
+  },
+  '🐈': {
+    en: ['cat', 'feline', 'pet'],
+    ru: ['кот', 'кошачий', 'домашний питомец']
+  },
+  '🐈‍⬛': {
+    en: ['black cat', 'mysterious', 'feline'],
+    ru: ['чёрный кот', 'загадочный', 'кошачий']
+  },
+  '🦁': {
+    en: ['lion', 'king', 'wild', 'courage'],
+    ru: ['лев', 'король', 'дикий', 'отвага']
+  },
+  '🐯': {
+    en: ['tiger', 'wild', 'stripes', 'fierce'],
+    ru: ['тигр', 'дикий', 'полосатый', 'свирепый']
+  },
+  '🐅': {
+    en: ['tiger', 'stripes', 'wild'],
+    ru: ['тигр', 'полосатый', 'дикий']
+  },
+  '🐆': {
+    en: ['leopard', 'spots', 'wild', 'fast'],
+    ru: ['леопард', 'пятна', 'дикий', 'быстрый']
+  },
+  '🐴': {
+    en: ['horse', 'ride', 'equine'],
+    ru: ['лошадь', 'езда', 'конный']
+  },
+  '🐎': {
+    en: ['horse', 'racing', 'equine'],
+    ru: ['лошадь', 'гонки', 'конный']
+  },
+  '🦄': {
+    en: ['unicorn', 'magical', 'fantasy'],
+    ru: ['единорог', 'волшебный', 'фэнтези']
+  },
+  '🦓': {
+    en: ['zebra', 'stripes', 'wild'],
+    ru: ['зебра', 'полосатая', 'дикая']
+  },
+  '🦌': {
+    en: ['deer', 'antlers', 'forest'],
+    ru: ['олень', 'рога', 'лес']
+  },
+  '🦬': {
+    en: ['bison', 'buffalo', 'wild'],
+    ru: ['бизон', 'буйвол', 'дикий']
+  },
+  '🐮': {
+    en: ['cow', 'farm', 'bovine'],
+    ru: ['корова', 'ферма', 'коровий']
+  },
+  '🐂': {
+    en: ['ox', 'bull', 'bovine'],
+    ru: ['вол', 'бык', 'коровий']
+  },
+  '🐃': {
+    en: ['water buffalo', 'bovine', 'farm'],
+    ru: ['водный буйвол', 'коровий', 'ферма']
+  },
+  '🐄': {
+    en: ['cow', 'bovine', 'farm'],
+    ru: ['корова', 'коровий', 'ферма']
+  },
+  '🐷': {
+    en: ['pig', 'farm', 'oink'],
+    ru: ['свинья', 'ферма', 'хрюк']
+  },
+  '🐖': {
+    en: ['pig', 'swine', 'farm'],
+    ru: ['свинья', 'свинное животное', 'ферма']
+  },
+  '🐗': {
+    en: ['boar', 'wild', 'pig'],
+    ru: ['кабан', 'дикий', 'свинья']
+  },
+  '🐽': {
+    en: ['pig nose', 'snout'],
+    ru: ['свинной нос', 'хоботок']
+  },
+  '🐏': {
+    en: ['ram', 'sheep', 'male'],
+    ru: ['баран', 'овца', 'самец']
+  },
+  '🐑': {
+    en: ['sheep', 'wool', 'farm'],
+    ru: ['овца', 'шерсть', 'ферма']
+  },
+  '🐐': {
+    en: ['goat', 'farm', 'bleat'],
+    ru: ['коза', 'ферма', 'блеет']
+  },
+  '🐪': {
+    en: ['camel', 'desert', 'hump'],
+    ru: ['верблюд', 'пустыня', 'горб']
+  },
+  '🐫': {
+    en: ['camel', 'two-hump', 'desert'],
+    ru: ['двугорбый верблюд', 'двугорбый', 'пустыня']
+  },
+  '🦙': {
+    en: ['llama', 'alpaca', 'cute'],
+    ru: ['лама', 'альпака', 'милый']
+  },
+  '🦒': {
+    en: ['giraffe', 'tall', 'spots'],
+    ru: ['жираф', 'высокий', 'пятна']
+  },
+  '🐘': {
+    en: ['elephant', 'trunk', 'large'],
+    ru: ['слон', 'хобот', 'большой']
+  },
+  '🦏': {
+    en: ['rhinoceros', 'horn', 'tough'],
+    ru: ['носорог', 'рог', 'жесткий']
+  },
+  '🦛': {
+    en: ['hippopotamus', 'water', 'large'],
+    ru: ['бегемот', 'вода', 'большой']
+  },
 
   // Birds
-  '🦃': ['turkey', 'bird', 'thanksgiving'],
-  '🐔': ['chicken', 'rooster', 'hen'],
-  '🐓': ['rooster', 'chicken', 'bird'],
-  '🐣': ['hatching chick', 'baby', 'bird'],
-  '🐤': ['chick', 'small', 'bird'],
-  '🐥': ['baby chicken', 'cute', 'bird'],
-  '🐦': ['bird', 'tweet', 'wing'],
-  '🐧': ['penguin', 'cold', 'bird'],
-  '🕊️': ['dove', 'peace', 'bird'],
-  '🦅': ['eagle', 'wild', 'bird'],
-  '🦆': ['duck', 'water', 'bird'],
-  '🦢': ['swan', 'graceful', 'bird'],
-  '🦉': ['owl', 'wise', 'night', 'bird'],
-  '🦤': ['dodo', 'extinct', 'bird'],
-  '🪶': ['feather', 'light', 'bird'],
-  '🦩': ['flamingo', 'pink', 'bird'],
-  '🦚': ['peacock', 'colorful', 'bird'],
-  '🦜': ['parrot', 'talkative', 'colorful'],
+  '🦃': {
+    en: ['turkey', 'bird', 'thanksgiving'],
+    ru: ['индейка', 'птица', 'День благодарения']
+  },
+  '🐔': {
+    en: ['chicken', 'rooster', 'hen'],
+    ru: ['курица', 'петух', 'курица (самка)']
+  },
+  '🐓': {
+    en: ['rooster', 'chicken', 'bird'],
+    ru: ['петух', 'курица', 'птица']
+  },
+  '🐣': {
+    en: ['hatching chick', 'baby', 'bird'],
+    ru: ['вылупляющийся цыплёнок', 'малыш', 'птица']
+  },
+  '🐤': {
+    en: ['chick', 'small', 'bird'],
+    ru: ['цыплёнок', 'маленький', 'птица']
+  },
+  '🐥': {
+    en: ['baby chicken', 'cute', 'bird'],
+    ru: ['цыплёнок', 'милый', 'птица']
+  },
+  '🐦': {
+    en: ['bird', 'tweet', 'wing'],
+    ru: ['птица', 'чирик', 'крыло']
+  },
+  '🐧': {
+    en: ['penguin', 'cold', 'bird'],
+    ru: ['пингвин', 'холодный', 'птица']
+  },
+  '🕊️': {
+    en: ['dove', 'peace', 'bird'],
+    ru: ['голубь', 'мир', 'птица']
+  },
+  '🦅': {
+    en: ['eagle', 'wild', 'bird'],
+    ru: ['орёл', 'дикий', 'птица']
+  },
+  '🦆': {
+    en: ['duck', 'water', 'bird'],
+    ru: ['утка', 'вода', 'птица']
+  },
+  '🦢': {
+    en: ['swan', 'graceful', 'bird'],
+    ru: ['лебедь', 'грациозный', 'птица']
+  },
+  '🦉': {
+    en: ['owl', 'wise', 'night', 'bird'],
+    ru: ['сова', 'мудрая', 'ночная', 'птица']
+  },
+  '🦤': {
+    en: ['dodo', 'extinct', 'bird'],
+    ru: ['додо', 'вымершая', 'птица']
+  },
+  '🪶': {
+    en: ['feather', 'light', 'bird'],
+    ru: ['перо', 'лёгкое', 'птица']
+  },
+  '🦩': {
+    en: ['flamingo', 'pink', 'bird'],
+    ru: ['фламинго', 'розовый', 'птица']
+  },
+  '🦚': {
+    en: ['peacock', 'colorful', 'bird'],
+    ru: ['павлин', 'яркий', 'птица']
+  },
+  '🦜': {
+    en: ['parrot', 'talkative', 'colorful'],
+    ru: ['попугай', 'болтливый', 'яркий']
+  },
 
   // Reptiles/Amphibians
-  '🐸': ['frog', 'amphibian', 'green'],
-  '🐊': ['crocodile', 'reptile', 'danger'],
-  '🐢': ['turtle', 'slow', 'reptile'],
-  '🦎': ['lizard', 'reptile', 'scaly'],
-  '🐍': ['snake', 'reptile', 'slither'],
-  '🐲': ['dragon face', 'mythical', 'dragon'],
-  '🐉': ['dragon', 'mythical', 'fire'],
-  '🦕': ['dinosaur', 'sauropod', 'prehistoric'],
-  '🦖': ['dinosaur', 'T-Rex', 'prehistoric'],
+  '🐸': {
+    en: ['frog', 'amphibian', 'green'],
+    ru: ['лягушка', 'амфибия', 'зелёная']
+  },
+  '🐊': {
+    en: ['crocodile', 'reptile', 'danger'],
+    ru: ['крокодил', 'рептилия', 'опасность']
+  },
+  '🐢': {
+    en: ['turtle', 'slow', 'reptile'],
+    ru: ['черепаха', 'медленная', 'рептилия']
+  },
+  '🦎': {
+    en: ['lizard', 'reptile', 'scaly'],
+    ru: ['ящерица', 'рептилия', 'чешуйчатая']
+  },
+  '🐍': {
+    en: ['snake', 'reptile', 'slither'],
+    ru: ['змея', 'рептилия', 'ползать']
+  },
+  '🐲': {
+    en: ['dragon face', 'mythical', 'dragon'],
+    ru: ['лицо дракона', 'мифический', 'дракон']
+  },
+  '🐉': {
+    en: ['dragon', 'mythical', 'fire'],
+    ru: ['дракон', 'мифический', 'огонь']
+  },
+  '🦕': {
+    en: ['dinosaur', 'sauropod', 'prehistoric'],
+    ru: ['динозавр', 'зауропод', 'доисторический']
+  },
+  '🦖': {
+    en: ['dinosaur', 'T-Rex', 'prehistoric'],
+    ru: ['динозавр', 'Ти-Рекс', 'доисторический']
+  },
 
   // Marine
-  '🐳': ['whale', 'ocean', 'large'],
-  '🐋': ['whale', 'ocean', 'big'],
-  '🐬': ['dolphin', 'ocean', 'friendly'],
-  '🦭': ['seal', 'marine', 'cute'],
-  '🐟': ['fish', 'ocean', 'swim'],
-  '🐠': ['tropical fish', 'ocean', 'colorful'],
-  '🐡': ['blowfish', 'puffer', 'ocean'],
-  '🦈': ['shark', 'ocean', 'dangerous'],
-  '🐙': ['octopus', 'marine', 'tentacles'],
-  '🐚': ['shell', 'beach', 'ocean'],
-  '🪸': ['coral', 'reef', 'ocean'],
+  '🐳': {
+    en: ['whale', 'ocean', 'large'],
+    ru: ['кит', 'океан', 'большой']
+  },
+  '🐋': {
+    en: ['whale', 'ocean', 'big'],
+    ru: ['кит', 'океан', 'огромный']
+  },
+  '🐬': {
+    en: ['dolphin', 'ocean', 'friendly'],
+    ru: ['дельфин', 'океан', 'дружелюбный']
+  },
+  '🦭': {
+    en: ['seal', 'marine', 'cute'],
+    ru: ['тюлень', 'морской', 'милый']
+  },
+  '🐟': {
+    en: ['fish', 'ocean', 'swim'],
+    ru: ['рыба', 'океан', 'плавать']
+  },
+  '🐠': {
+    en: ['tropical fish', 'ocean', 'colorful'],
+    ru: ['тропическая рыба', 'океан', 'яркая']
+  },
+  '🐡': {
+    en: ['blowfish', 'puffer', 'ocean'],
+    ru: ['рыба-иглобрюх', 'фугу', 'океан']
+  },
+  '🦈': {
+    en: ['shark', 'ocean', 'dangerous'],
+    ru: ['акула', 'океан', 'опасная']
+  },
+  '🐙': {
+    en: ['octopus', 'marine', 'tentacles'],
+    ru: ['осьминог', 'морской', 'щупальца']
+  },
+  '🐚': {
+    en: ['shell', 'beach', 'ocean'],
+    ru: ['ракушка', 'пляж', 'океан']
+  },
+  '🪸': {
+    en: ['coral', 'reef', 'ocean'],
+    ru: ['коралл', 'риф', 'океан']
+  },
 
   // Insects
-  '🐌': ['snail', 'slow', 'mollusk'],
-  '🦋': ['butterfly', 'insect', 'colorful'],
-  '🐛': ['caterpillar', 'insect', 'larva'],
-  '🐜': ['ant', 'small', 'insect'],
-  '🐝': ['bee', 'insect', 'honey'],
-  '🪲': ['beetle', 'insect', 'bug'],
-  '🐞': ['ladybug', 'insect', 'lucky'],
-  '🦗': ['cricket', 'insect', 'chirp'],
-  '🪳': ['cockroach', 'insect', 'pest'],
-  '🕷️': ['spider', 'arachnid', 'insect'],
-  '🕸️': ['web', 'spider', 'trap'],
-  '🦂': ['scorpion', 'insect', 'venom'],
-  '🦟': ['mosquito', 'insect', 'bite'],
-  '🪰': ['fly', 'insect', 'buzz'],
-  '🪱': ['worm', 'earth', 'invertebrate'],
+  '🐌': {
+    en: ['snail', 'slow', 'mollusk'],
+    ru: ['улитка', 'медленная', 'моллюск']
+  },
+  '🦋': {
+    en: ['butterfly', 'insect', 'colorful'],
+    ru: ['бабочка', 'насекомое', 'яркая']
+  },
+  '🐛': {
+    en: ['caterpillar', 'insect', 'larva'],
+    ru: ['гусеница', 'насекомое', 'личинка']
+  },
+  '🐜': {
+    en: ['ant', 'small', 'insect'],
+    ru: ['муравей', 'маленький', 'насекомое']
+  },
+  '🐝': {
+    en: ['bee', 'insect', 'honey'],
+    ru: ['пчела', 'насекомое', 'мёд']
+  },
+  '🪲': {
+    en: ['beetle', 'insect', 'bug'],
+    ru: ['жук', 'насекомое', 'баг']
+  },
+  '🐞': {
+    en: ['ladybug', 'insect', 'lucky'],
+    ru: ['божья коровка', 'насекомое', 'счастливая']
+  },
+  '🦗': {
+    en: ['cricket', 'insect', 'chirp'],
+    ru: ['сверчок', 'насекомое', 'щебет']
+  },
+  '🪳': {
+    en: ['cockroach', 'insect', 'pest'],
+    ru: ['таракан', 'насекомое', 'вредитель']
+  },
+  '🕷️': {
+    en: ['spider', 'arachnid', 'insect'],
+    ru: ['паук', 'паукообразное', 'насекомое']
+  },
+  '🕸️': {
+    en: ['web', 'spider', 'trap'],
+    ru: ['паутина', 'паук', 'ловушка']
+  },
+  '🦂': {
+    en: ['scorpion', 'insect', 'venom'],
+    ru: ['скорпион', 'насекомое', 'яд']
+  },
+  '🦟': {
+    en: ['mosquito', 'insect', 'bite'],
+    ru: ['комар', 'насекомое', 'укус']
+  },
+  '🪰': {
+    en: ['fly', 'insect', 'buzz'],
+    ru: ['муха', 'насекомое', 'жужжание']
+  },
+  '🪱': {
+    en: ['worm', 'earth', 'invertebrate'],
+    ru: ['червь', 'земля', 'беспозвоночное']
+  },
 
   // Plants
-  '🌸': ['cherry blossom', 'flower', 'spring'],
-  '💮': ['white flower', 'flower', 'symbol'],
-  '🏵️': ['rosette', 'flower', 'decorative'],
-  '🌹': ['rose', 'flower', 'love', 'romance'],
-  '🥀': ['wilted flower', 'sad', 'decay'],
-  '🌺': ['hibiscus', 'flower', 'tropical'],
-  '🌻': ['sunflower', 'flower', 'summer'],
-  '🌼': ['blossom', 'flower', 'spring'],
-  '🌷': ['tulip', 'flower', 'spring'],
-  '🌱': ['seedling', 'plant', 'growth'],
-  '🪴': ['potted plant', 'indoor', 'green'],
-  '🌲': ['evergreen', 'tree', 'forest'],
-  '🌳': ['tree', 'nature', 'shade'],
-  '🌴': ['palm tree', 'tropical', 'beach'],
-  '🌵': ['cactus', 'desert', 'succulent'],
-  '🌾': ['sheaf', 'grain', 'farm'],
-  '🌿': ['herb', 'plant', 'leaf'],
-  '☘️': ['shamrock', 'luck', 'clover'],
-  '🍀': ['four-leaf clover', 'luck', 'green'],
-  '🍁': ['maple leaf', 'autumn', 'fall'],
-  '🍂': ['fallen leaf', 'autumn', 'nature'],
-  '🍃': ['leaf', 'wind', 'nature'],
+  '🌸': {
+    en: ['cherry blossom', 'flower', 'spring'],
+    ru: ['сакура', 'цветок', 'весна']
+  },
+  '💮': {
+    en: ['white flower', 'flower', 'symbol'],
+    ru: ['белый цветок', 'цветок', 'символ']
+  },
+  '🏵️': {
+    en: ['rosette', 'flower', 'decorative'],
+    ru: ['розетка', 'цветок', 'декоративный']
+  },
+  '🌹': {
+    en: ['rose', 'flower', 'love', 'romance'],
+    ru: ['роза', 'цветок', 'любовь', 'романтика']
+  },
+  '🥀': {
+    en: ['wilted flower', 'sad', 'decay'],
+    ru: ['увядший цветок', 'грусть', 'разложение']
+  },
+  '🌺': {
+    en: ['hibiscus', 'flower', 'tropical'],
+    ru: ['гибискус', 'цветок', 'тропический']
+  },
+  '🌻': {
+    en: ['sunflower', 'flower', 'summer'],
+    ru: ['подсолнух', 'цветок', 'лето']
+  },
+  '🌼': {
+    en: ['blossom', 'flower', 'spring'],
+    ru: ['цветение', 'цветок', 'весна']
+  },
+  '🌷': {
+    en: ['tulip', 'flower', 'spring'],
+    ru: ['тюльпан', 'цветок', 'весна']
+  },
+  '🌱': {
+    en: ['seedling', 'plant', 'growth'],
+    ru: ['сеянец', 'растение', 'рост']
+  },
+  '🪴': {
+    en: ['potted plant', 'indoor', 'green'],
+    ru: ['растение в горшке', 'в помещении', 'зелёное']
+  },
+  '🌲': {
+    en: ['evergreen', 'tree', 'forest'],
+    ru: ['вечнозелёное', 'дерево', 'лес']
+  },
+  '🌳': {
+    en: ['tree', 'nature', 'shade'],
+    ru: ['дерево', 'природа', 'тень']
+  },
+  '🌴': {
+    en: ['palm tree', 'tropical', 'beach'],
+    ru: ['пальма', 'тропический', 'пляж']
+  },
+  '🌵': {
+    en: ['cactus', 'desert', 'succulent'],
+    ru: ['кактус', 'пустыня', 'суккулент']
+  },
+  '🌾': {
+    en: ['sheaf', 'grain', 'farm'],
+    ru: ['сноп', 'зерно', 'ферма']
+  },
+  '🌿': {
+    en: ['herb', 'plant', 'leaf'],
+    ru: ['трава', 'растение', 'лист']
+  },
+  '☘️': {
+    en: ['shamrock', 'luck', 'clover'],
+    ru: ['клевер', 'удача', 'трилистник']
+  },
+  '🍀': {
+    en: ['four-leaf clover', 'luck', 'green'],
+    ru: ['клевер с четырьмя листьями', 'удача', 'зелёный']
+  },
+  '🍁': {
+    en: ['maple leaf', 'autumn', 'fall'],
+    ru: ['кленовый лист', 'осень', 'осенний']
+  },
+  '🍂': {
+    en: ['fallen leaf', 'autumn', 'nature'],
+    ru: ['опавший лист', 'осень', 'природа']
+  },
+  '🍃': {
+    en: ['leaf', 'wind', 'nature'],
+    ru: ['лист', 'ветер', 'природа']
+  },
 
   //------------------------- Food & Drink -------------------------
   // Fruits
-  '🍎': ['apple', 'red', 'fruit', 'healthy'],
-  '🍐': ['pear', 'fruit', 'green', 'juicy'],
-  '🍊': ['orange', 'fruit', 'citrus', 'vitamin C'],
-  '🍋': ['lemon', 'citrus', 'sour', 'yellow'],
-  '🍌': ['banana', 'fruit', 'yellow', 'tropical'],
-  '🍉': ['watermelon', 'fruit', 'summer', 'refreshing'],
-  '🍇': ['grapes', 'fruit', 'purple', 'vine'],
-  '🍓': ['strawberry', 'fruit', 'red', 'sweet'],
-  '🫐': ['blueberry', 'fruit', 'blue', 'healthy'],
-  '🍈': ['melon', 'fruit', 'sweet', 'green'],
-  '🍒': ['cherry', 'fruit', 'red', 'sweet'],
-  '🍑': ['peach', 'fruit', 'fuzzy', 'sweet'],
-  '🥭': ['mango', 'fruit', 'tropical', 'yellow'],
-  '🍍': ['pineapple', 'fruit', 'tropical', 'spiky'],
-  '🥥': ['coconut', 'tropical', 'fruit', 'white'],
-  '🥝': ['kiwi', 'fruit', 'green', 'tart'],
+  '🍎': {
+    en: ['apple', 'red', 'fruit', 'healthy'],
+    ru: ['яблоко', 'красное', 'фрукт', 'полезное']
+  },
+  '🍐': {
+    en: ['pear', 'fruit', 'green', 'juicy'],
+    ru: ['груша', 'фрукт', 'зелёная', 'сочная']
+  },
+  '🍊': {
+    en: ['orange', 'fruit', 'citrus', 'vitamin C'],
+    ru: ['апельсин', 'фрукт', 'цитрус', 'витамин C']
+  },
+  '🍋': {
+    en: ['lemon', 'citrus', 'sour', 'yellow'],
+    ru: ['лимон', 'цитрус', 'кислый', 'жёлтый']
+  },
+  '🍌': {
+    en: ['banana', 'fruit', 'yellow', 'tropical'],
+    ru: ['банан', 'фрукт', 'жёлтый', 'тропический']
+  },
+  '🍉': {
+    en: ['watermelon', 'fruit', 'summer', 'refreshing'],
+    ru: ['арбуз', 'фрукт', 'лето', 'освежающий']
+  },
+  '🍇': {
+    en: ['grapes', 'fruit', 'purple', 'vine'],
+    ru: ['виноград', 'фрукт', 'фиолетовый', 'виноградная лоза']
+  },
+  '🍓': {
+    en: ['strawberry', 'fruit', 'red', 'sweet'],
+    ru: ['клубника', 'фрукт', 'красная', 'сладкая']
+  },
+  '🫐': {
+    en: ['blueberry', 'fruit', 'blue', 'healthy'],
+    ru: ['черника', 'фрукт', 'синяя', 'полезная']
+  },
+  '🍈': {
+    en: ['melon', 'fruit', 'sweet', 'green'],
+    ru: ['дыня', 'фрукт', 'сладкая', 'зелёная']
+  },
+  '🍒': {
+    en: ['cherry', 'fruit', 'red', 'sweet'],
+    ru: ['вишня', 'фрукт', 'красная', 'сладкая']
+  },
+  '🍑': {
+    en: ['peach', 'fruit', 'fuzzy', 'sweet'],
+    ru: ['персик', 'фрукт', 'шероховатый', 'сладкий']
+  },
+  '🥭': {
+    en: ['mango', 'fruit', 'tropical', 'yellow'],
+    ru: ['манго', 'фрукт', 'тропический', 'жёлтый']
+  },
+  '🍍': {
+    en: ['pineapple', 'fruit', 'tropical', 'spiky'],
+    ru: ['ананас', 'фрукт', 'тропический', 'колючий']
+  },
+  '🥥': {
+    en: ['coconut', 'tropical', 'fruit', 'white'],
+    ru: ['кокос', 'тропический', 'фрукт', 'белый']
+  },
+  '🥝': {
+    en: ['kiwi', 'fruit', 'green', 'tart'],
+    ru: ['киви', 'фрукт', 'зелёный', 'кисловатый']
+  },
 
   // Vegetables
-  '🍅': ['tomato', 'vegetable', 'red', 'juicy'],
-  '🍆': ['eggplant', 'vegetable', 'purple', 'aubergine'],
-  '🥑': ['avocado', 'vegetable', 'green', 'healthy'],
-  '🥦': ['broccoli', 'vegetable', 'green', 'healthy'],
-  '🥬': ['leafy greens', 'vegetable', 'lettuce', 'healthy'],
-  '🥒': ['cucumber', 'vegetable', 'green', 'fresh'],
-  '🌶️': ['chili pepper', 'spicy', 'red', 'hot'],
-  '🫑': ['bell pepper', 'vegetable', 'colorful', 'sweet'],
-  '🥕': ['carrot', 'vegetable', 'orange', 'crunchy'],
-  '🧄': ['garlic', 'vegetable', 'aromatic', 'flavorful'],
-  '🧅': ['onion', 'vegetable', 'strong', 'flavor'],
-  '🥔': ['potato', 'vegetable', 'starchy', 'brown'],
-  '🍠': ['sweet potato', 'vegetable', 'orange', 'starchy'],
+  '🍅': {
+    en: ['tomato', 'vegetable', 'red', 'juicy'],
+    ru: ['помидор', 'овощ', 'красный', 'сочный']
+  },
+  '🍆': {
+    en: ['eggplant', 'vegetable', 'purple', 'aubergine'],
+    ru: ['баклажан', 'овощ', 'фиолетовый', 'баклажан']
+  },
+  '🥑': {
+    en: ['avocado', 'vegetable', 'green', 'healthy'],
+    ru: ['авокадо', 'овощ', 'зелёный', 'полезный']
+  },
+  '🥦': {
+    en: ['broccoli', 'vegetable', 'green', 'healthy'],
+    ru: ['брокколи', 'овощ', 'зелёный', 'полезный']
+  },
+  '🥬': {
+    en: ['leafy greens', 'vegetable', 'lettuce', 'healthy'],
+    ru: ['листья салата', 'овощ', 'салат', 'полезный']
+  },
+  '🥒': {
+    en: ['cucumber', 'vegetable', 'green', 'fresh'],
+    ru: ['огурец', 'овощ', 'зелёный', 'свежий']
+  },
+  '🌶️': {
+    en: ['chili pepper', 'spicy', 'red', 'hot'],
+    ru: ['чили', 'острый', 'красный', 'горячий']
+  },
+  '🫑': {
+    en: ['bell pepper', 'vegetable', 'colorful', 'sweet'],
+    ru: ['болгарский перец', 'овощ', 'разноцветный', 'сладкий']
+  },
+  '🥕': {
+    en: ['carrot', 'vegetable', 'orange', 'crunchy'],
+    ru: ['морковь', 'овощ', 'оранжевая', 'хрустящая']
+  },
+  '🧄': {
+    en: ['garlic', 'vegetable', 'aromatic', 'flavorful'],
+    ru: ['чеснок', 'овощ', 'ароматный', 'вкусный']
+  },
+  '🧅': {
+    en: ['onion', 'vegetable', 'strong', 'flavor'],
+    ru: ['лук', 'овощ', 'сильный', 'вкус']
+  },
+  '🥔': {
+    en: ['potato', 'vegetable', 'starchy', 'brown'],
+    ru: ['картофель', 'овощ', 'крахмалистый', 'коричневый']
+  },
+  '🍠': {
+    en: ['sweet potato', 'vegetable', 'orange', 'starchy'],
+    ru: ['батат', 'овощ', 'оранжевый', 'крахмалистый']
+  },
 
   // Breads & Baked Goods
-  '🥐': ['croissant', 'bread', 'pastry', 'flaky'],
-  '🥯': ['bagel', 'bread', 'round', 'chewy'],
-  '🍞': ['bread', 'baked', 'loaf', 'toast'],
-  '🥖': ['baguette', 'bread', 'French', 'long'],
-  '🥨': ['pretzel', 'snack', 'salted', 'twisted'],
+  '🥐': {
+    en: ['croissant', 'bread', 'pastry', 'flaky'],
+    ru: ['круассан', 'хлеб', 'выпечка', 'слоёный']
+  },
+  '🥯': {
+    en: ['bagel', 'bread', 'round', 'chewy'],
+    ru: ['бейгл', 'хлеб', 'круглый', 'жевательный']
+  },
+  '🍞': {
+    en: ['bread', 'baked', 'loaf', 'toast'],
+    ru: ['хлеб', 'выпеченный', 'буханка', 'тост']
+  },
+  '🥖': {
+    en: ['baguette', 'bread', 'French', 'long'],
+    ru: ['багет', 'хлеб', 'французский', 'длинный']
+  },
+  '🥨': {
+    en: ['pretzel', 'snack', 'salted', 'twisted'],
+    ru: ['претцель', 'закуска', 'солёный', 'скрученный']
+  },
 
   // Prepared Foods
-  '🧀': ['cheese', 'dairy', 'yellow', 'savory'],
-  '🥚': ['egg', 'protein', 'breakfast'],
-  '🍳': ['fried egg', 'breakfast', 'cooked'],
-  '🥓': ['bacon', 'meat', 'crispy', 'breakfast'],
-  '🥩': ['steak', 'meat', 'protein', 'beef'],
-  '🍗': ['chicken leg', 'meat', 'drumstick', 'grilled'],
-  '🍖': ['meat on bone', 'barbecue', 'protein'],
-  '🦴': ['bone', 'meat', 'dog', 'skeleton'],
-  '🌭': ['hot dog', 'fast food', 'sausage'],
-  '🍔': ['burger', 'fast food', 'beef', 'cheese'],
-  '🍟': ['french fries', 'fast food', 'crispy', 'potato'],
-  '🍕': ['pizza', 'cheese', 'fast food', 'Italian'],
-  '🫓': ['flatbread', 'bread', 'soft'],
-  '🥪': ['sandwich', 'bread', 'meal'],
-  '🥙': ['pita', 'bread', 'stuffed', 'Greek'],
-  '🧆': ['falafel', 'vegetarian', 'fried'],
-  '🌮': ['taco', 'Mexican', 'spicy'],
-  '🌯': ['burrito', 'Mexican', 'stuffed'],
-  '🫔': ['tamale', 'Mexican', 'corn'],
-  '🥗': ['salad', 'healthy', 'vegetable'],
+  '🧀': {
+    en: ['cheese', 'dairy', 'yellow', 'savory'],
+    ru: ['сыр', 'молочный продукт', 'жёлтый', 'пикантный']
+  },
+  '🥚': {
+    en: ['egg', 'protein', 'breakfast'],
+    ru: ['яйцо', 'белок', 'завтрак']
+  },
+  '🍳': {
+    en: ['fried egg', 'breakfast', 'cooked'],
+    ru: ['жареное яйцо', 'завтрак', 'приготовленное']
+  },
+  '🥓': {
+    en: ['bacon', 'meat', 'crispy', 'breakfast'],
+    ru: ['бекон', 'мясо', 'хрустящий', 'завтрак']
+  },
+  '🥩': {
+    en: ['steak', 'meat', 'protein', 'beef'],
+    ru: ['стейк', 'мясо', 'белок', 'говядина']
+  },
+  '🍗': {
+    en: ['chicken leg', 'meat', 'drumstick', 'grilled'],
+    ru: ['куриная ножка', 'мясо', 'барабанная палочка', 'гриль']
+  },
+  '🍖': {
+    en: ['meat on bone', 'barbecue', 'protein'],
+    ru: ['мясо на кости', 'барбекю', 'белок']
+  },
+  '🦴': {
+    en: ['bone', 'meat', 'dog', 'skeleton'],
+    ru: ['кость', 'мясо', 'собака', 'скелет']
+  },
+  '🌭': {
+    en: ['hot dog', 'fast food', 'sausage'],
+    ru: ['хот-дог', 'фастфуд', 'колбаска']
+  },
+  '🍔': {
+    en: ['burger', 'fast food', 'beef', 'cheese'],
+    ru: ['бургер', 'фастфуд', 'говядина', 'сыр']
+  },
+  '🍟': {
+    en: ['french fries', 'fast food', 'crispy', 'potato'],
+    ru: ['картофель фри', 'фастфуд', 'хрустящий', 'картофель']
+  },
+  '🍕': {
+    en: ['pizza', 'cheese', 'fast food', 'Italian'],
+    ru: ['пицца', 'сыр', 'фастфуд', 'итальянская']
+  },
+  '🫓': {
+    en: ['flatbread', 'bread', 'soft'],
+    ru: ['лепёшка', 'хлеб', 'мягкая']
+  },
+  '🥪': {
+    en: ['sandwich', 'bread', 'meal'],
+    ru: ['бутерброд', 'хлеб', 'приём пищи']
+  },
+  '🥙': {
+    en: ['pita', 'bread', 'stuffed', 'Greek'],
+    ru: ['пита', 'хлеб', 'фаршированная', 'греческая']
+  },
+  '🧆': {
+    en: ['falafel', 'vegetarian', 'fried'],
+    ru: ['фалафель', 'вегетарианский', 'жареный']
+  },
+  '🌮': {
+    en: ['taco', 'Mexican', 'spicy'],
+    ru: ['тако', 'мексиканская', 'острая']
+  },
+  '🌯': {
+    en: ['burrito', 'Mexican', 'stuffed'],
+    ru: ['буррито', 'мексиканская', 'фаршированная']
+  },
+  '🫔': {
+    en: ['tamale', 'Mexican', 'corn'],
+    ru: ['тамале', 'мексиканская', 'кукурузная']
+  },
+  '🥗': {
+    en: ['salad', 'healthy', 'vegetable'],
+    ru: ['салат', 'здоровый', 'овощной']
+  },
 
   // Asian Foods
-  '🥘': ['paella', 'stew', 'seafood'],
-  '🫕': ['fondue', 'melted', 'cheese'],
-  '🥫': ['canned food', 'storage', 'preserved'],
-  '🍝': ['spaghetti', 'pasta', 'Italian'],
-  '🍜': ['ramen', 'noodles', 'Asian'],
-  '🍲': ['hotpot', 'stew', 'broth'],
-  '🍛': ['curry', 'spicy', 'rice'],
-  '🍣': ['sushi', 'Japanese', 'fish'],
-  '🍱': ['bento box', 'Japanese', 'meal'],
-  '🥟': ['dumpling', 'Asian', 'stuffed'],
-  '🦪': ['oyster', 'seafood', 'shellfish'],
-  '🍤': ['shrimp tempura', 'fried', 'seafood'],
-  '🍙': ['rice ball', 'Japanese', 'onigiri'],
-  '🍚': ['cooked rice', 'staple', 'Asian'],
-  '🍘': ['rice cracker', 'snack', 'Japanese'],
-  '🍥': ['fish cake', 'Japanese', 'swirl'],
-  '🥠': ['fortune cookie', 'Chinese', 'paper'],
-  '🥮': ['mooncake', 'Chinese', 'festival'],
+  '🥘': {
+    en: ['paella', 'stew', 'seafood'],
+    ru: ['паэлья', 'тушёное блюдо', 'морепродукты']
+  },
+  '🫕': {
+    en: ['fondue', 'melted', 'cheese'],
+    ru: ['фондю', 'расплавленный', 'сыр']
+  },
+  '🥫': {
+    en: ['canned food', 'storage', 'preserved'],
+    ru: ['консервы', 'хранение', 'сохранённое']
+  },
+  '🍝': {
+    en: ['spaghetti', 'pasta', 'Italian'],
+    ru: ['спагетти', 'паста', 'итальянская']
+  },
+  '🍜': {
+    en: ['ramen', 'noodles', 'Asian'],
+    ru: ['рамен', 'лапша', 'азиатская']
+  },
+  '🍲': {
+    en: ['hotpot', 'stew', 'broth'],
+    ru: ['хотпот', 'тушёное блюдо', 'бульон']
+  },
+  '🍛': {
+    en: ['curry', 'spicy', 'rice'],
+    ru: ['карри', 'острая', 'рис']
+  },
+  '🍣': {
+    en: ['sushi', 'Japanese', 'fish'],
+    ru: ['суши', 'японская', 'рыба']
+  },
+  '🍱': {
+    en: ['bento box', 'Japanese', 'meal'],
+    ru: ['бенто', 'японская', 'еда']
+  },
+  '🥟': {
+    en: ['dumpling', 'Asian', 'stuffed'],
+    ru: ['пельмени', 'азиатские', 'фаршированные']
+  },
+  '🦪': {
+    en: ['oyster', 'seafood', 'shellfish'],
+    ru: ['устрица', 'морепродукт', 'раковина']
+  },
+  '🍤': {
+    en: ['shrimp tempura', 'fried', 'seafood'],
+    ru: ['креветка темпура', 'жареная', 'морепродукт']
+  },
+  '🍙': {
+    en: ['rice ball', 'Japanese', 'onigiri'],
+    ru: ['рисовый шар', 'японская', 'онигири']
+  },
+  '🍚': {
+    en: ['cooked rice', 'staple', 'Asian'],
+    ru: ['варёный рис', 'основа', 'азиатская']
+  },
+  '🍘': {
+    en: ['rice cracker', 'snack', 'Japanese'],
+    ru: ['рисовый крекер', 'закуска', 'японская']
+  },
+  '🍥': {
+    en: ['fish cake', 'Japanese', 'swirl'],
+    ru: ['рыбный пирожок', 'японская', 'спираль']
+  },
+  '🥠': {
+    en: ['fortune cookie', 'Chinese', 'paper'],
+    ru: ['печенье с предсказанием', 'китайское', 'бумажное']
+  },
+  '🥮': {
+    en: ['mooncake', 'Chinese', 'festival'],
+    ru: ['лунное печенье', 'китайское', 'фестиваль']
+  },
 
   // Sweets & Desserts
-  '🍢': ['skewered snack', 'street food'],
-  '🍡': ['dango', 'Japanese', 'mochi'],
-  '🍧': ['shaved ice', 'dessert', 'cold'],
-  '🍨': ['ice cream', 'cold', 'sweet'],
-  '🍦': ['soft serve', 'dessert', 'cold'],
-  '🥧': ['pie', 'dessert', 'baked'],
-  '🧁': ['cupcake', 'sweet', 'frosting'],
-  '🍰': ['cake', 'dessert', 'slice'],
-  '🎂': ['birthday cake', 'celebration', 'sweet'],
-  '🍮': ['flan', 'custard', 'dessert'],
-  '🍭': ['lollipop', 'candy', 'sweet'],
-  '🍬': ['candy', 'sweet', 'sugar'],
-  '🍫': ['chocolate', 'sweet', 'cocoa'],
-  '🍿': ['popcorn', 'snack', 'buttery'],
-  '🍩': ['doughnut', 'sweet', 'fried'],
-  '🍪': ['cookie', 'sweet', 'baked'],
+  '🍢': {
+    en: ['skewered snack', 'street food'],
+    ru: ['шампур', 'уличная еда']
+  },
+  '🍡': {
+    en: ['dango', 'Japanese', 'mochi'],
+    ru: ['данго', 'японское', 'мочи']
+  },
+  '🍧': {
+    en: ['shaved ice', 'dessert', 'cold'],
+    ru: ['измельчённый лёд', 'десерт', 'холодный']
+  },
+  '🍨': {
+    en: ['ice cream', 'cold', 'sweet'],
+    ru: ['мороженое', 'холодное', 'сладкое']
+  },
+  '🍦': {
+    en: ['soft serve', 'dessert', 'cold'],
+    ru: ['мягкое мороженое', 'десерт', 'холодное']
+  },
+  '🥧': {
+    en: ['pie', 'dessert', 'baked'],
+    ru: ['пирог', 'десерт', 'выпеченный']
+  },
+  '🧁': {
+    en: ['cupcake', 'sweet', 'frosting'],
+    ru: ['капкейк', 'сладкий', 'с глазурью']
+  },
+  '🍰': {
+    en: ['cake', 'dessert', 'slice'],
+    ru: ['торт', 'десерт', 'кусок']
+  },
+  '🎂': {
+    en: ['birthday cake', 'celebration', 'sweet'],
+    ru: ['торт ко дню рождения', 'празднование', 'сладкий']
+  },
+  '🍮': {
+    en: ['flan', 'custard', 'dessert'],
+    ru: ['флан', 'кастард', 'десерт']
+  },
+  '🍭': {
+    en: ['lollipop', 'candy', 'sweet'],
+    ru: ['леденец', 'конфета', 'сладкий']
+  },
+  '🍬': {
+    en: ['candy', 'sweet', 'sugar'],
+    ru: ['конфета', 'сладость', 'сахар']
+  },
+  '🍫': {
+    en: ['chocolate', 'sweet', 'cocoa'],
+    ru: ['шоколад', 'сладкий', 'какао']
+  },
+  '🍿': {
+    en: ['popcorn', 'snack', 'buttery'],
+    ru: ['попкорн', 'закуска', 'масляный']
+  },
+  '🍩': {
+    en: ['doughnut', 'sweet', 'fried'],
+    ru: ['пончик', 'сладкий', 'жареный']
+  },
+  '🍪': {
+    en: ['cookie', 'sweet', 'baked'],
+    ru: ['печенье', 'сладкое', 'выпеченное']
+  },
 
   // Drinks
-  '🫖': ['teapot', 'tea', 'hot'],
-  '☕': ['coffee', 'hot drink', 'caffeine'],
-  '🍵': ['green tea', 'hot', 'Japanese'],
-  '🧃': ['juice', 'drink', 'fruit'],
-  '🥤': ['soft drink', 'straw', 'fast food'],
-  '🧋': ['bubble tea', 'milk tea', 'boba'],
-  '🍶': ['sake', 'Japanese', 'rice wine'],
-  '🍺': ['beer', 'drink', 'alcohol'],
-  '🍻': ['cheers', 'beer', 'drinking'],
-  '🥂': ['champagne', 'celebration', 'toast'],
-  '🍷': ['wine', 'drink', 'red'],
-  '🥃': ['whiskey', 'liquor', 'alcohol'],
-  '🍸': ['cocktail', 'martini', 'drink'],
-  '🍹': ['tropical drink', 'cocktail', 'summer'],
-  '🧉': ['mate', 'South American', 'tea'],
-  '🍾': ['champagne bottle', 'celebration', 'party'],
+  '🫖': {
+    en: ['teapot', 'tea', 'hot'],
+    ru: ['чайник', 'чай', 'горячий']
+  },
+  '☕': {
+    en: ['coffee', 'hot drink', 'caffeine'],
+    ru: ['кофе', 'горячий напиток', 'кофеин']
+  },
+  '🍵': {
+    en: ['green tea', 'hot', 'Japanese'],
+    ru: ['зелёный чай', 'горячий', 'японский']
+  },
+  '🧃': {
+    en: ['juice', 'drink', 'fruit'],
+    ru: ['сок', 'напиток', 'фруктовый']
+  },
+  '🥤': {
+    en: ['soft drink', 'straw', 'fast food'],
+    ru: ['безалкогольный напиток', 'с трубочкой', 'фастфуд']
+  },
+  '🧋': {
+    en: ['bubble tea', 'milk tea', 'boba'],
+    ru: ['бабл-ти', 'молочный чай', 'боба']
+  },
+  '🍶': {
+    en: ['sake', 'Japanese', 'rice wine'],
+    ru: ['саке', 'японский', 'рисовое вино']
+  },
+  '🍺': {
+    en: ['beer', 'drink', 'alcohol'],
+    ru: ['пиво', 'напиток', 'алкоголь']
+  },
+  '🍻': {
+    en: ['cheers', 'beer', 'drinking'],
+    ru: ['ура', 'пиво', 'выпивка']
+  },
+  '🥂': {
+    en: ['champagne', 'celebration', 'toast'],
+    ru: ['шампанское', 'празднование', 'тост']
+  },
+  '🍷': {
+    en: ['wine', 'drink', 'red'],
+    ru: ['вино', 'напиток', 'красное']
+  },
+  '🥃': {
+    en: ['whiskey', 'liquor', 'alcohol'],
+    ru: ['виски', 'ликёр', 'алкоголь']
+  },
+  '🍸': {
+    en: ['cocktail', 'martini', 'drink'],
+    ru: ['коктейль', 'мартини', 'напиток']
+  },
+  '🍹': {
+    en: ['tropical drink', 'cocktail', 'summer'],
+    ru: ['тропический напиток', 'коктейль', 'лето']
+  },
+  '🧉': {
+    en: ['mate', 'South American', 'tea'],
+    ru: ['мате', 'южноамериканский', 'чай']
+  },
+  '🍾': {
+    en: ['champagne bottle', 'celebration', 'party'],
+    ru: ['бутылка шампанского', 'празднование', 'вечеринка']
+  },
 
   //------------------------- Activities & Objects -------------------------
   // Sports
-  '⚽': ['soccer', 'football', 'sports', 'ball'],
-  '🏀': ['basketball', 'sports', 'hoop', 'dunk'],
-  '🏈': ['American football', 'sports', 'rugby'],
-  '⚾': ['baseball', 'sports', 'bat'],
-  '🥎': ['softball', 'sports', 'ball'],
-  '🎾': ['tennis', 'sports', 'racket'],
-  '🏐': ['volleyball', 'sports', 'beach'],
-  '🏉': ['rugby', 'sports', 'oval ball'],
-  '🥏': ['frisbee', 'throw', 'flying disc'],
-  '🎱': ['billiards', '8 ball', 'pool'],
-  '🪀': ['yo-yo', 'toy', 'string'],
-  '🏓': ['ping pong', 'table tennis', 'sports'],
-  '🏸': ['badminton', 'racket', 'sports'],
-  '🏒': ['hockey', 'ice hockey', 'sports'],
-  '🏑': ['field hockey', 'sports', 'stick'],
-  '🥍': ['lacrosse', 'sports', 'net'],
-  '🏏': ['cricket', 'bat', 'sports'],
-  '⛳': ['golf', 'sports', 'hole in one'],
-  '🪁': ['kite', 'flying', 'wind'],
-  '🎣': ['fishing', 'hook', 'water'],
-  '🤿': ['diving', 'underwater', 'snorkel'],
-  '🎽': ['running', 'jersey', 'athlete'],
-  '🛹': ['skateboard', 'sports', 'extreme'],
-  '🛼': ['roller skate', 'sports', 'wheels'],
-  '🛷': ['sled', 'winter', 'snow'],
-  '⛸️': ['ice skate', 'winter', 'sports'],
-  '🥌': ['curling', 'winter', 'stone'],
-  '⛷️': ['skiing', 'winter', 'snow'],
-  '🏂': ['snowboarding', 'sports', 'snow'],
-  '🪂': ['parachute', 'skydiving', 'air'],
-  '🏋️': ['weightlifting', 'gym', 'strong'],
-  '🤼': ['wrestling', 'fight', 'grapple'],
-  '🤸': ['gymnastics', 'acrobatics', 'flip'],
-  '⛹️': ['basketball', 'dribbling', 'sports'],
-  '🤾': ['handball', 'sports', 'throw'],
-  '🏌️': ['golf', 'swing', 'sports'],
-  '🏇': ['horse racing', 'sports', 'jockey'],
-  '🧘': ['meditation', 'yoga', 'zen'],
-  '🏄': ['surfing', 'wave', 'water'],
-  '🏊': ['swimming', 'water', 'pool'],
+  '⚽': {
+    en: ['soccer', 'football', 'sports', 'ball'],
+    ru: ['футбол', 'футбол', 'спорт', 'мяч']
+  },
+  '🏀': {
+    en: ['basketball', 'sports', 'hoop', 'dunk'],
+    ru: ['баскетбол', 'спорт', 'кольцо', 'данк']
+  },
+  '🏈': {
+    en: ['American football', 'sports', 'rugby'],
+    ru: ['американский футбол', 'спорт', 'регби']
+  },
+  '⚾': {
+    en: ['baseball', 'sports', 'bat'],
+    ru: ['бейсбол', 'спорт', 'бита']
+  },
+  '🥎': {
+    en: ['softball', 'sports', 'ball'],
+    ru: ['софтбол', 'спорт', 'мяч']
+  },
+  '🎾': {
+    en: ['tennis', 'sports', 'racket'],
+    ru: ['теннис', 'спорт', 'ракетка']
+  },
+  '🏐': {
+    en: ['volleyball', 'sports', 'beach'],
+    ru: ['волейбол', 'спорт', 'пляж']
+  },
+  '🏉': {
+    en: ['rugby', 'sports', 'oval ball'],
+    ru: ['регби', 'спорт', 'овальный мяч']
+  },
+  '🥏': {
+    en: ['frisbee', 'throw', 'flying disc'],
+    ru: ['фрисби', 'бросок', 'летающий диск']
+  },
+  '🎱': {
+    en: ['billiards', '8 ball', 'pool'],
+    ru: ['бильярд', 'восьмёрка', 'пул']
+  },
+  '🪀': {
+    en: ['yo-yo', 'toy', 'string'],
+    ru: ['йо-йо', 'игрушка', 'верёвка']
+  },
+  '🏓': {
+    en: ['ping pong', 'table tennis', 'sports'],
+    ru: ['пинг-понг', 'настольный теннис', 'спорт']
+  },
+  '🏸': {
+    en: ['badminton', 'racket', 'sports'],
+    ru: ['бадминтон', 'ракетка', 'спорт']
+  },
+  '🏒': {
+    en: ['hockey', 'ice hockey', 'sports'],
+    ru: ['хоккей', 'хоккей на льду', 'спорт']
+  },
+  '🏑': {
+    en: ['field hockey', 'sports', 'stick'],
+    ru: ['хоккей на траве', 'спорт', 'клюшка']
+  },
+  '🥍': {
+    en: ['lacrosse', 'sports', 'net'],
+    ru: ['лакросс', 'спорт', 'сеть']
+  },
+  '🏏': {
+    en: ['cricket', 'bat', 'sports'],
+    ru: ['крикет', 'бита', 'спорт']
+  },
+  '⛳': {
+    en: ['golf', 'sports', 'hole in one'],
+    ru: ['гольф', 'спорт', 'луночка']
+  },
+  '🪁': {
+    en: ['kite', 'flying', 'wind'],
+    ru: ['змей', 'летать', 'ветер']
+  },
+  '🎣': {
+    en: ['fishing', 'hook', 'water'],
+    ru: ['рыбалка', 'крючок', 'вода']
+  },
+  '🤿': {
+    en: ['diving', 'underwater', 'snorkel'],
+    ru: ['дайвинг', 'под водой', 'снорклинг']
+  },
+  '🎽': {
+    en: ['running', 'jersey', 'athlete'],
+    ru: ['бег', 'майка', 'спортсмен']
+  },
+  '🛹': {
+    en: ['skateboard', 'sports', 'extreme'],
+    ru: ['скейтборд', 'спорт', 'экстрим']
+  },
+  '🛼': {
+    en: ['roller skate', 'sports', 'wheels'],
+    ru: ['роликовые коньки', 'спорт', 'колёса']
+  },
+  '🛷': {
+    en: ['sled', 'winter', 'snow'],
+    ru: ['санки', 'зима', 'снег']
+  },
+  '⛸️': {
+    en: ['ice skate', 'winter', 'sports'],
+    ru: ['коньки', 'зима', 'спорт']
+  },
+  '🥌': {
+    en: ['curling', 'winter', 'stone'],
+    ru: ['керлинг', 'зима', 'камень']
+  },
+  '⛷️': {
+    en: ['skiing', 'winter', 'snow'],
+    ru: ['лыжи', 'зима', 'снег']
+  },
+  '🏂': {
+    en: ['snowboarding', 'sports', 'snow'],
+    ru: ['сноуборд', 'спорт', 'снег']
+  },
+  '🪂': {
+    en: ['parachute', 'skydiving', 'air'],
+    ru: ['парашют', 'скайдайвинг', 'воздух']
+  },
+  '🏋️': {
+    en: ['weightlifting', 'gym', 'strong'],
+    ru: ['тяжёлая атлетика', 'спортзал', 'сильный']
+  },
+  '🤼': {
+    en: ['wrestling', 'fight', 'grapple'],
+    ru: ['борьба', 'драка', 'схватка']
+  },
+  '🤸': {
+    en: ['gymnastics', 'acrobatics', 'flip'],
+    ru: ['гимнастика', 'акробатика', 'сальто']
+  },
+  '⛹️': {
+    en: ['basketball', 'dribbling', 'sports'],
+    ru: ['баскетбол', 'дриблинг', 'спорт']
+  },
+  '🤾': {
+    en: ['handball', 'sports', 'throw'],
+    ru: ['гандбол', 'спорт', 'бросок']
+  },
+  '🏌️': {
+    en: ['golf', 'swing', 'sports'],
+    ru: ['гольф', 'мах', 'спорт']
+  },
+  '🏇': {
+    en: ['horse racing', 'sports', 'jockey'],
+    ru: ['конные скачки', 'спорт', 'жокей']
+  },
+  '🧘': {
+    en: ['meditation', 'yoga', 'zen'],
+    ru: ['медитация', 'йога', 'дзен']
+  },
+  '🏄': {
+    en: ['surfing', 'wave', 'water'],
+    ru: ['серфинг', 'волна', 'вода']
+  },
+  '🏊': {
+    en: ['swimming', 'water', 'pool'],
+    ru: ['плавание', 'вода', 'бассейн']
+  },
 
-  // Activities
-  '🤽': ['water polo', 'sports', 'swimming'],
-  '🚣': ['rowing', 'boat', 'water'],
-  '🧗': ['rock climbing', 'sports', 'mountain'],
-  '🚴': ['cycling', 'bike', 'sports'],
-  '🚵': ['mountain biking', 'sports', 'outdoor'],
-  '🎪': ['circus', 'tent', 'performance'],
-  '🎭': ['theater', 'drama', 'acting'],
-  '🎨': ['painting', 'art', 'colors'],
-  '🎬': ['film', 'clapperboard', 'movie'],
-  '🎤': ['microphone', 'singing', 'music'],
-  '🎧': ['headphones', 'music', 'listening'],
-  '🎼': ['music', 'sheet', 'notes'],
-  '🎹': ['piano', 'keyboard', 'music'],
-  '🥁': ['drums', 'music', 'percussion'],
-  '🎷': ['saxophone', 'jazz', 'music'],
-  '🎺': ['trumpet', 'brass', 'music'],
-  '🎸': ['guitar', 'music', 'rock'],
-  '🎻': ['violin', 'music', 'strings'],
-  '🎲': ['dice', 'game', 'board game'],
-  '🎯': ['dart', 'target', 'game'],
-  '🎳': ['bowling', 'sports', 'pins'],
-  '🎮': ['video game', 'console', 'gaming'],
-  '🎰': ['slot machine', 'casino', 'gambling'],
-  '🧩': ['puzzle', 'pieces', 'brain teaser'],
-  '🎫': ['ticket', 'event', 'entry'],
-  '🎟️': ['admission', 'ticket', 'event'],
+  // Activities (cultural/entertainment)
+  '🤽': {
+    en: ['water polo', 'sports', 'swimming'],
+    ru: ['водное поло', 'спорт', 'плавание']
+  },
+  '🚣': {
+    en: ['rowing', 'boat', 'water'],
+    ru: ['гребля', 'лодка', 'вода']
+  },
+  '🧗': {
+    en: ['rock climbing', 'sports', 'mountain'],
+    ru: ['скалолазание', 'спорт', 'гора']
+  },
+  '🚴': {
+    en: ['cycling', 'bike', 'sports'],
+    ru: ['велоспорт', 'велосипед', 'спорт']
+  },
+  '🚵': {
+    en: ['mountain biking', 'sports', 'outdoor'],
+    ru: ['маунтинбайк', 'спорт', 'на свежем воздухе']
+  },
+  '🎪': {
+    en: ['circus', 'tent', 'performance'],
+    ru: ['цирк', 'палатка', 'выступление']
+  },
+  '🎭': {
+    en: ['theater', 'drama', 'acting'],
+    ru: ['театр', 'драма', 'актерство']
+  },
+  '🎨': {
+    en: ['painting', 'art', 'colors'],
+    ru: ['живопись', 'искусство', 'цвета']
+  },
+  '🎬': {
+    en: ['film', 'clapperboard', 'movie'],
+    ru: ['фильм', 'хлопушка', 'кино']
+  },
+  '🎤': {
+    en: ['microphone', 'singing', 'music'],
+    ru: ['микрофон', 'пение', 'музыка']
+  },
+  '🎧': {
+    en: ['headphones', 'music', 'listening'],
+    ru: ['наушники', 'музыка', 'прослушивание']
+  },
+  '🎼': {
+    en: ['music', 'sheet', 'notes'],
+    ru: ['музыка', 'ноты', 'сценарий']
+  },
+  '🎹': {
+    en: ['piano', 'keyboard', 'music'],
+    ru: ['пианино', 'клавиатура', 'музыка']
+  },
+  '🥁': {
+    en: ['drums', 'music', 'percussion'],
+    ru: ['барабаны', 'музыка', 'ударные']
+  },
+  '🎷': {
+    en: ['saxophone', 'jazz', 'music'],
+    ru: ['саксофон', 'джаз', 'музыка']
+  },
+  '🎺': {
+    en: ['trumpet', 'brass', 'music'],
+    ru: ['труба', 'латунь', 'музыка']
+  },
+  '🎸': {
+    en: ['guitar', 'music', 'rock'],
+    ru: ['гитара', 'музыка', 'рок']
+  },
+  '🎻': {
+    en: ['violin', 'music', 'strings'],
+    ru: ['скрипка', 'музыка', 'струны']
+  },
+  '🎲': {
+    en: ['dice', 'game', 'board game'],
+    ru: ['кубики', 'игра', 'настольная игра']
+  },
+  '🎯': {
+    en: ['dart', 'target', 'game'],
+    ru: ['дротик', 'цель', 'игра']
+  },
+  '🎳': {
+    en: ['bowling', 'sports', 'pins'],
+    ru: ['боулинг', 'спорт', 'кегли']
+  },
+  '🎮': {
+    en: ['video game', 'console', 'gaming'],
+    ru: ['видеоигра', 'консоль', 'игры']
+  },
+  '🎰': {
+    en: ['slot machine', 'casino', 'gambling'],
+    ru: ['игровой автомат', 'казино', 'азартные игры']
+  },
+  '🧩': {
+    en: ['puzzle', 'pieces', 'brain teaser'],
+    ru: ['головоломка', 'кусочки', 'разминка для мозга']
+  },
+  '🎫': {
+    en: ['ticket', 'event', 'entry'],
+    ru: ['билет', 'событие', 'вход']
+  },
+  '🎟️': {
+    en: ['admission', 'ticket', 'event'],
+    ru: ['входной билет', 'билет', 'событие']
+  },
 
   //------------------------- Travel & Places -------------------------
   // Land Transport
-  '🚗': ['car', 'automobile', 'vehicle', 'transport'],
-  '🚕': ['taxi', 'cab', 'transport', 'vehicle'],
-  '🚙': ['suv', 'vehicle', 'transport'],
-  '🚌': ['bus', 'public transport', 'commute'],
-  '🚎': ['trolleybus', 'public transport', 'electric'],
-  '🏎️': ['race car', 'sports car', 'fast', 'speed'],
-  '🚓': ['police car', 'law enforcement', 'vehicle'],
-  '🚑': ['ambulance', 'emergency', 'hospital'],
-  '🚒': ['fire truck', 'firefighter', 'emergency'],
-  '🚐': ['van', 'minibus', 'transport'],
-  '🛻': ['pickup truck', 'off-road', 'vehicle'],
-  '🚚': ['delivery truck', 'freight', 'cargo'],
-  '🚛': ['truck', 'semi-trailer', 'transport'],
-  '🚜': ['tractor', 'farming', 'agriculture'],
-  '🛵': ['scooter', 'motorbike', 'moped'],
-  '🏍️': ['motorcycle', 'bike', 'racing'],
-  '🛺': ['rickshaw', 'auto rickshaw', 'transport'],
-  '🚲': ['bicycle', 'bike', 'pedal', 'cycling'],
-  '🛴': ['kick scooter', 'scooter', 'ride'],
+  '🚗': {
+    en: ['car', 'automobile', 'vehicle', 'transport'],
+    ru: ['автомобиль', 'машина', 'транспортное средство', 'транспорт']
+  },
+  '🚕': {
+    en: ['taxi', 'cab', 'transport', 'vehicle'],
+    ru: ['такси', 'маршрутка', 'транспорт', 'транспортное средство']
+  },
+  '🚙': {
+    en: ['suv', 'vehicle', 'transport'],
+    ru: ['внедорожник', 'транспортное средство', 'транспорт']
+  },
+  '🚌': {
+    en: ['bus', 'public transport', 'commute'],
+    ru: ['автобус', 'общественный транспорт', 'коммьют']
+  },
+  '🚎': {
+    en: ['trolleybus', 'public transport', 'electric'],
+    ru: ['троллейбус', 'общественный транспорт', 'электрический']
+  },
+  '🏎️': {
+    en: ['race car', 'sports car', 'fast', 'speed'],
+    ru: ['гоночный автомобиль', 'спортивный автомобиль', 'быстрый', 'скорость']
+  },
+  '🚓': {
+    en: ['police car', 'law enforcement', 'vehicle'],
+    ru: ['полицейская машина', 'правоохранительные органы', 'транспортное средство']
+  },
+  '🚑': {
+    en: ['ambulance', 'emergency', 'hospital'],
+    ru: ['скорая помощь', 'чрезвычайная ситуация', 'больница']
+  },
+  '🚒': {
+    en: ['fire truck', 'firefighter', 'emergency'],
+    ru: ['пожарная машина', 'пожарный', 'чрезвычайная ситуация']
+  },
+  '🚐': {
+    en: ['van', 'minibus', 'transport'],
+    ru: ['фургон', 'маршрутка', 'транспорт']
+  },
+  '🛻': {
+    en: ['pickup truck', 'off-road', 'vehicle'],
+    ru: ['пикап', 'для бездорожья', 'транспортное средство']
+  },
+  '🚚': {
+    en: ['delivery truck', 'freight', 'cargo'],
+    ru: ['грузовик', 'доставка', 'груз']
+  },
+  '🚛': {
+    en: ['truck', 'semi-trailer', 'transport'],
+    ru: ['грузовик', 'самосвал', 'транспорт']
+  },
+  '🚜': {
+    en: ['tractor', 'farming', 'agriculture'],
+    ru: ['трактор', 'сельское хозяйство', 'агрономия']
+  },
+  '🛵': {
+    en: ['scooter', 'motorbike', 'moped'],
+    ru: ['скутер', 'мотоцикл', 'мопед']
+  },
+  '🏍️': {
+    en: ['motorcycle', 'bike', 'racing'],
+    ru: ['мотоцикл', 'байк', 'гоночный']
+  },
+  '🛺': {
+    en: ['rickshaw', 'auto rickshaw', 'transport'],
+    ru: ['рикша', 'авто-рикша', 'транспорт']
+  },
+  '🚲': {
+    en: ['bicycle', 'bike', 'pedal', 'cycling'],
+    ru: ['велосипед', 'байк', 'педаль', 'велоспорт']
+  },
+  '🛴': {
+    en: ['kick scooter', 'scooter', 'ride'],
+    ru: ['самокат', 'скутер', 'поездка']
+  },
 
   // Air Transport
-  '✈️': ['airplane', 'flight', 'travel', 'sky'],
-  '🛩️': ['small airplane', 'aviation', 'sky'],
-  '🛫': ['departure', 'takeoff', 'airport'],
-  '🛬': ['landing', 'arrival', 'airport'],
-  '🚁': ['helicopter', 'aviation', 'air'],
-  '🚀': ['rocket', 'space', 'launch', 'NASA'],
-  '🛸': ['UFO', 'alien', 'spaceship', 'extraterrestrial'],
+  '✈️': {
+    en: ['airplane', 'flight', 'travel', 'sky'],
+    ru: ['самолёт', 'рейс', 'путешествие', 'небо']
+  },
+  '🛩️': {
+    en: ['small airplane', 'aviation', 'sky'],
+    ru: ['малый самолёт', 'авиация', 'небо']
+  },
+  '🛫': {
+    en: ['departure', 'takeoff', 'airport'],
+    ru: ['вылет', 'взлёт', 'аэропорт']
+  },
+  '🛬': {
+    en: ['landing', 'arrival', 'airport'],
+    ru: ['посадка', 'прибытие', 'аэропорт']
+  },
+  '🚁': {
+    en: ['helicopter', 'aviation', 'air'],
+    ru: ['вертолёт', 'авиация', 'воздух']
+  },
+  '🚀': {
+    en: ['rocket', 'space', 'launch', 'NASA'],
+    ru: ['ракета', 'космос', 'запуск', 'НАСА']
+  },
+  '🛸': {
+    en: ['UFO', 'alien', 'spaceship', 'extraterrestrial'],
+    ru: ['НЛО', 'инопланетянин', 'космический корабль', 'внеземной']
+  },
 
   // Water Transport
-  '🛶': ['canoe', 'boat', 'paddle', 'water'],
-  '⛵': ['sailboat', 'yacht', 'sea'],
-  '🚤': ['motorboat', 'speedboat', 'ocean'],
-  '🛥️': ['yacht', 'luxury', 'boat'],
-  '🛳️': ['cruise ship', 'ocean', 'voyage'],
-  '⛴️': ['ferry', 'boat', 'transport'],
-  '🚢': ['ship', 'ocean', 'voyage'],
+  '🛶': {
+    en: ['canoe', 'boat', 'paddle', 'water'],
+    ru: ['каноэ', 'лодка', 'весло', 'вода']
+  },
+  '⛵': {
+    en: ['sailboat', 'yacht', 'sea'],
+    ru: ['парусник', 'яхта', 'море']
+  },
+  '🚤': {
+    en: ['motorboat', 'speedboat', 'ocean'],
+    ru: ['моторная лодка', 'скоростной катер', 'океан']
+  },
+  '🛥️': {
+    en: ['yacht', 'luxury', 'boat'],
+    ru: ['яхта', 'роскошь', 'лодка']
+  },
+  '🛳️': {
+    en: ['cruise ship', 'ocean', 'voyage'],
+    ru: ['круизный лайнер', 'океан', 'путешествие']
+  },
+  '⛴️': {
+    en: ['ferry', 'boat', 'transport'],
+    ru: ['паром', 'лодка', 'транспорт']
+  },
+  '🚢': {
+    en: ['ship', 'ocean', 'voyage'],
+    ru: ['корабль', 'океан', 'путешествие']
+  },
 
   // Places
-  '🏰': ['castle', 'fortress', 'history'],
-  '🏯': ['Japanese castle', 'Asia', 'samurai'],
-  '🏟️': ['stadium', 'sports', 'arena'],
-  '🏖️': ['beach', 'sun', 'vacation'],
-  '🏝️': ['island', 'tropical', 'vacation'],
-  '🏜️': ['desert', 'sand', 'dry'],
-  '🌋': ['volcano', 'eruption', 'lava'],
-  '⛰️': ['mountain', 'hiking', 'nature'],
-  '🏔️': ['snowy mountain', 'climbing', 'cold'],
-  '🗻': ['Mount Fuji', 'Japan', 'scenic'],
-  '🏕️': ['camping', 'tent', 'outdoors'],
-  '🏭': ['factory', 'industry', 'building'],
-  '🏢': ['office building', 'corporate', 'city'],
-  '🏬': ['shopping mall', 'retail', 'stores'],
-  '🏣': ['post office', 'mail', 'building'],
-  '🏤': ['post office', 'mail', 'postal service'],
-  '🏥': ['hospital', 'healthcare', 'emergency'],
-  '🏦': ['bank', 'money', 'finance'],
-  '🏨': ['hotel', 'accommodation', 'stay'],
-  '🏪': ['convenience store', 'shopping', '24/7'],
-  '🏫': ['school', 'education', 'learning'],
-  '🏩': ['love hotel', 'romantic', 'Japan'],
-  '💒': ['wedding', 'church', 'marriage'],
-  '⛪': ['church', 'Christianity', 'religion'],
-  '🕌': ['mosque', 'Islam', 'prayer'],
-  '🕍': ['synagogue', 'Judaism', 'religion'],
-  '🛕': ['hindu temple', 'spiritual', 'India'],
-  '⛩️': ['shrine', 'torii', 'Japan'],
-  '🏛️': ['government building', 'politics', 'history'],
+  '🏰': {
+    en: ['castle', 'fortress', 'history'],
+    ru: ['замок', 'крепость', 'история']
+  },
+  '🏯': {
+    en: ['Japanese castle', 'Asia', 'samurai'],
+    ru: ['японский замок', 'Азия', 'самурай']
+  },
+  '🏟️': {
+    en: ['stadium', 'sports', 'arena'],
+    ru: ['стадион', 'спорт', 'арена']
+  },
+  '🏖️': {
+    en: ['beach', 'sun', 'vacation'],
+    ru: ['пляж', 'солнце', 'отпуск']
+  },
+  '🏝️': {
+    en: ['island', 'tropical', 'vacation'],
+    ru: ['остров', 'тропический', 'отпуск']
+  },
+  '🏜️': {
+    en: ['desert', 'sand', 'dry'],
+    ru: ['пустыня', 'песок', 'сухой']
+  },
+  '🌋': {
+    en: ['volcano', 'eruption', 'lava'],
+    ru: ['вулкан', 'извержение', 'лава']
+  },
+  '⛰️': {
+    en: ['mountain', 'hiking', 'nature'],
+    ru: ['гора', 'поход', 'природа']
+  },
+  '🏔️': {
+    en: ['snowy mountain', 'climbing', 'cold'],
+    ru: ['снежная гора', 'скалолазание', 'холод']
+  },
+  '🗻': {
+    en: ['Mount Fuji', 'Japan', 'scenic'],
+    ru: ['гора Фудзи', 'Япония', 'живописный']
+  },
+  '🏕️': {
+    en: ['camping', 'tent', 'outdoors'],
+    ru: ['кемпинг', 'палатка', 'на природе']
+  },
+  '🏭': {
+    en: ['factory', 'industry', 'building'],
+    ru: ['фабрика', 'индустрия', 'здание']
+  },
+  '🏢': {
+    en: ['office building', 'corporate', 'city'],
+    ru: ['офисное здание', 'корпоративный', 'город']
+  },
+  '🏬': {
+    en: ['shopping mall', 'retail', 'stores'],
+    ru: ['торговый центр', 'розничная торговля', 'магазины']
+  },
+  '🏣': {
+    en: ['post office', 'mail', 'building'],
+    ru: ['почтовое отделение', 'почта', 'здание']
+  },
+  '🏤': {
+    en: ['post office', 'mail', 'postal service'],
+    ru: ['почтовое отделение', 'почта', 'почтовая служба']
+  },
+  '🏥': {
+    en: ['hospital', 'healthcare', 'emergency'],
+    ru: ['больница', 'здравоохранение', 'чрезвычайная ситуация']
+  },
+  '🏦': {
+    en: ['bank', 'money', 'finance'],
+    ru: ['банк', 'деньги', 'финансы']
+  },
+  '🏨': {
+    en: ['hotel', 'accommodation', 'stay'],
+    ru: ['отель', 'размещение', 'проживание']
+  },
+  '🏪': {
+    en: ['convenience store', 'shopping', '24/7'],
+    ru: ['магазин', 'шоппинг', 'круглосуточно']
+  },
+  '🏫': {
+    en: ['school', 'education', 'learning'],
+    ru: ['школа', 'образование', 'обучение']
+  },
+  '🏩': {
+    en: ['love hotel', 'romantic', 'Japan'],
+    ru: ['любовный отель', 'романтический', 'Япония']
+  },
+  '💒': {
+    en: ['wedding', 'church', 'marriage'],
+    ru: ['свадьба', 'церковь', 'брак']
+  },
+  '⛪': {
+    en: ['church', 'Christianity', 'religion'],
+    ru: ['церковь', 'христианство', 'религия']
+  },
+  '🕌': {
+    en: ['mosque', 'Islam', 'prayer'],
+    ru: ['мечеть', 'ислам', 'молитва']
+  },
+  '🕍': {
+    en: ['synagogue', 'Judaism', 'religion'],
+    ru: ['синагога', 'иудаизм', 'религия']
+  },
+  '🛕': {
+    en: ['hindu temple', 'spiritual', 'India'],
+    ru: ['индуистский храм', 'духовный', 'Индия']
+  },
+  '⛩️': {
+    en: ['shrine', 'torii', 'Japan'],
+    ru: ['святилище', 'тории', 'Япония']
+  },
+  '🏛️': {
+    en: ['government building', 'politics', 'history'],
+    ru: ['правительственное здание', 'политика', 'история']
+  },
 
   //------------------------- Objects & Symbols -------------------------
   // Tools & Technology
-  '⌚': ['watch', 'smartwatch', 'time'],
-  '📱': ['smartphone', 'mobile', 'phone'],
-  '💻': ['laptop', 'computer', 'technology'],
-  '⌨️': ['keyboard', 'typing', 'computer'],
-  '🖥️': ['desktop', 'monitor', 'screen'],
-  '🖨️': ['printer', 'print', 'office'],
-  '🖱️': ['mouse', 'computer', 'click'],
-  '🖲️': ['trackball', 'navigation', 'input'],
-  '🕹️': ['joystick', 'gaming', 'console'],
-  '🗜️': ['clamp', 'tool', 'hardware'],
-  '💽': ['mini disc', 'storage', 'media'],
-  '💾': ['floppy disk', 'save', 'data'],
-  '💿': ['CD', 'compact disc', 'music'],
-  '📀': ['DVD', 'video', 'disc'],
-  '📼': ['VHS', 'video cassette', 'retro'],
-  '📷': ['camera', 'photo', 'photography'],
-  '📸': ['camera flash', 'photography', 'snapshot'],
-  '📹': ['video camera', 'recording', 'film'],
-  '🎥': ['movie camera', 'film', 'cinema'],
+  '⌚': {
+    en: ['watch', 'smartwatch', 'time'],
+    ru: ['часы', 'умные часы', 'время']
+  },
+  '📱': {
+    en: ['smartphone', 'mobile', 'phone'],
+    ru: ['смартфон', 'мобильный', 'телефон']
+  },
+  '💻': {
+    en: ['laptop', 'computer', 'technology'],
+    ru: ['ноутбук', 'компьютер', 'технология']
+  },
+  '⌨️': {
+    en: ['keyboard', 'typing', 'computer'],
+    ru: ['клавиатура', 'набор текста', 'компьютер']
+  },
+  '🖥️': {
+    en: ['desktop', 'monitor', 'screen'],
+    ru: ['настольный компьютер', 'монитор', 'экран']
+  },
+  '🖨️': {
+    en: ['printer', 'print', 'office'],
+    ru: ['принтер', 'печать', 'офис']
+  },
+  '🖱️': {
+    en: ['mouse', 'computer', 'click'],
+    ru: ['мышь', 'компьютер', 'клик']
+  },
+  '🖲️': {
+    en: ['trackball', 'navigation', 'input'],
+    ru: ['трекбол', 'навигация', 'ввод']
+  },
+  '🕹️': {
+    en: ['joystick', 'gaming', 'console'],
+    ru: ['джойстик', 'игры', 'консоль']
+  },
+  '🗜️': {
+    en: ['clamp', 'tool', 'hardware'],
+    ru: ['зажим', 'инструмент', 'аппаратное обеспечение']
+  },
+  '💽': {
+    en: ['mini disc', 'storage', 'media'],
+    ru: ['мини-диск', 'хранение', 'медиа']
+  },
+  '💾': {
+    en: ['floppy disk', 'save', 'data'],
+    ru: ['флоппи-диск', 'сохранить', 'данные']
+  },
+  '💿': {
+    en: ['CD', 'compact disc', 'music'],
+    ru: ['CD', 'компакт-диск', 'музыка']
+  },
+  '📀': {
+    en: ['DVD', 'video', 'disc'],
+    ru: ['DVD', 'видео', 'диск']
+  },
+  '📼': {
+    en: ['VHS', 'video cassette', 'retro'],
+    ru: ['VHS', 'видеокассета', 'ретро']
+  },
+  '📷': {
+    en: ['camera', 'photo', 'photography'],
+    ru: ['камера', 'фото', 'фотография']
+  },
+  '📸': {
+    en: ['camera flash', 'photography', 'snapshot'],
+    ru: ['вспышка камеры', 'фотография', 'снимок']
+  },
+  '📹': {
+    en: ['video camera', 'recording', 'film'],
+    ru: ['видеокамера', 'запись', 'фильм']
+  },
+  '🎥': {
+    en: ['movie camera', 'film', 'cinema'],
+    ru: ['кино-камера', 'фильм', 'кино']
+  },
 
   // Office & Communication
-  '📞': ['telephone', 'call', 'communication'],
-  '☎️': ['phone', 'landline', 'call'],
-  '📟': ['pager', 'message', 'communication'],
-  '📠': ['fax machine', 'office', 'document'],
-  '📺': ['TV', 'television', 'screen'],
-  '📻': ['radio', 'broadcast', 'audio'],
-  '🎙️': ['microphone', 'recording', 'podcast'],
-  '🎚️': ['control knob', 'audio', 'volume'],
-  '🎛️': ['sliders', 'equalizer', 'settings'],
-  '📡': ['satellite dish', 'broadcast', 'signal'],
-  '🔋': ['battery', 'power', 'energy'],
-  '🔌': ['plug', 'electricity', 'charging'],
-  '💡': ['light bulb', 'idea', 'illumination'],
-  '🔦': ['flashlight', 'torch', 'light'],
-  '🕯️': ['candle', 'light', 'fire'],
+  '📞': {
+    en: ['telephone', 'call', 'communication'],
+    ru: ['телефон', 'звонок', 'коммуникация']
+  },
+  '☎️': {
+    en: ['phone', 'landline', 'call'],
+    ru: ['телефон', 'стационарный', 'звонок']
+  },
+  '📟': {
+    en: ['pager', 'message', 'communication'],
+    ru: ['пейджер', 'сообщение', 'коммуникация']
+  },
+  '📠': {
+    en: ['fax machine', 'office', 'document'],
+    ru: ['факс', 'офис', 'документ']
+  },
+  '📺': {
+    en: ['TV', 'television', 'screen'],
+    ru: ['телевизор', 'теле', 'экран']
+  },
+  '📻': {
+    en: ['radio', 'broadcast', 'audio'],
+    ru: ['радио', 'трансляция', 'аудио']
+  },
+  '🎙️': {
+    en: ['microphone', 'recording', 'podcast'],
+    ru: ['микрофон', 'запись', 'подкаст']
+  },
+  '🎚️': {
+    en: ['control knob', 'audio', 'volume'],
+    ru: ['ручка управления', 'аудио', 'громкость']
+  },
+  '🎛️': {
+    en: ['sliders', 'equalizer', 'settings'],
+    ru: ['ползунки', 'эквалайзер', 'настройки']
+  },
+  '📡': {
+    en: ['satellite dish', 'broadcast', 'signal'],
+    ru: ['спутниковая антенна', 'трансляция', 'сигнал']
+  },
+  '🔋': {
+    en: ['battery', 'power', 'energy'],
+    ru: ['батарея', 'мощность', 'энергия']
+  },
+  '🔌': {
+    en: ['plug', 'electricity', 'charging'],
+    ru: ['штекер', 'электричество', 'зарядка']
+  },
+  '💡': {
+    en: ['light bulb', 'idea', 'illumination'],
+    ru: ['лампочка', 'идея', 'освещение']
+  },
+  '🔦': {
+    en: ['flashlight', 'torch', 'light'],
+    ru: ['фонарик', 'фонарь', 'свет']
+  },
+  '🕯️': {
+    en: ['candle', 'light', 'fire'],
+    ru: ['свеча', 'свет', 'огонь']
+  },
 
   // Household & Money
-  '🧯': ['fire extinguisher', 'safety', 'fire'],
-  '🛢️': ['barrel', 'oil', 'fuel'],
-  '💸': ['money with wings', 'cash', 'spending'],
-  '💵': ['dollar bills', 'money', 'USD'],
-  '💴': ['yen', 'money', 'Japan'],
-  '💶': ['euro', 'money', 'currency'],
-  '💷': ['pound', 'money', 'UK'],
-  '🪙': ['coin', 'currency', 'money'],
-  '💰': ['money bag', 'wealth', 'rich'],
-  '💳': ['credit card', 'banking', 'payment'],
-  '💎': ['gem', 'diamond', 'valuable'],
-  '⚖️': ['balance scale', 'justice', 'law'],
-  '🪜': ['ladder', 'climb', 'height'],
-  '🧰': ['toolbox', 'tools', 'repair'],
-  '🔧': ['wrench', 'repair', 'tools'],
-  '🔨': ['hammer', 'build', 'fix'],
-  '⚒️': ['hammer and pick', 'construction', 'work'],
-  '🛠️': ['tools', 'fix', 'maintenance'],
-  '⛏️': ['pickaxe', 'mining', 'digging'],
+  '🧯': {
+    en: ['fire extinguisher', 'safety', 'fire'],
+    ru: ['огнетушитель', 'безопасность', 'огонь']
+  },
+  '🛢️': {
+    en: ['barrel', 'oil', 'fuel'],
+    ru: ['бочка', 'масло', 'топливо']
+  },
+  '💸': {
+    en: ['money with wings', 'cash', 'spending'],
+    ru: ['деньги с крыльями', 'наличные', 'расходы']
+  },
+  '💵': {
+    en: ['dollar bills', 'money', 'USD'],
+    ru: ['долларовые банкноты', 'деньги', 'USD']
+  },
+  '💴': {
+    en: ['yen', 'money', 'Japan'],
+    ru: ['иена', 'деньги', 'Япония']
+  },
+  '💶': {
+    en: ['euro', 'money', 'currency'],
+    ru: ['евро', 'деньги', 'валюта']
+  },
+  '💷': {
+    en: ['pound', 'money', 'UK'],
+    ru: ['фунт', 'деньги', 'Великобритания']
+  },
+  '🪙': {
+    en: ['coin', 'currency', 'money'],
+    ru: ['монета', 'валюта', 'деньги']
+  },
+  '💰': {
+    en: ['money bag', 'wealth', 'rich'],
+    ru: ['мешок с деньгами', 'богатство', 'богатый']
+  },
+  '💳': {
+    en: ['credit card', 'banking', 'payment'],
+    ru: ['кредитная карта', 'банковское дело', 'оплата']
+  },
+  '💎': {
+    en: ['gem', 'diamond', 'valuable'],
+    ru: ['драгоценный камень', 'бриллиант', 'ценный']
+  },
+  '⚖️': {
+    en: ['balance scale', 'justice', 'law'],
+    ru: ['весы', 'справедливость', 'закон']
+  },
+  '🪜': {
+    en: ['ladder', 'climb', 'height'],
+    ru: ['лестница', 'лазить', 'высота']
+  },
+  '🧰': {
+    en: ['toolbox', 'tools', 'repair'],
+    ru: ['ящик с инструментами', 'инструменты', 'ремонт']
+  },
+  '🔧': {
+    en: ['wrench', 'repair', 'tools'],
+    ru: ['гаечный ключ', 'ремонт', 'инструменты']
+  },
+  '🔨': {
+    en: ['hammer', 'build', 'fix'],
+    ru: ['молоток', 'строить', 'чинить']
+  },
+  '⚒️': {
+    en: ['hammer and pick', 'construction', 'work'],
+    ru: ['молот и кирка', 'строительство', 'работа']
+  },
+  '🛠️': {
+    en: ['tools', 'fix', 'maintenance'],
+    ru: ['инструменты', 'чинить', 'обслуживание']
+  },
+  '⛏️': {
+    en: ['pickaxe', 'mining', 'digging'],
+    ru: ['кирка', 'горное дело', 'копать']
+  },
 
   // Writing & Reading
-  '✏️': ['pencil', 'writing', 'notes'],
-  '🖊️': ['pen', 'writing', 'signature'],
-  '🖋️': ['fountain pen', 'calligraphy', 'writing'],
-  '✒️': ['nib', 'ink', 'writing'],
-  '🖌️': ['paintbrush', 'art', 'painting'],
-  '🖍️': ['crayon', 'drawing', 'color'],
-  '📝': ['memo', 'notes', 'document'],
-  '📚': ['books', 'reading', 'library'],
-  '📖': ['open book', 'reading', 'story'],
-  '🔖': ['bookmark', 'reading', 'save'],
-  '📑': ['bookmark tabs', 'pages', 'notes'],
-  '🗒️': ['spiral notepad', 'notes', 'journal'],
-  '📄': ['document', 'paper', 'page'],
-  '📰': ['newspaper', 'news', 'journalism'],
-  '🗞️': ['rolled newspaper', 'press', 'print'],
-  '📁': ['file folder', 'documents', 'storage'],
-  '📂': ['open folder', 'organization', 'files'],
-  '🗂️': ['card index', 'catalog', 'records'],
-  // Tools & Technology
-  '⌚': ['watch', 'smartwatch', 'time'],
-  '📱': ['smartphone', 'mobile', 'phone'],
-  '💻': ['laptop', 'computer', 'technology'],
-  '⌨️': ['keyboard', 'typing', 'computer'],
-  '🖥️': ['desktop', 'monitor', 'screen'],
-  '🖨️': ['printer', 'print', 'office'],
-  '🖱️': ['mouse', 'computer', 'click'],
-  '🖲️': ['trackball', 'navigation', 'input'],
-  '🕹️': ['joystick', 'gaming', 'console'],
-  '🗜️': ['clamp', 'tool', 'hardware'],
-  '💽': ['mini disc', 'storage', 'media'],
-  '💾': ['floppy disk', 'save', 'data'],
-  '💿': ['CD', 'compact disc', 'music'],
-  '📀': ['DVD', 'video', 'disc'],
-  '📼': ['VHS', 'video cassette', 'retro'],
-  '📷': ['camera', 'photo', 'photography'],
-  '📸': ['camera flash', 'photography', 'snapshot'],
-  '📹': ['video camera', 'recording', 'film'],
-  '🎥': ['movie camera', 'film', 'cinema'],
-
-  // Office & Communication
-  '📞': ['telephone', 'call', 'communication'],
-  '☎️': ['phone', 'landline', 'call'],
-  '📟': ['pager', 'message', 'communication'],
-  '📠': ['fax machine', 'office', 'document'],
-  '📺': ['TV', 'television', 'screen'],
-  '📻': ['radio', 'broadcast', 'audio'],
-  '🎙️': ['microphone', 'recording', 'podcast'],
-  '🎚️': ['control knob', 'audio', 'volume'],
-  '🎛️': ['sliders', 'equalizer', 'settings'],
-  '📡': ['satellite dish', 'broadcast', 'signal'],
-  '🔋': ['battery', 'power', 'energy'],
-  '🔌': ['plug', 'electricity', 'charging'],
-  '💡': ['light bulb', 'idea', 'illumination'],
-  '🔦': ['flashlight', 'torch', 'light'],
-  '🕯️': ['candle', 'light', 'fire'],
-
-  // Household & Money
-  '🧯': ['fire extinguisher', 'safety', 'fire'],
-  '🛢️': ['barrel', 'oil', 'fuel'],
-  '💸': ['money with wings', 'cash', 'spending'],
-  '💵': ['dollar bills', 'money', 'USD'],
-  '💴': ['yen', 'money', 'Japan'],
-  '💶': ['euro', 'money', 'currency'],
-  '💷': ['pound', 'money', 'UK'],
-  '🪙': ['coin', 'currency', 'money'],
-  '💰': ['money bag', 'wealth', 'rich'],
-  '💳': ['credit card', 'banking', 'payment'],
-  '💎': ['gem', 'diamond', 'valuable'],
-  '⚖️': ['balance scale', 'justice', 'law'],
-  '🪜': ['ladder', 'climb', 'height'],
-  '🧰': ['toolbox', 'tools', 'repair'],
-  '🔧': ['wrench', 'repair', 'tools'],
-  '🔨': ['hammer', 'build', 'fix'],
-  '⚒️': ['hammer and pick', 'construction', 'work'],
-  '🛠️': ['tools', 'fix', 'maintenance'],
-  '⛏️': ['pickaxe', 'mining', 'digging'],
-
-  // Writing & Reading
-  '✏️': ['pencil', 'writing', 'notes'],
-  '🖊️': ['pen', 'writing', 'signature'],
-  '🖋️': ['fountain pen', 'calligraphy', 'writing'],
-  '✒️': ['nib', 'ink', 'writing'],
-  '🖌️': ['paintbrush', 'art', 'painting'],
-  '🖍️': ['crayon', 'drawing', 'color'],
-  '📝': ['memo', 'notes', 'document'],
-  '📚': ['books', 'reading', 'library'],
-  '📖': ['open book', 'reading', 'story'],
-  '🔖': ['bookmark', 'reading', 'save'],
-  '📑': ['bookmark tabs', 'pages', 'notes'],
-  '🗒️': ['spiral notepad', 'notes', 'journal'],
-  '📄': ['document', 'paper', 'page'],
-  '📰': ['newspaper', 'news', 'journalism'],
-  '🗞️': ['rolled newspaper', 'press', 'print'],
-  '📁': ['file folder', 'documents', 'storage'],
-  '📂': ['open folder', 'organization', 'files'],
-  '🗂️': ['card index', 'catalog', 'records'],
+  '✏️': {
+    en: ['pencil', 'writing', 'notes'],
+    ru: ['карандаш', 'написание', 'заметки']
+  },
+  '🖊️': {
+    en: ['pen', 'writing', 'signature'],
+    ru: ['ручка', 'написание', 'подпись']
+  },
+  '🖋️': {
+    en: ['fountain pen', 'calligraphy', 'writing'],
+    ru: ['перьевая ручка', 'каллиграфия', 'написание']
+  },
+  '✒️': {
+    en: ['nib', 'ink', 'writing'],
+    ru: ['остриё', 'чернила', 'написание']
+  },
+  '🖌️': {
+    en: ['paintbrush', 'art', 'painting'],
+    ru: ['кисть', 'искусство', 'живопись']
+  },
+  '🖍️': {
+    en: ['crayon', 'drawing', 'color'],
+    ru: ['мелки', 'рисование', 'цвет']
+  },
+  '📝': {
+    en: ['memo', 'notes', 'document'],
+    ru: ['заметка', 'записи', 'документ']
+  },
+  '📚': {
+    en: ['books', 'reading', 'library'],
+    ru: ['книги', 'чтение', 'библиотека']
+  },
+  '📖': {
+    en: ['open book', 'reading', 'story'],
+    ru: ['открытая книга', 'чтение', 'история']
+  },
+  '🔖': {
+    en: ['bookmark', 'reading', 'save'],
+    ru: ['закладка', 'чтение', 'сохранить']
+  },
+  '📑': {
+    en: ['bookmark tabs', 'pages', 'notes'],
+    ru: ['закладки', 'страницы', 'заметки']
+  },
+  '🗒️': {
+    en: ['spiral notepad', 'notes', 'journal'],
+    ru: ['спиральный блокнот', 'записи', 'журнал']
+  },
+  '📄': {
+    en: ['document', 'paper', 'page'],
+    ru: ['документ', 'бумага', 'страница']
+  },
+  '📰': {
+    en: ['newspaper', 'news', 'journalism'],
+    ru: ['газета', 'новости', 'журналистика']
+  },
+  '🗞️': {
+    en: ['rolled newspaper', 'press', 'print'],
+    ru: ['свернутая газета', 'пресса', 'печатное издание']
+  },
+  '📁': {
+    en: ['file folder', 'documents', 'storage'],
+    ru: ['папка', 'документы', 'хранение']
+  },
+  '📂': {
+    en: ['open folder', 'organization', 'files'],
+    ru: ['открытая папка', 'организация', 'файлы']
+  },
+  '🗂️': {
+    en: ['card index', 'catalog', 'records'],
+    ru: ['карточный индекс', 'каталог', 'записи']
+  },
 
   //------------------------- Symbols & Signs -------------------------
   // Hearts
-  '❤️': ['heart', 'love', 'affection'],
-  '🧡': ['orange heart', 'warmth', 'care'],
-  '💛': ['yellow heart', 'friendship', 'happiness'],
-  '💚': ['green heart', 'envy', 'nature', 'eco'],
-  '💙': ['blue heart', 'loyalty', 'trust'],
-  '💜': ['purple heart', 'compassion', 'admiration'],
-  '🤎': ['brown heart', 'earth', 'stability'],
-  '🖤': ['black heart', 'mourning', 'dark'],
-  '🤍': ['white heart', 'pure', 'peace'],
-  '💔': ['broken heart', 'sad', 'heartbreak'],
-  '❣️': ['heart exclamation', 'love', 'emotion'],
-  '💕': ['two hearts', 'romance', 'affection'],
-  '💞': ['revolving hearts', 'love', 'relationship'],
-  '💓': ['beating heart', 'emotion', 'passion'],
-  '💗': ['growing heart', 'love', 'expanding'],
-  '💖': ['sparkling heart', 'admiration', 'shine'],
-  '💘': ['heart with arrow', 'love', 'romance'],
-  '💝': ['heart with ribbon', 'gift', 'affection'],
-  '💟': ['heart decoration', 'symbol', 'love'],
+  '❤️': {
+    en: ['heart', 'love', 'affection'],
+    ru: ['сердце', 'любовь', 'нежность']
+  },
+  '🧡': {
+    en: ['orange heart', 'warmth', 'care'],
+    ru: ['оранжевое сердце', 'теплота', 'забота']
+  },
+  '💛': {
+    en: ['yellow heart', 'friendship', 'happiness'],
+    ru: ['жёлтое сердце', 'дружба', 'счастье']
+  },
+  '💚': {
+    en: ['green heart', 'envy', 'nature', 'eco'],
+    ru: ['зелёное сердце', 'зависть', 'природа', 'эко']
+  },
+  '💙': {
+    en: ['blue heart', 'loyalty', 'trust'],
+    ru: ['синее сердце', 'верность', 'доверие']
+  },
+  '💜': {
+    en: ['purple heart', 'compassion', 'admiration'],
+    ru: ['фиолетовое сердце', 'сострадание', 'восхищение']
+  },
+  '🤎': {
+    en: ['brown heart', 'earth', 'stability'],
+    ru: ['коричневое сердце', 'земля', 'устойчивость']
+  },
+  '🖤': {
+    en: ['black heart', 'mourning', 'dark'],
+    ru: ['чёрное сердце', 'скорбь', 'тёмный']
+  },
+  '🤍': {
+    en: ['white heart', 'pure', 'peace'],
+    ru: ['белое сердце', 'чистый', 'мир']
+  },
+  '💔': {
+    en: ['broken heart', 'sad', 'heartbreak'],
+    ru: ['разбитое сердце', 'грусть', 'сердечная боль']
+  },
+  '❣️': {
+    en: ['heart exclamation', 'love', 'emotion'],
+    ru: ['сердечный восклицательный знак', 'любовь', 'эмоция']
+  },
+  '💕': {
+    en: ['two hearts', 'romance', 'affection'],
+    ru: ['два сердца', 'романтика', 'нежность']
+  },
+  '💞': {
+    en: ['revolving hearts', 'love', 'relationship'],
+    ru: ['вращающиеся сердца', 'любовь', 'отношения']
+  },
+  '💓': {
+    en: ['beating heart', 'emotion', 'passion'],
+    ru: ['бьющееся сердце', 'эмоция', 'страсть']
+  },
+  '💗': {
+    en: ['growing heart', 'love', 'expanding'],
+    ru: ['растущее сердце', 'любовь', 'расширяющееся']
+  },
+  '💖': {
+    en: ['sparkling heart', 'admiration', 'shine'],
+    ru: ['блестящее сердце', 'восхищение', 'сияние']
+  },
+  '💘': {
+    en: ['heart with arrow', 'love', 'romance'],
+    ru: ['сердце со стрелой', 'любовь', 'романтика']
+  },
+  '💝': {
+    en: ['heart with ribbon', 'gift', 'affection'],
+    ru: ['сердце с лентой', 'подарок', 'нежность']
+  },
+  '💟': {
+    en: ['heart decoration', 'symbol', 'love'],
+    ru: ['украшение сердца', 'символ', 'любовь']
+  },
 
   // Religion
-  '☮️': ['peace', 'pacifism', 'symbol'],
-  '✝️': ['cross', 'christianity', 'religion'],
-  '☪️': ['star and crescent', 'islam', 'faith'],
-  '🕉️': ['om', 'hinduism', 'spiritual'],
-  '☸️': ['dharma wheel', 'buddhism', 'karma'],
-  '✡️': ['star of david', 'judaism', 'faith'],
-  '🔯': ['hexagram', 'mystic', 'spiritual'],
-  '🕎': ['menorah', 'hanukkah', 'jewish'],
-  '☯️': ['yin yang', 'balance', 'harmony'],
-  '☦️': ['orthodox cross', 'christianity', 'faith'],
-  '🛐': ['place of worship', 'religion', 'faith'],
-  '⛎': ['ophiuchus', 'zodiac', 'astrology'],
+  '☮️': {
+    en: ['peace', 'pacifism', 'symbol'],
+    ru: ['мир', 'пацифизм', 'символ']
+  },
+  '✝️': {
+    en: ['cross', 'christianity', 'religion'],
+    ru: ['крест', 'христианство', 'религия']
+  },
+  '☪️': {
+    en: ['star and crescent', 'islam', 'faith'],
+    ru: ['звезда и полумесяц', 'ислам', 'вера']
+  },
+  '🕉️': {
+    en: ['om', 'hinduism', 'spiritual'],
+    ru: ['ом', 'индуизм', 'духовный']
+  },
+  '☸️': {
+    en: ['dharma wheel', 'buddhism', 'karma'],
+    ru: ['колесо дхармы', 'буддизм', 'карма']
+  },
+  '✡️': {
+    en: ['star of david', 'judaism', 'faith'],
+    ru: ['звезда Давида', 'иудаизм', 'вера']
+  },
+  '🔯': {
+    en: ['hexagram', 'mystic', 'spiritual'],
+    ru: ['шестиконечная звезда', 'мистический', 'духовный']
+  },
+  '🕎': {
+    en: ['menorah', 'hanukkah', 'jewish'],
+    ru: ['менора', 'Ханука', 'еврейский']
+  },
+  '☯️': {
+    en: ['yin yang', 'balance', 'harmony'],
+    ru: ['инь-ян', 'баланс', 'гармония']
+  },
+  '☦️': {
+    en: ['orthodox cross', 'christianity', 'faith'],
+    ru: ['православный крест', 'христианство', 'вера']
+  },
+  '🛐': {
+    en: ['place of worship', 'religion', 'faith'],
+    ru: ['место поклонения', 'религия', 'вера']
+  },
+  '⛎': {
+    en: ['ophiuchus', 'zodiac', 'astrology'],
+    ru: ['змееносец', 'зодиак', 'астрология']
+  },
 
   // Warning & Restrictions
-  '⚠️': ['warning', 'caution', 'alert'],
-  '🚸': ['children crossing', 'school', 'pedestrian'],
-  '⛔': ['no entry', 'prohibited', 'restricted'],
-  '🚫': ['prohibited', 'no', 'forbidden'],
-  '🚳': ['no bicycles', 'banned', 'bike'],
-  '🚭': ['no smoking', 'ban', 'cigarette'],
-  '🚯': ['no littering', 'clean', 'trash'],
-  '🚱': ['no drinking water', 'prohibited', 'thirst'],
-  '🚷': ['no pedestrians', 'walking', 'forbidden'],
-  '📵': ['no phones', 'silent', 'restriction'],
-  '🔞': ['18+', 'adult content', 'restricted'],
-  '☢️': ['radioactive', 'hazard', 'danger'],
-  '☣️': ['biohazard', 'toxic', 'warning'],
+  '⚠️': {
+    en: ['warning', 'caution', 'alert'],
+    ru: ['предупреждение', 'осторожность', 'тревога']
+  },
+  '🚸': {
+    en: ['children crossing', 'school', 'pedestrian'],
+    ru: ['дети на переходе', 'школа', 'пешеход']
+  },
+  '⛔': {
+    en: ['no entry', 'prohibited', 'restricted'],
+    ru: ['вход запрещён', 'запрещено', 'ограничено']
+  },
+  '🚫': {
+    en: ['prohibited', 'no', 'forbidden'],
+    ru: ['запрещено', 'нет', 'запрещено']
+  },
+  '🚳': {
+    en: ['no bicycles', 'banned', 'bike'],
+    ru: ['велосипеды запрещены', 'запрещено', 'велосипед']
+  },
+  '🚭': {
+    en: ['no smoking', 'ban', 'cigarette'],
+    ru: ['курение запрещено', 'запрет', 'сигарета']
+  },
+  '🚯': {
+    en: ['no littering', 'clean', 'trash'],
+    ru: ['не мусорить', 'чистота', 'мусор']
+  },
+  '🚱': {
+    en: ['no drinking water', 'prohibited', 'thirst'],
+    ru: ['питьевая вода запрещена', 'запрещено', 'жажда']
+  },
+  '🚷': {
+    en: ['no pedestrians', 'walking', 'forbidden'],
+    ru: ['пешеходам запрещено', 'ходьба', 'запрещено']
+  },
+  '📵': {
+    en: ['no phones', 'silent', 'restriction'],
+    ru: ['телефоны запрещены', 'тихий', 'ограничение']
+  },
+  '🔞': {
+    en: ['18+', 'adult content', 'restricted'],
+    ru: ['18+', 'контент для взрослых', 'ограничено']
+  },
+  '☢️': {
+    en: ['radioactive', 'hazard', 'danger'],
+    ru: ['радиоактивный', 'опасность', 'угроза']
+  },
+  '☣️': {
+    en: ['biohazard', 'toxic', 'warning'],
+    ru: ['биологическая опасность', 'ядовитый', 'предупреждение']
+  },
 
   // Math Symbols
-  '➕': ['plus', 'addition', 'math'],
-  '➖': ['minus', 'subtraction', 'math'],
-  '➗': ['division', 'divide', 'math'],
-  '✖️': ['multiplication', 'times', 'math'],
-  '♾️': ['infinity', 'limitless', 'math'],
-  '💲': ['dollar', 'money', 'currency'],
-  '💱': ['currency exchange', 'finance', 'money'],
+  '➕': {
+    en: ['plus', 'addition', 'math'],
+    ru: ['плюс', 'сложение', 'математика']
+  },
+  '➖': {
+    en: ['minus', 'subtraction', 'math'],
+    ru: ['минус', 'вычитание', 'математика']
+  },
+  '➗': {
+    en: ['division', 'divide', 'math'],
+    ru: ['деление', 'делить', 'математика']
+  },
+  '✖️': {
+    en: ['multiplication', 'times', 'math'],
+    ru: ['умножение', 'раз', 'математика']
+  },
+  '♾️': {
+    en: ['infinity', 'limitless', 'math'],
+    ru: ['бесконечность', 'безграничный', 'математика']
+  },
+  '💲': {
+    en: ['dollar', 'money', 'currency'],
+    ru: ['доллар', 'деньги', 'валюта']
+  },
+  '💱': {
+    en: ['currency exchange', 'finance', 'money'],
+    ru: ['обмен валюты', 'финансы', 'деньги']
+  },
 
   // Arrows
-  '⬆️': ['up arrow', 'increase', 'direction'],
-  '↗️': ['up-right arrow', 'growth', 'move'],
-  '➡️': ['right arrow', 'next', 'forward'],
-  '↘️': ['down-right arrow', 'decrease', 'move'],
-  '⬇️': ['down arrow', 'lower', 'decline'],
-  '↙️': ['down-left arrow', 'falling', 'move'],
-  '⬅️': ['left arrow', 'back', 'previous'],
-  '↖️': ['up-left arrow', 'direction', 'move'],
-  '↕️': ['vertical arrows', 'up down', 'change'],
-  '↔️': ['horizontal arrows', 'left right', 'switch'],
-  '↩️': ['back arrow', 'undo', 'return'],
-  '↪️': ['right curved arrow', 'redirect', 'turn'],
-  '⤴️': ['up-right arrow', 'diagonal', 'move'],
-  '⤵️': ['down-right arrow', 'diagonal', 'move'],
-  '🔃': ['repeat', 'cycle', 'refresh'],
-  '🔄': ['counterclockwise arrows', 'reload', 'sync'],
+  '⬆️': {
+    en: ['up arrow', 'increase', 'direction'],
+    ru: ['стрелка вверх', 'увеличение', 'направление']
+  },
+  '↗️': {
+    en: ['up-right arrow', 'growth', 'move'],
+    ru: ['стрелка вверх-вправо', 'рост', 'движение']
+  },
+  '➡️': {
+    en: ['right arrow', 'next', 'forward'],
+    ru: ['стрелка вправо', 'далее', 'вперёд']
+  },
+  '↘️': {
+    en: ['down-right arrow', 'decrease', 'move'],
+    ru: ['стрелка вниз-вправо', 'уменьшение', 'движение']
+  },
+  '⬇️': {
+    en: ['down arrow', 'lower', 'decline'],
+    ru: ['стрелка вниз', 'понижение', 'снижение']
+  },
+  '↙️': {
+    en: ['down-left arrow', 'falling', 'move'],
+    ru: ['стрелка вниз-влево', 'падение', 'движение']
+  },
+  '⬅️': {
+    en: ['left arrow', 'back', 'previous'],
+    ru: ['стрелка влево', 'назад', 'предыдущий']
+  },
+  '↖️': {
+    en: ['up-left arrow', 'direction', 'move'],
+    ru: ['стрелка вверх-влево', 'направление', 'движение']
+  },
+  '↕️': {
+    en: ['vertical arrows', 'up down', 'change'],
+    ru: ['вертикальные стрелки', 'вверх вниз', 'изменение']
+  },
+  '↔️': {
+    en: ['horizontal arrows', 'left right', 'switch'],
+    ru: ['горизонтальные стрелки', 'влево вправо', 'переключение']
+  },
+  '↩️': {
+    en: ['back arrow', 'undo', 'return'],
+    ru: ['стрелка назад', 'отмена', 'возврат']
+  },
+  '↪️': {
+    en: ['right curved arrow', 'redirect', 'turn'],
+    ru: ['изогнутая стрелка вправо', 'перенаправление', 'поворот']
+  },
+  '⤴️': {
+    en: ['up-right arrow', 'diagonal', 'move'],
+    ru: ['диагональная стрелка вверх-вправо', 'диагональ', 'движение']
+  },
+  '⤵️': {
+    en: ['down-right arrow', 'diagonal', 'move'],
+    ru: ['диагональная стрелка вниз-вправо', 'диагональ', 'движение']
+  },
+  '🔃': {
+    en: ['repeat', 'cycle', 'refresh'],
+    ru: ['повтор', 'цикл', 'обновление']
+  },
+  '🔄': {
+    en: ['counterclockwise arrows', 'reload', 'sync'],
+    ru: ['стрелки против часовой стрелки', 'перезагрузка', 'синхронизация']
+  },
 
   // Miscellaneous Symbols
-  '🔆': ['bright', 'high brightness', 'sun'],
-  '📶': ['signal', 'network', 'connection'],
-  '🎦': ['cinema', 'movies', 'entertainment'],
-  '🔅': ['dim', 'low brightness', 'light'],
-  '♻️': ['recycle', 'eco', 'sustainability'],
-  '✅': ['check mark', 'yes', 'approved'],
-  '❌': ['cross mark', 'no', 'wrong'],
-  '❎': ['negative cross', 'decline', 'cancel'],
-  '➰': ['curly loop', 'infinity', 'twist'],
-  '➿': ['double curly loop', 'loop', 'repeat'],
-  '〽️': ['part alternation', 'music', 'symbol'],
-  '✳️': ['eight-spoked asterisk', 'star', 'highlight'],
-  '✴️': ['eight-pointed star', 'shine', 'special'],
-  '❇️': ['sparkle', 'highlight', 'shine'],
-  '©️': ['copyright', 'legal', 'rights'],
-  '®️': ['registered', 'trademark', 'brand'],
-  '™️': ['trademark', 'brand', 'symbol'],
+  '🔆': {
+    en: ['bright', 'high brightness', 'sun'],
+    ru: ['яркий', 'высокая яркость', 'солнце']
+  },
+  '📶': {
+    en: ['signal', 'network', 'connection'],
+    ru: ['сигнал', 'сеть', 'соединение']
+  },
+  '🎦': {
+    en: ['cinema', 'movies', 'entertainment'],
+    ru: ['кино', 'фильмы', 'развлечения']
+  },
+  '🔅': {
+    en: ['dim', 'low brightness', 'light'],
+    ru: ['тусклый', 'низкая яркость', 'свет']
+  },
+  '♻️': {
+    en: ['recycle', 'eco', 'sustainability'],
+    ru: ['переработка', 'эко', 'устойчивость']
+  },
+  '✅': {
+    en: ['check mark', 'yes', 'approved'],
+    ru: ['галочка', 'да', 'одобрено']
+  },
+  '❌': {
+    en: ['cross mark', 'no', 'wrong'],
+    ru: ['крестик', 'нет', 'неправильно']
+  },
+  '❎': {
+    en: ['negative cross', 'decline', 'cancel'],
+    ru: ['отрицательный крест', 'отказ', 'отмена']
+  },
+  '➰': {
+    en: ['curly loop', 'infinity', 'twist'],
+    ru: ['извилистая петля', 'бесконечность', 'скрутка']
+  },
+  '➿': {
+    en: ['double curly loop', 'loop', 'repeat'],
+    ru: ['двойная извилистая петля', 'петля', 'повтор']
+  },
+  '〽️': {
+    en: ['part alternation', 'music', 'symbol'],
+    ru: ['знак чередования', 'музыка', 'символ']
+  },
+  '✳️': {
+    en: ['eight-spoked asterisk', 'star', 'highlight'],
+    ru: ['восьмиконечная астериска', 'звезда', 'акцент']
+  },
+  '✴️': {
+    en: ['eight-pointed star', 'shine', 'special'],
+    ru: ['восьмиконечная звезда', 'сияние', 'особый']
+  },
+  '❇️': {
+    en: ['sparkle', 'highlight', 'shine'],
+    ru: ['сверкание', 'акцент', 'сияние']
+  },
+  '©️': {
+    en: ['copyright', 'legal', 'rights'],
+    ru: ['авторское право', 'юридический', 'права']
+  },
+  '®️': {
+    en: ['registered', 'trademark', 'brand'],
+    ru: ['зарегистрировано', 'торговая марка', 'бренд']
+  },
+  '™️': {
+    en: ['trademark', 'brand', 'symbol'],
+    ru: ['торговая марка', 'бренд', 'символ']
+  },
 
   //------------------------- Flags -------------------------
   // Special Flags
-  '🏁': ['checkered flag', 'finish line', 'racing'],
-  '🚩': ['triangular flag', 'mark', 'warning'],
-  '🎌': ['crossed flags', 'celebration', 'Japan'],
-  '🏴': ['black flag', 'protest', 'symbol'],
-  '🏳️': ['white flag', 'surrender', 'peace'],
-  '🏳️‍🌈': ['rainbow flag', 'LGBTQ+', 'pride'],
-  '🏳️‍⚧️': ['transgender flag', 'trans', 'pride'],
-  '🏴‍☠️': ['pirate flag', 'skull', 'danger'],
+  '🏁': {
+    en: ['checkered flag', 'finish line', 'racing'],
+    ru: ['шашечный флаг', 'финишная черта', 'гонки']
+  },
+  '🚩': {
+    en: ['triangular flag', 'mark', 'warning'],
+    ru: ['треугольный флаг', 'метка', 'предупреждение']
+  },
+  '🎌': {
+    en: ['crossed flags', 'celebration', 'Japan'],
+    ru: ['перекрещённые флаги', 'празднование', 'Япония']
+  },
+  '🏴': {
+    en: ['black flag', 'protest', 'symbol'],
+    ru: ['чёрный флаг', 'протест', 'символ']
+  },
+  '🏳️': {
+    en: ['white flag', 'surrender', 'peace'],
+    ru: ['белый флаг', 'капитуляция', 'мир']
+  },
+  '🏳️‍🌈': {
+    en: ['rainbow flag', 'LGBTQ+', 'pride'],
+    ru: ['радужный флаг', 'ЛГБТК+', 'гордость']
+  },
+  '🏳️‍⚧️': {
+    en: ['transgender flag', 'trans', 'pride'],
+    ru: ['трансгендерный флаг', 'транс', 'гордость']
+  },
+  '🏴‍☠️': {
+    en: ['pirate flag', 'skull', 'danger'],
+    ru: ['пиратский флаг', 'череп', 'опасность']
+  },
 
   // Country Flags (Sample)
-  '🇺🇸': ['United States', 'USA', 'America'],
-  '🇬🇧': ['United Kingdom', 'UK', 'Britain'],
-  '🇯🇵': ['Japan', 'Japanese', 'Asia'],
-  '🇰🇷': ['South Korea', 'Korea', 'Asian'],
-  '🇩🇪': ['Germany', 'Deutschland', 'Europe'],
-  '🇨🇳': ['China', 'Chinese', 'Asia'],
-  '🇧🇷': ['Brazil', 'Brasil', 'South America'],
-  '🇮🇳': ['India', 'Indian', 'Asia'],
-  '🇫🇷': ['France', 'French', 'Europe'],
-  '🇪🇸': ['Spain', 'Spanish', 'Europe'],
-  '🇮🇹': ['Italy', 'Italian', 'Europe'],
-  '🇷🇺': ['Russia', 'Russian', 'Europe'],
-  '🇨🇦': ['Canada', 'Canadian', 'North America'],
-  '🇦🇺': ['Australia', 'Aussie', 'Oceania'],
-  '🇳🇿': ['New Zealand', 'Kiwi', 'Oceania']
+  '🇺🇸': {
+    en: ['United States', 'USA', 'America'],
+    ru: ['Соединённые Штаты', 'США', 'Америка']
+  },
+  '🇬🇧': {
+    en: ['United Kingdom', 'UK', 'Britain'],
+    ru: ['Соединённое Королевство', 'Великобритания', 'Британия']
+  },
+  '🇯🇵': {
+    en: ['Japan', 'Japanese', 'Asia'],
+    ru: ['Япония', 'японский', 'Азия']
+  },
+  '🇰🇷': {
+    en: ['South Korea', 'Korea', 'Asian'],
+    ru: ['Южная Корея', 'Корея', 'азиатский']
+  },
+  '🇩🇪': {
+    en: ['Germany', 'Deutschland', 'Europe'],
+    ru: ['Германия', 'Германия', 'Европа']
+  },
+  '🇨🇳': {
+    en: ['China', 'Chinese', 'Asia'],
+    ru: ['Китай', 'китайский', 'Азия']
+  },
+  '🇧🇷': {
+    en: ['Brazil', 'Brasil', 'South America'],
+    ru: ['Бразилия', 'Бразилия', 'Южная Америка']
+  },
+  '🇮🇳': {
+    en: ['India', 'Indian', 'Asia'],
+    ru: ['Индия', 'индийский', 'Азия']
+  },
+  '🇫🇷': {
+    en: ['France', 'French', 'Europe'],
+    ru: ['Франция', 'французский', 'Европа']
+  },
+  '🇪🇸': {
+    en: ['Spain', 'Spanish', 'Europe'],
+    ru: ['Испания', 'испанский', 'Европа']
+  },
+  '🇮🇹': {
+    en: ['Italy', 'Italian', 'Europe'],
+    ru: ['Италия', 'итальянский', 'Европа']
+  },
+  '🇷🇺': {
+    en: ['Russia', 'Russian', 'Europe'],
+    ru: ['Россия', 'русский', 'Европа']
+  },
+  '🇨🇦': {
+    en: ['Canada', 'Canadian', 'North America'],
+    ru: ['Канада', 'канадский', 'Северная Америка']
+  },
+  '🇦🇺': {
+    en: ['Australia', 'Aussie', 'Oceania'],
+    ru: ['Австралия', 'австралиец', 'Океания']
+  },
+  '🇳🇿': {
+    en: ['New Zealand', 'Kiwi', 'Oceania'],
+    ru: ['Новая Зеландия', 'киви', 'Океания']
+  }
 };
