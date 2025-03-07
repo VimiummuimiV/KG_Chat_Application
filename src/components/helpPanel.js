@@ -16,54 +16,144 @@ class HelpPanel {
   createPanel() {
     this.container = document.createElement('div');
     this.container.className = 'emoji-panel help-panel';
-    // Build help content with specific header and subheader classes
-    const content = document.createElement('div');
-    content.className = 'help-content';
-    content.innerHTML = `
-      <h5 class="help-section-header">Chat Commands & Hotkeys</h5>
 
-      <h6 class="help-section-subheader">Chat Commands</h6>
-      <ul class="help-list">
-      <li class="help-list-item"><strong class="help-hotkey">/help</strong> Show this help panel</li>
-      <li class="help-list-item"><strong class="help-hotkey">/pm username</strong> Activate private messaging mode with the specified user</li>
-      <li class="help-list-item"><strong class="help-hotkey">/exit</strong> Exit private messaging mode</li>
-      </ul>
+    // Create and save the content element for later updates.
+    this.content = document.createElement('div');
+    this.content.className = 'help-content';
+    // Initialize content for the first time.
+    this.updatePanelContent();
+    this.container.appendChild(this.content);
 
-      <h6 class="help-section-subheader">Chat Hotkeys</h6>
-      <ul class="help-list">
-      <li class="help-list-item"><strong class="help-hotkey">Ctrl + Space</strong> Hide the chat</li>
-      <li class="help-list-item"><strong class="help-hotkey">Shift + Ctrl + Space</strong> Expand/Collapse the chat</li>
-      <li class="help-list-item"><strong class="help-hotkey">Ctrl + Click on username</strong> Activate private messaging mode with the clicked user (in chat messages)</li>
-      </ul>
-
-
-      <h5 class="help-section-header">Emoji Panel Actions & Hotkeys</h5> 
-
-      <h6 class="help-section-subheader">Emoji Panel Actions</h6>
-      <ul class="help-list">
-      <li class="help-list-item"><strong class="help-hotkey">Click an emoji</strong> Selects the emoji</li>
-      <li class="help-list-item"><strong class="help-hotkey">Click outside panel</strong> Closes the panel (emoji or help)</li>
-      </ul>
-
-      <h6 class="help-section-subheader">Emoji Panel Hotkeys</h6>
-      <ul class="help-list">
-      <li class="help-list-item"><strong class="help-hotkey">Ctrl + ;</strong> Open the Emoji Panel</li>
-      <li class="help-list-item"><strong class="help-hotkey">Enter</strong> Insert the emoji</li>
-      <li class="help-list-item"><strong class="help-hotkey">Ctrl + Enter</strong> Insert the emoji keeping the panel open</li>
-      <li class="help-list-item"><strong class="help-hotkey">Ctrl + Click</strong> Insert the emoji keeping the panel open</li>
-      <li class="help-list-item"><strong class="help-hotkey">Shift + Click</strong> Remove emoji from recent list (in recent category)</li>
-      <li class="help-list-item"><strong class="help-hotkey">q</strong> Hide the Emoji Panel (single press when search is not focused)</li>
-      <li class="help-list-item"><strong class="help-hotkey">qq</strong> Hide the Emoji Panel (double press within 500ms when search is focused)</li>
-      <li class="help-list-item"><strong class="help-hotkey">Esc</strong> Close the (emoji or help)</li>
-      </ul>
-    `;
-    this.container.appendChild(content);
-    // Append the help panel inside the messages-panel container
     if (this.options.container) {
       this.options.container.appendChild(this.container);
     }
-    // Initially hidden
     this.hide();
+  }
+  updatePanelContent() {
+    // Retrieve current language from localStorage
+    const lang = localStorage.getItem('emojiPanelLanguage') || 'en';
+    const helpTranslations = {
+      en: {
+        heading: "Chat Commands & Hotkeys",
+        sections: [
+          {
+            title: "Chat Commands",
+            items: [
+              { key: "/help", desc: "Show this help panel" },
+              { key: "/pm username", desc: "Activate private messaging mode with the specified user" },
+              { key: "/exit", desc: "Exit private messaging mode" }
+            ]
+          },
+          {
+            title: "Chat Hotkeys",
+            items: [
+              { key: "Ctrl + Space", desc: "Hide/Show the chat" },
+              { key: "Shift + Ctrl + Space", desc: "Expand/Collapse the chat" },
+              { key: "Ctrl + Click on username", desc: "Activate private messaging mode with the clicked user (in chat messages)" }
+            ]
+          },
+          {
+            heading: "Emoji Panel Actions & Hotkeys",
+            subSections: [
+              {
+                title: "Emoji Panel Actions",
+                items: [
+                  { key: "Click an emoji", desc: "Insert the emoji" },
+                  { key: "Click outside panel", desc: "Closes the panel (emoji or help)" }
+                ]
+              },
+              {
+                title: "Emoji Panel Hotkeys",
+                items: [
+                  { key: "Ctrl + ;", desc: "Open the Emoji Panel" },
+                  { key: "Enter", desc: "Insert the emoji" },
+                  { key: "Ctrl + Enter", desc: "Insert the emoji keeping the panel open" },
+                  { key: "Ctrl + Click", desc: "Insert the emoji keeping the panel open" },
+                  { key: "Shift + Click", desc: "Remove emoji from recent list (in recent category)" },
+                  { key: "q", desc: "Hide the Emoji Panel (single press when search is not focused)" },
+                  { key: "qq", desc: "Hide the Emoji Panel (double press 'q' when search is focused)" },
+                  { key: "Esc", desc: "Close the (emoji or help)" }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      ru: {
+        heading: "Команды чата и горячие клавиши",
+        sections: [
+          {
+            title: "Команды чата",
+            items: [
+              { key: "/help", desc: "Показать панель помощи" },
+              { key: "/pm username", desc: "Активировать режим личных сообщений для указанного пользователя" },
+              { key: "/exit", desc: "Выйти из режима личных сообщений" }
+            ]
+          },
+          {
+            title: "Горячие клавиши чата",
+            items: [
+              { key: "Ctrl + Space", desc: "Скрыть/Показать чат" },
+              { key: "Shift + Ctrl + Space", desc: "Развернуть/Свернуть чат" },
+              { key: "Ctrl + Click on username", desc: "Активировать режим личных сообщений для выбранного пользователя (в сообщениях чата)" }
+            ]
+          },
+          {
+            heading: "Действия и горячие клавиши панели эмодзи",
+            subSections: [
+              {
+                title: "Действия панели эмодзи",
+                items: [
+                  { key: "Click an emoji", desc: "Вставить эмодзи" },
+                  { key: "Click outside panel", desc: "Закрыть панель (эмодзи или помощь)" }
+                ]
+              },
+              {
+                title: "Горячие клавиши панели эмодзи",
+                items: [
+                  { key: "Ctrl + ;", desc: "Открыть панель эмодзи" },
+                  { key: "Enter", desc: "Вставить эмодзи" },
+                  { key: "Ctrl + Enter", desc: "Вставить эмодзи, оставив панель открытой" },
+                  { key: "Ctrl + Click", desc: "Вставить эмодзи, оставив панель открытой" },
+                  { key: "Shift + Click", desc: "Удалить эмодзи из списка \"Недавно использованные\"" },
+                  { key: "q", desc: "Скрыть панель эмодзи (одиночный нажим, когда поиск не в фокусе)" },
+                  { key: "qq", desc: "Скрыть панель эмодзи (дважды нажмите 'q', когда поиск в фокусе)" },
+                  { key: "Esc", desc: "Закрыть (эмодзи или помощь)" }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    };
+    const t = helpTranslations[lang];
+
+    let html = `<h5 class="help-section-header">${t.heading}</h5>`;
+    t.sections.forEach(section => {
+      if (section.title) {
+        html += `<h6 class="help-section-subheader">${section.title}</h6>`;
+      } else if (section.heading) {
+        html += `<h5 class="help-section-header">${section.heading}</h5>`;
+      }
+      if (section.items) {
+        html += `<ul class="help-list">`;
+        section.items.forEach(item => {
+          html += `<li class="help-list-item"><strong class="help-hotkey">${item.key}</strong> ${item.desc}</li>`;
+        });
+        html += `</ul>`;
+      }
+      if (section.subSections) {
+        section.subSections.forEach(sub => {
+          html += `<h6 class="help-section-subheader">${sub.title}</h6>`;
+          html += `<ul class="help-list">`;
+          sub.items.forEach(item => {
+            html += `<li class="help-list-item"><strong class="help-hotkey">${item.key}</strong> ${item.desc}</li>`;
+          });
+          html += `</ul>`;
+        });
+      }
+    });
+    this.content.innerHTML = html;
   }
   bindEvents() {
     // Global click to close help panel
@@ -121,6 +211,8 @@ class HelpPanel {
   }
   // New method to activate the help panel with notification
   activate() {
+    // Update the panel content based on the current language setting
+    this.updatePanelContent();
     showChatAlert("Help panel is shown", { type: 'info', duration: 3000 });
     this.show();
   }
