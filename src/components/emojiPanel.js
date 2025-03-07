@@ -14,7 +14,7 @@ export class EmojiPanel {
 
     // Configuration options
     this.options = {
-      onEmojiSelect: options.onEmojiSelect || (() => {}),
+      onEmojiSelect: options.onEmojiSelect || (() => { }),
       container: options.container || document.body,
       position: options.position || 'bottom'
     };
@@ -159,6 +159,7 @@ export class EmojiPanel {
     this.container.appendChild(footer);
 
     this.options.container.appendChild(this.container);
+    this.searchInput.focus(); // Always focus the search input when the panel is created
   }
 
   /**
@@ -275,6 +276,16 @@ export class EmojiPanel {
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && this.container.classList.contains('visible')) {
         this.hide();
+      }
+    });
+
+    // New listener: open panel with Ctrl + Semicolon (using event.code)
+    document.addEventListener('keydown', (e) => {
+      if (e.ctrlKey && e.code === 'Semicolon') {
+        e.preventDefault();
+        if (!this.container.classList.contains('visible')) {
+          this.show();
+        }
       }
     });
 
@@ -444,6 +455,7 @@ export class EmojiPanel {
    */
   show() {
     this.container.classList.add('visible');
+    this.searchInput.focus(); // Ensure focus when the panel is shown
   }
 
   /**
