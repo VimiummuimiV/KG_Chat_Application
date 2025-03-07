@@ -360,7 +360,7 @@ export function highlightMentionWords() {
 }
 
 let firstTime = true;
-const scrollThreshold = 300;
+const scrollThreshold = 600;
 
 export function scrollToBottom() {
   const container = document.getElementById('messages-panel');
