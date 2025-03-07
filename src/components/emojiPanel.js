@@ -1,6 +1,7 @@
 import { emojiData, emojiKeywords } from '../data/emojiData.js';
 
 export class EmojiPanel {
+
   constructor(options = {}) {
     // DOM elements
     this.container = null;
@@ -143,10 +144,9 @@ export class EmojiPanel {
       <option value="en">EN</option>
       <option value="ru">RU</option>
     `;
-    // Set the select value to the currently saved language
     this.languageSelect.value = this.currentLanguage;
 
-    // Footer to hold info panel and language selector in a row
+    // Footer to hold info panel and language selector
     const footer = document.createElement('div');
     footer.className = 'emoji-footer';
     footer.appendChild(this.infoPanel);
@@ -157,9 +157,8 @@ export class EmojiPanel {
     this.container.appendChild(this.categoryNav);
     this.container.appendChild(this.emojiContainer);
     this.container.appendChild(footer);
-
     this.options.container.appendChild(this.container);
-    this.searchInput.focus(); // Always focus the search input when the panel is created
+    this.searchInput.focus();
   }
 
   /**
@@ -169,7 +168,6 @@ export class EmojiPanel {
     this.emojiContainer.innerHTML = '';
     this.loadedIndices = {};
     this.categorySections = {};
-
     Object.keys(this.categories).forEach(category => {
       const section = document.createElement('div');
       section.className = 'emoji-category-section';
@@ -187,7 +185,6 @@ export class EmojiPanel {
       this.emojiContainer.appendChild(section);
       this.loadedIndices[category] = 0;
       this.categorySections[category] = { section, emojiList, header };
-
       this.loadMoreEmojisForCategory(category);
     });
   }
@@ -209,12 +206,29 @@ export class EmojiPanel {
       button.textContent = emoji;
       button.addEventListener('mouseenter', () => this.updateInfoPanel(emoji));
       button.addEventListener('mouseleave', () => this.clearInfoPanel());
-      button.addEventListener('click', () => {
-        this.addToRecent(emoji);
-        this.options.onEmojiSelect(emoji);
+
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+
+        if (e.shiftKey && category === 'recent') {
+          e.preventDefault();
+          this.removeFromRecent(emoji);
+        } else {
+          this.addToRecent(emoji);
+          this.options.onEmojiSelect(emoji);
+
+          // Only hide if Ctrl is not pressed
+          if (e.ctrlKey) {
+            this.show();
+          } else {
+            this.hide();
+          }
+        }
       });
+
       container.appendChild(button);
     });
+
     this.loadedIndices[category] += batch.length;
   }
 
@@ -226,10 +240,8 @@ export class EmojiPanel {
     this.emojiContainer.innerHTML = '';
     const section = document.createElement('div');
     section.className = 'emoji-category-section';
-
     const header = document.createElement('div');
     header.className = 'emoji-category-header';
-    // Use localized UI label for search results header
     header.textContent = this.uiLabels[this.currentLanguage].searchResults;
     section.appendChild(header);
 
@@ -258,10 +270,21 @@ export class EmojiPanel {
       button.textContent = emoji;
       button.addEventListener('mouseenter', () => this.updateInfoPanel(emoji));
       button.addEventListener('mouseleave', () => this.clearInfoPanel());
-      button.addEventListener('click', () => {
+
+      button.addEventListener('click', (e) => {
+        e.stopPropagation();
+
         this.addToRecent(emoji);
         this.options.onEmojiSelect(emoji);
+
+        // Only hide if Ctrl is not pressed
+        if (!e.ctrlKey) {
+            this.hide();
+        } else {
+            this.searchInput.focus();
+        }
       });
+
       emojiList.appendChild(button);
     });
 
@@ -304,16 +327,25 @@ export class EmojiPanel {
     // Enter key to select first search result
     this.searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
-      e.preventDefault();
-      if (this.emojiContainer.classList.contains('search-active')) {
-        const firstEmojiBtn = this.emojiContainer.querySelector('.emoji-btn');
-        if (firstEmojiBtn) {
-        firstEmojiBtn.click();
-        this.searchInput.value = ''; // Clear the search input value
-        this.loadAllEmojis(); // Reset the panel to show all categories
-        this.emojiContainer.classList.remove('search-active'); // Remove search-active class
+        e.preventDefault();
+        if (this.emojiContainer.classList.contains('search-active')) {
+          const firstEmojiBtn = this.emojiContainer.querySelector('.emoji-btn');
+          if (firstEmojiBtn) {
+            const clickEvent = new MouseEvent('click', {
+              bubbles: true,
+              cancelable: true,
+              ctrlKey: e.ctrlKey // Pass Ctrl key state
+            });
+            firstEmojiBtn.dispatchEvent(clickEvent);
+
+            // Only reset search if Ctrl is not pressed
+            if (!e.ctrlKey) {
+              this.searchInput.value = '';
+              this.loadAllEmojis();
+              this.emojiContainer.classList.remove('search-active');
+            }
+          }
         }
-      }
       }
     });
 
@@ -345,13 +377,17 @@ export class EmojiPanel {
         this.searchEmojis(this.searchInput.value.trim().toLowerCase());
       }
     });
+
+    // Prevent closing when clicking inside panel
+    this.container.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
   }
 
   /**
    * Handle scroll events for infinite scrolling and category highlighting
    */
   handleScroll() {
-    // Load more emojis when nearing the bottom of a section
     Object.keys(this.categorySections).forEach(category => {
       const { section } = this.categorySections[category];
       const sectionRect = section.getBoundingClientRect();
@@ -361,7 +397,6 @@ export class EmojiPanel {
       }
     });
 
-    // Highlight active category
     let activeCategory = null;
     let minDistance = Infinity;
     Object.keys(this.categorySections).forEach(category => {
@@ -373,6 +408,7 @@ export class EmojiPanel {
         activeCategory = category;
       }
     });
+
     if (activeCategory) {
       this.highlightCategory(activeCategory);
     }
@@ -385,9 +421,7 @@ export class EmojiPanel {
     Object.keys(this.categories).forEach(category => {
       const localizedName = this.getLocalizedCategoryName(category);
       const btn = this.categoryNav.querySelector(`[data-category="${category}"]`);
-      if (btn) {
-        btn.title = localizedName;
-      }
+      if (btn) btn.title = localizedName;
       if (this.categorySections[category] && this.categorySections[category].header) {
         this.categorySections[category].header.textContent = localizedName;
       }
@@ -423,7 +457,21 @@ export class EmojiPanel {
       ...this.recentEmojis.filter(e => e !== emoji)
     ].slice(0, 25);
     this.saveRecentEmojis();
-    // Refresh recent section if it exists
+    if (this.categorySections['recent']) {
+      const recentList = this.categorySections['recent'].emojiList;
+      recentList.innerHTML = '';
+      this.loadedIndices['recent'] = 0;
+      this.loadMoreEmojisForCategory('recent');
+    }
+  }
+
+  /**
+   * Remove an emoji from the recent list and refresh the recent section
+   * @param {string} emoji - The emoji to remove
+   */
+  removeFromRecent(emoji) {
+    this.recentEmojis = this.recentEmojis.filter(e => e !== emoji);
+    this.saveRecentEmojis();
     if (this.categorySections['recent']) {
       const recentList = this.categorySections['recent'].emojiList;
       recentList.innerHTML = '';
@@ -471,7 +519,7 @@ export class EmojiPanel {
    */
   show() {
     this.container.classList.add('visible');
-    this.searchInput.focus(); // Ensure focus when the panel is shown
+    this.searchInput.focus();
   }
 
   /**

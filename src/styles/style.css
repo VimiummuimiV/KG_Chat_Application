@@ -4,6 +4,7 @@
   --min-chat-width: 420px;
   --min-chat-height: 200px;
   --user-list-width: fit-content;
+  --emoji-font: "Twemoji Mozilla", "Twemoji", "Segoe UI Emoji", "NotoColorEmoji", "Apple Color Emoji", "Android Emoji", "EmojiSymbols", "EmojiOne", "Segoe UI Symbol", "Symbola", "Quivira", "BabelStone Han", "Noto Sans Symbols", "Noto Sans CJK JP", "Noto Sans CJK KR", "Noto Sans CJK SC", "Noto Sans CJK TC", "Noto Sans CJK HK", "Noto Sans CJK TW", "Noto Sans CJK VN", "Noto Sans CJK", "Noto Sans", "sans-serif";
 }
 
 /* Main chat container */
@@ -257,7 +258,10 @@
 }
 
 #app-chat-container .message-text .emoji-adjuster {
-  font-size: 1.5em !important; 
+  font-family: var(--emoji-font) !important;
+  font-size: 1.5em !important;
+  margin: 0 0.1em !important;
+  display: inline-flex !important;
 }
 
 #app-chat-container .message.system {
@@ -489,7 +493,8 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  line-height: 1 !important; /* Ensure the emoji is vertically centered */
+  line-height: 1 !important;
+  /* Ensure the emoji is vertically centered */
 }
 
 #app-chat-container .emoji-trigger::before {
@@ -499,7 +504,8 @@
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  line-height: 1 !important; /* Ensure the emoji is vertically centered */
+  line-height: 1 !important;
+  /* Ensure the emoji is vertically centered */
 }
 
 /* on hover, rotate the emoji trigger smoothly */
