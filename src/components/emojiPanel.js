@@ -220,6 +220,7 @@ export class EmojiPanel {
           // Only hide if Ctrl is not pressed
           if (e.ctrlKey) {
             this.show();
+            this.searchInput.focus();
           } else {
             this.hide();
           }
@@ -278,10 +279,11 @@ export class EmojiPanel {
         this.options.onEmojiSelect(emoji);
 
         // Only hide if Ctrl is not pressed
-        if (!e.ctrlKey) {
-            this.hide();
+        if (e.ctrlKey) {
+          this.show();
+          this.searchInput.focus();
         } else {
-            this.searchInput.focus();
+          this.hide();
         }
       });
 
@@ -338,11 +340,17 @@ export class EmojiPanel {
             });
             firstEmojiBtn.dispatchEvent(clickEvent);
 
-            // Only reset search if Ctrl is not pressed
-            if (!e.ctrlKey) {
-              this.searchInput.value = '';
-              this.loadAllEmojis();
-              this.emojiContainer.classList.remove('search-active');
+            // Clear search input
+            this.searchInput.value = '';
+            this.loadAllEmojis();
+            this.emojiContainer.classList.remove('search-active');
+
+            // Only hide panel if Ctrl is not pressed
+            if (e.ctrlKey) {
+              this.show();
+              this.searchInput.focus();
+            } else {
+              this.hide();
             }
           }
         }
