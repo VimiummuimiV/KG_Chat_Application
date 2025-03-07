@@ -192,6 +192,7 @@
 /* Input container at bottom */
 #app-chat-container .input-container {
   display: flex !important;
+  align-items: center !important;
   padding: 1em !important;
   gap: 0.5em !important;
   border-top: 1px solid #333 !important;
