@@ -40,7 +40,7 @@ class HelpPanel {
             title: "Chat Commands",
             items: [
               { key: "/help", desc: "Show this help panel" },
-              { key: "/pm username", desc: "Activate private messaging mode with the specified user" },
+              { key: "/pm username", desc: "Activate private chat mode with the specified user" },
               { key: "/exit", desc: "Exit private messaging mode" }
             ]
           },
@@ -49,7 +49,7 @@ class HelpPanel {
             items: [
               { key: "Ctrl + Space", desc: "Hide/Show the chat" },
               { key: "Shift + Ctrl + Space", desc: "Expand/Collapse the chat" },
-              { key: "Ctrl + Click on username", desc: "Activate private messaging mode with the clicked user (in chat messages)" }
+              { key: "Ctrl + Click on username", desc: "Activate private chat mode with the clicked user (in chat messages)" }
             ]
           },
           {
@@ -86,8 +86,8 @@ class HelpPanel {
             title: "Команды чата",
             items: [
               { key: "/help", desc: "Показать панель помощи" },
-              { key: "/pm username", desc: "Активировать режим личных сообщений для указанного пользователя" },
-              { key: "/exit", desc: "Выйти из режима личных сообщений" }
+              { key: "/pm username", desc: "Активировать приватный чат для указанного пользователя" },
+              { key: "/exit", desc: "Выйти из приватного чата" }
             ]
           },
           {
@@ -95,7 +95,7 @@ class HelpPanel {
             items: [
               { key: "Ctrl + Space", desc: "Скрыть/Показать чат" },
               { key: "Shift + Ctrl + Space", desc: "Развернуть/Свернуть чат" },
-              { key: "Ctrl + Click on username", desc: "Активировать режим личных сообщений для выбранного пользователя (в сообщениях чата)" }
+              { key: "Ctrl + Click on username", desc: "Активировать приватный чат для выбранного пользователя (в сообщениях чата)" }
             ]
           },
           {
