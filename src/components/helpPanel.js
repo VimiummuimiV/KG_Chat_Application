@@ -41,7 +41,7 @@ class HelpPanel {
             items: [
               { key: "/help", desc: "Show this help panel" },
               { key: "/pm username", desc: "Activate private chat mode with the specified user" },
-              { key: "/exit", desc: "Exit private messaging mode" }
+              { key: "/exit", desc: "Exit private chat mode" }
             ]
           },
           {
