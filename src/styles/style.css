@@ -271,10 +271,14 @@
 }
 
 #app-chat-container .message.system .time {
+  margin-right: unset !important;
   color: #ffa50060 !important;
 }
 
-#app-chat-container .message.system .username,
+#app-chat-container .message.system .username {
+  display: none !important;
+}
+
 #app-chat-container .message.system .message-text {
   color: #ffa500 !important;
 }
