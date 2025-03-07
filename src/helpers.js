@@ -596,6 +596,7 @@ export function exitPrivateMode() {
   const messageInput = document.getElementById('message-input');
   if (messageInput.classList.contains('private-mode')) {
     messageInput.classList.remove('private-mode');
+    messageInput.placeholder = 'Type a message...'; // Reset placeholder to general chat
     privateMessageState.exitPrivateMode();
     showChatAlert('Exited private chat mode', { type: 'success', duration: 3000 });
   }
