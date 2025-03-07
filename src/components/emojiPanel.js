@@ -340,7 +340,7 @@ export class EmojiPanel {
             });
             firstEmojiBtn.dispatchEvent(clickEvent);
 
-            // Clear search input
+            // Clear search input and reset emoji view
             this.searchInput.value = '';
             this.loadAllEmojis();
             this.emojiContainer.classList.remove('search-active');
@@ -389,6 +389,30 @@ export class EmojiPanel {
     // Prevent closing when clicking inside panel
     this.container.addEventListener('click', (e) => {
       e.stopPropagation();
+    });
+
+    // New keydown handler for 'q'
+    let lastQPressTime = 0;
+    document.addEventListener('keydown', (e) => {
+      if (e.code === 'KeyQ') {
+        if (!this.container.classList.contains('visible')) return;
+        // Check if search input is focused
+        if (document.activeElement === this.searchInput) {
+          const now = Date.now();
+          // If two 'q' presses occur within 500ms, close the panel
+          if (now - lastQPressTime < 500) {
+            e.preventDefault();
+            this.hide();
+            lastQPressTime = 0;
+          } else {
+            lastQPressTime = now;
+          }
+        } else {
+          // When search input is not in focus, a single 'q' closes the panel
+          e.preventDefault();
+          this.hide();
+        }
+      }
     });
   }
 
@@ -531,10 +555,17 @@ export class EmojiPanel {
   }
 
   /**
-   * Hide the emoji panel
+   * Hide the emoji panel, clear the search input, and reset emoji view
    */
   hide() {
     this.container.classList.remove('visible');
+    // Clear search input
+    this.searchInput.value = '';
+    // Reset the emoji container to the default view
+    if (this.emojiContainer.classList.contains('search-active')) {
+      this.loadAllEmojis();
+      this.emojiContainer.classList.remove('search-active');
+    }
   }
 
   /**
