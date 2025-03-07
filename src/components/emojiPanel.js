@@ -297,22 +297,46 @@ export class EmojiPanel {
    * Bind all event listeners
    */
   bindEvents() {
-    // Hide panel on ESC key
-    document.addEventListener('keydown', (e) => {
+    // Global keydown to close emoji panel on ESC
+    this._emojiKeydownHandler = (e) => {
       if (e.key === 'Escape' && this.container.classList.contains('visible')) {
         this.hide();
       }
-    });
+    };
+    document.addEventListener('keydown', this._emojiKeydownHandler);
 
-    // Open panel with Ctrl + Semicolon
-    document.addEventListener('keydown', (e) => {
+    // Global keydown to open panel with Ctrl+Semicolon
+    this._openPanelHandler = (e) => {
       if (e.ctrlKey && e.code === 'Semicolon') {
         e.preventDefault();
         if (!this.container.classList.contains('visible')) {
           this.show();
         }
       }
-    });
+    };
+    document.addEventListener('keydown', this._openPanelHandler);
+
+    // Global keydown to handle 'q' for closing panel
+    this._qKeydownHandler = (e) => {
+      if (e.code === 'KeyQ') {
+        if (!this.container.classList.contains('visible')) return;
+        if (document.activeElement === this.searchInput) {
+          const now = Date.now();
+          if (!this._lastQPressTime) this._lastQPressTime = now;
+          if (now - this._lastQPressTime < 500) {
+            e.preventDefault();
+            this.hide();
+            this._lastQPressTime = 0;
+          } else {
+            this._lastQPressTime = now;
+          }
+        } else {
+          e.preventDefault();
+          this.hide();
+        }
+      }
+    };
+    document.addEventListener('keydown', this._qKeydownHandler);
 
     // Search input with class management
     this.searchInput.addEventListener('input', (e) => {
@@ -389,30 +413,6 @@ export class EmojiPanel {
     // Prevent closing when clicking inside panel
     this.container.addEventListener('click', (e) => {
       e.stopPropagation();
-    });
-
-    // New keydown handler for 'q'
-    let lastQPressTime = 0;
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'KeyQ') {
-        if (!this.container.classList.contains('visible')) return;
-        // Check if search input is focused
-        if (document.activeElement === this.searchInput) {
-          const now = Date.now();
-          // If two 'q' presses occur within 500ms, close the panel
-          if (now - lastQPressTime < 500) {
-            e.preventDefault();
-            this.hide();
-            lastQPressTime = 0;
-          } else {
-            lastQPressTime = now;
-          }
-        } else {
-          // When search input is not in focus, a single 'q' closes the panel
-          e.preventDefault();
-          this.hide();
-        }
-      }
     });
   }
 
@@ -551,6 +551,38 @@ export class EmojiPanel {
    */
   show() {
     this.container.classList.add('visible');
+    // Rebind global keydown for closing (ESC) if missing
+    if (!this._emojiKeydownHandler) {
+      this._emojiKeydownHandler = (e) => {
+        if (e.key === 'Escape' && this.container.classList.contains('visible')) {
+          this.hide();
+        }
+      };
+      document.addEventListener('keydown', this._emojiKeydownHandler);
+    }
+    // Rebind global keydown for handling the 'q' key if missing
+    if (!this._qKeydownHandler) {
+      this._qKeydownHandler = (e) => {
+        if (e.code === 'KeyQ') {
+          if (!this.container.classList.contains('visible')) return;
+          if (document.activeElement === this.searchInput) {
+            const now = Date.now();
+            if (!this._lastQPressTime) this._lastQPressTime = now;
+            if (now - this._lastQPressTime < 500) {
+              e.preventDefault();
+              this.hide();
+              this._lastQPressTime = 0;
+            } else {
+              this._lastQPressTime = now;
+            }
+          } else {
+            e.preventDefault();
+            this.hide();
+          }
+        }
+      };
+      document.addEventListener('keydown', this._qKeydownHandler);
+    }
     this.searchInput.focus();
   }
 
@@ -558,10 +590,13 @@ export class EmojiPanel {
    * Hide the emoji panel, clear the search input, and reset emoji view
    */
   hide() {
+    // Remove global keydown listeners for closing and 'q'
+    document.removeEventListener('keydown', this._emojiKeydownHandler);
+    document.removeEventListener('keydown', this._qKeydownHandler);
+    this._emojiKeydownHandler = null;
+    this._qKeydownHandler = null;
     this.container.classList.remove('visible');
-    // Clear search input
     this.searchInput.value = '';
-    // Reset the emoji container to the default view
     if (this.emojiContainer.classList.contains('search-active')) {
       this.loadAllEmojis();
       this.emojiContainer.classList.remove('search-active');

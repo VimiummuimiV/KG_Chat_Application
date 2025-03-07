@@ -10,10 +10,12 @@ import { addChatToggleFeature } from "./src/chatFeatures.js";
 import { setupDragHandlers, setupResizeHandlers, setupWindowResizeHandler } from './src/events.js';
 import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
-import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput } from "./src/helpers.js";
+import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput, showChatAlert } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
 import { EmojiPanel } from './src/components/emojiPanel.js';
+import { HelpPanel } from './src/components/helpPanel.js';
 import './src/styles/emojiPanel.css';
+import './src/styles/helpPanel.css';
 
 // Function to detect if running in an iframe
 function isInIframe() {
@@ -87,11 +89,10 @@ async function initializeApp() {
     const input = document.getElementById('message-input');
     const sendMessage = () => {
       const text = input.value.trim();
-      if (text) {
-        xmppClient.sendMessage(text);
-        input.value = '';
-        input.focus();
-      }
+      if (!text) return;
+      xmppClient.sendMessage(text);
+      input.value = '';
+      input.focus();
     };
 
     document.getElementById('send-button').addEventListener('click', sendMessage);
@@ -123,6 +124,8 @@ async function initializeApp() {
 
     // Set up private messaging events
     setupPrivateMessageEvents();
+    // New: Set up help command events (similar to /pm command)
+    HelpPanel.setupHelpCommandEvents();
 
     // Connect to XMPP and join the room
     await xmppClient.connect();
