@@ -58,6 +58,16 @@ export class EmojiPanel {
       }
     };
 
+    // UI Labels for static text elements
+    this.uiLabels = {
+      en: {
+        searchResults: 'Search Results'
+      },
+      ru: {
+        searchResults: 'Результаты поиска'
+      }
+    };
+
     // Emoji data and keywords
     this.emojiData = emojiData;
     this.emojiKeywords = emojiKeywords;
@@ -70,8 +80,8 @@ export class EmojiPanel {
     this.loadedIndices = {};
     this.categorySections = {};
 
-    // Current language for keywords and labels
-    this.currentLanguage = 'en';
+    // Retrieve current language from localStorage (default to 'en')
+    this.currentLanguage = localStorage.getItem('emojiPanelLanguage') || 'en';
   }
 
   /**
@@ -133,6 +143,8 @@ export class EmojiPanel {
       <option value="en">EN</option>
       <option value="ru">RU</option>
     `;
+    // Set the select value to the currently saved language
+    this.languageSelect.value = this.currentLanguage;
 
     // Footer to hold info panel and language selector in a row
     const footer = document.createElement('div');
@@ -216,7 +228,8 @@ export class EmojiPanel {
 
     const header = document.createElement('div');
     header.className = 'emoji-category-header';
-    header.textContent = 'Search Results';
+    // Use localized UI label for search results header
+    header.textContent = this.uiLabels[this.currentLanguage].searchResults;
     section.appendChild(header);
 
     const emojiList = document.createElement('div');
@@ -290,14 +303,20 @@ export class EmojiPanel {
     // Infinite scroll
     this.emojiContainer.addEventListener('scroll', () => this.handleScroll());
 
-    // Language change
+    // Language change: update UI elements accordingly and save to localStorage
     this.languageSelect.addEventListener('change', (e) => {
       this.currentLanguage = e.target.value;
+      // Remember the user's language selection in localStorage
+      localStorage.setItem('emojiPanelLanguage', this.currentLanguage);
       const currentEmoji = this.infoIcon.textContent;
       if (currentEmoji) {
         this.updateInfoPanel(currentEmoji);
       }
       this.updateCategoryLabels();
+      // If a search is active, refresh the search results header with the new language
+      if (this.searchInput.value.trim()) {
+        this.searchEmojis(this.searchInput.value.trim().toLowerCase());
+      }
     });
   }
 

@@ -137,6 +137,7 @@
 }
 
 .emoji-footer {
+  border-top: 1px solid #333 !important;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
@@ -148,7 +149,6 @@
 .emoji-info-panel {
   height: 40px !important;
   padding: 8px !important;
-  border-top: 1px solid #333 !important;
   display: flex !important;
   align-items: center !important;
   gap: 8px !important;
@@ -158,32 +158,46 @@
 }
 
 .emoji-language-select {
-  border-radius: 0.4em !important; /* Rounded corners */
-  padding: 5px 10px; /* Space inside the select */
-  font-size: 14px; /* Font size for readability */
-  background-color: #2a2a2a !important; /* Dark background to match search input */
-  border: 1px solid #444 !important; /* Subtle dark border */
-  color: #deb887 !important; /* Text color to match headers and info panel */
-  cursor: pointer; /* Pointer cursor to indicate it's clickable */
-  transition: border-color 0.3s ease; /* Smooth transition for border color */
+  border-radius: 0.4em !important;
+  /* Rounded corners */
+  padding: 5px 10px;
+  /* Space inside the select */
+  font-size: 14px;
+  /* Font size for readability */
+  background-color: #2a2a2a !important;
+  /* Dark background to match search input */
+  border: 1px solid #444 !important;
+  /* Subtle dark border */
+  color: #deb887 !important;
+  /* Text color to match headers and info panel */
+  cursor: pointer;
+  /* Pointer cursor to indicate it's clickable */
+  transition: border-color 0.3s ease;
+  /* Smooth transition for border color */
 }
 
 /* Focus state */
 .emoji-language-select:focus {
-  outline: none; /* Remove default outline */
-  border-color: goldenrod !important; /* Match active category button */
+  outline: none;
+  /* Remove default outline */
+  border-color: goldenrod !important;
+  /* Match active category button */
 }
 
 /* Hover state */
 .emoji-language-select:hover {
-  border-color: #666 !important; /* Lighten border on hover */
+  border-color: #666 !important;
+  /* Lighten border on hover */
 }
 
 /* Optional: Style for options (limited control) */
 .emoji-language-select option {
-  font-size: 14px; /* Match font size */
-  background-color: #2a2a2a !important; /* Dark background for options */
-  color: #deb887 !important; /* Text color for options */
+  font-size: 14px;
+  /* Match font size */
+  background-color: #2a2a2a !important;
+  /* Dark background for options */
+  color: #deb887 !important;
+  /* Text color for options */
 }
 
 .emoji-info-icon {
