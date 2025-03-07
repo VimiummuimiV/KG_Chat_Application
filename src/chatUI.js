@@ -94,6 +94,14 @@ export function createChatUI() {
   // Add the font size control and restore font size
   createFontSizeControl();
   restoreFontSize();
+
+  // Force scroll to bottom once after chat creation, before further initialization
+  requestAnimationFrame(() => {
+    const messagesPanel = document.getElementById('messages-panel');
+    if (messagesPanel) {
+      messagesPanel.scrollTop = messagesPanel.scrollHeight;
+    }
+  });
 }
 
 let originalChatState = null;
