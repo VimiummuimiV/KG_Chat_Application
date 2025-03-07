@@ -221,10 +221,15 @@ export function saveChatState(state) {
   localStorage.setItem('chatState', JSON.stringify(state));
 }
 
-export const parseMessageText = text =>
-  text
-    .replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1" target="_blank">$1</a>')
-    .replace(/:(\w+):/g, (m, e) => `<img src="https://klavogonki.ru/img/smilies/${e}.gif" alt="${e}" />`);
+export const parseMessageText = text => text
+  // Convert URLs to clickable links
+  .replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, '<a href="$1" target="_blank">$1</a>')
+  
+  // Handle :emoji: syntax with specific images
+  .replace(/:(\w+):/g, (m, e) => `<img src="https://klavogonki.ru/img/smilies/${e}.gif" alt="${e}" />`)
+  
+  // Wrap all emoji characters in spans with the emoji-adjuster class
+  .replace(/(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu, '<span class="emoji-adjuster">$&</span>');
 
 export function clamp(value, min, max) {
   return Math.min(Math.max(value, min), max);
