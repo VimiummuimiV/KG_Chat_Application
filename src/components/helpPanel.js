@@ -150,18 +150,27 @@ export class HelpPanel {
   }
   bindEvents() {
     this._clickOutsideHandler = (e) => {
+      // If the click is on (or within) the help button, do nothing.
+      if (this.options.helpButton &&
+        (e.target === this.options.helpButton || this.options.helpButton.contains(e.target))) {
+        return;
+      }
+      // Otherwise, if the click occurred outside the help panel, remove it.
       if (this.container && !this.container.contains(e.target)) {
         this.remove();
       }
     };
+    // Use capture phase so this handler runs before bubble-phase events.
     document.addEventListener('click', this._clickOutsideHandler, true);
+
     this._escHandler = (e) => {
       if (e.key === 'Escape') {
         this.remove();
       }
     };
     document.addEventListener('keydown', this._escHandler, true);
-    // Prevent propagation inside panel
+
+    // Prevent clicks inside the help panel from bubbling.
     this._stopPropagationHandler = (e) => {
       e.stopPropagation();
     };

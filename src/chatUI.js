@@ -97,26 +97,36 @@ export function createChatUI() {
   helpButton.className = 'filled-button header-button chat-help-button';
   helpButton.innerHTML = '?'; // Replace with desired icon if available
   helpButton.title = 'Show chat help';
-  // Setup help panel toggle functionality
+  // Declare a variable to track the help panel instance.
   let helpPanelInstance = null;
+
   helpButton.addEventListener('click', (e) => {
+    console.log("Help button clicked.");
     e.stopPropagation();
-    if (!helpPanelInstance || !document.querySelector('.help-panel')) {
-      helpPanelInstance = new HelpPanel({
-        helpButton: helpButton,
-        onDestroy: () => {
-          helpButton.title = 'Show chat help';
-          helpPanelInstance = null;
-        }
-      });
-      helpPanelInstance.init();
-      helpPanelInstance.show(); // Show the help panel
-      showChatAlert("Help panel is now visible."); // Show alert
-      helpButton.title = 'Hide chat help';
-    } else {
+
+    // If a help panel exists, remove it and exit.
+    if (helpPanelInstance && document.querySelector('.help-panel')) {
+      console.log("Help panel exists. Removing help panel...");
       helpPanelInstance.remove();
+      return;
     }
+
+    // Otherwise, create a new help panel.
+    console.log("Help panel does not exist. Creating help panel...");
+    helpPanelInstance = new HelpPanel({
+      helpButton: helpButton,
+      onDestroy: () => {
+        console.log("Help panel destroyed.");
+        helpButton.title = 'Show chat help';
+        helpPanelInstance = null;
+      }
+    });
+    helpPanelInstance.init();
+    helpPanelInstance.show();
+    showChatAlert("Help panel is now visible.");
+    helpButton.title = 'Hide chat help';
   });
+
   chatContainer.appendChild(helpButton);
   // Toggle visibility button
   const toggleButton = document.createElement('button');
