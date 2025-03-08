@@ -1,36 +1,30 @@
 import { showChatAlert } from "../helpers.js";
-
-class HelpPanel {
+export class HelpPanel {
   constructor(options = {}) {
     this.container = null;
     this.options = {
       container: options.container || document.getElementById("messages-panel"),
+      helpButton: options.helpButton,
+      onDestroy: options.onDestroy
     };
+    // Set the class instance to this
+    HelpPanel.instance = this;
   }
   init() {
     this.createPanel();
     this.bindEvents();
-    this.bindInputEvents(); // Existing binding (can be kept if desired)
     return this;
   }
   createPanel() {
     this.container = document.createElement('div');
-    this.container.className = 'emoji-panel help-panel';
-
-    // Create and save the content element for later updates.
+    this.container.className = 'help-panel';
     this.content = document.createElement('div');
     this.content.className = 'help-content';
-    // Initialize content for the first time.
     this.updatePanelContent();
     this.container.appendChild(this.content);
-
-    if (this.options.container) {
-      this.options.container.appendChild(this.container);
-    }
-    this.hide();
+    document.body.appendChild(this.container);
   }
   updatePanelContent() {
-    // Retrieve current language from localStorage
     const lang = localStorage.getItem('emojiPanelLanguage') || 'en';
     const helpTranslations = {
       en: {
@@ -49,7 +43,7 @@ class HelpPanel {
             items: [
               { key: "Ctrl + Space", desc: "Hide/Show the chat" },
               { key: "Shift + Ctrl + Space", desc: "Expand/Collapse the chat" },
-              { key: "Ctrl + Click on username", desc: "Activate private chat mode with the clicked user (in chat messages)" }
+              { key: "Ctrl + Click", desc: "Activate private chat mode with the clicked user" }
             ]
           },
           {
@@ -72,7 +66,7 @@ class HelpPanel {
                   { key: "Shift + Click", desc: "Remove emoji from recent list (in recent category)" },
                   { key: "q", desc: "Hide the Emoji Panel (single press when search is not focused)" },
                   { key: "qq", desc: "Hide the Emoji Panel (double press 'q' when search is focused)" },
-                  { key: "Esc", desc: "Close the (emoji or help)" }
+                  { key: "Esc", desc: "Close the panel (emoji or help)" }
                 ]
               }
             ]
@@ -95,7 +89,7 @@ class HelpPanel {
             items: [
               { key: "Ctrl + Space", desc: "Скрыть/Показать чат" },
               { key: "Shift + Ctrl + Space", desc: "Развернуть/Свернуть чат" },
-              { key: "Ctrl + Click on username", desc: "Активировать приватный чат для выбранного пользователя (в сообщениях чата)" }
+              { key: "Ctrl + Click", desc: "Активировать приватный чат для выбранного пользователя" }
             ]
           },
           {
@@ -127,7 +121,6 @@ class HelpPanel {
       }
     };
     const t = helpTranslations[lang];
-
     let html = `<h5 class="help-section-header">${t.heading}</h5>`;
     t.sections.forEach(section => {
       if (section.title) {
@@ -156,81 +149,91 @@ class HelpPanel {
     this.content.innerHTML = html;
   }
   bindEvents() {
-    // Global click to close help panel
-    this._globalClickHandler = () => { this.hide(); };
-    document.addEventListener('click', this._globalClickHandler);
-
-    // Prevent propagation inside panel
-    this.container.addEventListener('click', (e) => {
-      e.stopPropagation();
-    });
-
-    // Global keydown to close help panel (on ESC key)
-    this._globalKeydownHandler = (e) => {
-      if (e.key === 'Escape' && this.container.classList.contains('visible')) {
-        this.hide();
+    this._clickOutsideHandler = (e) => {
+      if (this.container && !this.container.contains(e.target)) {
+        this.remove();
       }
     };
-    document.addEventListener('keydown', this._globalKeydownHandler);
-  }
-  // Existing input binding (optional, can be removed if using the static version)
-  bindInputEvents() {
-    const input = document.getElementById('message-input');
-    if (!input) return;
-    input.addEventListener('keydown', (e) => {
-      if (input.value.trim() === "/help" && e.code === 'Space') {
-        e.preventDefault();
-        this.activate();
-        input.value = "";
+    document.addEventListener('click', this._clickOutsideHandler, true);
+    this._escHandler = (e) => {
+      if (e.key === 'Escape') {
+        this.remove();
       }
-    });
+    };
+    document.addEventListener('keydown', this._escHandler, true);
+    // Prevent propagation inside panel
+    this._stopPropagationHandler = (e) => {
+      e.stopPropagation();
+    };
+    this.container.addEventListener('click', this._stopPropagationHandler);
+  }
+  remove() {
+    // Remove all event listeners
+    if (this._clickOutsideHandler) {
+      document.removeEventListener('click', this._clickOutsideHandler, true);
+      this._clickOutsideHandler = null;
+    }
+    if (this._escHandler) {
+      document.removeEventListener('keydown', this._escHandler, true);
+      this._escHandler = null;
+    }
+    if (this.container) {
+      this.container.removeEventListener('click', this._stopPropagationHandler);
+      this._stopPropagationHandler = null;
+    }
+    // Remove from DOM
+    if (this.container && this.container.parentNode) {
+      this.container.parentNode.removeChild(this.container);
+      this.container = null;
+    }
+    // Call destroy callback
+    if (typeof this.options.onDestroy === 'function') {
+      this.options.onDestroy();
+    }
+    // Reset static instance
+    HelpPanel.instance = null;
   }
   show() {
-    this.container.classList.add('visible');
-    // Rebind global events if missing
-    if (!this._globalClickHandler) {
-      this._globalClickHandler = () => { this.hide(); };
-      document.addEventListener('click', this._globalClickHandler);
+    if (!this.container) {
+      this.init();
     }
-    if (!this._globalKeydownHandler) {
-      this._globalKeydownHandler = (e) => {
-        if (e.key === 'Escape' && this.container.classList.contains('visible')) {
-          this.hide();
-        }
-      };
-      document.addEventListener('keydown', this._globalKeydownHandler);
-    }
-  }
-  hide() {
-    // Remove global listeners and clear references
-    document.removeEventListener('click', this._globalClickHandler);
-    document.removeEventListener('keydown', this._globalKeydownHandler);
-    this._globalClickHandler = null;
-    this._globalKeydownHandler = null;
-    this.container.classList.remove('visible');
-  }
-  // New method to activate the help panel with notification
-  activate() {
-    // Update the panel content based on the current language setting
     this.updatePanelContent();
-    showChatAlert("Help panel is shown", { type: 'info', duration: 3000 });
-    this.show();
+    if (!document.body.contains(this.container)) {
+      document.body.appendChild(this.container);
+      showChatAlert("Help panel is now visible."); // Only show alert when panel is actually added
+    }
   }
-  // Static method to set up the /help command binding on the message input
+  toggle() {
+    if (this.container && document.body.contains(this.container)) {
+      this.remove();
+    } else {
+      this.show();
+    }
+  }
   static setupHelpCommandEvents() {
-    const helpPanelInstance = new HelpPanel({ container: document.getElementById("messages-panel") }).init();
     const input = document.getElementById('message-input');
     if (input) {
       input.addEventListener('keydown', (e) => {
-        // If the input exactly equals "/help" (after trimming) and the key pressed is Space
         if (input.value.trim() === "/help" && e.code === 'Space') {
           e.preventDefault();
-          helpPanelInstance.activate();
+          if (!HelpPanel.instance) {
+            const helpPanelInstance = new HelpPanel({
+              onDestroy: () => {
+                // This callback can be used if needed to update external state.
+              }
+            });
+            helpPanelInstance.init();
+            helpPanelInstance.show();
+            showChatAlert("Help panel is now visible."); // Add alert when opening via command
+          } else {
+            HelpPanel.instance.remove();
+          }
           input.value = "";
         }
       });
     }
-    return helpPanelInstance;
+    return HelpPanel.instance;
   }
 }
-export { HelpPanel };
+// Static instance tracker
+HelpPanel.instance = null;

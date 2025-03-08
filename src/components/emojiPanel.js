@@ -1,8 +1,21 @@
 import { emojiData, emojiKeywords } from '../data/emojiData.js';
 
 export class EmojiPanel {
+  static instance = null;
 
   constructor(options = {}) {
+    if (EmojiPanel.instance) {
+      return EmojiPanel.instance;
+    }
+    EmojiPanel.instance = this;
+    this.options = {
+      onEmojiSelect: options.onEmojiSelect || (() => {}),
+      container: options.container || document.body,
+      position: options.position || 'bottom',
+      onDestroy: options.onDestroy,
+      emojiButton: options.emojiButton,
+    };
+
     // DOM elements
     this.container = null;
     this.searchInput = null;
@@ -12,13 +25,6 @@ export class EmojiPanel {
     this.infoIcon = null;
     this.infoKeywords = null;
     this.languageSelect = null;
-
-    // Configuration options
-    this.options = {
-      onEmojiSelect: options.onEmojiSelect || (() => { }),
-      container: options.container || document.body,
-      position: options.position || 'bottom'
-    };
 
     // Category definitions with icons
     this.categories = {
@@ -85,10 +91,7 @@ export class EmojiPanel {
     this.currentLanguage = localStorage.getItem('emojiPanelLanguage') || 'en';
   }
 
-  /**
-   * Initialize the emoji panel
-   * @returns {EmojiPanel} The instance for chaining
-   */
+  /** Initialize the emoji panel */
   init() {
     this.createPanel();
     this.bindEvents();
@@ -96,10 +99,11 @@ export class EmojiPanel {
     return this;
   }
 
-  /**
-   * Create the HTML structure of the emoji panel
-   */
+  /** Create the HTML structure of the emoji panel */
   createPanel() {
+    if (document.querySelector('.emoji-panel')) {
+      return;
+    }
     this.container = document.createElement('div');
     this.container.className = 'emoji-panel';
 
@@ -161,9 +165,7 @@ export class EmojiPanel {
     this.searchInput.focus();
   }
 
-  /**
-   * Load initial batch of emojis for all categories
-   */
+  /** Load initial batch of emojis for all categories */
   loadAllEmojis() {
     this.emojiContainer.innerHTML = '';
     this.loadedIndices = {};
@@ -172,16 +174,13 @@ export class EmojiPanel {
       const section = document.createElement('div');
       section.className = 'emoji-category-section';
       section.id = `emoji-section-${category}`;
-
       const header = document.createElement('div');
       header.className = 'emoji-category-header';
       header.textContent = this.getLocalizedCategoryName(category);
       section.appendChild(header);
-
       const emojiList = document.createElement('div');
       emojiList.className = 'emoji-list';
       section.appendChild(emojiList);
-
       this.emojiContainer.appendChild(section);
       this.loadedIndices[category] = 0;
       this.categorySections[category] = { section, emojiList, header };
@@ -189,16 +188,12 @@ export class EmojiPanel {
     });
   }
 
-  /**
-   * Load more emojis for a specific category (infinite scroll)
-   * @param {string} category - The category key
-   */
+  /** Load more emojis for a specific category */
   loadMoreEmojisForCategory(category) {
     const data = category === 'recent' ? this.recentEmojis : (this.emojiData[category] || []);
     const start = this.loadedIndices[category];
     const batch = data.slice(start, start + this.batchSize);
     if (!batch.length) return;
-
     const container = this.categorySections[category].emojiList;
     batch.forEach(emoji => {
       const button = document.createElement('button');
@@ -206,37 +201,27 @@ export class EmojiPanel {
       button.textContent = emoji;
       button.addEventListener('mouseenter', () => this.updateInfoPanel(emoji));
       button.addEventListener('mouseleave', () => this.clearInfoPanel());
-
       button.addEventListener('click', (e) => {
         e.stopPropagation();
-
         if (e.shiftKey && category === 'recent') {
           e.preventDefault();
           this.removeFromRecent(emoji);
         } else {
           this.addToRecent(emoji);
           this.options.onEmojiSelect(emoji);
-
-          // Only hide if Ctrl is not pressed
-          if (e.ctrlKey) {
-            this.show();
-            this.searchInput.focus();
+          if (!e.ctrlKey) {
+            this.destroy();
           } else {
-            this.hide();
+            this.searchInput.focus();
           }
         }
       });
-
       container.appendChild(button);
     });
-
     this.loadedIndices[category] += batch.length;
   }
 
-  /**
-   * Search for emojis based on the search term
-   * @param {string} searchTerm - The term to search for
-   */
+  /** Search for emojis based on a search term */
   searchEmojis(searchTerm) {
     this.emojiContainer.innerHTML = '';
     const section = document.createElement('div');
@@ -245,11 +230,9 @@ export class EmojiPanel {
     header.className = 'emoji-category-header';
     header.textContent = this.uiLabels[this.currentLanguage].searchResults;
     section.appendChild(header);
-
     const emojiList = document.createElement('div');
     emojiList.className = 'emoji-list';
     section.appendChild(emojiList);
-
     const results = [];
     Object.keys(this.emojiData).forEach(category => {
       const emojis = this.emojiData[category] || [];
@@ -264,81 +247,77 @@ export class EmojiPanel {
         }
       });
     });
-
     results.forEach(emoji => {
       const button = document.createElement('button');
       button.className = 'emoji-btn';
       button.textContent = emoji;
       button.addEventListener('mouseenter', () => this.updateInfoPanel(emoji));
       button.addEventListener('mouseleave', () => this.clearInfoPanel());
-
       button.addEventListener('click', (e) => {
         e.stopPropagation();
-
         this.addToRecent(emoji);
         this.options.onEmojiSelect(emoji);
-
-        // Only hide if Ctrl is not pressed
-        if (e.ctrlKey) {
-          this.show();
-          this.searchInput.focus();
+        if (!e.ctrlKey) {
+          this.destroy();
         } else {
-          this.hide();
+          this.searchInput.focus();
         }
       });
-
       emojiList.appendChild(button);
     });
-
     this.emojiContainer.appendChild(section);
   }
 
-  /**
-   * Bind all event listeners
-   */
+  /** Bind event listeners for the emoji panel */
   bindEvents() {
-    // Global keydown to close emoji panel on ESC
+    // Close panel on clicking outside
+    this._documentClickHandler = (e) => {
+      if (!this.container.contains(e.target)) {
+        this.destroy();
+      }
+    };
+    document.addEventListener('click', this._documentClickHandler);
+
+    // Close panel on Escape key
     this._emojiKeydownHandler = (e) => {
-      if (e.key === 'Escape' && this.container.classList.contains('visible')) {
-        this.hide();
+      if (e.key === 'Escape') {
+        this.destroy();
       }
     };
     document.addEventListener('keydown', this._emojiKeydownHandler);
 
-    // Global keydown to open panel with Ctrl+Semicolon
+    // Open panel with Ctrl+Semicolon
     this._openPanelHandler = (e) => {
       if (e.ctrlKey && e.code === 'Semicolon') {
         e.preventDefault();
-        if (!this.container.classList.contains('visible')) {
+        if (!document.querySelector('.emoji-panel')) {
           this.show();
         }
       }
     };
     document.addEventListener('keydown', this._openPanelHandler);
 
-    // Global keydown to handle 'q' for closing panel
+    // Handle 'q' key for closing panel
     this._qKeydownHandler = (e) => {
       if (e.code === 'KeyQ') {
-        if (!this.container.classList.contains('visible')) return;
         if (document.activeElement === this.searchInput) {
           const now = Date.now();
-          if (!this._lastQPressTime) this._lastQPressTime = now;
-          if (now - this._lastQPressTime < 500) {
+          if (this._lastQPressTime && (now - this._lastQPressTime < 500)) {
             e.preventDefault();
-            this.hide();
+            this.destroy();
             this._lastQPressTime = 0;
           } else {
             this._lastQPressTime = now;
           }
         } else {
           e.preventDefault();
-          this.hide();
+          this.destroy();
         }
       }
     };
     document.addEventListener('keydown', this._qKeydownHandler);
 
-    // Search input with class management
+    // Update view on search input change
     this.searchInput.addEventListener('input', (e) => {
       const searchTerm = e.target.value.trim().toLowerCase();
       if (searchTerm) {
@@ -350,7 +329,7 @@ export class EmojiPanel {
       }
     });
 
-    // Enter key to select first search result
+    // Handle Enter key in search input
     this.searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -360,21 +339,16 @@ export class EmojiPanel {
             const clickEvent = new MouseEvent('click', {
               bubbles: true,
               cancelable: true,
-              ctrlKey: e.ctrlKey // Pass Ctrl key state
+              ctrlKey: e.ctrlKey
             });
             firstEmojiBtn.dispatchEvent(clickEvent);
-
-            // Clear search input and reset emoji view
             this.searchInput.value = '';
             this.loadAllEmojis();
             this.emojiContainer.classList.remove('search-active');
-
-            // Only hide panel if Ctrl is not pressed
-            if (e.ctrlKey) {
-              this.show();
-              this.searchInput.focus();
+            if (!e.ctrlKey) {
+              this.destroy();
             } else {
-              this.hide();
+              this.searchInput.focus();
             }
           }
         }
@@ -393,10 +367,10 @@ export class EmojiPanel {
       }
     });
 
-    // Infinite scroll
+    // Infinite scroll handler
     this.emojiContainer.addEventListener('scroll', () => this.handleScroll());
 
-    // Language change
+    // Language change handler
     this.languageSelect.addEventListener('change', (e) => {
       this.currentLanguage = e.target.value;
       localStorage.setItem('emojiPanelLanguage', this.currentLanguage);
@@ -416,9 +390,7 @@ export class EmojiPanel {
     });
   }
 
-  /**
-   * Handle scroll events for infinite scrolling and category highlighting
-   */
+  /** Handle scroll events for infinite scrolling and category highlighting */
   handleScroll() {
     Object.keys(this.categorySections).forEach(category => {
       const { section } = this.categorySections[category];
@@ -428,7 +400,6 @@ export class EmojiPanel {
         this.loadMoreEmojisForCategory(category);
       }
     });
-
     let activeCategory = null;
     let minDistance = Infinity;
     Object.keys(this.categorySections).forEach(category => {
@@ -440,15 +411,12 @@ export class EmojiPanel {
         activeCategory = category;
       }
     });
-
     if (activeCategory) {
       this.highlightCategory(activeCategory);
     }
   }
 
-  /**
-   * Update category labels based on current language
-   */
+  /** Update category labels based on current language */
   updateCategoryLabels() {
     Object.keys(this.categories).forEach(category => {
       const localizedName = this.getLocalizedCategoryName(category);
@@ -460,10 +428,7 @@ export class EmojiPanel {
     });
   }
 
-  /**
-   * Update the info panel with emoji and keywords
-   * @param {string} emoji - The emoji to display
-   */
+  /** Update the info panel with emoji and keywords */
   updateInfoPanel(emoji) {
     this.infoIcon.textContent = emoji;
     const keywordsObj = this.emojiKeywords[emoji] || {};
@@ -471,18 +436,13 @@ export class EmojiPanel {
     this.infoKeywords.textContent = keywords.join(', ');
   }
 
-  /**
-   * Clear the info panel
-   */
+  /** Clear the info panel */
   clearInfoPanel() {
     this.infoIcon.textContent = '';
     this.infoKeywords.textContent = '';
   }
 
-  /**
-   * Add an emoji to the recent list and refresh the recent section
-   * @param {string} emoji - The emoji to add
-   */
+  /** Add an emoji to the recent list and refresh the recent section */
   addToRecent(emoji) {
     this.recentEmojis = [
       emoji,
@@ -497,10 +457,7 @@ export class EmojiPanel {
     }
   }
 
-  /**
-   * Remove an emoji from the recent list and refresh the recent section
-   * @param {string} emoji - The emoji to remove
-   */
+  /** Remove an emoji from the recent list and refresh the recent section */
   removeFromRecent(emoji) {
     this.recentEmojis = this.recentEmojis.filter(e => e !== emoji);
     this.saveRecentEmojis();
@@ -512,10 +469,7 @@ export class EmojiPanel {
     }
   }
 
-  /**
-   * Load recent emojis from localStorage
-   * @returns {string[]} Array of recent emojis
-   */
+  /** Load recent emojis from localStorage */
   loadRecentEmojis() {
     try {
       return JSON.parse(localStorage.getItem('recentEmojis')) || [];
@@ -524,9 +478,7 @@ export class EmojiPanel {
     }
   }
 
-  /**
-   * Save recent emojis to localStorage
-   */
+  /** Save recent emojis to localStorage */
   saveRecentEmojis() {
     try {
       localStorage.setItem('recentEmojis', JSON.stringify(this.recentEmojis));
@@ -535,10 +487,7 @@ export class EmojiPanel {
     }
   }
 
-  /**
-   * Highlight the active category in the navigation
-   * @param {string} categoryId - The category to highlight
-   */
+  /** Highlight the active category in the navigation */
   highlightCategory(categoryId) {
     const buttons = this.categoryNav.querySelectorAll('.emoji-category-btn');
     buttons.forEach(btn => {
@@ -546,76 +495,51 @@ export class EmojiPanel {
     });
   }
 
-  /**
-   * Show the emoji panel
-   */
+  /** Show the emoji panel */
   show() {
-    this.container.classList.add('visible');
-    // Rebind global keydown for closing (ESC) if missing
-    if (!this._emojiKeydownHandler) {
-      this._emojiKeydownHandler = (e) => {
-        if (e.key === 'Escape' && this.container.classList.contains('visible')) {
-          this.hide();
-        }
-      };
-      document.addEventListener('keydown', this._emojiKeydownHandler);
-    }
-    // Rebind global keydown for handling the 'q' key if missing
-    if (!this._qKeydownHandler) {
-      this._qKeydownHandler = (e) => {
-        if (e.code === 'KeyQ') {
-          if (!this.container.classList.contains('visible')) return;
-          if (document.activeElement === this.searchInput) {
-            const now = Date.now();
-            if (!this._lastQPressTime) this._lastQPressTime = now;
-            if (now - this._lastQPressTime < 500) {
-              e.preventDefault();
-              this.hide();
-              this._lastQPressTime = 0;
-            } else {
-              this._lastQPressTime = now;
-            }
-          } else {
-            e.preventDefault();
-            this.hide();
-          }
-        }
-      };
-      document.addEventListener('keydown', this._qKeydownHandler);
-    }
+    this.createPanel();
+    this.bindEvents();
+    this.loadAllEmojis();
     this.searchInput.focus();
   }
 
-  /**
-   * Hide the emoji panel, clear the search input, and reset emoji view
-   */
-  hide() {
-    // Remove global keydown listeners for closing and 'q'
+  /** Completely remove the emoji panel from DOM and clean up */
+  destroy() {
     document.removeEventListener('keydown', this._emojiKeydownHandler);
     document.removeEventListener('keydown', this._qKeydownHandler);
-    this._emojiKeydownHandler = null;
-    this._qKeydownHandler = null;
-    this.container.classList.remove('visible');
-    this.searchInput.value = '';
-    if (this.emojiContainer.classList.contains('search-active')) {
-      this.loadAllEmojis();
-      this.emojiContainer.classList.remove('search-active');
+    document.removeEventListener('click', this._documentClickHandler);
+    if (this.container && this.container.parentNode) {
+      this.container.parentNode.removeChild(this.container);
+    }
+    this.container = null;
+    this.searchInput = null;
+    this.emojiContainer = null;
+    this.categoryNav = null;
+    this.infoPanel = null;
+    this.infoIcon = null;
+    this.infoKeywords = null;
+    this.languageSelect = null;
+    EmojiPanel.instance = null;
+    if (this.options.emojiButton) {
+      this.options.emojiButton.title = 'Open emoji picker';
+    }
+    if (typeof this.options.onDestroy === 'function') {
+      this.options.onDestroy();
     }
   }
 
-  /**
-   * Toggle the visibility of the emoji panel
-   */
+  /** Toggle the visibility of the emoji panel */
   toggle() {
-    this.container.classList.toggle('visible');
+    if (document.querySelector('.emoji-panel')) {
+      this.destroy();
+    } else {
+      this.show();
+    }
   }
 
-  /**
-   * Get the localized name for a category
-   * @param {string} categoryKey - The category key
-   * @returns {string} The localized name
-   */
+  /** Get the localized name for a category */
   getLocalizedCategoryName(categoryKey) {
     return this.categoryLabels[this.currentLanguage][categoryKey] || categoryKey;
   }
 }
+  

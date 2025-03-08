@@ -392,7 +392,7 @@ export function showChatAlert(message, options = {}) {
   if (!dragArea) return;
 
   const existingAlert = dragArea.querySelector('.chat-dynamic-alert');
-  if (existingAlert) {
+  if (existingAlert && existingAlert.parentNode === dragArea) {
     dragArea.removeChild(existingAlert);
   }
 
@@ -457,7 +457,9 @@ export function showChatAlert(message, options = {}) {
         alertElement.style.transition = 'opacity 0.3s ease-in-out';
         alertElement.style.opacity = '0';
         setTimeout(() => {
-          dragArea.removeChild(alertElement);
+          if (alertElement && alertElement.parentNode === dragArea) {
+            dragArea.removeChild(alertElement);
+          }
         }, 300);
       }, settings.duration);
     });

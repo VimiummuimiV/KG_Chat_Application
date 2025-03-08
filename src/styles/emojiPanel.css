@@ -13,17 +13,9 @@
   width: 380px;
   height: 600px;
   display: flex;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.15s ease-out;
   flex-direction: column;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   z-index: 1000;
-}
-
-.emoji-panel.visible {
-  opacity: 1;
-  pointer-events: auto;
 }
 
 .emoji-search-container {
