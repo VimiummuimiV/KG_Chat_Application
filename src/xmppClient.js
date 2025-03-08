@@ -1,5 +1,6 @@
-import { userListDelay } from "./definitions.js";
+import { reconnectionDelay, userListDelay } from "./definitions.js";
 import { privateMessageState } from "./helpers.js";
+import { showChatAlert } from "./helpers.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   const xmppClient = {
@@ -49,23 +50,29 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             this.isReconnecting = false; // Reset reconnection flag
           } catch (error) {
             console.error('Presence polling error:', error.message);
+            // If a 404 error occurs and we're not already reconnecting
             if (error.message.includes('404') && !this.isReconnecting) {
-              console.log('🛑 Connection lost (404). Reconnecting in 10 seconds...');
+              console.log('🛑 Connection lost (404). Reconnecting in 5 seconds...');
+              // Notify user about the connection loss
+              showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
+              // Clear the previous messages from the UI and in-memory storage
+              messageManager.clearMessages();
               this.isReconnecting = true;
               clearInterval(this.presenceInterval);
               this.presenceInterval = null;
-              setTimeout(() => this.connect(), 10000);
+              setTimeout(() => this.connect(), reconnectionDelay);
             }
           }
         }, userListDelay);
-
         console.log('🚀 Step 10: Connected! Starting presence updates...');
+        // Notify user about successful reconnection
+        showChatAlert("Chat reconnected successfully!", { type: 'success' });
       } catch (error) {
         console.error(`💥 Connection error: ${error.message}`);
         if (!this.isReconnecting) {
-          console.log('⏳ Scheduling reconnection attempt in 10 seconds...');
+          console.log('⏳ Scheduling reconnection attempt in 5 seconds...');
           this.isReconnecting = true;
-          setTimeout(() => this.connect(), 10000);
+          setTimeout(() => this.connect(), reconnectionDelay);
         }
       }
     },
@@ -78,7 +85,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
       const messageId = `msg_${Date.now()}`;
       let messageStanza;
-      
+
       if (privateMessageState.isPrivateMode && privateMessageState.fullJid) {
         messageStanza = `
           <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
@@ -110,7 +117,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           </body>`;
         messageManager.addSentMessage(text);
       }
-      
+
       xmppConnection.sendRequestWithRetry(messageStanza)
         .then(response => messageManager.processMessages(response))
         .catch(error => console.error('Message send error:', error.message));

@@ -241,4 +241,13 @@ export default class MessageManager {
   getChatHistory() {
     return Array.from(this.chatHistory.values());
   }
+
+  clearMessages() {
+    this.messages = [];
+    this.chatHistory.clear();
+    this.processedMessageIds.clear();
+    if (this.panel) {
+      this.panel.innerHTML = '';
+    }
+  }
 }
