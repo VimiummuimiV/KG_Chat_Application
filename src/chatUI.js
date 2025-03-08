@@ -106,8 +106,13 @@ export function createChatUI() {
 
     // If a help panel exists, remove it and exit.
     if (helpPanelInstance && document.querySelector('.help-panel')) {
-      console.log("Help panel exists. Removing help panel...");
       helpPanelInstance.remove();
+      helpButton.title = 'Show chat help';
+      helpPanelInstance = null;
+      showChatAlert('Help panel has been closed.', {
+        type: 'warning',
+        duration: 2000
+      });
       return;
     }
 
@@ -116,14 +121,16 @@ export function createChatUI() {
     helpPanelInstance = new HelpPanel({
       helpButton: helpButton,
       onDestroy: () => {
-        console.log("Help panel destroyed.");
         helpButton.title = 'Show chat help';
         helpPanelInstance = null;
       }
     });
     helpPanelInstance.init();
     helpPanelInstance.show();
-    showChatAlert("Help panel is now visible.");
+    showChatAlert('Help panel has been opened. Press "?" or "ESC" key, or click outside to close.', {
+      type: 'success',
+      duration: 2000
+    });
     helpButton.title = 'Hide chat help';
   });
 
@@ -166,8 +173,8 @@ export function toggleChatMaximize() {
     chat.style.cssText = `
       width: 100vw !important;
       height: ${calculateHeight()} !important;
-      max-width: 95vw !important;
-      min-width: 95vw !important;
+      max-width: 100vw !important;
+      min-width: 100vw !important;
       position: fixed !important;
       bottom: 0 !important;
       left: 0 !important;

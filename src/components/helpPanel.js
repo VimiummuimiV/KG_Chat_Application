@@ -158,6 +158,10 @@ export class HelpPanel {
       // Otherwise, if the click occurred outside the help panel, remove it.
       if (this.container && !this.container.contains(e.target)) {
         this.remove();
+        showChatAlert('Help panel has been closed.', {
+          type: 'warning',
+          duration: 2000
+        });
       }
     };
     // Use capture phase so this handler runs before bubble-phase events.
@@ -166,6 +170,10 @@ export class HelpPanel {
     this._escHandler = (e) => {
       if (e.key === 'Escape') {
         this.remove();
+        showChatAlert('Help panel has been closed.', {
+          type: 'warning',
+          duration: 2000
+        });
       }
     };
     document.addEventListener('keydown', this._escHandler, true);
