@@ -12,7 +12,6 @@ import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
 import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
-import { EmojiPanel } from './src/components/emojiPanel.js';
 import { HelpPanel } from './src/components/helpPanel.js';
 import './src/styles/emojiPanel.css';
 import './src/styles/helpPanel.css';

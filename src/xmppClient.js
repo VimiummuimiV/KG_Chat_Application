@@ -1,20 +1,21 @@
 import { userListDelay } from "./definitions.js";
 import { privateMessageState } from "./helpers.js";
 
-/**
- * Creates and manages an XMPP client with user and message handling
- * @param {Object} xmppConnection - XMPP connection instance
- * @param {Object} userManager - User manager instance
- * @param {Object} messageManager - Message manager instance
- * @param {string} username - Current username
- * @returns {Object} XMPP client object
- */
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   const xmppClient = {
     userManager,
     messageManager,
+    presenceInterval: null,
+    isReconnecting: false,
+
     async connect() {
       try {
+        // Clear existing interval if reconnecting
+        if (this.presenceInterval) {
+          clearInterval(this.presenceInterval);
+          this.presenceInterval = null;
+        }
+
         const session = await xmppConnection.connect();
 
         console.log('💬 Step 8: Joining chat room...');
@@ -37,27 +38,48 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           </body>`;
         await xmppConnection.sendRequestWithRetry(infoPayload);
 
-        // Start polling for presence and messages.
-        setInterval(async () => {
-          const xmlResponse = await xmppConnection.sendRequestWithRetry(
-            `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
-          );
-          userManager.updatePresence(xmlResponse);
-          messageManager.processMessages(xmlResponse);
+        // Start polling for presence and messages
+        this.presenceInterval = setInterval(async () => {
+          try {
+            const xmlResponse = await xmppConnection.sendRequestWithRetry(
+              `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
+            );
+            userManager.updatePresence(xmlResponse);
+            messageManager.processMessages(xmlResponse);
+            this.isReconnecting = false; // Reset reconnection flag
+          } catch (error) {
+            console.error('Presence polling error:', error.message);
+            if (error.message.includes('404') && !this.isReconnecting) {
+              console.log('🛑 Connection lost (404). Reconnecting in 10 seconds...');
+              this.isReconnecting = true;
+              clearInterval(this.presenceInterval);
+              this.presenceInterval = null;
+              setTimeout(() => this.connect(), 10000);
+            }
+          }
         }, userListDelay);
 
         console.log('🚀 Step 10: Connected! Starting presence updates...');
       } catch (error) {
-        console.error(`💥 Error: ${error.message}`);
+        console.error(`💥 Connection error: ${error.message}`);
+        if (!this.isReconnecting) {
+          console.log('⏳ Scheduling reconnection attempt in 10 seconds...');
+          this.isReconnecting = true;
+          setTimeout(() => this.connect(), 10000);
+        }
       }
     },
+
     sendMessage(text) {
+      if (this.isReconnecting) {
+        console.warn('⚠️ Message not sent - reconnection in progress');
+        return;
+      }
+
       const messageId = `msg_${Date.now()}`;
       let messageStanza;
       
-      // Check if we're in private message mode
       if (privateMessageState.isPrivateMode && privateMessageState.fullJid) {
-        // Create a private message stanza
         messageStanza = `
           <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
             <message from='${username}@jabber.klavogonki.ru/web' 
@@ -74,16 +96,9 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
                 </user>
               </x>
             </message>
-          </body>
-        `;
-        
-        // Add message to messageManager with private flag
-        messageManager.addSentMessage(text, {
-          isPrivate: true,
-          recipient: privateMessageState.targetUsername
-        });
+          </body>`;
+        messageManager.addSentMessage(text, { isPrivate: true, recipient: privateMessageState.targetUsername });
       } else {
-        // Regular group chat message
         messageStanza = `
           <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
             <message to='general@conference.jabber.klavogonki.ru'
@@ -92,18 +107,13 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
                      xmlns='jabber:client'>
               <body>${text}</body>
             </message>
-          </body>
-        `;
-        
-        // Add message to messageManager for group chat
+          </body>`;
         messageManager.addSentMessage(text);
       }
       
       xmppConnection.sendRequestWithRetry(messageStanza)
-        .then(response => {
-          messageManager.processMessages(response);
-        })
-        .catch(console.error);
+        .then(response => messageManager.processMessages(response))
+        .catch(error => console.error('Message send error:', error.message));
     }
   };
 
