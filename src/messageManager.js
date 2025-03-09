@@ -11,7 +11,6 @@ export default class MessageManager {
     this.chatHistory = new Map(); // Local in-memory map for chat history
   }
 
-  // Process incoming XML response and extract message bodies
   processMessages(xmlResponse) {
     if (!xmlResponse || typeof xmlResponse !== 'string') return;
 
@@ -20,71 +19,58 @@ export default class MessageManager {
     const messageElements = doc.getElementsByTagName("message");
     let newMessagesAdded = false;
 
+    // Initialize the composite key set if needed
+    this.processedMessageKeys = this.processedMessageKeys || new Set();
+
     Array.from(messageElements).forEach(msg => {
-      // Generate a message ID if one isn't provided
-      const messageId = msg.getAttribute("id") || `msg_${this.messageIdCounter++}`;
-
-      // Skip if we've already processed this message
-      if (this.processedMessageIds.has(messageId)) {
-        return;
-      }
-
+      let messageId = msg.getAttribute("id");
       const bodyNode = msg.getElementsByTagName("body")[0];
-      if (bodyNode && bodyNode.textContent) {
-        const text = bodyNode.textContent;
+      if (!bodyNode || !bodyNode.textContent) return;
 
-        // Exclude the specific unwanted message text
-        if (text.trim() === "This room is not anonymous") {
-          return;
-        }
+      const text = bodyNode.textContent.trim();
+      if (text === "This room is not anonymous") return;
 
-        const fromAttr = msg.getAttribute("from");
-        const toAttr = msg.getAttribute("to");
-        const type = msg.getAttribute("type");
+      const fromAttr = msg.getAttribute("from");
+      const from = fromAttr ? fromAttr.split('#')[1]?.split('@')[0] || "unknown" : "unknown";
+      const cleanFrom = parseUsername(from);
 
-        // Determine if this is a private message
-        const isPrivate = type === 'chat';
-
-        // Extract username from Jabber ID format and clean it
-        const from = fromAttr ? fromAttr.split('#')[1]?.split('@')[0] || "unknown" : "unknown";
-        const cleanFrom = parseUsername(from);
-
-        // Extract recipient for private messages
-        let recipient = null;
-        if (isPrivate && toAttr) {
-          recipient = toAttr.split('#')[1]?.split('@')[0] || toAttr;
-          recipient = parseUsername(recipient);
-        }
-
-        // Extract timestamp from delay elements if available
-        let timestamp = new Date().toISOString();
-        const delayNodes = msg.getElementsByTagName("delay");
-        if (delayNodes.length > 0 && delayNodes[0].getAttribute("stamp")) {
-          timestamp = delayNodes[0].getAttribute("stamp");
-        }
-
-        // Skip if this is a duplicate of a message we just sent (for group chat only)
-        const isDuplicate = !isPrivate && cleanFrom === this.currentUsername && this.sentMessageTexts.has(text);
-
-        if (!isDuplicate) {
-          const messageObj = {
-            id: messageId,
-            from: cleanFrom,
-            text,
-            timestamp,
-            isPrivate,
-            recipient
-          };
-
-          this.messages.push(messageObj);
-          this.chatHistory.set(messageId, messageObj); // Save in the local memory map
-          this.processedMessageIds.add(messageId);
-          newMessagesAdded = true;
-        }
+      let timestamp = new Date().toISOString();
+      const delayNodes = msg.getElementsByTagName("delay");
+      if (delayNodes.length && delayNodes[0].getAttribute("stamp")) {
+        timestamp = delayNodes[0].getAttribute("stamp");
       }
+
+      // Compact duplicate resolution:
+      // Generate a composite key, use it as messageId if none exists, and skip if duplicate.
+      const compositeKey = `${cleanFrom}|${timestamp}|${text}`;
+      messageId = messageId || compositeKey;
+      if (this.processedMessageIds.has(messageId) || this.processedMessageKeys.has(compositeKey)) return;
+
+      const toAttr = msg.getAttribute("to");
+      const type = msg.getAttribute("type");
+      const isPrivate = type === 'chat';
+      let recipient = null;
+      if (isPrivate && toAttr) {
+        recipient = toAttr.split('#')[1]?.split('@')[0] || toAttr;
+        recipient = parseUsername(recipient);
+      }
+
+      const messageObj = {
+        id: messageId,
+        from: cleanFrom,
+        text,
+        timestamp,
+        isPrivate,
+        recipient
+      };
+
+      this.messages.push(messageObj);
+      this.chatHistory.set(messageId, messageObj);
+      this.processedMessageIds.add(messageId);
+      this.processedMessageKeys.add(compositeKey);
+      newMessagesAdded = true;
     });
 
-    // Update the panel only if new messages were added
     if (newMessagesAdded) {
       this.updatePanel();
     }
@@ -153,6 +139,11 @@ export default class MessageManager {
         if (msg.text.startsWith('/me ')) {
           messageDiv.classList.add('system');
           msg.text = `${msg.from} ${msg.text.substring(msg.text.indexOf(' ') + 1)}`;
+        }
+
+        // Add to the updatePanel method where it creates messageDiv
+        if (msg.isSystem) {
+          messageDiv.classList.add('system');
         }
 
         messageDiv.setAttribute('data-message-id', msg.id);
@@ -242,12 +233,25 @@ export default class MessageManager {
     return Array.from(this.chatHistory.values());
   }
 
+  // Replace the clearMessages method in MessageManager class
   clearMessages() {
-    this.messages = [];
-    this.chatHistory.clear();
-    this.processedMessageIds.clear();
-    if (this.panel) {
-      this.panel.innerHTML = '';
-    }
+    // Instead of clearing messages, let's add a system notification
+    const systemMessageId = `system_${Date.now()}`;
+    const systemMessage = {
+      id: systemMessageId,
+      from: "System",
+      text: "Chat connection lost. Reconnecting...",
+      timestamp: new Date().toISOString(),
+      isPrivate: false,
+      recipient: null,
+      isSystem: true  // Add a flag to identify system messages
+    };
+
+    this.messages.push(systemMessage);
+    this.chatHistory.set(systemMessageId, systemMessage);
+    this.processedMessageIds.add(systemMessageId);
+
+    // Update the panel to show the system message
+    this.updatePanel();
   }
 }
