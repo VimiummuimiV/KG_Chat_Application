@@ -38,7 +38,7 @@ export default class UserManager {
           window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
         }
       }
-      
+
       // Handle game indicator clicks
       if (event.target.closest('.game-indicator')) {
         const gameIndicator = event.target.closest('.game-indicator');
@@ -71,6 +71,22 @@ export default class UserManager {
       const from = presence.getAttribute('from');
       const type = presence.getAttribute('type');
 
+      // Skip if not from the conference room
+      if (!from || !from.includes('general@conference.jabber.klavogonki.ru/')) {
+        continue;
+      }
+
+      // Extract username from JID (everything after the last slash)
+      const usernameFromJid = from.split('/').pop();
+      if (!usernameFromJid) continue;
+      
+      // Skip processing for Клавобот/клавобот
+      if (usernameFromJid === 'Клавобот' || usernameFromJid === 'клавобот' || 
+          from.includes('#Клавобот') || from.includes('#клавобот')) {
+        console.log(`🚫 Skipping Клавобот user: ${from}`);
+        continue;
+      }
+
       // Handle user leaving
       if (type === 'unavailable') {
         if (this.activeUsers.has(from)) {
@@ -81,86 +97,111 @@ export default class UserManager {
         continue;
       }
 
-      // Find user data in the klavogonki:userdata namespace
-      let xData = null;
+      const existingUser = this.activeUsers.get(from) || {};
+      
+      // Initialize userData (with color properties) without setting the avatar here
+      let userData = {
+        jid: from,
+        login: usernameFromJid,
+        color: '#777',
+        usernameColor: usernameColors.getColor(usernameFromJid),
+        role: 'participant',
+        gameId: null,
+        avatar: null
+      };
+
+      // Process all x elements to find relevant data
       const xElements = presence.getElementsByTagName("x");
+      let foundAvatar = false; // Flag to track if we found an avatar in this update
+      
       for (let j = 0; j < xElements.length; j++) {
-        if (xElements[j].namespaceURI === "klavogonki:userdata") {
-          xData = xElements[j];
-          break;
+        const xmlns = xElements[j].getAttribute("xmlns");
+        if (xmlns === "klavogonki:userdata") {
+          const userNode = xElements[j].getElementsByTagName("user")[0];
+          if (userNode) {
+            const loginElement = userNode.getElementsByTagName("login")[0];
+            if (loginElement && loginElement.textContent) {
+              const loginText = loginElement.textContent;
+              
+              // Additional check to skip Клавобот/клавобот
+              if (loginText === 'Клавобот' || loginText === 'клавобот') {
+                console.log(`🚫 Skipping Клавобот from login element: ${loginText}`);
+                continue;
+              }
+              
+              userData.login = parseUsername(loginText);
+              userData.usernameColor = usernameColors.getColor(userData.login);
+            }
+
+            // Check for avatar in the current presence update
+            const avatarElement = userNode.getElementsByTagName("avatar")[0];
+            if (avatarElement && avatarElement.textContent) {
+              userData.avatar = avatarElement.textContent;
+              foundAvatar = true;
+              console.log(`👤 Found avatar for ${userData.login}: ${userData.avatar}`);
+            } else {
+              console.log(`🎭 No avatar element found for ${userData.login}, will use emoji avatar`);
+            }
+
+            const moderatorNode = userNode.getElementsByTagName("moderator")[0];
+            if (moderatorNode && moderatorNode.textContent === '1') {
+              userData.role = 'moderator';
+            }
+          }
+
+          const gameIdElement = xElements[j].getElementsByTagName("game_id")[0];
+          if (gameIdElement && gameIdElement.textContent) {
+            userData.gameId = gameIdElement.textContent;
+          }
+        }
+
+        if (xmlns === "http://jabber.org/protocol/muc#user") {
+          const itemNode = xElements[j].getElementsByTagName("item")[0];
+          if (itemNode) {
+            const role = itemNode.getAttribute("role");
+            // Only override role if not already marked as moderator
+            if (role && userData.role !== 'moderator') {
+              userData.role = role;
+            }
+          }
         }
       }
 
-      if (!xData) {
-        console.log(`⚠️ No klavogonki:userdata found for presence from: ${from}`);
-        continue;
+      // If we didn't find an avatar in this update but have one stored, keep the existing one
+      if (!foundAvatar && existingUser && existingUser.avatar) {
+        userData.avatar = existingUser.avatar;
+        console.log(`🖼️ Preserving existing avatar for ${userData.login}: ${userData.avatar}`);
       }
-
-      const userNode = xData.getElementsByTagName("user")[0];
-      if (!userNode) {
-        console.log(`⚠️ No user node found in klavogonki:userdata for presence from: ${from}`);
-        continue;
+      
+      // Special handling for users with Cyrillic names like "Душа_Чата"
+      if (userData.login.match(/[А-Яа-я]/) && !userData.avatar) {
+        console.log(`🌐 Handling Cyrillic username: ${userData.login}`);
+        // Extract user ID from JID for avatar path construction
+        const userId = from.split('/')[1].split('#')[0];
+        userData.avatar = `/storage/avatars/${userId}.png`;
+        console.log(`🖌️ Created avatar path for ${userData.login}: ${userData.avatar}`);
       }
-
-      // Extract user information
-      const loginRaw = userNode.getElementsByTagName("login")[0]?.textContent || 'Anonymous';
-      const login = parseUsername(loginRaw);
-      const avatar = userNode.getElementsByTagName("avatar")[0]?.textContent;
-      const background = userNode.getElementsByTagName("background")[0]?.textContent || '#777';
-
-      // Extract game_id if available
-      const gameId = xData.getElementsByTagName("game_id")[0]?.textContent || null;
-
-      // Check for moderator status
-      const moderatorNode = userNode.getElementsByTagName("moderator")[0];
-      const isModerator = moderatorNode && moderatorNode.textContent === '1';
-
-      // Determine role from XML (default to participant)
-      const itemNode = presence.getElementsByTagName("item")[0];
-      let role = itemNode?.getAttribute("role") || 'participant';
-      if (isModerator) {
-        role = 'moderator';
-      }
-
-      // Generate a consistent color for the username
-      const usernameColor = usernameColors.getColor(login);
-
-      // Create the user object including the dynamic game id
-      const user = {
-        jid: from,
-        login,
-        avatar,
-        color: background,
-        role,
-        usernameColor,
-        gameId
-      };
-
-      const existingUser = this.activeUsers.get(from);
 
       // Determine if the user is new or updated
-      if (!existingUser) {
-        console.log(`👤 User joined: ${login}`);
-        this.activeUsers.set(from, user);
+      if (!this.activeUsers.has(from)) {
+        console.log(`👤 User joined: ${userData.login}${userData.avatar ? ' with avatar' : ' without avatar'}`);
+        this.activeUsers.set(from, userData);
         changes = true;
         newUserJIDs.push(from);
-      } else if (JSON.stringify(existingUser) !== JSON.stringify(user)) {
-        console.log(`👤 User updated: ${login}`);
-        this.activeUsers.set(from, user);
+      } else if (JSON.stringify(existingUser) !== JSON.stringify(userData)) {
+        console.log(`👤 User updated: ${userData.login}${userData.avatar ? ' with avatar' : ' without avatar'}`);
+        this.activeUsers.set(from, userData);
         changes = true;
         updatedUserJIDs.push(from);
       }
     }
 
     if (changes) {
-      // console.log(`📋 Current active users: ${this.activeUsers.size}`);
       this.updateUI(newUserJIDs, updatedUserJIDs);
     }
   }
 
   updateUI(newUserJIDs = [], updatedUserJIDs = []) {
-    // console.log(`🖥️ Updating UI with ${this.activeUsers.size} users`);
-
     // Build a map of existing DOM elements by user JID
     const existingElements = new Map();
     this.container.querySelectorAll('.user-item').forEach(el => {
@@ -177,58 +218,158 @@ export default class UserManager {
 
     // Use a document fragment to build the updated list
     const fragment = document.createDocumentFragment();
-
     sortedUsers.forEach(user => {
       let userElement = existingElements.get(user.jid);
-
       // If the element doesn't exist, create it
       if (!userElement) {
         userElement = document.createElement('div');
         userElement.classList.add('user-item');
         userElement.setAttribute('data-jid', user.jid);
-
         const cleanLogin = parseUsername(user.login);
         const roleIcon = this.roleIcons[user.role] || '👤';
-        let avatarHTML = '';
 
+        // Create avatar container element (assigned once at creation)
+        const avatarContainer = document.createElement('span');
+        avatarContainer.className = 'avatar-container';
+
+        // Check if user has an avatar path defined
         if (user.avatar) {
           try {
-            const avatarUrl = `${BASE_URL}${user.avatar.replace('.png', '_big.png')}`;
-            avatarHTML = `<img class="user-avatar image-avatar" src="${avatarUrl}" alt="${cleanLogin}'s avatar" 
-              onerror="this.onerror=null; this.classList.add('fallback-avatar'); this.innerHTML='${getRandomEmojiAvatar()}'">`;
+            // Determine the avatar URL, handling Cyrillic usernames
+            const isCyrillic = !!cleanLogin.match(/[А-Яа-я]/);
+            let avatarUrl;
+            if (isCyrillic) {
+              const userId = user.jid.split('/')[1].split('#')[0];
+              avatarUrl = `${BASE_URL}/storage/avatars/${userId}_big.png`;
+            } else {
+              avatarUrl = `${BASE_URL}${user.avatar.replace('.png', '_big.png')}`;
+            }
+            console.log(`🖼️ Avatar URL for ${cleanLogin}: ${avatarUrl}`);
+
+            // Create the image element for the avatar
+            const avatarImg = document.createElement('img');
+            avatarImg.className = 'user-avatar image-avatar';
+            avatarImg.src = avatarUrl;
+            avatarImg.alt = `${cleanLogin}'s avatar`;
+
+            // Add error handling: if the image fails to load, replace it with a fallback emoji
+            avatarImg.addEventListener('error', function() {
+              console.log(`🚫 Avatar failed to load for ${cleanLogin}, using emoji fallback`);
+              const fallbackEmoji = getRandomEmojiAvatar();
+              avatarContainer.innerHTML = '';
+              const fallbackSpan = document.createElement('span');
+              fallbackSpan.className = 'user-avatar svg-avatar';
+              fallbackSpan.textContent = fallbackEmoji;
+              avatarContainer.appendChild(fallbackSpan);
+            });
+
+            // Append the image to the avatar container
+            avatarContainer.appendChild(avatarImg);
           } catch (error) {
             console.error(`Error loading avatar for ${cleanLogin}:`, error);
-            avatarHTML = `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
+            // On error, fallback to a span with the fallback emoji
+            const fallbackEmoji = getRandomEmojiAvatar();
+            const fallbackSpan = document.createElement('span');
+            fallbackSpan.className = 'user-avatar svg-avatar';
+            fallbackSpan.textContent = fallbackEmoji;
+            avatarContainer.appendChild(fallbackSpan);
           }
         } else {
-          avatarHTML = `<span class="user-avatar svg-avatar">${getRandomEmojiAvatar()}</span>`;
+          // No avatar provided or avatar element not found – fallback to a span with a random emoji
+          console.log(`🎭 Using emoji avatar for ${cleanLogin} (no avatar path)`);
+          const fallbackEmoji = getRandomEmojiAvatar();
+          const fallbackSpan = document.createElement('span');
+          fallbackSpan.className = 'user-avatar svg-avatar';
+          fallbackSpan.textContent = fallbackEmoji;
+          avatarContainer.appendChild(fallbackSpan);
         }
 
-        // Create the static part of the user element (without the game indicator)
-        userElement.innerHTML = `
-          ${avatarHTML}
-          <div class="user-info">
-            <div class="username" style="color: ${user.usernameColor}">
-              <span class="username-clickable" data-user-id="${user.jid}">${cleanLogin}</span>
-              <span class="role ${user.role}">${roleIcon}</span>
-            </div>
+        // Create the user info container with the color applied
+        const userInfo = document.createElement('div');
+        userInfo.className = 'user-info';
+        userInfo.innerHTML = `
+          <div class="username" style="color: ${user.usernameColor}">
+            <span class="username-clickable" data-user-id="${user.jid}">${cleanLogin}</span>
+            <span class="role ${user.role}">${roleIcon}</span>
           </div>
         `;
+
+        // Append avatar and user info to the user element
+        userElement.appendChild(avatarContainer);
+        userElement.appendChild(userInfo);
       } else {
+        // For existing elements, do not update the avatar (it should be assigned only once)
+        // But if for some reason the avatar container is missing, add it.
+        if (!userElement.querySelector('.avatar-container')) {
+          const cleanLogin = parseUsername(user.login);
+          const avatarContainer = document.createElement('span');
+          avatarContainer.className = 'avatar-container';
+          
+          if (user.avatar) {
+            try {
+              const isCyrillic = !!cleanLogin.match(/[А-Яа-я]/);
+              let avatarUrl;
+              if (isCyrillic) {
+                const userId = user.jid.split('/')[1].split('#')[0];
+                avatarUrl = `${BASE_URL}/storage/avatars/${userId}_big.png`;
+              } else {
+                avatarUrl = `${BASE_URL}${user.avatar.replace('.png', '_big.png')}`;
+              }
+              console.log(`(Existing) Adding missing avatar for ${cleanLogin}: ${avatarUrl}`);
+              
+              const avatarImg = document.createElement('img');
+              avatarImg.className = 'user-avatar image-avatar';
+              avatarImg.src = avatarUrl;
+              avatarImg.alt = `${cleanLogin}'s avatar`;
+              avatarImg.addEventListener('error', function() {
+                console.log(`🚫 Missing avatar failed to load for ${cleanLogin}, using emoji fallback`);
+                const fallbackEmoji = getRandomEmojiAvatar();
+                avatarContainer.innerHTML = '';
+                const fallbackSpan = document.createElement('span');
+                fallbackSpan.className = 'user-avatar svg-avatar';
+                fallbackSpan.textContent = fallbackEmoji;
+                avatarContainer.appendChild(fallbackSpan);
+              });
+              avatarContainer.appendChild(avatarImg);
+            } catch (error) {
+              console.error(`Error adding missing avatar for ${cleanLogin}:`, error);
+              // Use emoji fallback on error
+              const fallbackEmoji = getRandomEmojiAvatar();
+              const fallbackSpan = document.createElement('span');
+              fallbackSpan.className = 'user-avatar svg-avatar';
+              fallbackSpan.textContent = fallbackEmoji;
+              avatarContainer.appendChild(fallbackSpan);
+            }
+          } else {
+            // No avatar, use emoji
+            console.log(`🎭 Using emoji avatar for existing ${cleanLogin} (no avatar path)`);
+            const fallbackEmoji = getRandomEmojiAvatar();
+            const fallbackSpan = document.createElement('span');
+            fallbackSpan.className = 'user-avatar svg-avatar';
+            fallbackSpan.textContent = fallbackEmoji;
+            avatarContainer.appendChild(fallbackSpan);
+          }
+          
+          // Prepend the avatar container if missing
+          userElement.insertBefore(avatarContainer, userElement.firstChild);
+        }
+        
         // Remove from the map so that remaining elements are those to be removed later.
         existingElements.delete(user.jid);
-
         // Update role icon if the role has changed
         const roleElement = userElement.querySelector('.role');
         const newRoleIcon = this.roleIcons[user.role] || '👤';
-        if (roleElement) {
-          if (roleElement.textContent !== newRoleIcon) {
-            roleElement.textContent = newRoleIcon;
-          }
-          // Also update the class if needed
+        if (roleElement && roleElement.textContent !== newRoleIcon) {
+          roleElement.textContent = newRoleIcon;
           if (!roleElement.classList.contains(user.role)) {
             roleElement.className = `role ${user.role}`;
           }
+        }
+        
+        // Update username color if needed
+        const usernameElement = userElement.querySelector('.username');
+        if (usernameElement && usernameElement.style.color !== user.usernameColor) {
+          usernameElement.style.color = user.usernameColor;
         }
       }
 
