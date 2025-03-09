@@ -470,6 +470,11 @@
   filter: brightness(0.8) !important;
 }
 
+#app-chat-container .traffic-icon {
+  /* Set font-family to var(--emoji-font) or fallback to system emoji */
+  font-family: var(--emoji-font), sans-serif !important;
+}
+
 /* Header toggle button */
 #app-chat-container .header-button {
   cursor: pointer !important;
