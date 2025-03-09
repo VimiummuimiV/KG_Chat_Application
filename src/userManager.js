@@ -382,7 +382,7 @@ export default class UserManager {
             usernameContainer.insertAdjacentHTML('beforeend', newIndicatorHTML);
           }
         }
-      } else if (gameIndicatorElement) {
+      } else if (gameIndicatorElement && gameIndicatorElement.parentNode) {
         gameIndicatorElement.remove();
       }
 
@@ -396,14 +396,16 @@ export default class UserManager {
 
     // Remove DOM elements for users that are no longer active.
     existingElements.forEach((el, jid) => {
-      el.remove();
+      if (el && el.parentNode) {
+        el.remove();
+      }
     });
 
     // For new users, apply a shake effect on the whole user-item.
     if (!this.isFirstLoad) {
       newUserJIDs.forEach(jid => {
         const userElement = this.container.querySelector(`.user-item[data-jid="${jid}"]`);
-        if (userElement) {
+        if (userElement && userElement.parentNode) {
           addShakeEffect(userElement);
         }
       });

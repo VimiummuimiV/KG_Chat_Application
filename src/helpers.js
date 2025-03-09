@@ -507,7 +507,7 @@ export async function getExactUserIdByName(userName) {
 
     return user.id;
   } catch (error) {
-    console.error('Error getting user ID:', error);
+    // console.error('Error getting user ID:', error);
     showChatAlert(`Could not find user "${userName}"`, { type: 'error', duration: 5000 });
     return null;
   }
