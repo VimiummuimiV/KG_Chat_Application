@@ -79,18 +79,19 @@ export default class UserManager {
       // Extract username from JID (everything after the last slash)
       const usernameFromJid = from.split('/').pop();
       if (!usernameFromJid) continue;
-      
+
       // Skip processing for Клавобот/клавобот
-      if (usernameFromJid === 'Клавобот' || usernameFromJid === 'клавобот' || 
-          from.includes('#Клавобот') || from.includes('#клавобот')) {
-        console.log(`🚫 Skipping Клавобот user: ${from}`);
+      if (usernameFromJid === 'Клавобот' || usernameFromJid === 'клавобот' ||
+        from.includes('#Клавобот') || from.includes('#клавобот')) {
         continue;
       }
 
       // Handle user leaving
       if (type === 'unavailable') {
         if (this.activeUsers.has(from)) {
-          console.log(`🚪 User left: ${this.activeUsers.get(from).login || from}`);
+          if (this.isFirstLoad) {
+            console.log(`🚪 User left: ${this.activeUsers.get(from).login || from}`);
+          }
           this.activeUsers.delete(from);
           changes = true;
         }
@@ -98,7 +99,7 @@ export default class UserManager {
       }
 
       const existingUser = this.activeUsers.get(from) || {};
-      
+
       // Initialize userData (with color properties) without setting the avatar here
       let userData = {
         jid: from,
@@ -113,7 +114,7 @@ export default class UserManager {
       // Process all x elements to find relevant data
       const xElements = presence.getElementsByTagName("x");
       let foundAvatar = false; // Flag to track if we found an avatar in this update
-      
+
       for (let j = 0; j < xElements.length; j++) {
         const xmlns = xElements[j].getAttribute("xmlns");
         if (xmlns === "klavogonki:userdata") {
@@ -122,13 +123,13 @@ export default class UserManager {
             const loginElement = userNode.getElementsByTagName("login")[0];
             if (loginElement && loginElement.textContent) {
               const loginText = loginElement.textContent;
-              
+
               // Additional check to skip Клавобот/клавобот
               if (loginText === 'Клавобот' || loginText === 'клавобот') {
                 console.log(`🚫 Skipping Клавобот from login element: ${loginText}`);
                 continue;
               }
-              
+
               userData.login = parseUsername(loginText);
               userData.usernameColor = usernameColors.getColor(userData.login);
             }
@@ -138,9 +139,6 @@ export default class UserManager {
             if (avatarElement && avatarElement.textContent) {
               userData.avatar = avatarElement.textContent;
               foundAvatar = true;
-              console.log(`👤 Found avatar for ${userData.login}: ${userData.avatar}`);
-            } else {
-              console.log(`🎭 No avatar element found for ${userData.login}, will use emoji avatar`);
             }
 
             const moderatorNode = userNode.getElementsByTagName("moderator")[0];
@@ -170,26 +168,24 @@ export default class UserManager {
       // If we didn't find an avatar in this update but have one stored, keep the existing one
       if (!foundAvatar && existingUser && existingUser.avatar) {
         userData.avatar = existingUser.avatar;
-        console.log(`🖼️ Preserving existing avatar for ${userData.login}: ${userData.avatar}`);
       }
-      
+
       // Special handling for users with Cyrillic names like "Душа_Чата"
       if (userData.login.match(/[А-Яа-я]/) && !userData.avatar) {
-        console.log(`🌐 Handling Cyrillic username: ${userData.login}`);
         // Extract user ID from JID for avatar path construction
         const userId = from.split('/')[1].split('#')[0];
         userData.avatar = `/storage/avatars/${userId}.png`;
-        console.log(`🖌️ Created avatar path for ${userData.login}: ${userData.avatar}`);
       }
 
       // Determine if the user is new or updated
       if (!this.activeUsers.has(from)) {
-        console.log(`👤 User joined: ${userData.login}${userData.avatar ? ' with avatar' : ' without avatar'}`);
+        if (!this.isFirstLoad) {
+          console.log(`👤 User joined: ${userData.login}`);
+        }
         this.activeUsers.set(from, userData);
         changes = true;
         newUserJIDs.push(from);
       } else if (JSON.stringify(existingUser) !== JSON.stringify(userData)) {
-        console.log(`👤 User updated: ${userData.login}${userData.avatar ? ' with avatar' : ' without avatar'}`);
         this.activeUsers.set(from, userData);
         changes = true;
         updatedUserJIDs.push(from);
@@ -244,7 +240,6 @@ export default class UserManager {
             } else {
               avatarUrl = `${BASE_URL}${user.avatar.replace('.png', '_big.png')}`;
             }
-            console.log(`🖼️ Avatar URL for ${cleanLogin}: ${avatarUrl}`);
 
             // Create the image element for the avatar
             const avatarImg = document.createElement('img');
@@ -253,8 +248,7 @@ export default class UserManager {
             avatarImg.alt = `${cleanLogin}'s avatar`;
 
             // Add error handling: if the image fails to load, replace it with a fallback emoji
-            avatarImg.addEventListener('error', function() {
-              console.log(`🚫 Avatar failed to load for ${cleanLogin}, using emoji fallback`);
+            avatarImg.addEventListener('error', function () {
               const fallbackEmoji = getRandomEmojiAvatar();
               avatarContainer.innerHTML = '';
               const fallbackSpan = document.createElement('span');
@@ -276,7 +270,6 @@ export default class UserManager {
           }
         } else {
           // No avatar provided or avatar element not found – fallback to a span with a random emoji
-          console.log(`🎭 Using emoji avatar for ${cleanLogin} (no avatar path)`);
           const fallbackEmoji = getRandomEmojiAvatar();
           const fallbackSpan = document.createElement('span');
           fallbackSpan.className = 'user-avatar svg-avatar';
@@ -304,7 +297,7 @@ export default class UserManager {
           const cleanLogin = parseUsername(user.login);
           const avatarContainer = document.createElement('span');
           avatarContainer.className = 'avatar-container';
-          
+
           if (user.avatar) {
             try {
               const isCyrillic = !!cleanLogin.match(/[А-Яа-я]/);
@@ -316,12 +309,12 @@ export default class UserManager {
                 avatarUrl = `${BASE_URL}${user.avatar.replace('.png', '_big.png')}`;
               }
               console.log(`(Existing) Adding missing avatar for ${cleanLogin}: ${avatarUrl}`);
-              
+
               const avatarImg = document.createElement('img');
               avatarImg.className = 'user-avatar image-avatar';
               avatarImg.src = avatarUrl;
               avatarImg.alt = `${cleanLogin}'s avatar`;
-              avatarImg.addEventListener('error', function() {
+              avatarImg.addEventListener('error', function () {
                 console.log(`🚫 Missing avatar failed to load for ${cleanLogin}, using emoji fallback`);
                 const fallbackEmoji = getRandomEmojiAvatar();
                 avatarContainer.innerHTML = '';
@@ -349,11 +342,11 @@ export default class UserManager {
             fallbackSpan.textContent = fallbackEmoji;
             avatarContainer.appendChild(fallbackSpan);
           }
-          
+
           // Prepend the avatar container if missing
           userElement.insertBefore(avatarContainer, userElement.firstChild);
         }
-        
+
         // Remove from the map so that remaining elements are those to be removed later.
         existingElements.delete(user.jid);
         // Update role icon if the role has changed
@@ -365,7 +358,7 @@ export default class UserManager {
             roleElement.className = `role ${user.role}`;
           }
         }
-        
+
         // Update username color if needed
         const usernameElement = userElement.querySelector('.username');
         if (usernameElement && usernameElement.style.color !== user.usernameColor) {
