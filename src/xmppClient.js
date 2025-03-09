@@ -66,7 +66,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         }, userListDelay);
         console.log('🚀 Step 10: Connected! Starting presence updates...');
         // Notify user about successful connection
-        showChatAlert("Chat connected successfully!", { type: 'success' });
+        if (this.isReconnecting) {
+          showChatAlert("Chat connected successfully!", { type: 'success' });
+          this.isReconnecting = false;
+        }
       } catch (error) {
         console.error(`💥 Connection error: ${error.message}`);
         if (!this.isReconnecting) {
