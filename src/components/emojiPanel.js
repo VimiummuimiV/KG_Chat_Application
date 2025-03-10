@@ -10,7 +10,7 @@ export class EmojiPanel {
     }
     EmojiPanel.instance = this;
     this.options = {
-      onEmojiSelect: options.onEmojiSelect || (() => {}),
+      onEmojiSelect: options.onEmojiSelect || (() => { }),
       container: options.container || document.body,
       position: options.position || 'bottom',
       onDestroy: options.onDestroy,
@@ -433,6 +433,9 @@ export class EmojiPanel {
 
   /** Update the info panel with emoji and keywords */
   updateInfoPanel(emoji) {
+    // Check if the info panel elements exist before trying to update them
+    if (!this.infoIcon || !this.infoKeywords) return;
+
     this.infoIcon.textContent = emoji;
     const keywordsObj = this.emojiKeywords[emoji] || {};
     const keywords = keywordsObj[this.currentLanguage] || [];
@@ -441,6 +444,9 @@ export class EmojiPanel {
 
   /** Clear the info panel */
   clearInfoPanel() {
+    // Check if the info panel elements exist before trying to clear them
+    if (!this.infoIcon || !this.infoKeywords) return;
+
     this.infoIcon.textContent = '';
     this.infoKeywords.textContent = '';
   }
