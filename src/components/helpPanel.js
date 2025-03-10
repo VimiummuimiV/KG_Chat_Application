@@ -84,7 +84,8 @@ export class HelpPanel {
                 title: "Open/Close",
                 items: [
                   { key: "(LMB) Click", desc: "Open the image" },
-                  { key: "Ctrl + (RMB)", desc: "Close the image and copy the link" }
+                  { key: "Ctrl + (RMB)", desc: "Close the image and copy the link" },
+                  { key: "Space or ESC", desc: "Close the image" }
                 ]
               },
               {
@@ -157,7 +158,8 @@ export class HelpPanel {
                 title: "Открытие/Закрытие",
                 items: [
                   { key: "(ЛКМ) Клик", desc: "Открыть изображение" },
-                  { key: "Ctrl + (ПКМ)", desc: "Закрыть изображение и скопировать ссылку" }
+                  { key: "Ctrl + (ПКМ)", desc: "Закрыть изображение и скопировать ссылку" },
+                  { key: "Space или ESC", desc: "Закрыть изображение" }
                 ]
               },
               {
