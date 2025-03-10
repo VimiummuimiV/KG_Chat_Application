@@ -1,20 +1,23 @@
-import { showChatAlert } from "../helpers.js";
+import { showChatAlert, adjustVisibility } from "../helpers.js";
+
 export class HelpPanel {
   constructor(options = {}) {
     this.container = null;
     this.options = {
-      container: options.container || document.getElementById("messages-panel"),
+      container: options.container || document.body,
       helpButton: options.helpButton,
       onDestroy: options.onDestroy
     };
     // Set the class instance to this
     HelpPanel.instance = this;
   }
+
   init() {
     this.createPanel();
     this.bindEvents();
     return this;
   }
+
   createPanel() {
     this.container = document.createElement('div');
     this.container.className = 'help-panel';
@@ -23,7 +26,10 @@ export class HelpPanel {
     this.updatePanelContent();
     this.container.appendChild(this.content);
     document.body.appendChild(this.container);
+    // Fade in the panel
+    adjustVisibility(this.container, 'show', '1');
   }
+
   updatePanelContent() {
     const lang = localStorage.getItem('emojiPanelLanguage') || 'en';
     const helpTranslations = {
@@ -148,14 +154,13 @@ export class HelpPanel {
     });
     this.content.innerHTML = html;
   }
+
   bindEvents() {
     this._clickOutsideHandler = (e) => {
-      // If the click is on (or within) the help button, do nothing.
       if (this.options.helpButton &&
         (e.target === this.options.helpButton || this.options.helpButton.contains(e.target))) {
         return;
       }
-      // Otherwise, if the click occurred outside the help panel, remove it.
       if (this.container && !this.container.contains(e.target)) {
         this.remove();
         showChatAlert('Help panel has been closed.', {
@@ -164,7 +169,6 @@ export class HelpPanel {
         });
       }
     };
-    // Use capture phase so this handler runs before bubble-phase events.
     document.addEventListener('click', this._clickOutsideHandler, true);
 
     this._escHandler = (e) => {
@@ -178,14 +182,13 @@ export class HelpPanel {
     };
     document.addEventListener('keydown', this._escHandler, true);
 
-    // Prevent clicks inside the help panel from bubbling.
     this._stopPropagationHandler = (e) => {
       e.stopPropagation();
     };
     this.container.addEventListener('click', this._stopPropagationHandler);
   }
+
   remove() {
-    // Remove all event listeners
     if (this._clickOutsideHandler) {
       document.removeEventListener('click', this._clickOutsideHandler, true);
       this._clickOutsideHandler = null;
@@ -198,28 +201,30 @@ export class HelpPanel {
       this.container.removeEventListener('click', this._stopPropagationHandler);
       this._stopPropagationHandler = null;
     }
-    // Remove from DOM
-    if (this.container && this.container.parentNode) {
-      this.container.parentNode.removeChild(this.container);
+    if (this.container) {
+      // Fade out the panel; the helper will remove the element after transition.
+      adjustVisibility(this.container, 'hide', '0');
       this.container = null;
     }
-    // Call destroy callback
     if (typeof this.options.onDestroy === 'function') {
       this.options.onDestroy();
     }
-    // Reset static instance
     HelpPanel.instance = null;
   }
+
   show() {
     if (!this.container) {
       this.init();
+    } else {
+      this.updatePanelContent();
     }
-    this.updatePanelContent();
     if (!document.body.contains(this.container)) {
       document.body.appendChild(this.container);
-      showChatAlert("Help panel is now visible."); // Only show alert when panel is actually added
+      adjustVisibility(this.container, 'show', '1');
+      showChatAlert("Help panel is now visible.");
     }
   }
+
   toggle() {
     if (this.container && document.body.contains(this.container)) {
       this.remove();
@@ -227,6 +232,7 @@ export class HelpPanel {
       this.show();
     }
   }
+
   static setupHelpCommandEvents() {
     const input = document.getElementById('message-input');
     if (input) {
@@ -236,12 +242,12 @@ export class HelpPanel {
           if (!HelpPanel.instance) {
             const helpPanelInstance = new HelpPanel({
               onDestroy: () => {
-                // This callback can be used if needed to update external state.
+                // Callback if needed.
               }
             });
             helpPanelInstance.init();
             helpPanelInstance.show();
-            showChatAlert("Help panel is now visible."); // Add alert when opening via command
+            showChatAlert("Help panel is now visible.");
           } else {
             HelpPanel.instance.remove();
           }
@@ -252,5 +258,6 @@ export class HelpPanel {
     return HelpPanel.instance;
   }
 }
+
 // Static instance tracker
 HelpPanel.instance = null;

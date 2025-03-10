@@ -424,7 +424,7 @@
 }
 
 #app-chat-container .user-avatar.svg-avatar {
-  filter: grayscale(0.5) !important;
+  font-family: var(--emoji-font), sans-serif !important;
 }
 
 #app-chat-container .user-info {

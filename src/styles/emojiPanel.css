@@ -3,6 +3,8 @@
 }
 
 .emoji-panel {
+  opacity: 0;
+  transition: opacity 0.3s ease;
   position: absolute !important;
   top: 50% !important;
   left: 50% !important;

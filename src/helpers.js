@@ -259,14 +259,14 @@ export function removeBigImageEventListeners() {
 
 export function adjustVisibility(element, action, opacity) {
   if (!element) return;
-
-  void element.offsetHeight;
-  element.style.transition = 'opacity 0.3s';
+  void element.offsetHeight; // Force reflow
+  element.style.transition = 'opacity 0.3s ease';
   element.style.opacity = action === 'show' ? opacity : '0';
-
   if (action === 'hide') {
     element.addEventListener('transitionend', () => {
-      if (element.style.opacity === '0') element.remove();
+      if (element.style.opacity === '0' && element.parentNode) {
+        element.parentNode.removeChild(element);
+      }
     }, { once: true });
   }
 }

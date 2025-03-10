@@ -1,4 +1,5 @@
 import { emojiData, emojiKeywords } from '../data/emojiData.js';
+import { adjustVisibility } from '../helpers.js';
 
 export class EmojiPanel {
   static instance = null;
@@ -162,6 +163,8 @@ export class EmojiPanel {
     this.container.appendChild(this.emojiContainer);
     this.container.appendChild(footer);
     this.options.container.appendChild(this.container);
+    // Fade in the panel
+    adjustVisibility(this.container, 'show', '1');
     this.searchInput.focus();
   }
 
@@ -508,8 +511,9 @@ export class EmojiPanel {
     document.removeEventListener('keydown', this._emojiKeydownHandler);
     document.removeEventListener('keydown', this._qKeydownHandler);
     document.removeEventListener('click', this._documentClickHandler);
-    if (this.container && this.container.parentNode) {
-      this.container.parentNode.removeChild(this.container);
+    if (this.container) {
+      // Fade out the panel; the helper will remove it after transition.
+      adjustVisibility(this.container, 'hide', '0');
     }
     this.container = null;
     this.searchInput = null;
@@ -542,4 +546,3 @@ export class EmojiPanel {
     return this.categoryLabels[this.currentLanguage][categoryKey] || categoryKey;
   }
 }
-  
