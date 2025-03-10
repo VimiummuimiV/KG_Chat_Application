@@ -1,5 +1,5 @@
 import { BASE_URL } from "./definitions";
-import { usernameColors, getRandomEmojiAvatar, extractCleanUsername, extractUserId } from "./helpers";
+import { usernameColors, getRandomEmojiAvatar, extractCleanUsername, extractUserId, handlePrivateMessageInput } from "./helpers";
 import { addShakeEffect } from "./animations";
 
 export default class UserManager {
@@ -64,8 +64,18 @@ export default class UserManager {
       if (event.target.classList.contains('username-clickable')) {
         const userId = event.target.getAttribute('data-user-id');
         if (userId) {
-          const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
-          window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
+          if (event.ctrlKey) {
+            // Ctrl+Click: Start private chat with user
+            const username = event.target.textContent.trim();
+            const messageInput = document.getElementById('message-input');
+            messageInput.value = `/pm ${username} `;
+            handlePrivateMessageInput(messageInput);
+            messageInput.focus();
+          } else {
+            // Normal click: Navigate to profile
+            const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
+            window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
+          }
         }
       }
 

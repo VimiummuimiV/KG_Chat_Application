@@ -582,16 +582,14 @@ export const privateMessageState = {
 // Toggle private message mode based on input value
 export async function handlePrivateMessageInput(inputElement) {
   if (!inputElement) return;
-
   const input = inputElement.value;
-  const privateModeRegex = /^\/pm\s+([\wа-яА-ЯёЁ]+)\s/;
+  // Updated regex to include hyphens and other common username special characters
+  const privateModeRegex = /^\/pm\s+([\wа-яА-ЯёЁ\-\.\_\+]+)\s/;
   const exitPrivateModeRegex = /^\/exit\s*$/;
   const match = input.match(privateModeRegex);
-
   if (match) {
     const username = match[1];
     const success = await privateMessageState.setPrivateTarget(username);
-
     if (success) {
       enterPrivateMode(username);
       inputElement.value = input.replace(privateModeRegex, ''); // Remove the /pm username part
