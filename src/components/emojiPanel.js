@@ -88,8 +88,8 @@ export class EmojiPanel {
     this.loadedIndices = {};
     this.categorySections = {};
 
-    // Retrieve current language from localStorage (default to 'en')
-    this.currentLanguage = localStorage.getItem('emojiPanelLanguage') || 'en';
+    // Retrieve current language from localStorage (default to 'ru')
+    this.currentLanguage = localStorage.getItem('emojiPanelLanguage') || 'ru';
   }
 
   /** Initialize the emoji panel */
