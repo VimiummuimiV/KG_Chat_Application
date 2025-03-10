@@ -264,6 +264,13 @@
   display: inline-flex !important;
 }
 
+#app-chat-container .message-text .mention {
+  display: inline-flex !important;
+  font-family: Roboto Mono !important;
+  font-weight: bold !important;
+  font-size: 1.1em !important;
+}
+
 #app-chat-container .message.system {
   background-color: #ffa50020 !important;
   border: 1px solid #ffa60030 !important;
