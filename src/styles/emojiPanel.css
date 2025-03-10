@@ -47,12 +47,13 @@
 .emoji-categories {
   position: sticky !important;
   top: 0 !important;
-  display: flex !important;
-  flex-direction: row !important;
-  padding: 4px 4px 6px 4px !important;
+  display: grid !important;
+  grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important;
+  padding: 8px !important;
   border-bottom: 1px solid #333 !important;
-  gap: 2px !important;
+  gap: 8px !important;
   justify-content: center !important;
+  align-items: center !important;
   overflow-x: auto !important;
   scrollbar-width: thin !important;
 }
@@ -62,15 +63,17 @@
   position: relative !important;
   background: none !important;
   border: none !important;
-  padding: 6px !important;
+  padding: 4px !important;
   cursor: pointer !important;
   font-size: 1.5em !important;
-  min-width: 32px !important;
-  height: 32px !important;
+  transition: background-color 0.2s;
+  width: 100% !important;
+  height: 100% !important;
   display: flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border-bottom: 2px solid transparent !important;
+  aspect-ratio: 1 !important;
+  border-bottom: 3px solid transparent !important;
 }
 
 /* Active category button gets a 3px {color} border */
@@ -79,15 +82,19 @@
   border-bottom: 3px solid goldenrod !important;
 }
 
+.emoji-category-btn:hover {
+  background-color: #333;
+}
+
 .emoji-container {
   flex: 1;
   overflow-y: auto;
   overflow-x: hidden !important;
-  padding: 8px;
-  display: block;
-  /* Using block to allow sections stacking */
+  display: grid !important;
+  gap: 8px !important;
   width: 100% !important;
   max-width: 100% !important;
+  scrollbar-width: none !important;
 }
 
 .emoji-category-section {
@@ -99,7 +106,7 @@
   color: #deb887 !important;
   font-size: 0.9em !important;
   position: sticky !important;
-  top: -10px !important;
+  top: 0px !important;
   background: #1e1e1e !important;
   z-index: 1 !important;
   border-bottom: 1px solid #333 !important;
@@ -111,7 +118,8 @@
 .emoji-list {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important;
-  gap: 4px;
+  padding: 8px !important;
+  gap: 8px;
   align-content: start;
 }
 
@@ -122,7 +130,6 @@
   padding: 4px !important;
   cursor: pointer;
   font-size: 1.5em !important;
-  border-radius: 4px;
   transition: background-color 0.2s;
   width: 100% !important;
   height: 100% !important;
