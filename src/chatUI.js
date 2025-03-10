@@ -36,7 +36,7 @@ export function createChatUI() {
     e.stopPropagation();
     if (!emojiPanelInstance || !document.querySelector('.emoji-panel')) {
       emojiPanelInstance = new EmojiPanel({
-        container: inputContainer,
+        container: messagesPanel,
         position: 'bottom',
         emojiButton: emojiButton,
         onEmojiSelect: (emoji) => {
