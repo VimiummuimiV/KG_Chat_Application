@@ -28,6 +28,15 @@
   transition: opacity 0.3s ease, transform 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
 }
 
+#app-chat-container a {
+  color: #82B32A !important;
+  transition: color 0.15s !important;
+}
+
+#app-chat-container a:hover {
+  color: #95cc30 !important;
+}
+
 /* Chat container states */
 #app-chat-container.maximized {
   position: fixed;
