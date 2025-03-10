@@ -188,7 +188,7 @@
   overflow: hidden !important;
 }
 
-/* Messages panel takes most of the space */
+/* Scrollable container settings */
 #app-chat-container .messages-panel {
   flex: 1 !important;
   overflow-y: auto !important;
@@ -197,6 +197,25 @@
   display: flex !important;
   flex-direction: column !important;
   gap: 0.2em !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #333 #1e1e1e !important;
+}
+
+/* Custom scrollbar styling for WebKit browsers */
+#app-chat-container .messages-panel::-webkit-scrollbar {
+  width: 8px !important;
+}
+
+#app-chat-container .messages-panel::-webkit-scrollbar-thumb {
+  background-color: #333 !important;
+}
+
+#app-chat-container .messages-panel::-webkit-scrollbar-thumb:hover {
+  background-color: #444 !important;
+}
+
+#app-chat-container .messages-panel::-webkit-scrollbar-track {
+  background-color: #1e1e1e !important;
 }
 
 /* Input container at bottom */
