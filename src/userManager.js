@@ -1,5 +1,5 @@
 import { BASE_URL } from "./definitions";
-import { usernameColors, getRandomEmojiAvatar, parseUsername } from "./helpers";
+import { usernameColors, getRandomEmojiAvatar, parseUsername, checkImageExists } from "./helpers";
 import { addShakeEffect } from "./animations";
 
 export default class UserManager {
@@ -51,7 +51,8 @@ export default class UserManager {
     });
   }
 
-  updatePresence(xmlResponse) {
+  // Mark updatePresence as async so we can await the image checks
+  async updatePresence(xmlResponse) {
     const parser = new DOMParser();
     const doc = parser.parseFromString(xmlResponse, "text/xml");
     const presences = doc.getElementsByTagName("presence");
@@ -65,6 +66,7 @@ export default class UserManager {
     let changes = false;
     const newUserJIDs = [];
     const updatedUserJIDs = [];
+    const imageCheckPromises = [];
 
     for (let i = 0; i < presences.length; i++) {
       const presence = presences[i];
@@ -82,7 +84,7 @@ export default class UserManager {
 
       // Skip processing for Клавобот/клавобот
       if (usernameFromJid === 'Клавобот' || usernameFromJid === 'клавобот' ||
-        from.includes('#Клавобот') || from.includes('#клавобот')) {
+          from.includes('#Клавобот') || from.includes('#клавобот')) {
         continue;
       }
 
@@ -170,11 +172,17 @@ export default class UserManager {
         userData.avatar = existingUser.avatar;
       }
 
-      // Special handling for users with Cyrillic names like "Душа_Чата"
+      // For Cyrillic names: check if the candidate avatar image exists before setting it.
       if (userData.login.match(/[А-Яа-я]/) && !userData.avatar) {
-        // Extract user ID from JID for avatar path construction
         const userId = from.split('/')[1].split('#')[0];
-        userData.avatar = `/storage/avatars/${userId}.png`;
+        const candidateAvatarUrl = `${BASE_URL}/storage/avatars/${userId}.png`;
+        imageCheckPromises.push(
+          checkImageExists(candidateAvatarUrl).then((exists) => {
+            if (exists) {
+              userData.avatar = candidateAvatarUrl;
+            }
+          })
+        );
       }
 
       // Determine if the user is new or updated
@@ -191,6 +199,9 @@ export default class UserManager {
         updatedUserJIDs.push(from);
       }
     }
+
+    // Wait for all asynchronous image checks to complete
+    await Promise.all(imageCheckPromises);
 
     if (changes) {
       this.updateUI(newUserJIDs, updatedUserJIDs);
