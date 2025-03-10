@@ -1,5 +1,7 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+
 :root {
-  --emoji-font: "Twemoji Mozilla", "Twemoji", "Segoe UI Emoji", "NotoColorEmoji", "Apple Color Emoji", "Android Emoji", "EmojiSymbols", "EmojiOne", "Segoe UI Symbol", "Symbola", "Quivira", "BabelStone Han", "Noto Sans Symbols", "Noto Sans CJK JP", "Noto Sans CJK KR", "Noto Sans CJK SC", "Noto Sans CJK TC", "Noto Sans CJK HK", "Noto Sans CJK TW", "Noto Sans CJK VN", "Noto Sans CJK", "Noto Sans", "sans-serif";
+  --emoji-font: "Noto Color Emoji";
 }
 
 .emoji-panel {
@@ -62,8 +64,6 @@
   border: none !important;
   padding: 6px !important;
   cursor: pointer !important;
-  opacity: 0.7 !important;
-  transition: opacity 0.2s !important;
   font-size: 1.5em !important;
   min-width: 32px !important;
   height: 32px !important;
@@ -116,8 +116,7 @@
 }
 
 .emoji-btn {
-  /* Set priority to Twemoji Mozilla font first, then fallback to other emoji fonts */
-  font-family: var(--emoji-font) !important;
+  font-family: var(--emoji-font), sans-serif !important;
   background: none;
   border: none;
   padding: 4px !important;

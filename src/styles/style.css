@@ -497,6 +497,10 @@
   color: #b0b0b0 !important;
 }
 
+#app-chat-container .role {
+  font-family: var(--emoji-font), sans-serif !important;
+}
+
 #app-chat-container .role.participant {
   filter: brightness(0.6) !important;
 }
@@ -531,6 +535,7 @@
 }
 
 #app-chat-container .emoji-trigger {
+  font-family: var(--emoji-font), sans-serif !important;
   height: 28px !important;
   width: 28px !important;
   font-size: 1.5em !important;
@@ -538,6 +543,9 @@
   align-items: center !important;
   justify-content: center !important;
   line-height: 1 !important;
+  outline: none !important;
+  cursor: pointer !important;
+  background: transparent !important;
 }
 
 #app-chat-container .emoji-trigger::before {
