@@ -68,8 +68,8 @@
 /* List item styling */
 .help-list-item {
   display: flex;
+  align-items: center;
   flex-direction: row;
-  margin-bottom: 0.5em;
   padding: 0.3em;
   border-bottom: 1px dashed #444 !important;
 }
@@ -82,7 +82,6 @@
 .help-hotkey {
   width: fit-content;
   display: flex;
-  margin-bottom: 0.3em;
   color: #7ed4ff !important;
   font-family: monospace;
   background-color: rgba(126, 212, 255, 0.1) !important;
