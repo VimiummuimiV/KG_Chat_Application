@@ -363,7 +363,7 @@ export default class UserManager {
       avatarImg.addEventListener('load', () => {
         // Only log first time we detect an avatar
         if (!cachedAvatarInfo || !cachedAvatarInfo.hasAvatar) {
-          console.log(`🖼️ Using image avatar for User: ${cleanLogin} ID: (${userId})`);
+          // console.log(`🖼️ Using image avatar for User: ${cleanLogin} ID: (${userId})`);
         }
         this.avatarCache[userId] = {
           hasAvatar: true,
@@ -409,7 +409,7 @@ export default class UserManager {
 
         // Only log first time we use an emoji avatar
         if (!this.avatarCache[userId] || !this.avatarCache[userId].hasEmoji) {
-          console.log(`😊 Using emoji avatar for User: ${cleanLogin} ID: (${userId}): ${cachedAvatarInfo.emoji}`);
+          // console.log(`😊 Using emoji avatar for User: ${cleanLogin} ID: (${userId}): ${cachedAvatarInfo.emoji}`);
           // Mark that we've logged this emoji usage
           this.avatarCache[userId].hasEmoji = true;
           this.saveAvatarCache();
