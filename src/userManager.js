@@ -122,8 +122,8 @@ export default class UserManager {
           const userId = extractUserId(from);
           const cleanLogin = extractCleanUsername(departingUser.login);
 
-          if (this.isFirstLoad) {
-            console.log(`🚪 User left: ${cleanLogin} ID: (${userId})`);
+          if (!this.isFirstLoad) {
+            // console.log(`🚪 User left: ${cleanLogin} ID: (${userId})`);
           }
           this.activeUsers.delete(from);
           changes = true;
@@ -207,7 +207,7 @@ export default class UserManager {
       // Determine if user is new or updated
       if (!this.activeUsers.has(from)) {
         if (!this.isFirstLoad) {
-          console.log(`👤 User joined: ${cleanLogin} ID: (${userId})`);
+          // console.log(`👤 User joined: ${cleanLogin} ID: (${userId})`);
         }
         this.activeUsers.set(from, userData);
         changes = true;
