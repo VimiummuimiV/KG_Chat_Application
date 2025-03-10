@@ -76,7 +76,7 @@ export function handleElementsBehavior() {
 
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
     msg.style.flexDirection = (isNarrow && !isMaximized) ? 'column' : 'row';
-    msg.style.marginBottom = (isNarrow && !isMaximized) ? '1em' : '0';
+    msg.style.marginBottom = (isNarrow && !isMaximized) ? '0.4em' : '0';
   });
 }
 

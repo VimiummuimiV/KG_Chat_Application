@@ -187,7 +187,7 @@
   padding: 1em !important;
   display: flex !important;
   flex-direction: column !important;
-  gap: 0.6em !important;
+  gap: 0.2em !important;
 }
 
 /* Input container at bottom */
@@ -248,9 +248,9 @@
 
 /* Message styles */
 #app-chat-container .message {
+  padding: 0.2em 0.4em !important;
   display: flex;
   flex-direction: row;
-  padding: 0.08em 0.8em !important;
   border-radius: var(--border-radius) !important;
   width: fit-content !important;
   max-width: 100% !important;
