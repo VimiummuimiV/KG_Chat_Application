@@ -268,7 +268,6 @@
   display: inline-flex !important;
   font-family: Roboto Mono !important;
   font-weight: bold !important;
-  font-size: 1.1em !important;
 }
 
 #app-chat-container .message.system {
