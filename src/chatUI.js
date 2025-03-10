@@ -1,6 +1,6 @@
 import { toggleChatVisibility } from "./chatFeatures.js";
 import { restoreChatState, getChatState, saveChatState, handleElementsBehavior, focusTextInput, createFontSizeControl, restoreFontSize, showChatAlert } from "./helpers.js";
-import { sendSVG, closeSVG, expandSVG, collapseSVG } from "./icons.js";
+import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./icons.js";
 import { HelpPanel } from "./components/helpPanel.js";
 import { EmojiPanel } from "./components/emojiPanel.js";
 
@@ -95,7 +95,7 @@ export function createChatUI() {
   // Help button next to maximize button
   const helpButton = document.createElement('button');
   helpButton.className = 'filled-button header-button chat-help-button';
-  helpButton.innerHTML = '?'; // Replace with desired icon if available
+  helpButton.innerHTML = helpSVG; // Replace with desired icon if available
   helpButton.title = 'Show chat help';
   // Declare a variable to track the help panel instance.
   let helpPanelInstance = null;
