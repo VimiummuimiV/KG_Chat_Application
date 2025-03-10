@@ -608,9 +608,41 @@ export function enterPrivateMode(username) {
   if (privateMessageState.isPrivateMode && privateMessageState.targetUsername !== username) {
     exitPrivateMode();
   }
+  
   if (!messageInput.classList.contains('private-mode') || privateMessageState.targetUsername !== username) {
     messageInput.classList.add('private-mode');
     messageInput.placeholder = `PM to ➡ ${username}`;
+    
+    // Create or update exit button
+    let exitButton = document.querySelector('.private-mode-exit');
+    if (!exitButton) {
+      exitButton = document.createElement('span');
+      exitButton.className = 'private-mode-exit';
+      
+      // Add click event to exit private mode
+      exitButton.addEventListener('click', () => {
+        exitPrivateMode();
+        messageInput.focus();
+      });
+      
+      // Add the exit button to the UI near the input
+      const inputContainer = messageInput.parentElement;
+      inputContainer.insertBefore(exitButton, messageInput.nextSibling);
+    }
+    
+    // Set default closed lock emoji and title
+    exitButton.innerHTML = "🔒";
+    exitButton.title = "Exit private mode";
+    
+    // Change emoji on hover: open lock on mouseenter, closed lock on mouseleave
+    exitButton.addEventListener('mouseenter', () => {
+      exitButton.innerHTML = "🔓";
+    });
+    
+    exitButton.addEventListener('mouseleave', () => {
+      exitButton.innerHTML = "🔒";
+    });
+    
     showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
     privateMessageState.isPrivateMode = true;
     privateMessageState.targetUsername = username;
@@ -625,6 +657,11 @@ export function exitPrivateMode() {
   if (messageInput.classList.contains('private-mode')) {
     messageInput.classList.remove('private-mode');
     messageInput.placeholder = ''; // Reset placeholder
+    
+    // Remove the exit button
+    const exitButton = document.querySelector('.private-mode-exit');
+    if (exitButton) exitButton.remove();
+    
     privateMessageState.exitPrivateMode();
     showChatAlert('Exited private chat mode', { type: 'success', duration: 3000 });
   }

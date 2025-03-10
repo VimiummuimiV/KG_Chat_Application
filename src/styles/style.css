@@ -534,7 +534,8 @@
   filter: brightness(1.2) !important;
 }
 
-#app-chat-container .emoji-trigger {
+#app-chat-container .emoji-trigger,
+#app-chat-container .private-mode-exit {
   font-family: var(--emoji-font), sans-serif !important;
   height: 28px !important;
   width: 28px !important;
@@ -546,15 +547,6 @@
   outline: none !important;
   cursor: pointer !important;
   background: transparent !important;
-}
-
-#app-chat-container .emoji-trigger::before {
-  transform-origin: center !important;
-  transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-  line-height: 1 !important;
 }
 
 /* on hover, rotate the emoji trigger smoothly */
