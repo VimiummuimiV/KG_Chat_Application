@@ -245,6 +245,29 @@ export function parseUsername(username) {
   return username.replace(/^\d+#/, '');
 }
 
+// Extract userId from JID, handling formats like "123456#Username"
+export function extractUserId(jid) {
+  if (!jid) return null;
+  const parts = jid.split('/');
+  if (parts.length < 2) return null;
+
+  const secondPart = parts[1];
+  return secondPart.split('#')[0]; // Get everything before the # character
+}
+
+// Extract clean username from the full JID or login string
+export function extractCleanUsername(login) {
+  if (!login) return "Unknown";
+
+  // If login contains #, get everything after it
+  if (login.includes('#')) {
+    return login.split('#')[1];
+  }
+
+  // Replace the parseUsername call with direct implementation
+  return login.replace(/^\d+#/, '');
+}
+
 export function addBigImageEventListeners() {
   Object.entries(state.bigImageEvents).forEach(([event, handler]) => {
     document.addEventListener(event, handler);
