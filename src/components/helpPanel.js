@@ -76,6 +76,33 @@ export class HelpPanel {
                 ]
               }
             ]
+          },
+          {
+            heading: "Image Manipulations",
+            subSections: [
+              {
+                title: "Open/Close",
+                items: [
+                  { key: "(LMB) Click", desc: "Open the image" },
+                  { key: "Ctrl + (RMB)", desc: "Close the image and copy the link" }
+                ]
+              },
+              {
+                title: "Movement and Scaling",
+                items: [
+                  { key: "Hold (MMB)", desc: "Drag the expanded image" },
+                  { key: "Scroll (MMB)", desc: "Zoom in/out the image" },
+                  { key: "Ctrl + (MMB)", desc: "Scale the image. Move the cursor up or down." }
+                ]
+              },
+              {
+                title: "Navigation",
+                items: [
+                  { key: "Arrow keys (< >)", desc: "Switch between images" },
+                  { key: "(LMB), (RMB)", desc: "Switch between images" }
+                ]
+              }
+            ]
           }
         ]
       },
@@ -119,6 +146,33 @@ export class HelpPanel {
                   { key: "q", desc: "Скрыть панель эмодзи (одиночный нажим, когда поиск не в фокусе)" },
                   { key: "qq", desc: "Скрыть панель эмодзи (дважды нажмите 'q', когда поиск в фокусе)" },
                   { key: "Esc", desc: "Закрыть (эмодзи или помощь)" }
+                ]
+              }
+            ]
+          },
+          {
+            heading: "Манипуляции с изображением",
+            subSections: [
+              {
+                title: "Открытие/Закрытие",
+                items: [
+                  { key: "(ЛКМ) Клик", desc: "Открыть изображение" },
+                  { key: "Ctrl + (ПКМ)", desc: "Закрыть изображение и скопировать ссылку" }
+                ]
+              },
+              {
+                title: "Перемещение и масштабирование",
+                items: [
+                  { key: "Зажатая (СКМ)", desc: "Перемещайте развернутое изображение" },
+                  { key: "Прокрутка (СКМ)", desc: "Увеличивайте/уменьшайте изображение" },
+                  { key: "Ctrl + (СКМ)", desc: "Масштабируйте изображение. Курсор вверх или вниз." }
+                ]
+              },
+              {
+                title: "Навигация",
+                items: [
+                  { key: "Стрелки (< >)", desc: "Переключение между изображениями" },
+                  { key: "(ЛКМ), (ПКМ)", desc: "Переключение между изображениями" }
                 ]
               }
             ]
