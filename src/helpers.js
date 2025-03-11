@@ -3,6 +3,8 @@ import { convertVideoLinksToPlayer } from "./converters/video-converter.js";
 import { emojiFaces, trustedDomains } from "./definitions.js";
 import { state } from "./definitions.js";
 import { openSVG, closeSVG } from "./icons.js";
+import { addShakeEffect } from "./animations.js";
+import { emojiKeywords } from "./data/emojiData.js";
 
 export const getAuthData = () => {
   const pageData = JSON.parse([...document.scripts]
@@ -699,4 +701,54 @@ export function checkImageExists(url) {
     img.onerror = () => resolve(false);
     img.src = url;
   });
+}
+
+// Function to randomize emoji and add shake effect
+export function setupRandomEmojiAttention(emojiButton, frequency) {
+  // Get all emoji keys from the emojiKeywords object
+  const emojis = Object.keys(emojiKeywords);
+  
+  // Original emoji to return to after attention-getting effect
+  const originalEmoji = "🙂";
+  
+  // Function to select random emoji and apply shake effect
+  const showRandomEmoji = () => {
+    // Get a random emoji from the collection
+    const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
+    
+    // Set the random emoji
+    emojiButton.innerHTML = randomEmoji;
+    
+    // Apply shake effect
+    addShakeEffect(emojiButton);
+    
+    // Return to original emoji after animation completes
+    setTimeout(() => {
+      emojiButton.innerHTML = originalEmoji;
+    }, 1500);
+  };
+  
+  // Set interval to periodically show random emoji
+  const intervalId = setInterval(showRandomEmoji, frequency);
+  
+  // Store the intervalId on the element for potential cleanup
+  emojiButton.randomEmojiIntervalId = intervalId;
+  
+  return intervalId;
+}
+
+/**
+ * Generates a random number of milliseconds between the specified minimum and maximum values
+ * @param {number} minMs - Minimum time in milliseconds
+ * @param {number} maxMs - Maximum time in milliseconds
+ * @returns {number} - A random number of milliseconds between minMs and maxMs (inclusive)
+ */
+export function getRandomInterval(minMs, maxMs) {
+  // Ensure min is not greater than max
+  if (minMs > maxMs) {
+    [minMs, maxMs] = [maxMs, minMs]; // Swap values if min > max
+  }
+  
+  // Calculate a random value between min and max (inclusive)
+  return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
 }

@@ -1,5 +1,18 @@
 import { toggleChatVisibility } from "./chatFeatures.js";
-import { restoreChatState, getChatState, saveChatState, handleElementsBehavior, focusTextInput, createFontSizeControl, restoreFontSize, showChatAlert } from "./helpers.js";
+
+import {
+  restoreChatState,
+  getChatState,
+  saveChatState,
+  handleElementsBehavior,
+  focusTextInput,
+  createFontSizeControl,
+  restoreFontSize,
+  showChatAlert,
+  setupRandomEmojiAttention,
+  getRandomInterval
+} from "./helpers.js";
+
 import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./icons.js";
 import { HelpPanel } from "./components/helpPanel.js";
 import { EmojiPanel } from "./components/emojiPanel.js";
@@ -30,6 +43,19 @@ export function createChatUI() {
   emojiButton.innerHTML = "🙂";
   emojiButton.classList.add('emoji-button');
   emojiButton.title = 'Open emoji picker';
+
+  // Add these event listeners to change the emoji on hover
+  emojiButton.addEventListener('mouseover', () => {
+    emojiButton.innerHTML = "🙃";
+  });
+
+  emojiButton.addEventListener('mouseout', () => {
+    emojiButton.innerHTML = "🙂";
+  });
+
+  // Setup random emoji appearance with range (10min - 30min)
+  setupRandomEmojiAttention(emojiButton, getRandomInterval(600000, 1800000));
+
   // Setup emoji panel toggle functionality
   let emojiPanelInstance = null;
   emojiButton.addEventListener('click', (e) => {

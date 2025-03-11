@@ -526,6 +526,7 @@
 
 #app-chat-container .filled-button {
   border: none !important;
+  outline: none !important;
   background-color: transparent !important;
   transition: all 0.15s ease-out;
 }
@@ -535,7 +536,8 @@
 }
 
 #app-chat-container .emoji-trigger,
-#app-chat-container .private-mode-exit {
+#app-chat-container .private-mode-exit,
+#app-chat-container .send-button {
   font-family: var(--emoji-font), sans-serif !important;
   height: 28px !important;
   width: 28px !important;
@@ -544,26 +546,18 @@
   align-items: center !important;
   justify-content: center !important;
   line-height: 1 !important;
-  outline: none !important;
   cursor: pointer !important;
   background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 
-#app-chat-container .emoji-trigger {
-  transition: transform 0.15s ease-out !important;
-}
-
-/* on hover, rotate the emoji trigger smoothly */
-#app-chat-container .emoji-trigger:hover {
-  filter: none !important;
-  transform: rotate(180deg) !important;
-}
-
-#app-chat-container .chat-toggle-button {
+.chat-toggle-button {
   right: 0 !important;
 }
 
-/* Maximize button positioning and styling */
 .chat-maximize-button {
   right: 25px !important;
 }
