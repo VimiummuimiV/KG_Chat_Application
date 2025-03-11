@@ -18,23 +18,35 @@ export const getAuthData = () => {
   };
 };
 
-// Color generation factory
 function colorGenerator(config) {
+  // Load stored mapping from sessionStorage (if available) or initialize an empty object.
+  const storedMapping = sessionStorage.getItem('usernameColors');
+  const hueMap = storedMapping ? JSON.parse(storedMapping) : {};
+
   return {
-    hueMap: {},
     hueStep: config.hueStep || 30,
     maxHue: config.maxHue || 360,
     saturation: config.saturation || '80%',
     lightness: config.lightness || '50%',
 
-    getColor(key) {
-      let hue = this.hueMap[key];
-      if (!hue) {
-        const maxSteps = this.maxHue / this.hueStep;
-        hue = Math.floor(Math.random() * maxSteps) * this.hueStep;
-        this.hueMap[key] = hue;
+    getColor(username) {
+      // Normalize the username to ensure consistency.
+      const key = username.trim().toLowerCase();
+
+      // Return the color if it already exists.
+      if (hueMap[key]) {
+        return hueMap[key];
       }
-      return `hsl(${hue}, ${this.saturation}, ${this.lightness})`;
+
+      // Otherwise, generate a new color.
+      const maxSteps = this.maxHue / this.hueStep;
+      const hue = Math.floor(Math.random() * maxSteps) * this.hueStep;
+      const color = `hsl(${hue}, ${this.saturation}, ${this.lightness})`;
+      hueMap[key] = color;
+
+      // Save the updated mapping back to sessionStorage.
+      sessionStorage.setItem('usernameColors', JSON.stringify(hueMap));
+      return color;
     }
   };
 }

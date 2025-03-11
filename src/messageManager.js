@@ -118,7 +118,8 @@ export default class MessageManager {
       if (!renderedIds.has(msg.id)) {
         const date = new Date(msg.timestamp);
         const formattedTime = date.toLocaleTimeString('en-GB', { hour12: false });
-        const usernameColor = usernameColors.getColor(msg.from);
+        const normalizedUsername = parseUsername(msg.from);
+        const usernameColor = usernameColors.getColor(normalizedUsername);
 
         // Create the container for the message.
         const messageDiv = document.createElement('div');

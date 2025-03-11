@@ -150,7 +150,8 @@ export default class UserManager {
         jid: from,
         login: usernameFromJid,
         color: '#777',
-        usernameColor: usernameColors.getColor(usernameFromJid),
+        // Normalize the username before calling getColor:
+        usernameColor: usernameColors.getColor(extractCleanUsername(usernameFromJid)),
         role: 'participant',
         gameId: null,
         avatar: null
@@ -166,8 +167,10 @@ export default class UserManager {
           const userNode = xElements[j].getElementsByTagName("user")[0];
           if (userNode) {
             const loginElement = userNode.getElementsByTagName("login")[0];
+            // Later, when the login element is updated:
             if (loginElement && loginElement.textContent) {
               userData.login = loginElement.textContent;
+              // Again, normalize the username for color generation:
               userData.usernameColor = usernameColors.getColor(extractCleanUsername(userData.login));
             }
 
