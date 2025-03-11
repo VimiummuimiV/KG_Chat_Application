@@ -549,6 +549,10 @@
   background: transparent !important;
 }
 
+#app-chat-container .emoji-trigger {
+  transition: transform 0.15s ease-out !important;
+}
+
 /* on hover, rotate the emoji trigger smoothly */
 #app-chat-container .emoji-trigger:hover {
   filter: none !important;
