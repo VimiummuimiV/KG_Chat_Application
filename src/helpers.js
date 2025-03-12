@@ -84,7 +84,64 @@ export function handleElementsBehavior() {
   const isMaximized = chatContainer.classList.contains('maximized');
   const userList = document.querySelector('#app-chat-container .user-list-container');
 
-  if (userList) userList.style.display = (isNarrow && !isMaximized) ? 'none' : '';
+  let isUserListOpen = false;
+
+  if (userList) {
+    if (isNarrow && !isMaximized) {
+      userList.style.position = 'absolute';
+      userList.style.height = '100%';
+      userList.style.top = '0';
+      userList.style.right = '0';
+      userList.style.transition = 'transform 0.3s ease';
+      userList.style.zIndex = '1001';
+      userList.style.transform = 'translateX(100%)';
+
+      let revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
+      if (!revealButton) {
+        revealButton = document.createElement('button');
+        revealButton.className = 'reveal-userlist-btn hidden-userlist';
+        revealButton.textContent = '📋';
+
+        chatContainer.appendChild(revealButton);
+
+        function closeUserList(event) {
+          if (!userList.contains(event.target) && event.target !== revealButton) {
+            userList.style.transform = 'translateX(100%)';
+            revealButton.classList.remove('shown-userlist');
+            revealButton.classList.add('hidden-userlist');
+            isUserListOpen = false;
+            document.removeEventListener('click', closeUserList, true);
+          }
+        }
+
+        revealButton.addEventListener('click', (event) => {
+          event.stopPropagation();
+          if (!isUserListOpen) {
+            userList.style.transform = 'translateX(0)';
+            revealButton.classList.remove('hidden-userlist');
+            revealButton.classList.add('shown-userlist');
+            isUserListOpen = true;
+
+            setTimeout(() => {
+              document.addEventListener('click', closeUserList, true);
+            }, 10);
+          }
+        });
+      }
+    } else {
+      userList.style.position = '';
+      userList.style.height = '';
+      userList.style.top = '';
+      userList.style.right = '';
+      userList.style.transform = '';
+      userList.style.zIndex = '';
+
+      const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
+      if (revealButton) {
+        revealButton.remove();
+      }
+    }
+  }
 
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
     msg.style.flexDirection = (isNarrow && !isMaximized) ? 'column' : 'row';
