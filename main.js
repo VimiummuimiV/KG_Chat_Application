@@ -10,7 +10,7 @@ import { addChatToggleFeature } from "./src/chatFeatures.js";
 import { setupDragHandlers, setupResizeHandlers, setupWindowResizeHandler } from './src/events.js';
 import { createXMPPClient } from './src/xmppClient.js';
 import { config } from "./src/definitions.js";
-import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput } from "./src/helpers.js";
+import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput, addViewportMeta } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
 import { HelpPanel } from './src/components/helpPanel.js';
 import './src/styles/emojiPanel.css';
@@ -55,6 +55,9 @@ function checkAuth() {
 // ------------------------- Main App ---------------------------
 async function initializeApp() {
   try {
+    // Add viewport meta tag
+    addViewportMeta();
+
     if (!checkAuth()) return;
 
     // Initialize UI and features
