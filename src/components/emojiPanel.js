@@ -1,6 +1,29 @@
 import { emojiData, emojiKeywords } from '../data/emojiData.js';
 import { adjustVisibility } from '../helpers.js';
 
+// Create a single global shortcut handler
+const setupGlobalEmojiShortcut = (() => {
+  let isSetup = false;
+
+  return function () {
+    if (!isSetup) {
+      document.addEventListener('keydown', (e) => {
+        if (e.ctrlKey && e.code === 'Semicolon') {
+          e.preventDefault();
+          if (!document.querySelector('.emoji-panel')) {
+            // Initialize or show the emoji panel
+            new EmojiPanel().show();
+          }
+        }
+      });
+      isSetup = true;
+    }
+  };
+})();
+
+// Call this function immediately to set up the shortcut
+setupGlobalEmojiShortcut();
+
 export class EmojiPanel {
   static instance = null;
 
@@ -11,7 +34,7 @@ export class EmojiPanel {
     EmojiPanel.instance = this;
     this.options = {
       onEmojiSelect: options.onEmojiSelect || (() => { }),
-      container: options.container || document.body,
+      container: options.container || document.getElementById('messages-panel') || document.body,
       position: options.position || 'bottom',
       onDestroy: options.onDestroy,
       emojiButton: options.emojiButton,
@@ -288,17 +311,6 @@ export class EmojiPanel {
       }
     };
     document.addEventListener('keydown', this._emojiKeydownHandler);
-
-    // Open panel with Ctrl+Semicolon
-    this._openPanelHandler = (e) => {
-      if (e.ctrlKey && e.code === 'Semicolon') {
-        e.preventDefault();
-        if (!document.querySelector('.emoji-panel')) {
-          this.show();
-        }
-      }
-    };
-    document.addEventListener('keydown', this._openPanelHandler);
 
     // Handle 'q' key for closing panel
     this._qKeydownHandler = (e) => {
