@@ -69,12 +69,18 @@
   }
 }
 
-@media screen and (max-width: 768px), (hover: none), (pointer: coarse) {
+@media screen and (max-width: 768px),
+(hover: none),
+(pointer: coarse) {
+  body {
+    background-color: #1e1e1e !important;
+  }
+
   #app-chat-container {
-    height: 100vh !important;
+    height: 95vh !important;
     width: 100vw !important;
+    min-height: 95vh !important;
     min-width: 100vw !important;
-    min-height: 100vh !important;
     border: none !important;
     border-radius: 0 !important;
     overflow: hidden !important;
@@ -272,16 +278,16 @@
 }
 
 #app-chat-container .length-field-popup {
-	position: absolute !important;
+  position: absolute !important;
   display: flex !important;
-	font: bold 12px Montserrat !important;
-	bottom: 60px !important;
-	transition: left 100ms ease-out !important;
-	height: 20px !important;
-	align-items: center !important;
-	justify-content: center !important;
-	opacity: 0;
-	border: none !important;
+  font: bold 12px Montserrat !important;
+  bottom: 60px !important;
+  transition: left 100ms ease-out !important;
+  height: 20px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  opacity: 0;
+  border: none !important;
 }
 
 .bounce-in {
