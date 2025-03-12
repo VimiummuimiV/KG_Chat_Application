@@ -284,6 +284,48 @@
 	border: none !important;
 }
 
+.bounce-in {
+  animation: bounceIn 500ms forwards;
+}
+
+@keyframes bounceIn {
+  0% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.bounce-out {
+  animation: bounceOut 500ms forwards;
+}
+
+@keyframes bounceOut {
+  0% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+
+  50% {
+    transform: translateY(-10px);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateY(0);
+    opacity: 0;
+  }
+}
+
 #app-chat-container #message-input.private-mode {
   background-color: #ff6b6b38 !important;
   color: #ff6b6b !important;
