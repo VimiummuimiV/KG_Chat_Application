@@ -6,6 +6,7 @@
 // @author       Patcher
 // @match        *://klavogonki.ru/*
 // @exclude      https://klavogonki.ru/g/?gmid=*
+// @exclude      https://klavogonki.ru/chatlogs/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=klavogonki.ru
 // @grant        none
 // ==/UserScript==

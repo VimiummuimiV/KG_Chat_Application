@@ -691,41 +691,41 @@ export function enterPrivateMode(username) {
   if (privateMessageState.isPrivateMode && privateMessageState.targetUsername !== username) {
     exitPrivateMode();
   }
-  
+
   if (!messageInput.classList.contains('private-mode') || privateMessageState.targetUsername !== username) {
     messageInput.classList.add('private-mode');
     messageInput.placeholder = `PM to ➡ ${username}`;
-    
+
     // Create or update exit button
     let exitButton = document.querySelector('.private-mode-exit');
     if (!exitButton) {
       exitButton = document.createElement('span');
       exitButton.className = 'private-mode-exit';
-      
+
       // Add click event to exit private mode
       exitButton.addEventListener('click', () => {
         exitPrivateMode();
         messageInput.focus();
       });
-      
+
       // Add the exit button to the UI near the input
       const inputContainer = messageInput.parentElement;
       inputContainer.insertBefore(exitButton, messageInput.nextSibling);
     }
-    
+
     // Set default closed lock emoji and title
     exitButton.innerHTML = "🔒";
     exitButton.title = "Exit private mode";
-    
+
     // Change emoji on hover: open lock on mouseenter, closed lock on mouseleave
     exitButton.addEventListener('mouseenter', () => {
       exitButton.innerHTML = "🔓";
     });
-    
+
     exitButton.addEventListener('mouseleave', () => {
       exitButton.innerHTML = "🔒";
     });
-    
+
     showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
     privateMessageState.isPrivateMode = true;
     privateMessageState.targetUsername = username;
@@ -740,11 +740,11 @@ export function exitPrivateMode() {
   if (messageInput.classList.contains('private-mode')) {
     messageInput.classList.remove('private-mode');
     messageInput.placeholder = ''; // Reset placeholder
-    
+
     // Remove the exit button
     const exitButton = document.querySelector('.private-mode-exit');
     if (exitButton) exitButton.remove();
-    
+
     privateMessageState.exitPrivateMode();
     showChatAlert('Exited private chat mode', { type: 'success', duration: 3000 });
   }
@@ -788,33 +788,33 @@ export function checkImageExists(url) {
 export function setupRandomEmojiAttention(emojiButton, frequency) {
   // Get all emoji keys from the emojiKeywords object
   const emojis = Object.keys(emojiKeywords);
-  
+
   // Original emoji to return to after attention-getting effect
   const originalEmoji = "🙂";
-  
+
   // Function to select random emoji and apply shake effect
   const showRandomEmoji = () => {
     // Get a random emoji from the collection
     const randomEmoji = emojis[Math.floor(Math.random() * emojis.length)];
-    
+
     // Set the random emoji
     emojiButton.innerHTML = randomEmoji;
-    
+
     // Apply shake effect
     addShakeEffect(emojiButton);
-    
+
     // Return to original emoji after animation completes
     setTimeout(() => {
       emojiButton.innerHTML = originalEmoji;
     }, 1500);
   };
-  
+
   // Set interval to periodically show random emoji
   const intervalId = setInterval(showRandomEmoji, frequency);
-  
+
   // Store the intervalId on the element for potential cleanup
   emojiButton.randomEmojiIntervalId = intervalId;
-  
+
   return intervalId;
 }
 
@@ -829,7 +829,7 @@ export function getRandomInterval(minMs, maxMs) {
   if (minMs > maxMs) {
     [minMs, maxMs] = [maxMs, minMs]; // Swap values if min > max
   }
-  
+
   // Calculate a random value between min and max (inclusive)
   return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
 }
@@ -858,7 +858,7 @@ export function createLengthPopup(container) {
   lengthPopup = document.createElement('div');
   lengthPopup.className = 'length-field-popup';
   messagesContainer.appendChild(lengthPopup);
-} 
+}
 
 // Create a canvas for text measurement.
 const textMeasurementCanvas = document.createElement('canvas');
@@ -919,8 +919,8 @@ function updatePopupMetrics(text) {
 function updateLengthPopup(length) {
   let displayText =
     length > previousLength ? `${length} 🡆` :
-    length < previousLength ? `🡄 ${length}` :
-    `${length}`;
+      length < previousLength ? `🡄 ${length}` :
+        `${length}`;
   lengthPopup.textContent = displayText;
   updateLengthPopupColor(length);
   previousLength = length;
@@ -968,4 +968,53 @@ export function initChatLengthPopupEvents(field) {
   if (!lengthPopup) return;
   chatField.addEventListener('input', handleInputEvent);
   chatField.addEventListener('keydown', handleKeydownEvent);
+}
+
+/**
+ * Converts a given local time to Moscow time (UTC+3) based on the system's timezone.
+ *
+ * How it works:
+ * 1. Gets the system's local timezone offset in minutes (positive if behind UTC).
+ * 2. Converts the local offset to total minutes from UTC.
+ * 3. Defines Moscow's fixed offset as UTC+3 (180 minutes).
+ * 4. Calculates the difference between Moscow's offset and the local offset.
+ * 5. Parses the input time and converts it into total minutes since midnight.
+ * 6. Adjusts the time by the calculated difference.
+ * 7. Ensures the result stays within the 24-hour format (wrap-around handling).
+ * 8. Converts the result back to HH:MM:SS format and returns it.
+ *
+ * @param {string} time - The local time in "HH:MM:SS" format.
+ * @returns {string} - The converted time in Moscow time (HH:MM:SS).
+ */
+export function calibrateToMoscowTime(time) {
+  // Get local timezone offset in minutes (positive if local is behind UTC)
+  const localOffsetMinutes = new Date().getTimezoneOffset();
+
+  // Convert local offset to total minutes from UTC (local time = UTC + localTotalOffset)
+  const localTotalOffset = -localOffsetMinutes;
+
+  // Moscow is UTC+3 (180 minutes)
+  const moscowOffset = 3 * 60; // 180 minutes
+
+  // Calculate the adjustment needed: Moscow offset - local offset
+  const diffMinutes = moscowOffset - localTotalOffset;
+
+  // Parse input time
+  const [hours, minutes, seconds] = time.split(':').map(Number);
+
+  // Convert input time to total minutes since 00:00
+  const totalInputMinutes = hours * 60 + minutes;
+
+  // Adjust by diff and wrap within a single day (1440 minutes)
+  let adjustedMinutes = totalInputMinutes + diffMinutes;
+  adjustedMinutes = ((adjustedMinutes % 1440) + 1440) % 1440; // Ensure positive
+
+  // Convert back to hours and minutes
+  const adjustedHours = Math.floor(adjustedMinutes / 60);
+  const adjustedMins = adjustedMinutes % 60;
+
+  // Format the result with original seconds
+  return `${adjustedHours.toString().padStart(2, '0')}:` +
+    `${adjustedMins.toString().padStart(2, '0')}:` +
+    `${seconds.toString().padStart(2, '0')}`;
 }

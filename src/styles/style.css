@@ -537,14 +537,14 @@
 }
 
 /* Add to existing style.css content */
-#app-chat-container .message-info .username,
-#app-chat-container .user-info .username {
+#app-chat-container .username,
+#app-chat-container .time {
   cursor: pointer !important;
   transition: opacity 0.2s ease !important;
 }
 
-#app-chat-container .message-info .username:hover,
-#app-chat-container .user-info .username:hover {
+#app-chat-container .username:hover,
+#app-chat-container .time:hover {
   opacity: 0.7 !important;
 }
 

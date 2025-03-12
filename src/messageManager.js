@@ -1,4 +1,12 @@
-import { parseUsername, parseMessageText, scrollToBottom, highlightMentionWords, usernameColors, handlePrivateMessageInput } from './helpers.js';
+import {
+  parseUsername,
+  parseMessageText,
+  scrollToBottom,
+  highlightMentionWords,
+  usernameColors,
+  handlePrivateMessageInput,
+  calibrateToMoscowTime
+} from './helpers.js';
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
@@ -185,7 +193,7 @@ export default class MessageManager {
       }
     });
 
-    this.addUsernameClickListeners();
+    this.addDelegatedClickListeners();
     highlightMentionWords([this.currentUsername]);
 
     requestAnimationFrame(() => {
@@ -193,42 +201,56 @@ export default class MessageManager {
     });
   }
 
-  addUsernameClickListeners() {
+  addDelegatedClickListeners() {
     // Attach the listener only once using a custom flag.
-    if (!this.panel._usernameClickDelegated) {
+    if (!this.panel._delegatedClickAttached) {
       this.panel.addEventListener("click", (event) => {
-        // Check if the clicked element or one of its parents has the "username" class.
+        // --- Username click handling ---
         const usernameEl = event.target.closest('.username');
-        if (!usernameEl || !this.panel.contains(usernameEl)) return;
-
-        const usernameText = usernameEl.textContent.trim();
-        let selectedUsername = usernameText;
-
-        // Handle arrow formatting used in private messages.
-        if (selectedUsername.includes('→')) {
-          if (selectedUsername.startsWith('→')) {
-            selectedUsername = selectedUsername.replace('→', '').trim();
+        if (usernameEl && this.panel.contains(usernameEl)) {
+          const usernameText = usernameEl.textContent.trim();
+          let selectedUsername = usernameText;
+          // Handle arrow formatting used in private messages.
+          if (selectedUsername.includes('→')) {
+            if (selectedUsername.startsWith('→')) {
+              selectedUsername = selectedUsername.replace('→', '').trim();
+            } else {
+              selectedUsername = selectedUsername.split('→')[0].trim();
+            }
+          }
+          const messageInput = document.getElementById('message-input');
+          if (event.ctrlKey) {
+            // Ctrl+Click: Prepare for a private message.
+            messageInput.value = `/pm ${selectedUsername} `;
+            handlePrivateMessageInput(messageInput);
           } else {
-            selectedUsername = selectedUsername.split('→')[0].trim();
+            // Normal click: Append username if not already present.
+            const appendUsername = `${selectedUsername}, `;
+            if (!messageInput.value.includes(appendUsername)) {
+              messageInput.value += appendUsername;
+            }
           }
+          messageInput.focus();
         }
 
-        const messageInput = document.getElementById('message-input');
-        if (event.ctrlKey) {
-          // Ctrl+Click: Prepare for a private message.
-          messageInput.value = `/pm ${selectedUsername} `;
-          handlePrivateMessageInput(messageInput);
-        } else {
-          // Normal click: Append username if not already present.
-          const appendUsername = `${selectedUsername}, `;
-          if (!messageInput.value.includes(appendUsername)) {
-            messageInput.value += appendUsername;
-          }
+        // --- Time element click handling ---
+        const timeEl = event.target.closest('.time');
+        if (timeEl && this.panel.contains(timeEl)) {
+          // Extract the local time text (assumed format "HH:MM:SS")
+          const localTime = timeEl.textContent.trim();
+          // Calibrate the time using the provided function.
+          const moscowTime = calibrateToMoscowTime(localTime);
+          // Create today's date in the format "YYYY-MM-DD"
+          const today = new Intl.DateTimeFormat('en-CA').format(new Date());
+          // Build the URL to the chat logs with the calibrated time as the hash.
+          const url = `https://klavogonki.ru/chatlogs/${today}.html#${moscowTime}`;
+
+          // Open in a new tab
+          window.open(url, '_blank');
         }
-        messageInput.focus();
       });
-      // Mark that the listener has been attached.
-      this.panel._usernameClickDelegated = true;
+      // Use a unified flag to ensure the listener is attached only once.
+      this.panel._delegatedClickAttached = true;
     }
   }
 
