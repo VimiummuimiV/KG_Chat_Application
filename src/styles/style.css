@@ -1,7 +1,7 @@
 /* Variables */
 :root {
   --border-radius: 0.2em;
-  --min-chat-width: 360px;
+  --min-chat-width: 320px;
   --min-chat-height: 200px;
   --user-list-width: fit-content;
   --emoji-font: "Noto Color Emoji", sans-serif;
@@ -111,6 +111,13 @@
   #app-chat-container .video-container {
     transform-origin: left !important;
     transform: scale(0.9) !important;
+  }
+}
+
+@media screen and (max-width: 350px) {
+  #app-chat-container .video-container {
+    transform-origin: left !important;
+    transform: scale(0.8) !important;
   }
 }
 

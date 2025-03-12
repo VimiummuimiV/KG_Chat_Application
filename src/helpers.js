@@ -80,7 +80,8 @@ export function handleElementsBehavior() {
   if (!wrapper) return;
   const chatContainer = document.querySelector('#app-chat-container');
   const isNarrow = wrapper.offsetWidth <= 780;
-  const isVeryNarrow = wrapper.offsetWidth < 380;
+  const isVeryNarrow = wrapper.offsetWidth <= 380;
+  const isExtremelyNarrow = wrapper.offsetWidth <= 340;
   const isMaximized = chatContainer.classList.contains('maximized');
   const userList = document.querySelector('#app-chat-container .user-list-container');
 
@@ -149,8 +150,16 @@ export function handleElementsBehavior() {
   });
 
   document.querySelectorAll('#app-chat-container .video-container').forEach(video => {
-    video.style.transformOrigin = isVeryNarrow ? 'left' : '';
-    video.style.transform = isVeryNarrow ? 'scale(0.9)' : '';
+    if (isExtremelyNarrow) {
+      video.style.transformOrigin = 'left';
+      video.style.transform = 'scale(0.8)';
+    } else if (isVeryNarrow) {
+      video.style.transformOrigin = 'left';
+      video.style.transform = 'scale(0.9)';
+    } else {
+      video.style.transformOrigin = '';
+      video.style.transform = '';
+    }
   });
 }
 
