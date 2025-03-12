@@ -4,7 +4,7 @@
   --min-chat-width: 420px;
   --min-chat-height: 200px;
   --user-list-width: fit-content;
-  --emoji-font: "Twemoji Mozilla", "Twemoji", "Segoe UI Emoji", "NotoColorEmoji", "Apple Color Emoji", "Android Emoji", "EmojiSymbols", "EmojiOne", "Segoe UI Symbol", "Symbola", "Quivira", "BabelStone Han", "Noto Sans Symbols", "Noto Sans CJK JP", "Noto Sans CJK KR", "Noto Sans CJK SC", "Noto Sans CJK TC", "Noto Sans CJK HK", "Noto Sans CJK TW", "Noto Sans CJK VN", "Noto Sans CJK", "Noto Sans", "sans-serif";
+  --emoji-font: "Noto Color Emoji", sans-serif;
 }
 
 /* Main chat container */
@@ -73,10 +73,24 @@
   }
 }
 
-@media (max-width: 550px) {
-  #app-chat-container .message {
-    flex-direction: column !important;
-    margin-bottom: 1em !important;
+@media (max-width: 768px) {
+  #app-chat-container {
+    height: 100vh !important;
+    width: 100vw !important;
+    min-width: 100vw !important;
+    min-height: 100vh !important;
+    border: none !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+  }
+  
+  /* Hide non-essential elements on small screens */
+  #app-chat-container .user-list-container,
+  #app-chat-container .resize-handle,
+  #app-chat-container .font-size-control,
+  #app-chat-container .header-button,
+  #app-chat-container .message-info {
+    display: none !important;
   }
 }
 
