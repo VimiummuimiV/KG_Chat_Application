@@ -78,19 +78,22 @@ export function getRandomEmojiAvatar() {
 export function handleElementsBehavior() {
   const wrapper = document.querySelector('#app-chat-container .chat-wrapper');
   if (!wrapper) return;
-
   const chatContainer = document.querySelector('#app-chat-container');
   const isNarrow = wrapper.offsetWidth <= 780;
+  const isVeryNarrow = wrapper.offsetWidth < 380;
   const isMaximized = chatContainer.classList.contains('maximized');
-
   const userList = document.querySelector('#app-chat-container .user-list-container');
-  if (userList) {
-    userList.style.display = (isNarrow && !isMaximized) ? 'none' : '';
-  }
+
+  if (userList) userList.style.display = (isNarrow && !isMaximized) ? 'none' : '';
 
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
     msg.style.flexDirection = (isNarrow && !isMaximized) ? 'column' : 'row';
     msg.style.marginBottom = (isNarrow && !isMaximized) ? '0.4em' : '0';
+  });
+
+  document.querySelectorAll('#app-chat-container .video-container').forEach(video => {
+    video.style.transformOrigin = isVeryNarrow ? 'left' : '';
+    video.style.transform = isVeryNarrow ? 'scale(0.9)' : '';
   });
 }
 

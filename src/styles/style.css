@@ -1,7 +1,7 @@
 /* Variables */
 :root {
   --border-radius: 0.2em;
-  --min-chat-width: 420px;
+  --min-chat-width: 360px;
   --min-chat-height: 200px;
   --user-list-width: fit-content;
   --emoji-font: "Noto Color Emoji", sans-serif;
@@ -83,13 +83,12 @@
     border-radius: 0 !important;
     overflow: hidden !important;
   }
-  
+
   /* Hide non-essential elements on touch devices */
   #app-chat-container .user-list-container,
   #app-chat-container .resize-handle,
   #app-chat-container .font-size-control,
   #app-chat-container .header-button,
-  #app-chat-container .message-info,
   #app-chat-container #send-button,
   /* Unnecessary elements of klavogonki page */
   .userpanel,
@@ -104,6 +103,13 @@
   #footer,
   #google_esf {
     display: none !important;
+  }
+}
+
+@media screen and (max-width: 367px) {
+  #app-chat-container .video-container {
+    transform-origin: left !important;
+    transform: scale(0.9) !important;
   }
 }
 
