@@ -77,9 +77,9 @@
   }
 
   #app-chat-container {
-    height: 100% !important;
+    height: calc(100% - 25px) !important;
     width: 100vw !important;
-    min-height: 100% !important;
+    min-height: calc(100% - 25px) !important;
     min-width: 100vw !important;
     border: none !important;
     border-radius: 0 !important;
