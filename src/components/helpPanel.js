@@ -40,6 +40,7 @@ export class HelpPanel {
             title: "Chat Commands",
             items: [
               { key: "/help", desc: "Show this help panel" },
+              { key: "/me message", desc: "Send an action message" },
               { key: "/pm username", desc: "Activate private chat mode with the specified user" },
               { key: "/exit", desc: "Exit private chat mode" }
             ]
@@ -114,6 +115,7 @@ export class HelpPanel {
             title: "Команды чата",
             items: [
               { key: "/help", desc: "Показать панель помощи" },
+              { key: "/me сообщение", desc: "Отправить сообщение действия" },
               { key: "/pm username", desc: "Активировать приватный чат для указанного пользователя" },
               { key: "/exit", desc: "Выйти из приватного чата" }
             ]
