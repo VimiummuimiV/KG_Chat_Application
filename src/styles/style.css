@@ -89,7 +89,8 @@
   #app-chat-container .resize-handle,
   #app-chat-container .font-size-control,
   #app-chat-container .header-button,
-  #app-chat-container .message-info {
+  #app-chat-container .message-info,
+  #app-chat-container .send-button {
     display: none !important;
   }
 }
