@@ -10,7 +10,9 @@ import {
   restoreFontSize,
   showChatAlert,
   setupRandomEmojiAttention,
-  getRandomInterval
+  getRandomInterval,
+  initChatLengthPopupEvents,
+  createLengthPopup
 } from "./helpers.js";
 
 import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./icons.js";
@@ -92,6 +94,7 @@ export function createChatUI() {
   const messageInput = document.createElement('input');
   messageInput.type = 'text';
   messageInput.id = 'message-input';
+  messageInput.maxLength = 300;
   // Create send button
   const sendButton = document.createElement('button');
   sendButton.id = 'send-button';
@@ -180,8 +183,12 @@ export function createChatUI() {
   // Force scroll to bottom once after chat creation
   requestAnimationFrame(() => {
     const messagesPanel = document.getElementById('messages-panel');
-    if (messagesPanel) {
+    const messageInput = document.getElementById('message-input');
+    if (messagesPanel && messageInput) {
       messagesPanel.scrollTop = messagesPanel.scrollHeight;
+      // Pass the input element and messages panel into the helper functions.
+      createLengthPopup(messagesPanel);
+      initChatLengthPopupEvents(messageInput);
     }
   });
 }

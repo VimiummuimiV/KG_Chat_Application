@@ -271,6 +271,19 @@
   transition: font-size 0.2s ease !important;
 }
 
+#app-chat-container .length-field-popup {
+	position: absolute !important;
+  display: flex !important;
+	font: bold 12px Montserrat !important;
+	bottom: 60px !important;
+	transition: left 100ms ease-out !important;
+	height: 20px !important;
+	align-items: center !important;
+	justify-content: center !important;
+	opacity: 0;
+	border: none !important;
+}
+
 #app-chat-container #message-input.private-mode {
   background-color: #ff6b6b38 !important;
   color: #ff6b6b !important;
