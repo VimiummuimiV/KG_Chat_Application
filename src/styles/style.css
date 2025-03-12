@@ -90,7 +90,19 @@
   #app-chat-container .font-size-control,
   #app-chat-container .header-button,
   #app-chat-container .message-info,
-  #app-chat-container .send-button {
+  #app-chat-container #send-button,
+  /* Unnecessary elements of klavogonki page */
+  .userpanel,
+  #userpanel-dummy,
+  #reformal_tab,
+  .ownbanner-back,
+  .feedback,
+  .bar,
+  #content,
+  #head,
+  #index,
+  #footer,
+  #google_esf {
     display: none !important;
   }
 }
