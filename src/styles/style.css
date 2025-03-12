@@ -63,10 +63,6 @@
 
 /* Responsive styles */
 @media (max-width: 780px) {
-  #app-chat-container .user-list-container {
-    display: none !important;
-  }
-
   #app-chat-container .chat-wrapper {
     width: 100% !important;
     border-right: none !important;
@@ -85,7 +81,6 @@
   }
 
   /* Hide non-essential elements on touch devices */
-  #app-chat-container .user-list-container,
   #app-chat-container .resize-handle,
   #app-chat-container .font-size-control,
   #app-chat-container .header-button,
