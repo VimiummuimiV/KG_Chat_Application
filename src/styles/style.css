@@ -73,7 +73,7 @@
   }
 }
 
-@media (hover: none) and (pointer: coarse) {
+@media screen and (max-width: 768px), (hover: none), (pointer: coarse) {
   #app-chat-container {
     height: 100vh !important;
     width: 100vw !important;
