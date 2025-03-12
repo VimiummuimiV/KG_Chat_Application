@@ -73,7 +73,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@media (hover: none) and (pointer: coarse) {
   #app-chat-container {
     height: 100vh !important;
     width: 100vw !important;
@@ -84,7 +84,7 @@
     overflow: hidden !important;
   }
   
-  /* Hide non-essential elements on small screens */
+  /* Hide non-essential elements on touch devices */
   #app-chat-container .user-list-container,
   #app-chat-container .resize-handle,
   #app-chat-container .font-size-control,
