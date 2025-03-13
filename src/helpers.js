@@ -19,46 +19,141 @@ export const getAuthData = () => {
 };
 
 function colorGenerator(config) {
-  // Load stored mapping from sessionStorage (if available) or initialize an empty object.
-  const storedMapping = sessionStorage.getItem('usernameColors');
-  const hueMap = storedMapping ? JSON.parse(storedMapping) : {};
-
+  // Use sessionStorage as required
+  const storageKey = config.storageKey || 'usernameColors';
+  let colorMap;
+  
+  try {
+    const stored = sessionStorage.getItem(storageKey);
+    colorMap = stored ? JSON.parse(stored) : {};
+  } catch (e) {
+    // Handle potential JSON parsing errors
+    colorMap = {};
+  }
+  
+  // Pre-calculate constants
+  const hueStep = config.hueStep || 30;
+  const maxHue = config.maxHue || 360;
+  const hasFixedSaturation = Boolean(config.saturation);
+  const hasFixedLightness = Boolean(config.lightness);
+  const minSat = config.minSaturation || 20;
+  const maxSat = config.maxSaturation || 80;
+  const minLight = config.minLightness || 40;
+  const maxLight = config.maxLightness || 80;
+  const satRange = maxSat - minSat;
+  const lightRange = maxLight - minLight;
+  const maxSteps = Math.floor(maxHue / hueStep);
+  
+  // Cache existing color values for quick comparison
+  const existingColorValues = new Set(Object.values(colorMap));
+  
+  // Return the API object with optimized methods
   return {
-    hueStep: config.hueStep || 30,
-    maxHue: config.maxHue || 360,
-    saturation: config.saturation || '80%',
-    lightness: config.lightness || '50%',
-
     getColor(username) {
-      // Normalize the username to ensure consistency.
+      if (!username) return hasFixedSaturation && hasFixedLightness ? 
+        `hsl(0, ${config.saturation}, ${config.lightness})` : 
+        `hsl(0, 50%, 50%)`;
+      
+      // Normalize the username to ensure consistency
       const key = username.trim().toLowerCase();
-
-      // Return the color if it already exists.
-      if (hueMap[key]) {
-        return hueMap[key];
+      
+      // Return the color if it already exists
+      if (colorMap[key]) {
+        return colorMap[key];
       }
-
-      // Otherwise, generate a new color.
-      const maxSteps = this.maxHue / this.hueStep;
-      const hue = Math.floor(Math.random() * maxSteps) * this.hueStep;
-      const color = `hsl(${hue}, ${this.saturation}, ${this.lightness})`;
-      hueMap[key] = color;
-
-      // Save the updated mapping back to sessionStorage.
-      sessionStorage.setItem('usernameColors', JSON.stringify(hueMap));
+      
+      // Cache for generating unique colors
+      const usedHues = new Set();
+      let color = null;
+      let attempts = 0;
+      
+      // Try to find a unique color (max 10 attempts to avoid performance hits)
+      while (!color && attempts < 10) {
+        // Generate a random hue index that hasn't been used
+        let hueIndex;
+        do {
+          hueIndex = Math.floor(Math.random() * maxSteps);
+        } while (usedHues.has(hueIndex) && usedHues.size < maxSteps);
+        
+        // Mark this hue as tried
+        usedHues.add(hueIndex);
+        
+        // Calculate the actual hue value
+        const hue = hueIndex * hueStep;
+        
+        // Generate saturation and lightness
+        const sat = hasFixedSaturation ? 
+          config.saturation : 
+          `${Math.floor(Math.random() * satRange) + minSat}%`;
+        
+        const light = hasFixedLightness ? 
+          config.lightness : 
+          `${Math.floor(Math.random() * lightRange) + minLight}%`;
+        
+        // Create the color string
+        const newColor = `hsl(${hue}, ${sat}, ${light})`;
+        
+        // Check if this color already exists
+        if (!existingColorValues.has(newColor)) {
+          color = newColor;
+          break;
+        }
+        
+        attempts++;
+      }
+      
+      // If we couldn't find a unique color after max attempts, just use the last generated one
+      if (!color) {
+        const hue = Math.floor(Math.random() * maxSteps) * hueStep;
+        const sat = hasFixedSaturation ? 
+          config.saturation : 
+          `${Math.floor(Math.random() * satRange) + minSat}%`;
+        const light = hasFixedLightness ? 
+          config.lightness : 
+          `${Math.floor(Math.random() * lightRange) + minLight}%`;
+        color = `hsl(${hue}, ${sat}, ${light})`;
+      }
+      
+      // Save the new color
+      colorMap[key] = color;
+      existingColorValues.add(color);
+      
+      // Batch update to sessionStorage with throttling
+      this.saveColors();
+      
       return color;
+    },
+    
+    // Use a debounced save to reduce writes to sessionStorage
+    saveTimeout: null,
+    saveColors() {
+      if (this.saveTimeout) clearTimeout(this.saveTimeout);
+      
+      this.saveTimeout = setTimeout(() => {
+        try {
+          sessionStorage.setItem(storageKey, JSON.stringify(colorMap));
+        } catch (e) {
+          // Handle potential storage errors silently
+        }
+      }, 500); // Throttle saves to every 500ms
     }
   };
 }
 
 export const usernameColors = colorGenerator({
+  storageKey: 'usernameColors',
   maxHue: 210,
   hueStep: 30,
-  saturation: '80%',
-  lightness: '50%'
+
+  minSaturation: 40,
+  maxSaturation: 80,
+
+  minLightness: 40,
+  maxLightness: 80
 });
 
 export const mentionColors = colorGenerator({
+  storageKey: 'mentionColors',
   maxHue: 210,
   hueStep: 30,
   saturation: '80%',
