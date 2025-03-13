@@ -1,10 +1,14 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Color+Emoji&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Iansui&family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
 /* Variables */
 :root {
   --border-radius: 0.2em;
   --min-chat-width: 320px;
   --min-chat-height: 200px;
   --user-list-width: fit-content;
-  --emoji-font: "Noto Color Emoji", sans-serif;
+  --emoji-font: "Noto Color Emoji";
 }
 
 /* Main chat container */
@@ -287,7 +291,9 @@
 #app-chat-container .length-field-popup {
   position: absolute !important;
   display: flex !important;
-  font: bold 12px Montserrat !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  font-family: "Montserrat", Iansui, sans-serif !important;
   bottom: 60px !important;
   transition: left 100ms ease-out !important;
   height: 20px !important;
@@ -418,7 +424,7 @@
 }
 
 #app-chat-container .message-text .emoji-adjuster {
-  font-family: var(--emoji-font) !important;
+  font-family: var(--emoji-font), sans-serif !important;
   font-size: 1.5em !important;
   margin: 0 0.1em !important;
   display: inline-flex !important;
@@ -426,8 +432,8 @@
 
 #app-chat-container .message-text .mention {
   display: inline-flex !important;
-  font-family: Roboto Mono !important;
-  font-weight: bold !important;
+  font-family: Montserrat !important;
+  font-weight: 500 !important;
 }
 
 #app-chat-container .message.system {

@@ -525,7 +525,7 @@ export function showChatAlert(message, options = {}) {
     padding: 5px 10px;
     border-radius: 3px;
     z-index: 1000;
-    font-family: Roboto, Montserrat;
+    font-family: "Montserrat", sans-serif;
     font-size: 10px;
     font-weight: normal;
     box-shadow: 0 2px 5px rgba(0,0,0,0.2);
@@ -916,20 +916,15 @@ function updatePopupMetrics(text) {
   lengthPopup.style.left = `${Math.min(newLeft, maxLeft)}px`;
 }
 
-// Once during initialization:
-const isAndroid = /Android/i.test(navigator.userAgent);
-const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
-
-// Use these heavy arrows for Android/iOS; otherwise, use your preferred arrows.
-const arrowRight = (isAndroid || isiOS) ? "➡️" : "🡆";
-const arrowLeft = (isAndroid || isiOS) ? "⬅️️" : "🡄";
+const arrowRightBold = "➡"; // Heavy right arrow
+const arrowLeftBold = "⬅"; // Heavy left arrow
 
 function updateLengthPopup(length) {
   let displayText =
-    length > previousLength ? `${length} ${arrowRight}` :
-    length < previousLength ? `${arrowLeft} ${length}` :
+    length > previousLength ? `${length} ${arrowRightBold}` :
+    length < previousLength ? `${arrowLeftBold} ${length}` :
     `${length}`;
-  
+    
   lengthPopup.textContent = displayText;
   updateLengthPopupColor(length);
   previousLength = length;
