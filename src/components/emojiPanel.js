@@ -19,6 +19,7 @@ const setupGlobalEmojiShortcut = (() => {
                   input.value += emoji;
                   // Optionally, dispatch an input event if your application needs it
                   input.dispatchEvent(new Event('input', { bubbles: true }));
+                  input.focus(); // Add this line to restore focus
                 }
               }
             }).show();
