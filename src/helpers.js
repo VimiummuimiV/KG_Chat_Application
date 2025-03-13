@@ -518,6 +518,7 @@ export function showChatAlert(message, options = {}) {
 
   alertElement.style.cssText = `
     position: absolute;
+    white-space: nowrap;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
