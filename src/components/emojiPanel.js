@@ -11,8 +11,17 @@ const setupGlobalEmojiShortcut = (() => {
         if (e.ctrlKey && e.code === 'Semicolon') {
           e.preventDefault();
           if (!document.querySelector('.emoji-panel')) {
-            // Initialize or show the emoji panel
-            new EmojiPanel().show();
+            // Initialize or show the emoji panel with a callback to insert emoji
+            new EmojiPanel({
+              onEmojiSelect: (emoji) => {
+                const input = document.getElementById('message-input');
+                if (input) {
+                  input.value += emoji;
+                  // Optionally, dispatch an input event if your application needs it
+                  input.dispatchEvent(new Event('input', { bubbles: true }));
+                }
+              }
+            }).show();
           }
         }
       });
@@ -23,6 +32,7 @@ const setupGlobalEmojiShortcut = (() => {
 
 // Call this function immediately to set up the shortcut
 setupGlobalEmojiShortcut();
+
 
 export class EmojiPanel {
   static instance = null;
@@ -193,6 +203,7 @@ export class EmojiPanel {
 
   /** Load initial batch of emojis for all categories */
   loadAllEmojis() {
+    if (!this.emojiContainer) return; // Exit early if container is missing
     this.emojiContainer.innerHTML = '';
     this.loadedIndices = {};
     this.categorySections = {};
@@ -249,6 +260,7 @@ export class EmojiPanel {
 
   /** Search for emojis based on a search term */
   searchEmojis(searchTerm) {
+    if (!this.emojiContainer) return; // Exit early if container is missing
     this.emojiContainer.innerHTML = '';
     const section = document.createElement('div');
     section.className = 'emoji-category-section';
@@ -348,8 +360,13 @@ export class EmojiPanel {
     this.searchInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
+
+        // Ensure both elements exist before proceeding
+        if (!this.searchInput || !this.emojiContainer) return;
+
         if (this.emojiContainer.classList.contains('search-active')) {
-          const firstEmojiBtn = this.emojiContainer.querySelector('.emoji-btn');
+          const firstEmojiBtn = this.emojiContainer?.querySelector('.emoji-btn');
+
           if (firstEmojiBtn) {
             const clickEvent = new MouseEvent('click', {
               bubbles: true,
@@ -357,12 +374,21 @@ export class EmojiPanel {
               ctrlKey: e.ctrlKey
             });
             firstEmojiBtn.dispatchEvent(clickEvent);
-            this.searchInput.value = '';
-            this.loadAllEmojis();
-            this.emojiContainer.classList.remove('search-active');
+
+            // Ensure emojiContainer still exists before modifying it
+            if (this.emojiContainer) {
+              this.emojiContainer.classList.remove('search-active');
+              this.loadAllEmojis(); // Only if emojiContainer is still valid
+            }
+
+            // Ensure the search input exists before modifying it
+            if (this.searchInput) {
+              this.searchInput.value = '';
+            }
+
             if (!e.ctrlKey) {
               this.destroy();
-            } else {
+            } else if (this.searchInput) {
               this.searchInput.focus();
             }
           }
@@ -376,8 +402,17 @@ export class EmojiPanel {
       if (btn) {
         const category = btn.dataset.category;
         const section = document.getElementById(`emoji-section-${category}`);
-        if (section) {
-          section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (section && this.emojiContainer) {
+          // Add smooth scrolling behavior
+          this.emojiContainer.style.scrollBehavior = 'smooth';
+
+          // Instead of using scrollIntoView, manually set the scrollTop
+          // of the emoji container to the offsetTop of the section
+          this.emojiContainer.scrollTop = section.offsetTop - this.emojiContainer.offsetTop;
+
+          // Prevent default behavior to avoid any parent scrolling
+          e.preventDefault();
+          e.stopPropagation();
         }
       }
     });
