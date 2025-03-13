@@ -527,8 +527,7 @@ export function showChatAlert(message, options = {}) {
     z-index: 1000;
     font-family: "Montserrat", sans-serif;
     font-size: 10px;
-    font-weight: normal;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    font-weight: 500;
     opacity: 0;
   `;
 
