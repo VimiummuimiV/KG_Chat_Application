@@ -20,34 +20,38 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
+      const userDataBlock = `
+    <x xmlns='klavogonki:userdata'>
+      <user>
+        <login>${username.replace(/^\d+#/, '')}</login>
+        <avatar>/storage/avatars/${username.split('#')[0]}.png</avatar>
+        <background>#123456</background>
+      </user>
+    </x>`;
+
       if (isPrivate && fullJid) {
         return `
-          <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-            <message from='${username}@jabber.klavogonki.ru/web'
-                     to='${fullJid}'
-                     type='chat'
-                     id='${messageId}'
-                     xmlns='jabber:client'>
-              <body>${text}</body>
-              <x xmlns='klavogonki:userdata'>
-                <user>
-                  <login>${username.replace(/^\d+#/, '')}</login>
-                  <avatar>/storage/avatars/${username.split('#')[0]}.png</avatar>
-                  <background>#7788cc</background>
-                </user>
-              </x>
-            </message>
-          </body>`;
+      <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+        <message from='${username}@jabber.klavogonki.ru/web'
+                 to='${fullJid}'
+                 type='chat'
+                 id='${messageId}'
+                 xmlns='jabber:client'>
+          <body>${text}</body>
+          ${userDataBlock}
+        </message>
+      </body>`;
       } else {
         return `
-          <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-            <message to='general@conference.jabber.klavogonki.ru'
-                     type='groupchat'
-                     id='${messageId}'
-                     xmlns='jabber:client'>
-              <body>${text}</body>
-            </message>
-          </body>`;
+      <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+        <message to='general@conference.jabber.klavogonki.ru'
+                 type='groupchat'
+                 id='${messageId}'
+                 xmlns='jabber:client'>
+          <body>${text}</body>
+          ${userDataBlock}
+        </message>
+      </body>`;
       }
     },
 
