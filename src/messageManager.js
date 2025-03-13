@@ -15,7 +15,7 @@ export default class MessageManager {
     this.messageIdCounter = 0;
     this.currentUsername = currentUsername;
     this.sentMessageTexts = new Set(); // Track recently sent messages
-    this.processedMessageIds = new Set(); // Track message IDs to prevent duplicates
+    this.processedMessageIds = new Set(); // Now used exclusively for deduplication
     this.chatHistory = new Map(); // Local in-memory map for chat history
   }
 
@@ -27,11 +27,7 @@ export default class MessageManager {
     const messageElements = doc.getElementsByTagName("message");
     let newMessagesAdded = false;
 
-    // Initialize the composite key set if needed
-    this.processedMessageKeys = this.processedMessageKeys || new Set();
-
     Array.from(messageElements).forEach(msg => {
-      let messageId = msg.getAttribute("id");
       const bodyNode = msg.getElementsByTagName("body")[0];
       if (!bodyNode || !bodyNode.textContent) return;
 
@@ -42,16 +38,18 @@ export default class MessageManager {
       const from = fromAttr ? fromAttr.split('#')[1]?.split('@')[0] || "unknown" : "unknown";
       const cleanFrom = parseUsername(from);
 
+      // Generate a unique id based solely on username and message text.
+      const uniqueId = `[${cleanFrom}] ${text}`;
+
+      // Skip this message if it has already been processed.
+      if (this.processedMessageIds.has(uniqueId)) return;
+
+      // Get timestamp from <delay> if available, otherwise use current time.
       let timestamp = new Date().toISOString();
       const delayNodes = msg.getElementsByTagName("delay");
       if (delayNodes.length && delayNodes[0].getAttribute("stamp")) {
         timestamp = delayNodes[0].getAttribute("stamp");
       }
-
-      // Composite key for duplicate resolution.
-      const compositeKey = `${cleanFrom}|${timestamp}|${text}`;
-      messageId = messageId || compositeKey;
-      if (this.processedMessageIds.has(messageId) || this.processedMessageKeys.has(compositeKey)) return;
 
       const toAttr = msg.getAttribute("to");
       const type = msg.getAttribute("type");
@@ -63,19 +61,18 @@ export default class MessageManager {
       }
 
       const messageObj = {
-        id: messageId,
+        id: uniqueId,
         from: cleanFrom,
         text,
         timestamp,
         isPrivate,
         recipient,
-        pending: false  // Received messages are not pending.
+        pending: false
       };
 
       this.messages.push(messageObj);
-      this.chatHistory.set(messageId, messageObj);
-      this.processedMessageIds.add(messageId);
-      this.processedMessageKeys.add(compositeKey);
+      this.chatHistory.set(uniqueId, messageObj);
+      this.processedMessageIds.add(uniqueId);
       newMessagesAdded = true;
     });
 
@@ -87,9 +84,12 @@ export default class MessageManager {
   // Method to add a sent message.
   addSentMessage(text, options = {}) {
     this.sentMessageTexts.add(text);
-    const messageId = `msg_${Date.now()}`;
+
+    // Generate a unique ID using the same format as processMessages
+    const uniqueId = `[${this.currentUsername}] ${text}`;
+
     const messageObj = {
-      id: messageId,
+      id: uniqueId,
       from: this.currentUsername,
       text,
       timestamp: new Date().toISOString(),
@@ -97,9 +97,13 @@ export default class MessageManager {
       recipient: options.recipient || null,
       pending: options.pending || false
     };
+
+    // Skip if this exact message has already been processed
+    if (this.processedMessageIds.has(uniqueId)) return;
+
     this.messages.push(messageObj);
-    this.chatHistory.set(messageId, messageObj);
-    this.processedMessageIds.add(messageId);
+    this.chatHistory.set(uniqueId, messageObj);
+    this.processedMessageIds.add(uniqueId);
     this.updatePanel();
 
     // Limit the size of the sent messages set.
@@ -109,6 +113,8 @@ export default class MessageManager {
         this.sentMessageTexts.delete(entries[i]);
       }
     }
+
+    return uniqueId; // Return the ID so it can be used for updating pending status
   }
 
   // New: Update pending status of a message by ID.
@@ -205,7 +211,7 @@ export default class MessageManager {
     // Attach the listener only once using a custom flag.
     if (!this.panel._delegatedClickAttached) {
       this.panel.addEventListener("click", (event) => {
-        // --- Username click handling ---
+        // --- Username click handling --- 
         const usernameEl = event.target.closest('.username');
         if (usernameEl && this.panel.contains(usernameEl)) {
           const usernameText = usernameEl.textContent.trim();
@@ -233,7 +239,7 @@ export default class MessageManager {
           messageInput.focus();
         }
 
-        // --- Time element click handling ---
+        // --- Time element click handling --- 
         const timeEl = event.target.closest('.time');
         if (timeEl && this.panel.contains(timeEl)) {
           // Extract the local time text (assumed format "HH:MM:SS")
@@ -245,7 +251,7 @@ export default class MessageManager {
           // Build the URL to the chat logs with the calibrated time as the hash.
           const url = `https://klavogonki.ru/chatlogs/${today}.html#${moscowTime}`;
 
-          // Open in a new tab
+          // Open in a new tab.
           window.open(url, '_blank');
         }
       });
