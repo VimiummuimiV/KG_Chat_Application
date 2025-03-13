@@ -921,8 +921,8 @@ const isAndroid = /Android/i.test(navigator.userAgent);
 const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
 
 // Use these heavy arrows for Android/iOS; otherwise, use your preferred arrows.
-const arrowRight = (isAndroid || isiOS) ? "➡" : "🡆";
-const arrowLeft = (isAndroid || isiOS) ? "⬅" : "🡄";
+const arrowRight = (isAndroid || isiOS) ? "➡️" : "🡆";
+const arrowLeft = (isAndroid || isiOS) ? "⬅️️" : "🡄";
 
 function updateLengthPopup(length) {
   let displayText =
