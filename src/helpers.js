@@ -916,11 +916,24 @@ function updatePopupMetrics(text) {
   lengthPopup.style.left = `${Math.min(newLeft, maxLeft)}px`;
 }
 
+const isAndroid = /Android/i.test(navigator.userAgent);
+const isiOS = /iPhone|iPad|iPod/i.test(navigator.userAgent);
+
+// Define fallback arrows that are more widely supported
+const fallbackRight = "→";
+const fallbackLeft = "←";
+
+// Use preferred arrows if the platform supports them, otherwise fallback
 function updateLengthPopup(length) {
+  // Choose the arrow based on device detection.
+  const arrowRight = (isAndroid || isiOS) ? fallbackRight : "🡆";
+  const arrowLeft = (isAndroid || isiOS) ? fallbackLeft : "🡄";
+  
   let displayText =
-    length > previousLength ? `${length} 🡆` :
-      length < previousLength ? `🡄 ${length}` :
-        `${length}`;
+    length > previousLength ? `${length} ${arrowRight}` :
+    length < previousLength ? `${arrowLeft} ${length}` :
+    `${length}`;
+  
   lengthPopup.textContent = displayText;
   updateLengthPopupColor(length);
   previousLength = length;
