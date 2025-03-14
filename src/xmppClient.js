@@ -88,24 +88,26 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           try {
             const session = await xmppConnection.connect();
             console.log('💬 Step 8: Joining chat room...');
-            const joinPayload = `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}'
-                     xmlns='http://jabber.org/protocol/httpbind'>
-                <presence id='pres_1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru/${username}'>
-                  <x xmlns='http://jabber.org/protocol/muc'/>
-                </presence>
-              </body>`;
+            const joinPayload = `
+            <body rid='${xmppConnection.nextRid()}' sid='${session.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+              <presence id='initialChatLoad' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru/${username}'>
+                <x xmlns='http://jabber.org/protocol/muc'/>
+              </presence>
+            </body>
+            `;
             const joinResponse = await xmppConnection.sendRequestWithRetry(joinPayload);
             console.log('📥 Join response:', joinResponse);
 
             safeUpdatePresence(joinResponse);
             safeProcessMessages(joinResponse);
 
-            const infoPayload = `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}'
-                     xmlns='http://jabber.org/protocol/httpbind'>
-                <iq type='get' id='info1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru'>
-                  <query xmlns='http://jabber.org/protocol/disco#info'/>
-                </iq>
-              </body>`;
+            const infoPayload = `
+            <body rid='${xmppConnection.nextRid()}' sid='${session.sid}' xmlns='http://jabber.org/protocol/httpbind'>
+              <iq type='get' id='info1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru'>
+                <query xmlns='http://jabber.org/protocol/disco#info'/>
+              </iq>
+            </body>
+            `;
             await xmppConnection.sendRequestWithRetry(infoPayload);
             console.log('🚀 Step 10: Connected! Starting presence updates...');
 

@@ -96,7 +96,7 @@ export default class UserManager {
     const doc = parser.parseFromString(xmlResponse, "text/xml");
     const presences = doc.getElementsByTagName("presence");
 
-    if (xmlResponse.includes('<presence id="pres_1"')) {
+    if (xmlResponse.includes('<presence id="initialChatLoad"')) {
       console.log("🔄 Initial room join detected, requesting full roster");
       this.requestFullRoster();
       return;
