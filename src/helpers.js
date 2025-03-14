@@ -22,7 +22,7 @@ function colorGenerator(config) {
   // Use sessionStorage as required
   const storageKey = config.storageKey || 'usernameColors';
   let colorMap;
-  
+
   try {
     const stored = sessionStorage.getItem(storageKey);
     colorMap = stored ? JSON.parse(stored) : {};
@@ -30,7 +30,7 @@ function colorGenerator(config) {
     // Handle potential JSON parsing errors
     colorMap = {};
   }
-  
+
   // Pre-calculate constants
   const minHue = config.minHue || 0;
   const maxHue = config.maxHue || 210;
@@ -43,11 +43,11 @@ function colorGenerator(config) {
   const maxLight = config.maxLightness || 80;
   const satRange = maxSat - minSat;
   const lightRange = maxLight - minLight;
-  
+
   // Cache existing color values and used hues for quick comparison
   const existingColorValues = new Set(Object.values(colorMap));
   const usedHues = new Set();
-  
+
   // Extract used hues from existing colors
   Object.values(colorMap).forEach(colorStr => {
     try {
@@ -59,30 +59,30 @@ function colorGenerator(config) {
       // Ignore parsing errors
     }
   });
-  
+
   // Return the API object with optimized methods
   return {
     getColor(username) {
-      if (!username) return hasFixedSaturation && hasFixedLightness ? 
-        `hsl(0, ${config.saturation}, ${config.lightness})` : 
+      if (!username) return hasFixedSaturation && hasFixedLightness ?
+        `hsl(0, ${config.saturation}, ${config.lightness})` :
         `hsl(0, 50%, 50%)`;
-      
+
       // Normalize the username to ensure consistency
       const key = username.trim().toLowerCase();
-      
+
       // Return the color if it already exists
       if (colorMap[key]) {
         return colorMap[key];
       }
-      
+
       let color = null;
       let attempts = 0;
-      
+
       // Try to find a unique color (max 10 attempts to avoid performance hits)
       while (!color && attempts < 10) {
         // Generate a hue that hasn't been used yet
         let hue;
-        
+
         if (usedHues.size >= hueRange) {
           // If we've used all possible hues, just pick a random one
           hue = Math.floor(Math.random() * hueRange) + minHue;
@@ -92,56 +92,56 @@ function colorGenerator(config) {
             hue = Math.floor(Math.random() * hueRange) + minHue;
           } while (usedHues.has(hue) && usedHues.size < hueRange);
         }
-        
+
         // Generate saturation and lightness
-        const sat = hasFixedSaturation ? 
-          config.saturation : 
+        const sat = hasFixedSaturation ?
+          config.saturation :
           `${Math.floor(Math.random() * satRange) + minSat}%`;
-        
-        const light = hasFixedLightness ? 
-          config.lightness : 
+
+        const light = hasFixedLightness ?
+          config.lightness :
           `${Math.floor(Math.random() * lightRange) + minLight}%`;
-        
+
         // Create the color string
         const newColor = `hsl(${hue}, ${sat}, ${light})`;
-        
+
         // Check if this color already exists
         if (!existingColorValues.has(newColor)) {
           color = newColor;
           usedHues.add(hue);
           break;
         }
-        
+
         attempts++;
       }
-      
+
       // If we couldn't find a unique color after max attempts, use a random one
       if (!color) {
         const hue = Math.floor(Math.random() * hueRange) + minHue;
-        const sat = hasFixedSaturation ? 
-          config.saturation : 
+        const sat = hasFixedSaturation ?
+          config.saturation :
           `${Math.floor(Math.random() * satRange) + minSat}%`;
-        const light = hasFixedLightness ? 
-          config.lightness : 
+        const light = hasFixedLightness ?
+          config.lightness :
           `${Math.floor(Math.random() * lightRange) + minLight}%`;
         color = `hsl(${hue}, ${sat}, ${light})`;
       }
-      
+
       // Save the new color
       colorMap[key] = color;
       existingColorValues.add(color);
-      
+
       // Batch update to sessionStorage with throttling
       this.saveColors();
-      
+
       return color;
     },
-    
+
     // Use a debounced save to reduce writes to sessionStorage
     saveTimeout: null,
     saveColors() {
       if (this.saveTimeout) clearTimeout(this.saveTimeout);
-      
+
       this.saveTimeout = setTimeout(() => {
         try {
           sessionStorage.setItem(storageKey, JSON.stringify(colorMap));
@@ -412,16 +412,35 @@ export function saveChatState(state) {
 
 export const parseMessageText = text => {
   let i = 0, urls = [];
+
+  // Extract URLs and replace them with placeholders
   text = text.replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, m => {
     urls.push(m);
     return `___URL${i++}___`;
   });
+
+  // Replace smilies and adjust emoji presentation
   text = text
     .replace(/:(\w+):/g, (_, e) => `<img src="https://klavogonki.ru/img/smilies/${e}.gif" alt="${e}" />`)
     .replace(/(\p{Emoji_Presentation}|\p{Emoji}\uFE0F)/gu, '<span class="emoji-adjuster">$&</span>');
+
+  // Replace placeholders with anchor tags.
+  // Use decodeURL on the URL if it is encoded.
   urls.forEach((url, idx) => {
-    text = text.replace(`___URL${idx}___`, `<a href="${url}" target="_blank">${url}</a>`);
+    if (isEncodedURL(url)) {
+      const decodedURL = decodeURL(url);
+      text = text.replace(
+        `___URL${idx}___`,
+        `<a class="decoded" href="${url}" target="_blank">${decodedURL}</a>`
+      );
+    } else {
+      text = text.replace(
+        `___URL${idx}___`,
+        `<a href="${url}" target="_blank">${url}</a>`
+      );
+    }
   });
+
   return text;
 }
 
@@ -1028,9 +1047,9 @@ const arrowLeftBold = "⬅"; // Heavy left arrow
 function updateLengthPopup(length) {
   let displayText =
     length > previousLength ? `${length} ${arrowRightBold}` :
-    length < previousLength ? `${arrowLeftBold} ${length}` :
-    `${length}`;
-    
+      length < previousLength ? `${arrowLeftBold} ${length}` :
+        `${length}`;
+
   lengthPopup.textContent = displayText;
   updateLengthPopupColor(length);
   previousLength = length;
