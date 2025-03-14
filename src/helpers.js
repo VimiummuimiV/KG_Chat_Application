@@ -32,20 +32,33 @@ function colorGenerator(config) {
   }
   
   // Pre-calculate constants
-  const hueStep = config.hueStep || 30;
-  const maxHue = config.maxHue || 360;
+  const minHue = config.minHue || 0;
+  const maxHue = config.maxHue || 210;
+  const hueRange = maxHue - minHue;
   const hasFixedSaturation = Boolean(config.saturation);
   const hasFixedLightness = Boolean(config.lightness);
-  const minSat = config.minSaturation || 20;
+  const minSat = config.minSaturation || 40;
   const maxSat = config.maxSaturation || 80;
   const minLight = config.minLightness || 40;
   const maxLight = config.maxLightness || 80;
   const satRange = maxSat - minSat;
   const lightRange = maxLight - minLight;
-  const maxSteps = Math.floor(maxHue / hueStep);
   
-  // Cache existing color values for quick comparison
+  // Cache existing color values and used hues for quick comparison
   const existingColorValues = new Set(Object.values(colorMap));
+  const usedHues = new Set();
+  
+  // Extract used hues from existing colors
+  Object.values(colorMap).forEach(colorStr => {
+    try {
+      const hueMatch = colorStr.match(/hsl\((\d+)/);
+      if (hueMatch && hueMatch[1]) {
+        usedHues.add(parseInt(hueMatch[1], 10));
+      }
+    } catch (e) {
+      // Ignore parsing errors
+    }
+  });
   
   // Return the API object with optimized methods
   return {
@@ -62,24 +75,23 @@ function colorGenerator(config) {
         return colorMap[key];
       }
       
-      // Cache for generating unique colors
-      const usedHues = new Set();
       let color = null;
       let attempts = 0;
       
       // Try to find a unique color (max 10 attempts to avoid performance hits)
       while (!color && attempts < 10) {
-        // Generate a random hue index that hasn't been used
-        let hueIndex;
-        do {
-          hueIndex = Math.floor(Math.random() * maxSteps);
-        } while (usedHues.has(hueIndex) && usedHues.size < maxSteps);
+        // Generate a hue that hasn't been used yet
+        let hue;
         
-        // Mark this hue as tried
-        usedHues.add(hueIndex);
-        
-        // Calculate the actual hue value
-        const hue = hueIndex * hueStep;
+        if (usedHues.size >= hueRange) {
+          // If we've used all possible hues, just pick a random one
+          hue = Math.floor(Math.random() * hueRange) + minHue;
+        } else {
+          // Try to find an unused hue
+          do {
+            hue = Math.floor(Math.random() * hueRange) + minHue;
+          } while (usedHues.has(hue) && usedHues.size < hueRange);
+        }
         
         // Generate saturation and lightness
         const sat = hasFixedSaturation ? 
@@ -96,15 +108,16 @@ function colorGenerator(config) {
         // Check if this color already exists
         if (!existingColorValues.has(newColor)) {
           color = newColor;
+          usedHues.add(hue);
           break;
         }
         
         attempts++;
       }
       
-      // If we couldn't find a unique color after max attempts, just use the last generated one
+      // If we couldn't find a unique color after max attempts, use a random one
       if (!color) {
-        const hue = Math.floor(Math.random() * maxSteps) * hueStep;
+        const hue = Math.floor(Math.random() * hueRange) + minHue;
         const sat = hasFixedSaturation ? 
           config.saturation : 
           `${Math.floor(Math.random() * satRange) + minSat}%`;
@@ -142,20 +155,18 @@ function colorGenerator(config) {
 
 export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
+  minHue: 0,
   maxHue: 210,
-  hueStep: 30,
-
   minSaturation: 40,
   maxSaturation: 80,
-
   minLightness: 40,
   maxLightness: 80
 });
 
 export const mentionColors = colorGenerator({
   storageKey: 'mentionColors',
+  minHue: 0,
   maxHue: 210,
-  hueStep: 30,
   saturation: '80%',
   lightness: '50%'
 });
