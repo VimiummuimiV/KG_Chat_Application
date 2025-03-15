@@ -69,6 +69,7 @@ export function createChatUI() {
           transform: none !important;
           height: 60vh !important;
           bottom: 0 !important;
+          top: unset !important;
           left: unset !important;
           right: unset !important;
         }
