@@ -49,30 +49,20 @@ export function createChatUI() {
       ('ontouchstart' in window);
 
     if (isMobile) {
-      // Make input container floating for mobile at the bottom
+      // Make input container floating for mobile at the top
       inputContainer.style.position = 'absolute';
-      inputContainer.style.bottom = '0';
+      inputContainer.style.top = '0';
       inputContainer.style.left = '0';
       inputContainer.style.right = '0';
+      inputContainer.style.borderBottom = '1px solid #333';
       inputContainer.style.zIndex = '100'; // Ensure it's above content
 
-      // Use margin bottom instead of padding bottom
-      messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
-    } else {
-      // Reset styles for desktop
-      inputContainer.style.position = '';
-      inputContainer.style.bottom = '';
-      inputContainer.style.left = '';
-      inputContainer.style.right = '';
-      inputContainer.style.zIndex = '';
-      messagesPanel.style.marginBottom = '';
+      // Add margin top to messages panel
+      messagesPanel.style.marginTop = `${inputContainer.offsetHeight}px`;
     }
   }
 
-  // Call initially and on resize
-  window.addEventListener('resize', handleMobileLayout);
-
-  // Run after the container is in the DOM to get accurate offsetHeight
+  // Call once
   requestAnimationFrame(() => {
     handleMobileLayout();
   });
