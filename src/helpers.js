@@ -1269,7 +1269,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
   
   // Store original position values to restore later
   let originalStyles = {
-    position: inputContainer.style.position || 'relative',
+    position: inputContainer.style.position,
     bottom: inputContainer.style.bottom,
     left: inputContainer.style.left,
     right: inputContainer.style.right,

@@ -265,7 +265,6 @@
 
 /* Input container at bottom */
 #app-chat-container .input-container {
-  position: relative !important;
   display: flex !important;
   align-items: center !important;
   padding: 1em !important;
