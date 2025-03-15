@@ -1,5 +1,5 @@
 import { BASE_URL } from "./definitions";
-import { usernameColors, getRandomEmojiAvatar, extractCleanUsername, extractUserId, handlePrivateMessageInput } from "./helpers";
+import { usernameColors, getRandomEmojiAvatar, extractUsername, extractUserId, handlePrivateMessageInput } from "./helpers";
 import { addShakeEffect } from "./animations";
 
 export default class UserManager {
@@ -130,7 +130,7 @@ export default class UserManager {
         if (this.activeUsers.has(from)) {
           const departingUser = this.activeUsers.get(from);
           const userId = extractUserId(from);
-          const cleanLogin = extractCleanUsername(departingUser.login);
+          const cleanLogin = extractUsername(departingUser.login);
 
           if (!this.isFirstLoad) {
             // console.log(`🚪 User left: ${cleanLogin} ID: (${userId})`);
@@ -151,7 +151,7 @@ export default class UserManager {
         login: usernameFromJid,
         color: '#777',
         // Normalize the username before calling getColor:
-        usernameColor: usernameColors.getColor(extractCleanUsername(usernameFromJid)),
+        usernameColor: usernameColors.getColor(extractUsername(usernameFromJid)),
         role: 'participant',
         gameId: null,
         avatar: null
@@ -171,7 +171,7 @@ export default class UserManager {
             if (loginElement && loginElement.textContent) {
               userData.login = loginElement.textContent;
               // Again, normalize the username for color generation:
-              userData.usernameColor = usernameColors.getColor(extractCleanUsername(userData.login));
+              userData.usernameColor = usernameColors.getColor(extractUsername(userData.login));
             }
 
             const avatarElement = userNode.getElementsByTagName("avatar")[0];
@@ -215,7 +215,7 @@ export default class UserManager {
         }
       }
 
-      const cleanLogin = extractCleanUsername(userData.login);
+      const cleanLogin = extractUsername(userData.login);
 
       // Determine if user is new or updated
       if (!this.activeUsers.has(from)) {
@@ -248,7 +248,7 @@ export default class UserManager {
     const sortedUsers = Array.from(this.activeUsers.values()).sort((a, b) => {
       const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
       return priorityDiff !== 0 ? priorityDiff :
-        extractCleanUsername(a.login).localeCompare(extractCleanUsername(b.login));
+        extractUsername(a.login).localeCompare(extractUsername(b.login));
     });
 
     // Build the updated list
@@ -256,7 +256,7 @@ export default class UserManager {
     sortedUsers.forEach(user => {
       let userElement = existingElements.get(user.jid);
       const userId = extractUserId(user.jid);
-      const cleanLogin = extractCleanUsername(user.login);
+      const cleanLogin = extractUsername(user.login);
 
       // If element doesn't exist, create it
       if (!userElement) {

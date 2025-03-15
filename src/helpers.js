@@ -19,15 +19,68 @@ export const getAuthData = () => {
 };
 
 function colorGenerator(config) {
+  // Helper: Convert HSL (with h in [0,360] and s,l in percentage numbers) to hex
+  function hslToHex(h, s, l) {
+    s /= 100;
+    l /= 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s;
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const m = l - c / 2;
+    let r, g, b;
+    if (h < 60) {
+      r = c; g = x; b = 0;
+    } else if (h < 120) {
+      r = x; g = c; b = 0;
+    } else if (h < 180) {
+      r = 0; g = c; b = x;
+    } else if (h < 240) {
+      r = 0; g = x; b = c;
+    } else if (h < 300) {
+      r = x; g = 0; b = c;
+    } else {
+      r = c; g = 0; b = x;
+    }
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+    return '#' + ((1 << 24) + (r << 16) + (g << 8) + b)
+      .toString(16).slice(1);
+  }
+
+  // Helper: Convert a hex color (e.g. "#ff00c6") to its hue value.
+  function hexToHue(hex) {
+    hex = hex.replace(/^#/, '');
+    if (hex.length === 3) {
+      hex = hex.split('').map(c => c + c).join('');
+    }
+    const r = parseInt(hex.substring(0, 2), 16) / 255;
+    const g = parseInt(hex.substring(2, 4), 16) / 255;
+    const b = parseInt(hex.substring(4, 6), 16) / 255;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    let h;
+    if (max === min) {
+      h = 0;
+    } else {
+      const d = max - min;
+      if (max === r) {
+        h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
+      } else if (max === g) {
+        h = ((b - r) / d + 2) * 60;
+      } else {
+        h = ((r - g) / d + 4) * 60;
+      }
+    }
+    return Math.round(h);
+  }
+
   // Use sessionStorage as required
   const storageKey = config.storageKey || 'usernameColors';
   let colorMap;
-
   try {
     const stored = sessionStorage.getItem(storageKey);
     colorMap = stored ? JSON.parse(stored) : {};
   } catch (e) {
-    // Handle potential JSON parsing errors
     colorMap = {};
   }
 
@@ -48,24 +101,23 @@ function colorGenerator(config) {
   const existingColorValues = new Set(Object.values(colorMap));
   const usedHues = new Set();
 
-  // Extract used hues from existing colors
+  // Extract used hues from stored hex values by converting back to hue
   Object.values(colorMap).forEach(colorStr => {
     try {
-      const hueMatch = colorStr.match(/hsl\((\d+)/);
-      if (hueMatch && hueMatch[1]) {
-        usedHues.add(parseInt(hueMatch[1], 10));
-      }
+      usedHues.add(hexToHue(colorStr));
     } catch (e) {
       // Ignore parsing errors
     }
   });
 
-  // Return the API object with optimized methods
   return {
     getColor(username) {
-      if (!username) return hasFixedSaturation && hasFixedLightness ?
-        `hsl(0, ${config.saturation}, ${config.lightness})` :
-        `hsl(0, 50%, 50%)`;
+      // If username is falsy, return a default color (converted to hex)
+      if (!username) {
+        const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) : 50;
+        const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) : 50;
+        return hslToHex(0, satVal, lightVal);
+      }
 
       // Normalize the username to ensure consistency
       const key = username.trim().toLowerCase();
@@ -78,13 +130,11 @@ function colorGenerator(config) {
       let color = null;
       let attempts = 0;
 
-      // Try to find a unique color (max 10 attempts to avoid performance hits)
+      // Try to find a unique color (max 10 attempts)
       while (!color && attempts < 10) {
-        // Generate a hue that hasn't been used yet
         let hue;
-
         if (usedHues.size >= hueRange) {
-          // If we've used all possible hues, just pick a random one
+          // If all possible hues are used, pick a random one
           hue = Math.floor(Math.random() * hueRange) + minHue;
         } else {
           // Try to find an unused hue
@@ -93,38 +143,31 @@ function colorGenerator(config) {
           } while (usedHues.has(hue) && usedHues.size < hueRange);
         }
 
-        // Generate saturation and lightness
-        const sat = hasFixedSaturation ?
-          config.saturation :
-          `${Math.floor(Math.random() * satRange) + minSat}%`;
+        // Generate saturation and lightness as numbers
+        const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) :
+          Math.floor(Math.random() * satRange) + minSat;
+        const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) :
+          Math.floor(Math.random() * lightRange) + minLight;
 
-        const light = hasFixedLightness ?
-          config.lightness :
-          `${Math.floor(Math.random() * lightRange) + minLight}%`;
+        const newColor = hslToHex(hue, satVal, lightVal);
 
-        // Create the color string
-        const newColor = `hsl(${hue}, ${sat}, ${light})`;
-
-        // Check if this color already exists
+        // Check if this color is unique
         if (!existingColorValues.has(newColor)) {
           color = newColor;
           usedHues.add(hue);
           break;
         }
-
         attempts++;
       }
 
-      // If we couldn't find a unique color after max attempts, use a random one
+      // Fallback if unique color not found in allotted attempts
       if (!color) {
         const hue = Math.floor(Math.random() * hueRange) + minHue;
-        const sat = hasFixedSaturation ?
-          config.saturation :
-          `${Math.floor(Math.random() * satRange) + minSat}%`;
-        const light = hasFixedLightness ?
-          config.lightness :
-          `${Math.floor(Math.random() * lightRange) + minLight}%`;
-        color = `hsl(${hue}, ${sat}, ${light})`;
+        const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) :
+          Math.floor(Math.random() * satRange) + minSat;
+        const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) :
+          Math.floor(Math.random() * lightRange) + minLight;
+        color = hslToHex(hue, satVal, lightVal);
       }
 
       // Save the new color
@@ -141,14 +184,13 @@ function colorGenerator(config) {
     saveTimeout: null,
     saveColors() {
       if (this.saveTimeout) clearTimeout(this.saveTimeout);
-
       this.saveTimeout = setTimeout(() => {
         try {
           sessionStorage.setItem(storageKey, JSON.stringify(colorMap));
         } catch (e) {
           // Handle potential storage errors silently
         }
-      }, 500); // Throttle saves to every 500ms
+      }, 500);
     }
   };
 }
@@ -170,6 +212,7 @@ export const mentionColors = colorGenerator({
   saturation: '80%',
   lightness: '50%'
 });
+
 
 let lastEmojiAvatar = null;
 export function getRandomEmojiAvatar() {
@@ -463,8 +506,8 @@ export function extractUserId(jid) {
   return secondPart.split('#')[0]; // Get everything before the # character
 }
 
-// Extract clean username from the full JID or login string
-export function extractCleanUsername(login) {
+// Extract username from the full JID or login string
+export function extractUsername(login) {
   if (!login) return "Unknown";
 
   // If login contains #, get everything after it

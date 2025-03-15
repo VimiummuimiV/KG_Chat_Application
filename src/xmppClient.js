@@ -1,5 +1,5 @@
 import { reconnectionDelay, userListDelay } from "./definitions.js";
-import { generateRandomColor, privateMessageState, showChatAlert } from "./helpers.js";
+import { extractUsername, generateRandomColor, privateMessageState, showChatAlert } from "./helpers.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.
@@ -20,7 +20,14 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
-      const userDataBlock = `<x xmlns='klavogonki:userdata'><user><login>${username.replace(/^\d+#/, '')}</login><avatar>/storage/avatars/${username.split('#')[0]}.png</avatar><background>${generateRandomColor()}</background></user></x>`;
+      // Just for fun (and to test the feature), let's generate a random color for the background.
+      // const userDataBlock = `<x xmlns='klavogonki:userdata'><user><login>${username.replace(/^\d+#/, '')}</login><avatar>/storage/avatars/${username.split('#')[0]}.png</avatar><background>${generateRandomColor()}</background></user></x>`;
+
+      const usernameColors = JSON.parse(sessionStorage.getItem('usernameColors')) || {};
+      const cleanedUsername = extractUsername(username);
+      const usernameKey = cleanedUsername.toLowerCase(); // use lowercase for lookup
+      const backgroundColor = usernameColors[usernameKey] || '#ff00c6';
+      const userDataBlock = `<x xmlns='klavogonki:userdata'><user><login>${cleanedUsername}</login><avatar>/storage/avatars/${username.split('#')[0]}.png</avatar><background>${backgroundColor}</background></user></x>`;
 
       if (isPrivate && fullJid) {
         return `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'><message from='${username}@jabber.klavogonki.ru/web' to='${fullJid}' type='chat' id='${messageId}' xmlns='jabber:client'><body>${text}</body>${userDataBlock}</message></body>`;
