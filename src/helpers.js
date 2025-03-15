@@ -1263,9 +1263,9 @@ export function compactXML(xmlString) {
 export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
   // Use the detectMobileDevice function to determine device type
   const deviceInfo = detectMobileDevice();
-  
+
   if (!deviceInfo.isMobile) return false; // Only apply to mobile devices
-  
+
   // Store original position values to restore later
   let originalStyles = {
     position: inputContainer.style.position,
@@ -1274,7 +1274,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     right: inputContainer.style.right,
     zIndex: inputContainer.style.zIndex
   };
-  
+
   // Function to make input container float
   function floatInputContainer() {
     inputContainer.style.position = 'fixed';
@@ -1282,11 +1282,14 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
     inputContainer.style.zIndex = '1000';
-    
+
     // Adjust message panel to give space to the floating input
     messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
+
+    // Scroll the messages panel to the bottom
+    messagesPanel.scrollTop = messagesPanel.scrollHeight;
   }
-  
+
   // Function to restore input container to original position
   function restoreInputContainer() {
     Object.keys(originalStyles).forEach(key => {
@@ -1294,7 +1297,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     });
     messagesPanel.style.marginBottom = '0';
   }
-  
+
   // For iOS, we can use the visualViewport API
   if (deviceInfo.isIOS && window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
@@ -1307,12 +1310,12 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
       }
     });
   }
-  
+
   // For Android, we need to use a combination of focus/blur events and window resize
   if (deviceInfo.isAndroid) {
     // Find the input element within the inputContainer
     const messageInput = inputContainer.querySelector('input, textarea');
-    
+
     if (!messageInput) {
       // Fallback to window resize only if no input element is found
       window.addEventListener('resize', () => {
@@ -1325,10 +1328,10 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
       });
       return true;
     }
-    
+
     // Track initial window height
     const initialWindowHeight = window.innerHeight;
-    
+
     // On focus, check if keyboard appears (by detecting significant height change)
     messageInput.addEventListener('focus', () => {
       // Use setTimeout to give the keyboard time to appear
@@ -1338,12 +1341,12 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
         }
       }, 300);
     });
-    
+
     // On blur, restore the input container
     messageInput.addEventListener('blur', () => {
       setTimeout(restoreInputContainer, 100);
     });
-    
+
     // Also handle orientation changes
     window.addEventListener('resize', () => {
       if (document.activeElement === messageInput) {
@@ -1357,7 +1360,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
       }
     });
   }
-  
+
   return true;
 }
 
