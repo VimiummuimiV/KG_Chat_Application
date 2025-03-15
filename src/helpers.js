@@ -576,22 +576,53 @@ export function playMentionSound() {
 export function highlightMentionWords() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
-
+  
+  // Get mention keywords from localStorage
   const storedKeywords = localStorage.getItem('mentionKeywords');
-  if (!storedKeywords) return;
-
-  let mentionKeywords;
+  let mentionKeywords = [];
   try {
-    mentionKeywords = JSON.parse(storedKeywords);
-    if (!Array.isArray(mentionKeywords)) return;
+    if (storedKeywords) {
+      mentionKeywords = JSON.parse(storedKeywords);
+      if (!Array.isArray(mentionKeywords)) mentionKeywords = [];
+    }
   } catch (e) {
-    return;
+    console.error('Error parsing mention keywords:', e);
   }
-
+  
+  // Get username from auth data
+  const authData = localStorage.getItem('klavoauth');
+  let username = '';
+  try {
+    if (authData) {
+      const parsedAuth = JSON.parse(authData);
+      if (parsedAuth && parsedAuth.username) {
+        username = extractUsername(parsedAuth.username);
+      }
+    }
+  } catch (e) {
+    console.error('Error parsing auth data:', e);
+  }
+  
+  // Create a working copy of keywords to check (don't modify original mentionKeywords)
+  let highlightTerms = [...mentionKeywords];
+  
+  // If no mention keywords but we have a username, use the username
+  if (mentionKeywords.length === 0 && username) {
+    highlightTerms = [username];
+  }
+  
+  // Don't proceed if no keywords to check at all
+  if (highlightTerms.length === 0) return;
+  
   const globalProcessed = new WeakSet();
   const messages = container.querySelectorAll('.message-text');
-
+  
   messages.forEach((message) => {
+    // Skip already processed message elements
+    if (message.classList.contains('processed-mention')) {
+      return;
+    }
+    
     const walker = document.createTreeWalker(
       message,
       NodeFilter.SHOW_TEXT,
@@ -599,52 +630,58 @@ export function highlightMentionWords() {
         acceptNode: (node) => {
           if (globalProcessed.has(node)) return NodeFilter.FILTER_SKIP;
           const parent = node.parentElement;
-          if (parent.closest('.mention, .time, .username')) {
+          if (parent.closest('.mention, .time, .username, .processed-mention')) {
             return NodeFilter.FILTER_SKIP;
           }
           return NodeFilter.FILTER_ACCEPT;
         }
       }
     );
-
+    
     const nodes = [];
     let currentNode;
     while ((currentNode = walker.nextNode())) nodes.push(currentNode);
-
-    nodes.forEach((node) => {
-      if (!globalProcessed.has(node)) {
-        processNode(node, mentionKeywords);
-        globalProcessed.add(node);
-      }
-    });
+    
+    if (nodes.length > 0) {
+      nodes.forEach((node) => {
+        if (!globalProcessed.has(node)) {
+          processNode(node, highlightTerms);
+          globalProcessed.add(node);
+        }
+      });
+      
+      // Mark this message as processed
+      message.classList.add('processed-mention');
+    }
   });
-
+  
   function processNode(node, keywords) {
     const regex = /(@?[\wа-яА-ЯёЁ'-]+)|[\s]+|[^@\s\wа-яА-ЯёЁ'-]+/gu;
     const tokens = node.textContent.match(regex) || [];
-
     const fragment = document.createDocumentFragment();
-
+    
     tokens.forEach(token => {
       const isMatch = keywords.some(keyword =>
         keyword.localeCompare(token, undefined, { sensitivity: 'accent' }) === 0
       );
-
+      
       if (isMatch) {
         const mentionSpan = document.createElement('span');
-        mentionSpan.className = 'mention';
+        mentionSpan.className = 'mention processed-mention';
+        
         token.split('').forEach(char => {
           const charSpan = document.createElement('span');
           charSpan.style.color = mentionColors.getColor(char);
           charSpan.textContent = char;
           mentionSpan.appendChild(charSpan);
         });
+        
         fragment.appendChild(mentionSpan);
       } else {
         fragment.appendChild(document.createTextNode(token));
       }
     });
-
+    
     node.parentNode.replaceChild(fragment, node);
   }
 }
