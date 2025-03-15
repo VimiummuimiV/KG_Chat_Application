@@ -84,16 +84,22 @@ function colorGenerator(config) {
     colorMap = {};
   }
 
-  // Pre-calculate constants
-  const minHue = config.minHue || 0;
-  const maxHue = config.maxHue || 210;
-  const hueRange = maxHue - minHue;
+  // Configure hue ranges - support multiple ranges to enable skipping
+  const hueRanges = config.hueRanges || [
+    { min: 0, max: 210 },
+    { min: 280, max: 360 }
+  ];
+
+  // Calculate total available hue space
+  const totalHueSpace = hueRanges.reduce((sum, range) =>
+    sum + (range.max - range.min), 0);
+
   const hasFixedSaturation = Boolean(config.saturation);
   const hasFixedLightness = Boolean(config.lightness);
-  const minSat = config.minSaturation || 40;
-  const maxSat = config.maxSaturation || 80;
-  const minLight = config.minLightness || 40;
-  const maxLight = config.maxLightness || 80;
+  const minSat = config.minSaturation || 30;
+  const maxSat = config.maxSaturation || 90;
+  const minLight = config.minLightness || 50;
+  const maxLight = config.maxLightness || 60;
   const satRange = maxSat - minSat;
   const lightRange = maxLight - minLight;
 
@@ -109,6 +115,31 @@ function colorGenerator(config) {
       // Ignore parsing errors
     }
   });
+
+  // Helper to generate a random hue from the allowed ranges
+  function generateRandomHue() {
+    // Generate a random value within the total available hue space
+    let randomValue = Math.floor(Math.random() * totalHueSpace);
+
+    // Map this random value to the correct range
+    for (let range of hueRanges) {
+      const rangeSize = range.max - range.min;
+      if (randomValue < rangeSize) {
+        // This is our range, map the value
+        return range.min + randomValue;
+      }
+      // Move to the next range
+      randomValue -= rangeSize;
+    }
+
+    // Fallback (should never happen if ranges are configured correctly)
+    return hueRanges[0].min;
+  }
+
+  // Helper to check if a hue is within allowed ranges
+  function isHueInAllowedRanges(hue) {
+    return hueRanges.some(range => hue >= range.min && hue <= range.max);
+  }
 
   return {
     getColor(username) {
@@ -132,15 +163,16 @@ function colorGenerator(config) {
 
       // Try to find a unique color (max 10 attempts)
       while (!color && attempts < 10) {
+        // Generate a hue from the allowed ranges
         let hue;
-        if (usedHues.size >= hueRange) {
-          // If all possible hues are used, pick a random one
-          hue = Math.floor(Math.random() * hueRange) + minHue;
+        if (usedHues.size >= totalHueSpace) {
+          // If all possible hues are used, pick a random one from allowed ranges
+          hue = generateRandomHue();
         } else {
-          // Try to find an unused hue
+          // Try to find an unused hue within allowed ranges
           do {
-            hue = Math.floor(Math.random() * hueRange) + minHue;
-          } while (usedHues.has(hue) && usedHues.size < hueRange);
+            hue = generateRandomHue();
+          } while (usedHues.has(hue) && usedHues.size < totalHueSpace);
         }
 
         // Generate saturation and lightness as numbers
@@ -162,7 +194,7 @@ function colorGenerator(config) {
 
       // Fallback if unique color not found in allotted attempts
       if (!color) {
-        const hue = Math.floor(Math.random() * hueRange) + minHue;
+        const hue = generateRandomHue();
         const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) :
           Math.floor(Math.random() * satRange) + minSat;
         const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) :
@@ -197,22 +229,25 @@ function colorGenerator(config) {
 
 export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
-  minHue: 0,
-  maxHue: 210,
-  minSaturation: 40,
-  maxSaturation: 80,
-  minLightness: 40,
-  maxLightness: 80
+  hueRanges: [
+    { min: 0, max: 210 },
+    { min: 280, max: 360 }
+  ],
+  minSaturation: 30,
+  maxSaturation: 90,
+  minLightness: 50,
+  maxLightness: 60
 });
 
 export const mentionColors = colorGenerator({
   storageKey: 'mentionColors',
-  minHue: 0,
-  maxHue: 210,
-  saturation: '80%',
-  lightness: '50%'
+  hueRanges: [
+    { min: 0, max: 210 },
+    { min: 280, max: 360 }
+  ],
+  saturation: '80',
+  lightness: '50'
 });
-
 
 let lastEmojiAvatar = null;
 export function getRandomEmojiAvatar() {
@@ -576,7 +611,7 @@ export function playMentionSound() {
 export function highlightMentionWords() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
-  
+
   // Get username from auth data
   const authData = localStorage.getItem('klavoauth');
   let username = '';
@@ -590,16 +625,16 @@ export function highlightMentionWords() {
   } catch (e) {
     console.error('Error parsing auth data:', e);
   }
-  
+
   // Don't proceed if no username to check
   if (!username) return;
-  
+
   // Use username as the only term to highlight
   const highlightTerms = [username];
-  
+
   const globalProcessed = new WeakSet();
   const messages = container.querySelectorAll('.message-text:not(.processed-mention-word)');
-  
+
   messages.forEach((message) => {
     const walker = document.createTreeWalker(
       message,
@@ -615,11 +650,11 @@ export function highlightMentionWords() {
         }
       }
     );
-    
+
     const nodes = [];
     let currentNode;
     while ((currentNode = walker.nextNode())) nodes.push(currentNode);
-    
+
     if (nodes.length > 0) {
       nodes.forEach((node) => {
         if (!globalProcessed.has(node)) {
@@ -627,39 +662,39 @@ export function highlightMentionWords() {
           globalProcessed.add(node);
         }
       });
-      
+
       // Mark this message as processed
       message.classList.add('processed-mention-word');
     }
   });
-  
+
   function processNode(node, keywords) {
     const regex = /(@?[\wа-яА-ЯёЁ'-]+)|[\s]+|[^@\s\wа-яА-ЯёЁ'-]+/gu;
     const tokens = node.textContent.match(regex) || [];
     const fragment = document.createDocumentFragment();
-    
+
     tokens.forEach(token => {
       const isMatch = keywords.some(keyword =>
         keyword.localeCompare(token, undefined, { sensitivity: 'accent' }) === 0
       );
-      
+
       if (isMatch) {
         const mentionSpan = document.createElement('span');
         mentionSpan.className = 'mention';
-        
+
         token.split('').forEach(char => {
           const charSpan = document.createElement('span');
           charSpan.style.color = mentionColors.getColor(char);
           charSpan.textContent = char;
           mentionSpan.appendChild(charSpan);
         });
-        
+
         fragment.appendChild(mentionSpan);
       } else {
         fragment.appendChild(document.createTextNode(token));
       }
     });
-    
+
     node.parentNode.replaceChild(fragment, node);
   }
 }

@@ -25,12 +25,15 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       const usernameKey = cleanedUsername.toLowerCase(); // use lowercase for lookup
       const backgroundColor = usernameColors[usernameKey] || '#ff00c6';
 
+      // Generate timestamp for the avatar
+      const timestamp = Math.floor(Date.now() / 1000);
+
       // Create the user data block
       const userDataBlock = `
       <x xmlns='klavogonki:userdata'>
         <user>
           <login>${cleanedUsername}</login>
-          <avatar>/storage/avatars/${username.split('#')[0]}.png</avatar>
+          <avatar>/storage/avatars/${username.split('#')[0]}.png?updated=${timestamp}</avatar>
           <background>${backgroundColor}</background>
         </user>
       </x>
