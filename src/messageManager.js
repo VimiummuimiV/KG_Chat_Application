@@ -3,6 +3,7 @@ import {
   parseMessageText,
   scrollToBottom,
   highlightMentionWords,
+  playMentionSound,
   usernameColors,
   handlePrivateMessageInput,
   calibrateToMoscowTime
@@ -17,6 +18,7 @@ export default class MessageManager {
     this.sentMessageTexts = new Set(); // Track recently sent messages
     this.processedMessageIds = new Set(); // Now used exclusively for deduplication
     this.chatHistory = new Map(); // Local in-memory map for chat history
+    this.initialLoadComplete = false;
   }
 
   processMessages(xmlResponse) {
@@ -136,6 +138,8 @@ export default class MessageManager {
       Array.from(this.panel.querySelectorAll('.message')).map(el => el.getAttribute('data-message-id'))
     );
 
+    let mentionDetected = false;
+
     // Append only messages that haven't been rendered.
     this.messages.forEach(msg => {
       if (!renderedIds.has(msg.id)) {
@@ -196,6 +200,11 @@ export default class MessageManager {
         messageDiv.appendChild(messageInfoDiv);
         messageDiv.appendChild(messageTextDiv);
         this.panel.appendChild(messageDiv);
+
+        // Check if the message contains a mention of the current user
+        if (this.currentUsername && msg.text.includes(this.currentUsername)) {
+          mentionDetected = true;
+        }
       }
     });
 
@@ -205,6 +214,17 @@ export default class MessageManager {
     requestAnimationFrame(() => {
       scrollToBottom();
     });
+
+    // Only play mention sound if initial messages have already loaded
+    if (this.initialLoadComplete && mentionDetected) {
+      playMentionSound();
+    }
+
+    // Mark initial load as complete after the first call
+    if (!this.initialLoadComplete) {
+      this.initialLoadComplete = true;
+    }
+
   }
 
   addDelegatedClickListeners() {

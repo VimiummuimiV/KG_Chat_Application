@@ -567,6 +567,12 @@ export function decodeURL(url) {
   return decodeURIComponent(base).replace(/ /g, '_');
 }
 
+export function playMentionSound() {
+  const audio = new Audio('https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/notification-pluck-on.mp3');
+  audio.volume = 1;
+  audio.play();
+}
+
 export function highlightMentionWords() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
