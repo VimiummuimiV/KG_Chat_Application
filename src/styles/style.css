@@ -90,23 +90,16 @@
     overflow: hidden !important;
   }
 
-  /* Hide non-essential elements on touch devices */
+  /* Hide everything except #app-chat-container */
+  body > *:not(#app-chat-container) {
+    display: none !important;
+  }
+
+  /* Hide specific elements inside #app-chat-container */
   #app-chat-container .resize-handle,
   #app-chat-container .font-size-control,
   #app-chat-container .header-button,
-  #app-chat-container #send-button,
-  /* Unnecessary elements of klavogonki page */
-  .userpanel,
-  #userpanel-dummy,
-  #reformal_tab,
-  .ownbanner-back,
-  .feedback,
-  .bar,
-  #content,
-  #head,
-  #index,
-  #footer,
-  #google_esf {
+  #app-chat-container #send-button {
     display: none !important;
   }
 }
