@@ -1297,7 +1297,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     inputContainer.style.zIndex = '1000';
 
     // Add padding to ensure messages aren't hidden behind input container
-    messagesPanel.style.marginBottom = `${inputHeight + 10}px`; // Extra 10px for spacing
+    messagesPanel.style.marginBottom = inputHeight;
 
     // Scroll to ensure the most recent messages are visible
     messagesPanel.scrollTop = messagesPanel.scrollHeight;
