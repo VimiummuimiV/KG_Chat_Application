@@ -136,11 +136,6 @@ function colorGenerator(config) {
     return hueRanges[0].min;
   }
 
-  // Helper to check if a hue is within allowed ranges
-  function isHueInAllowedRanges(hue) {
-    return hueRanges.some(range => hue >= range.min && hue <= range.max);
-  }
-
   return {
     getColor(username) {
       // If username is falsy, return a default color (converted to hex)
