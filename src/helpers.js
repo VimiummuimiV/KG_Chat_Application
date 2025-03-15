@@ -1284,7 +1284,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     inputContainer.style.zIndex = '1000';
     
     // Adjust message panel to give space to the floating input
-    messagesPanel.style.paddingBottom = `${inputContainer.offsetHeight}px`;
+    messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
   }
   
   // Function to restore input container to original position
@@ -1292,7 +1292,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     Object.keys(originalStyles).forEach(key => {
       inputContainer.style[key] = originalStyles[key];
     });
-    messagesPanel.style.paddingBottom = '0';
+    messagesPanel.style.marginBottom = '0';
   }
   
   // For iOS, we can use the visualViewport API
