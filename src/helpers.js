@@ -1286,8 +1286,9 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     // Adjust message panel to give space to the floating input
     messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
 
-    // Scroll the messages panel to the bottom
-    messagesPanel.scrollTop = messagesPanel.scrollHeight;
+    requestAnimationFrame(() => {
+      messagesPanel.scrollTop = messagesPanel.scrollHeight;
+    });
   }
 
   // Function to restore input container to original position
