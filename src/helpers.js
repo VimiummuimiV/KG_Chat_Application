@@ -1256,6 +1256,7 @@ export function compactXML(xmlString) {
 
 /**
  * Sets up keyboard handling for mobile devices to float the input container above virtual keyboards
+ * and ensure messages remain visible
  * @param {HTMLElement} inputContainer - The input container element to float
  * @param {HTMLElement} messagesPanel - The messages panel to adjust padding for
  * @returns {boolean} - Returns true if setup was applied (mobile device), false otherwise
@@ -1264,9 +1265,9 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
   // Detect if device is iOS or Android
   const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
   const isAndroid = /Android/.test(navigator.userAgent);
-  
+
   if (!isIOS && !isAndroid) return false; // Only apply to mobile devices
-  
+
   // Store original position values to restore later
   let originalStyles = {
     position: inputContainer.style.position,
@@ -1275,27 +1276,54 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     right: inputContainer.style.right,
     zIndex: inputContainer.style.zIndex
   };
-  
-  // Function to make input container float
+
+  // Store original message panel styles
+  let originalMessagesPanelStyles = {
+    marginBottom: messagesPanel.style.marginBottom,
+    height: messagesPanel.style.height,
+    maxHeight: messagesPanel.style.maxHeight
+  };
+
+  // Function to make input container float and adjust messages panel
   function floatInputContainer() {
+    // Calculate the height of the input container
+    const inputHeight = inputContainer.offsetHeight;
+
+    // Apply styles to input container to float above keyboard
     inputContainer.style.position = 'fixed';
     inputContainer.style.bottom = '0';
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
     inputContainer.style.zIndex = '1000';
-    
-    // Adjust message panel to give space to the floating input
-    messagesPanel.style.paddingBottom = `${inputContainer.offsetHeight}px`;
+
+    // Add padding to ensure messages aren't hidden behind input container
+    messagesPanel.style.marginBottom = `${inputHeight + 10}px`; // Extra 10px for spacing
+
+    // Scroll to ensure the most recent messages are visible
+    messagesPanel.scrollTop = messagesPanel.scrollHeight;
+
+    // Add a class we can target with CSS if needed
+    inputContainer.classList.add('keyboard-active');
+    messagesPanel.classList.add('keyboard-active');
   }
-  
-  // Function to restore input container to original position
+
+  // Function to restore all elements to original position
   function restoreInputContainer() {
+    // Restore input container styles
     Object.keys(originalStyles).forEach(key => {
       inputContainer.style[key] = originalStyles[key];
     });
-    messagesPanel.style.paddingBottom = '0';
+
+    // Restore message panel styles
+    Object.keys(originalMessagesPanelStyles).forEach(key => {
+      messagesPanel.style[key] = originalMessagesPanelStyles[key];
+    });
+
+    // Remove keyboard-active classes
+    inputContainer.classList.remove('keyboard-active');
+    messagesPanel.classList.remove('keyboard-active');
   }
-  
+
   // For iOS, we can use the visualViewport API
   if (isIOS && window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
@@ -1308,14 +1336,14 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
       }
     });
   }
-  
+
   // For Android, we need to use a combination of focus/blur events and window resize
   if (isAndroid) {
     const messageInput = document.getElementById('message-input');
-    
+
     // Track initial window height
     const initialWindowHeight = window.innerHeight;
-    
+
     // On focus, check if keyboard appears (by detecting significant height change)
     messageInput.addEventListener('focus', () => {
       // Use setTimeout to give the keyboard time to appear
@@ -1325,12 +1353,12 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
         }
       }, 300);
     });
-    
+
     // On blur, restore the input container
     messageInput.addEventListener('blur', () => {
       setTimeout(restoreInputContainer, 100);
     });
-    
+
     // Also handle orientation changes
     window.addEventListener('resize', () => {
       if (document.activeElement === messageInput) {
@@ -1344,7 +1372,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
       }
     });
   }
-  
+
   return true;
 }
 
@@ -1355,12 +1383,12 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
 export function detectMobileDevice() {
   const ua = navigator.userAgent;
   const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-  
+
   return {
     isIOS: /iPhone|iPad|iPod/.test(ua) && !window.MSStream,
     isAndroid: /Android/.test(ua),
-    isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) || 
-              (ua.includes("Mac") && hasTouch),
+    isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) ||
+      (ua.includes("Mac") && hasTouch),
     hasTouch
   };
 }
