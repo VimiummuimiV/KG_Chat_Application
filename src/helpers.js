@@ -1256,18 +1256,16 @@ export function compactXML(xmlString) {
 
 /**
  * Sets up keyboard handling for mobile devices to float the input container above virtual keyboards
- * and ensure messages remain visible
  * @param {HTMLElement} inputContainer - The input container element to float
  * @param {HTMLElement} messagesPanel - The messages panel to adjust padding for
  * @returns {boolean} - Returns true if setup was applied (mobile device), false otherwise
  */
 export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
-  // Use the existing detection function
-  const device = detectMobileDevice();
-  const { isIOS, isAndroid } = device;
-
-  if (!isIOS && !isAndroid) return false; // Only apply to mobile devices
-
+  // Use the detectMobileDevice function to determine device type
+  const deviceInfo = detectMobileDevice();
+  
+  if (!deviceInfo.isMobile) return false; // Only apply to mobile devices
+  
   // Store original position values to restore later
   let originalStyles = {
     position: inputContainer.style.position,
@@ -1276,56 +1274,29 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     right: inputContainer.style.right,
     zIndex: inputContainer.style.zIndex
   };
-
-  // Store original message panel styles
-  let originalMessagesPanelStyles = {
-    marginBottom: messagesPanel.style.marginBottom,
-    height: messagesPanel.style.height,
-    maxHeight: messagesPanel.style.maxHeight
-  };
-
-  // Function to make input container float and adjust messages panel
+  
+  // Function to make input container float
   function floatInputContainer() {
-    // Calculate the height of the input container
-    const inputHeight = inputContainer.offsetHeight;
-
-    // Apply styles to input container to float above keyboard
     inputContainer.style.position = 'fixed';
     inputContainer.style.bottom = '0';
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
     inputContainer.style.zIndex = '1000';
-
-    // Add padding to ensure messages aren't hidden behind input container
-    messagesPanel.style.marginBottom = `${inputHeight}px`;
-
-    // Scroll to ensure the most recent messages are visible
-    messagesPanel.scrollTop = messagesPanel.scrollHeight;
-
-    // Add a class we can target with CSS if needed
-    inputContainer.classList.add('keyboard-active');
-    messagesPanel.classList.add('keyboard-active');
+    
+    // Adjust message panel to give space to the floating input
+    messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
   }
-
-  // Function to restore all elements to original position
+  
+  // Function to restore input container to original position
   function restoreInputContainer() {
-    // Restore input container styles
     Object.keys(originalStyles).forEach(key => {
       inputContainer.style[key] = originalStyles[key];
     });
-
-    // Restore message panel styles
-    Object.keys(originalMessagesPanelStyles).forEach(key => {
-      messagesPanel.style[key] = originalMessagesPanelStyles[key];
-    });
-
-    // Remove keyboard-active classes
-    inputContainer.classList.remove('keyboard-active');
-    messagesPanel.classList.remove('keyboard-active');
+    messagesPanel.style.marginBottom = '0';
   }
-
+  
   // For iOS, we can use the visualViewport API
-  if (isIOS && window.visualViewport) {
+  if (deviceInfo.isIOS && window.visualViewport) {
     window.visualViewport.addEventListener('resize', () => {
       if (window.visualViewport.height < window.innerHeight * 0.8) {
         // Keyboard is likely visible
@@ -1336,20 +1307,14 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
       }
     });
   }
-
+  
   // For Android, we need to use a combination of focus/blur events and window resize
-  if (isAndroid) {
-    // First try to find the message-input element
+  if (deviceInfo.isAndroid) {
     const messageInput = document.getElementById('message-input');
     
-    if (!messageInput) {
-      console.error('Message input element not found');
-      return false;
-    }
-
     // Track initial window height
     const initialWindowHeight = window.innerHeight;
-
+    
     // On focus, check if keyboard appears (by detecting significant height change)
     messageInput.addEventListener('focus', () => {
       // Use setTimeout to give the keyboard time to appear
@@ -1359,12 +1324,12 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
         }
       }, 300);
     });
-
+    
     // On blur, restore the input container
     messageInput.addEventListener('blur', () => {
       setTimeout(restoreInputContainer, 100);
     });
-
+    
     // Also handle orientation changes
     window.addEventListener('resize', () => {
       if (document.activeElement === messageInput) {
@@ -1378,7 +1343,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
       }
     });
   }
-
+  
   return true;
 }
 
