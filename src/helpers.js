@@ -577,18 +577,6 @@ export function highlightMentionWords() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
   
-  // Get mention keywords from localStorage
-  const storedKeywords = localStorage.getItem('mentionKeywords');
-  let mentionKeywords = [];
-  try {
-    if (storedKeywords) {
-      mentionKeywords = JSON.parse(storedKeywords);
-      if (!Array.isArray(mentionKeywords)) mentionKeywords = [];
-    }
-  } catch (e) {
-    console.error('Error parsing mention keywords:', e);
-  }
-  
   // Get username from auth data
   const authData = localStorage.getItem('klavoauth');
   let username = '';
@@ -603,26 +591,16 @@ export function highlightMentionWords() {
     console.error('Error parsing auth data:', e);
   }
   
-  // Create a working copy of keywords to check (don't modify original mentionKeywords)
-  let highlightTerms = [...mentionKeywords];
+  // Don't proceed if no username to check
+  if (!username) return;
   
-  // If no mention keywords but we have a username, use the username
-  if (mentionKeywords.length === 0 && username) {
-    highlightTerms = [username];
-  }
-  
-  // Don't proceed if no keywords to check at all
-  if (highlightTerms.length === 0) return;
+  // Use username as the only term to highlight
+  const highlightTerms = [username];
   
   const globalProcessed = new WeakSet();
-  const messages = container.querySelectorAll('.message-text');
+  const messages = container.querySelectorAll('.message-text:not(.processed-mention-word)');
   
   messages.forEach((message) => {
-    // Skip already processed message elements
-    if (message.classList.contains('processed-mention')) {
-      return;
-    }
-    
     const walker = document.createTreeWalker(
       message,
       NodeFilter.SHOW_TEXT,
@@ -630,7 +608,7 @@ export function highlightMentionWords() {
         acceptNode: (node) => {
           if (globalProcessed.has(node)) return NodeFilter.FILTER_SKIP;
           const parent = node.parentElement;
-          if (parent.closest('.mention, .time, .username, .processed-mention')) {
+          if (parent.closest('.mention, .time, .username')) {
             return NodeFilter.FILTER_SKIP;
           }
           return NodeFilter.FILTER_ACCEPT;
@@ -651,7 +629,7 @@ export function highlightMentionWords() {
       });
       
       // Mark this message as processed
-      message.classList.add('processed-mention');
+      message.classList.add('processed-mention-word');
     }
   });
   
@@ -667,7 +645,7 @@ export function highlightMentionWords() {
       
       if (isMatch) {
         const mentionSpan = document.createElement('span');
-        mentionSpan.className = 'mention processed-mention';
+        mentionSpan.className = 'mention';
         
         token.split('').forEach(char => {
           const charSpan = document.createElement('span');
