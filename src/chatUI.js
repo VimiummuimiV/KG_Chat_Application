@@ -205,7 +205,7 @@ export function createChatUI() {
   
   // Setup mobile keyboard handling with the helper function
   if (isMobile) {
-    setupMobileKeyboardHandling(inputContainer, messagesPanel);
+    setupMobileKeyboardHandling(inputContainer);
   }
   
   // Force scroll to bottom once after chat creation

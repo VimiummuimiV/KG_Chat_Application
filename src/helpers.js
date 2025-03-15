@@ -1260,10 +1260,9 @@ export function compactXML(xmlString) {
  * The messages panel is left unchanged.
  *
  * @param {HTMLElement} inputContainer - The input container element to float.
- * @param {HTMLElement} messagesPanel - The messages panel (unused in this version).
  * @returns {boolean} - Returns true if setup was applied (mobile device), false otherwise.
  */
-export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
+export function setupMobileKeyboardHandling(inputContainer) {
   // Determine device type using detectMobileDevice function
   const deviceInfo = detectMobileDevice();
   
