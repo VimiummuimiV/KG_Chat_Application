@@ -12,7 +12,8 @@ import {
   setupRandomEmojiAttention,
   getRandomInterval,
   initChatLengthPopupEvents,
-  createLengthPopup
+  createLengthPopup,
+  checkIsMobile
 } from "./helpers.js";
 
 import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./icons.js";
@@ -45,8 +46,7 @@ export function createChatUI() {
 
   // Add this function to handle mobile/touch devices
   function handleMobileLayout() {
-    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-      ('ontouchstart' in window);
+    const isMobile = checkIsMobile();
 
     if (isMobile) {
       // Make input container floating for mobile at the top
@@ -57,12 +57,25 @@ export function createChatUI() {
       inputContainer.style.borderBottom = '1px solid #333';
       inputContainer.style.zIndex = '100'; // Ensure it's above content
 
-      // Add margin top to messages panel
-      messagesPanel.style.marginTop = `${inputContainer.offsetHeight}px`;
+      // Initial margin update
+      let previousHeight = inputContainer.offsetHeight;
+      messagesPanel.style.marginTop = `${previousHeight}px`;
+
+      // Set up a ResizeObserver to monitor the input container's height
+      const resizeObserver = new ResizeObserver(() => {
+        const currentHeight = inputContainer.offsetHeight;
+        if (currentHeight !== previousHeight) {
+          messagesPanel.style.marginTop = `${currentHeight}px`;
+          previousHeight = currentHeight;
+        }
+      });
+
+      // Start observing the input container
+      resizeObserver.observe(inputContainer);
     }
   }
 
-  // Call once
+  // Initial setup after DOM is ready
   requestAnimationFrame(() => {
     handleMobileLayout();
   });

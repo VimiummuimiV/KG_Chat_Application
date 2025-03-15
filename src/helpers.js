@@ -1251,3 +1251,12 @@ export function compactXML(xmlString) {
     .replace(/>\s+</g, '><') // Remove spaces between tags
     .trim();                 // Remove leading/trailing whitespace
 }
+
+// ==================================================================================================
+
+export function checkIsMobile() {
+  return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+    ('ontouchstart' in window);
+}
+
+// ==================================================================================================
