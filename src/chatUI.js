@@ -12,7 +12,9 @@ import {
   setupRandomEmojiAttention,
   getRandomInterval,
   initChatLengthPopupEvents,
-  createLengthPopup
+  createLengthPopup,
+  setupMobileKeyboardHandling,
+  detectMobileDevice
 } from "./helpers.js";
 
 import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./icons.js";
@@ -22,15 +24,24 @@ import { EmojiPanel } from "./components/emojiPanel.js";
 export function createChatUI() {
   const chatContainer = document.createElement('div');
   chatContainer.id = 'app-chat-container';
+  
+  // Add mobile device class if applicable
+  const { isMobile } = detectMobileDevice();
+  if (isMobile) {
+    chatContainer.classList.add('mobile-device');
+  }
+  
   // Add resize handles
   ['top', 'left', 'right'].forEach(type => {
     const handle = document.createElement('div');
     handle.className = `resize-handle ${type}`;
     chatContainer.appendChild(handle);
   });
+  
   // Chat wrapper for content and user list
   const chatWrapper = document.createElement('div');
   chatWrapper.className = 'chat-wrapper';
+  
   // Left side: messages panel and input
   const chatContent = document.createElement('div');
   chatContent.className = 'chat-content';
@@ -39,6 +50,7 @@ export function createChatUI() {
   messagesPanel.className = 'messages-panel';
   const inputContainer = document.createElement('div');
   inputContainer.className = 'input-container';
+  
   // Create emoji button
   const emojiButton = document.createElement('button');
   emojiButton.className = 'emoji-trigger filled-button';
@@ -90,22 +102,26 @@ export function createChatUI() {
       emojiPanelInstance.destroy();
     }
   });
+  
   // Create message input
   const messageInput = document.createElement('input');
   messageInput.type = 'text';
   messageInput.id = 'message-input';
   messageInput.maxLength = 300;
+  
   // Create send button
   const sendButton = document.createElement('button');
   sendButton.id = 'send-button';
   sendButton.className = 'filled-button send-button';
   sendButton.innerHTML = sendSVG;
+  
   // Append elements in order
   inputContainer.appendChild(emojiButton);
   inputContainer.appendChild(messageInput);
   inputContainer.appendChild(sendButton);
   chatContent.appendChild(messagesPanel);
   chatContent.appendChild(inputContainer);
+  
   // Right side: user list
   const userListContainer = document.createElement('div');
   userListContainer.className = 'user-list-container';
@@ -115,17 +131,20 @@ export function createChatUI() {
   chatWrapper.appendChild(chatContent);
   chatWrapper.appendChild(userListContainer);
   chatContainer.appendChild(chatWrapper);
+  
   // Maximize button
   const maximizeButton = document.createElement('button');
   maximizeButton.className = 'filled-button header-button chat-maximize-button';
   maximizeButton.innerHTML = expandSVG;
   maximizeButton.addEventListener('click', toggleChatMaximize);
   chatContainer.appendChild(maximizeButton);
+  
   // Help button next to maximize button
   const helpButton = document.createElement('button');
   helpButton.className = 'filled-button header-button chat-help-button';
-  helpButton.innerHTML = helpSVG; // Replace with desired icon if available
+  helpButton.innerHTML = helpSVG;
   helpButton.title = 'Show chat help';
+  
   // Declare a variable to track the help panel instance.
   let helpPanelInstance = null;
 
@@ -164,22 +183,31 @@ export function createChatUI() {
   });
 
   chatContainer.appendChild(helpButton);
+  
   // Toggle visibility button
   const toggleButton = document.createElement('button');
   toggleButton.className = 'filled-button header-button chat-toggle-button';
   toggleButton.innerHTML = closeSVG;
   toggleButton.addEventListener('click', toggleChatVisibility);
   chatContainer.appendChild(toggleButton);
+  
   // Draggable top area
   const topArea = document.createElement('div');
   topArea.className = 'chat-drag-area';
   topArea.addEventListener('dblclick', toggleChatVisibility);
   chatContainer.appendChild(topArea);
   document.body.appendChild(chatContainer);
+  
   // Restore chat state and settings
   restoreChatState();
   createFontSizeControl();
   restoreFontSize();
+  
+  // Setup mobile keyboard handling with the helper function
+  if (isMobile) {
+    setupMobileKeyboardHandling(inputContainer, messagesPanel);
+  }
+  
   // Force scroll to bottom once after chat creation
   requestAnimationFrame(() => {
     const messagesPanel = document.getElementById('messages-panel');
