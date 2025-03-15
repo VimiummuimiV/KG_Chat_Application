@@ -61,19 +61,32 @@ export function createChatUI() {
       messagesPanel.style.marginTop = `${inputContainer.offsetHeight}px`;
 
       // Add a styles for the emoji panel on mobile devices
-      const emojiPanelMobileStyles = document.createElement('style');
-      emojiPanelMobileStyles.classList.add('emoji-panel-mobile-styles');
-      
-      styleTag.textContent = `
-      .emoji-panel {
-        transform: none !important;
-        height: 60vh !important;
-        bottom: 0 !important; 
-        left: unset !important;
-        right: unset !important;
-      }
-    `;
-      document.head.appendChild(emojiPanelMobileStyles);
+      const globalMobileStyles = document.createElement('style');
+      globalMobileStyles.classList.add('global-mobile-styles');
+
+      globalMobileStyles.textContent = `
+        .emoji-panel {
+          transform: none !important;
+          height: 60vh !important;
+          bottom: 0 !important;
+          left: unset !important;
+          right: unset !important;
+        }
+
+        /* Hide specific elements inside #app-chat-container */
+        #app-chat-container .resize-handle,
+        #app-chat-container .font-size-control,
+        #app-chat-container .header-button,
+        #app-chat-container #send-button {
+          display: none !important;
+        }
+
+        /* Hide everything except #app-chat-container */
+        body > *:not(#app-chat-container) {
+          display: none !important;
+        }
+      `;
+      document.head.appendChild(globalMobileStyles);
 
       // Set up height observer
       let previousHeight = inputContainer.offsetHeight;
