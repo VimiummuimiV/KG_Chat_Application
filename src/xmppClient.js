@@ -1,5 +1,5 @@
 import { reconnectionDelay, userListDelay } from "./definitions.js";
-import { privateMessageState, showChatAlert } from "./helpers.js";
+import { generateRandomColor, privateMessageState, showChatAlert } from "./helpers.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.
@@ -20,38 +20,12 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
-      const userDataBlock = `
-    <x xmlns='klavogonki:userdata'>
-      <user>
-        <login>${username.replace(/^\d+#/, '')}</login>
-        <avatar>/storage/avatars/${username.split('#')[0]}.png</avatar>
-        <background>#123456</background>
-      </user>
-    </x>`;
+      const userDataBlock = `<x xmlns='klavogonki:userdata'><user><login>${username.replace(/^\d+#/, '')}</login><avatar>/storage/avatars/${username.split('#')[0]}.png</avatar><background>${generateRandomColor()}</background></user></x>`;
 
       if (isPrivate && fullJid) {
-        return `
-      <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-        <message from='${username}@jabber.klavogonki.ru/web'
-                 to='${fullJid}'
-                 type='chat'
-                 id='${messageId}'
-                 xmlns='jabber:client'>
-          <body>${text}</body>
-          ${userDataBlock}
-        </message>
-      </body>`;
+        return `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'><message from='${username}@jabber.klavogonki.ru/web' to='${fullJid}' type='chat' id='${messageId}' xmlns='jabber:client'><body>${text}</body>${userDataBlock}</message></body>`;
       } else {
-        return `
-      <body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-        <message to='general@conference.jabber.klavogonki.ru'
-                 type='groupchat'
-                 id='${messageId}'
-                 xmlns='jabber:client'>
-          <body>${text}</body>
-          ${userDataBlock}
-        </message>
-      </body>`;
+        return `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'><message from='${username}@jabber.klavogonki.ru/web' to='general@conference.jabber.klavogonki.ru' type='groupchat' id='${messageId}' xmlns='jabber:client'><body>${text}</body>${userDataBlock}</message></body>`;
       }
     },
 
@@ -88,26 +62,18 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           try {
             const session = await xmppConnection.connect();
             console.log('💬 Step 8: Joining chat room...');
-            const joinPayload = `
-            <body rid='${xmppConnection.nextRid()}' sid='${session.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-              <presence id='initialChatLoad' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru/${username}'>
-                <x xmlns='http://jabber.org/protocol/muc'/>
-              </presence>
-            </body>
-            `;
+
+            const joinPayload = `<body rid='${xmppConnection.nextRid()}' xmlns='http://jabber.org/protocol/httpbind' sid='${session.sid}'><presence from='${username}@jabber.klavogonki.ru/web' to='general@conference.jabber.klavogonki.ru/${username}' xmlns='jabber:client'><x xmlns='http://jabber.org/protocol/muc'/><x xmlns='klavogonki:userdata'><user><login>${username.replace(/^\d+#/, '')}</login><avatar>/storage/avatars/${username.split('#')[0]}.png</avatar><background>#000000</background></user></x></presence></body>`;
+
             const joinResponse = await xmppConnection.sendRequestWithRetry(joinPayload);
+
             console.log('📥 Join response:', joinResponse);
 
             safeUpdatePresence(joinResponse);
             safeProcessMessages(joinResponse);
 
-            const infoPayload = `
-            <body rid='${xmppConnection.nextRid()}' sid='${session.sid}' xmlns='http://jabber.org/protocol/httpbind'>
-              <iq type='get' id='info1' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru'>
-                <query xmlns='http://jabber.org/protocol/disco#info'/>
-              </iq>
-            </body>
-            `;
+            const infoPayload = `<body rid='${xmppConnection.nextRid()}' sid='${session.sid}' xmlns='http://jabber.org/protocol/httpbind'><iq type='get' id='info_${Math.random().toString(36).substring(2, 10)}' xmlns='jabber:client' to='general@conference.jabber.klavogonki.ru'><query xmlns='http://jabber.org/protocol/disco#info'/></iq></body>`;
+
             await xmppConnection.sendRequestWithRetry(infoPayload);
             console.log('🚀 Step 10: Connected! Starting presence updates...');
 

@@ -1147,3 +1147,61 @@ export function calibrateToMoscowTime(time) {
     `${adjustedMins.toString().padStart(2, '0')}:` +
     `${seconds.toString().padStart(2, '0')}`;
 }
+
+/**
+ * Generates a random color with constraints to ensure readability
+ * @returns {string} A hex color code
+ */
+export function generateRandomColor() {
+  // Generate a random hue (0-360)
+  const hue = Math.floor(Math.random() * 360);
+  
+  // Use fixed saturation and lightness for good readability
+  // High saturation (70-90%) for vibrance
+  // Medium lightness (45-60%) for balance between too dark and too light
+  const saturation = 70 + Math.floor(Math.random() * 20);
+  const lightness = 45 + Math.floor(Math.random() * 15);
+  
+  // Convert HSL to hex
+  return hslToHex(hue, saturation, lightness);
+}
+
+/**
+ * Convert HSL to Hex color
+ * @param {number} h - Hue (0-360)
+ * @param {number} s - Saturation (0-100)
+ * @param {number} l - Lightness (0-100)
+ * @returns {string} Hex color code
+ */
+function hslToHex(h, s, l) {
+  s /= 100;
+  l /= 100;
+  
+  const c = (1 - Math.abs(2 * l - 1)) * s;
+  const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+  const m = l - c / 2;
+  
+  let r, g, b;
+  
+  if (h >= 0 && h < 60) {
+    [r, g, b] = [c, x, 0];
+  } else if (h >= 60 && h < 120) {
+    [r, g, b] = [x, c, 0];
+  } else if (h >= 120 && h < 180) {
+    [r, g, b] = [0, c, x];
+  } else if (h >= 180 && h < 240) {
+    [r, g, b] = [0, x, c];
+  } else if (h >= 240 && h < 300) {
+    [r, g, b] = [x, 0, c];
+  } else {
+    [r, g, b] = [c, 0, x];
+  }
+  
+  const toHex = (v) => {
+    return Math.round((v + m) * 255)
+      .toString(16)
+      .padStart(2, '0');
+  };
+  
+  return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+}
