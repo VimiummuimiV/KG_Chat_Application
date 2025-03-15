@@ -67,7 +67,7 @@ export function createChatUI() {
       styleTag.textContent = `
       .emoji-panel {
         transform: none !important;
-        height: calc(80% - ${inputContainer.offsetHeight}px) !important;
+        height: 60vh !important;
         bottom: 0 !important; 
         left: unset !important;
         right: unset !important;
