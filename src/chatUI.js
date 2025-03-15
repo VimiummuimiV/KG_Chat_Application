@@ -46,35 +46,36 @@ export function createChatUI() {
   // Add this function to handle mobile/touch devices
   function handleMobileLayout() {
     const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
-      (window.innerWidth <= 768) ||
       ('ontouchstart' in window);
 
     if (isMobile) {
-      // Make input container floating for mobile
+      // Make input container floating for mobile at the bottom
       inputContainer.style.position = 'absolute';
-      inputContainer.style.top = '0';
+      inputContainer.style.bottom = '0';
       inputContainer.style.left = '0';
       inputContainer.style.right = '0';
-      inputContainer.style.borderBottom = '1px solid #333';
       inputContainer.style.zIndex = '100'; // Ensure it's above content
 
-      // Add padding to messages panel to prevent content from hiding behind fixed input
-      messagesPanel.style.paddingTop = `${inputContainer.offsetHeight}px`;
+      // Use margin bottom instead of padding bottom
+      messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
     } else {
       // Reset styles for desktop
       inputContainer.style.position = '';
-      inputContainer.style.top = '';
+      inputContainer.style.bottom = '';
       inputContainer.style.left = '';
       inputContainer.style.right = '';
-      inputContainer.style.borderBottom = '';
       inputContainer.style.zIndex = '';
-      messagesPanel.style.paddingTop = '';
+      messagesPanel.style.marginBottom = '';
     }
   }
 
   // Call initially and on resize
   window.addEventListener('resize', handleMobileLayout);
-  handleMobileLayout();
+
+  // Run after the container is in the DOM to get accurate offsetHeight
+  requestAnimationFrame(() => {
+    handleMobileLayout();
+  });
 
   // Create emoji button
   const emojiButton = document.createElement('button');
