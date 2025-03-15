@@ -1254,19 +1254,12 @@ export function compactXML(xmlString) {
 
 // =================================================================================================
 
-/**
- * Sets up keyboard handling for mobile devices to float the input container above virtual keyboards
- * @param {HTMLElement} inputContainer - The input container element to float
- * @param {HTMLElement} messagesPanel - The messages panel to adjust padding for
- * @returns {boolean} - Returns true if setup was applied (mobile device), false otherwise
- */
 export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
-  // Use the detectMobileDevice function to determine device type
   const deviceInfo = detectMobileDevice();
-
-  if (!deviceInfo.isMobile) return false; // Only apply to mobile devices
-
-  // Store original position values to restore later
+  
+  if (!deviceInfo.isMobile) return false;
+  
+  // Store original position values
   let originalStyles = {
     position: inputContainer.style.position,
     bottom: inputContainer.style.bottom,
@@ -1274,109 +1267,161 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     right: inputContainer.style.right,
     zIndex: inputContainer.style.zIndex
   };
-
-  // Function to make input container float
+  
+  // Track if the keyboard is active
+  let isKeyboardActive = false;
+  
   function floatInputContainer() {
+    if (isKeyboardActive) return; // Prevent multiple applications
+    
+    isKeyboardActive = true;
     inputContainer.style.position = 'fixed';
     inputContainer.style.bottom = '0';
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
     inputContainer.style.zIndex = '1000';
-
-    // Adjust message panel to give space to the floating input
-    messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
-
-    requestAnimationFrame(() => {
+    
+    // Calculate proper bottom margin to avoid content being hidden
+    const inputHeight = inputContainer.offsetHeight;
+    messagesPanel.style.marginBottom = inputHeight;
+    
+    // Scroll to bottom with a delay to let layout settle
+    setTimeout(() => {
       messagesPanel.scrollTop = messagesPanel.scrollHeight;
-    });
+    }, 50);
   }
-
-  // Function to restore input container to original position
+  
   function restoreInputContainer() {
+    if (!isKeyboardActive) return; // Prevent unnecessary operations
+    
+    isKeyboardActive = false;
     Object.keys(originalStyles).forEach(key => {
       inputContainer.style[key] = originalStyles[key];
     });
     messagesPanel.style.marginBottom = '0';
   }
-
-  // For iOS, we can use the visualViewport API
+  
+  // For iOS devices
   if (deviceInfo.isIOS && window.visualViewport) {
+    // Use a more reliable detection ratio based on device type
+    const threshold = deviceInfo.isIOS && /iPhone/.test(navigator.userAgent) ? 0.7 : 0.85;
+    
     window.visualViewport.addEventListener('resize', () => {
-      if (window.visualViewport.height < window.innerHeight * 0.85) {
-        // Keyboard is likely visible
+      if (window.visualViewport.height < window.innerHeight * threshold) {
         floatInputContainer();
       } else {
-        // Keyboard is likely hidden
         restoreInputContainer();
       }
     });
-  }
-
-  // For Android, we need to use a combination of focus/blur events and window resize
-  if (deviceInfo.isAndroid) {
-    // Find the input element within the inputContainer
-    const messageInput = inputContainer.querySelector('input, textarea');
-
-    if (!messageInput) {
-      // Fallback to window resize only if no input element is found
-      window.addEventListener('resize', () => {
-        const currentHeight = window.innerHeight;
-        if (currentHeight < window.outerHeight * 0.85) {
+    
+    // Additional check for orientation changes on iOS
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        if (window.visualViewport.height < window.innerHeight * threshold) {
           floatInputContainer();
         } else {
+          restoreInputContainer();
+        }
+      }, 300);
+    });
+  }
+  
+  // For Android devices
+  if (deviceInfo.isAndroid) {
+    const messageInput = inputContainer.querySelector('input, textarea');
+    
+    if (!messageInput) {
+      // Fallback window resize method with more reliable threshold
+      const initialHeight = window.innerHeight;
+      window.addEventListener('resize', () => {
+        // More reliable threshold for keyboard detection
+        if (window.innerHeight < initialHeight * 0.75) {
+          floatInputContainer();
+        } else if (window.innerHeight > initialHeight * 0.9) {
           restoreInputContainer();
         }
       });
       return true;
     }
-
-    // Track initial window height
+    
+    // Initial window height to compare
     const initialWindowHeight = window.innerHeight;
-
-    // On focus, check if keyboard appears (by detecting significant height change)
+    
+    // Use focus with increased timeout
     messageInput.addEventListener('focus', () => {
-      // Use setTimeout to give the keyboard time to appear
+      // Increased timeout to 500ms for slower devices
       setTimeout(() => {
-        if (window.innerHeight < initialWindowHeight * 0.85) {
+        // Check both height and focus state
+        if (document.activeElement === messageInput && 
+            window.innerHeight < initialWindowHeight * 0.85) {
           floatInputContainer();
         }
-      }, 300);
+      }, 500);
     });
-
-    // On blur, restore the input container
+    
+    // Use blur with increased timeout
     messageInput.addEventListener('blur', () => {
-      setTimeout(restoreInputContainer, 100);
+      setTimeout(() => {
+        if (document.activeElement !== messageInput) {
+          restoreInputContainer();
+        }
+      }, 200);
     });
-
-    // Also handle orientation changes
+    
+    // Additional reliable check: observe window resize
+    let lastHeight = initialWindowHeight;
     window.addEventListener('resize', () => {
-      if (document.activeElement === messageInput) {
-        setTimeout(() => {
-          if (window.innerHeight < initialWindowHeight * 0.85) {
-            floatInputContainer();
-          } else {
-            restoreInputContainer();
-          }
-        }, 300);
+      const currentHeight = window.innerHeight;
+      
+      // Significant height change indicates keyboard
+      if (currentHeight < lastHeight * 0.85) {
+        // Double check if input is focused
+        if (document.activeElement === messageInput) {
+          floatInputContainer();
+        }
+      } else if (currentHeight > lastHeight * 1.1) {
+        restoreInputContainer();
       }
+      
+      lastHeight = currentHeight;
+    });
+    
+    // Handle orientation changes explicitly
+    window.addEventListener('orientationchange', () => {
+      // Wait for layout to stabilize after orientation change
+      setTimeout(() => {
+        // Recalculate dimensions
+        const currentHeight = window.innerHeight;
+        if (document.activeElement === messageInput && 
+            currentHeight < initialWindowHeight * 0.85) {
+          floatInputContainer();
+        } else {
+          restoreInputContainer();
+        }
+        
+        // Update reference height after orientation change
+        lastHeight = currentHeight;
+      }, 500);
     });
   }
-
+  
   return true;
 }
 
-/**
- * Detects mobile devices using multiple reliable signals
- * @returns {Object} Device type information
- */
 export function detectMobileDevice() {
   const ua = navigator.userAgent;
   const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+  const screenWidth = window.screen.width || window.innerWidth;
+  const screenHeight = window.screen.height || window.innerHeight;
+  
+  // Better size-based heuristic
+  const isMobileSize = screenWidth <= 1024 && screenWidth / screenHeight < 1.2;
+  
   return {
     isIOS: /iPhone|iPad|iPod/.test(ua) && !window.MSStream,
     isAndroid: /Android/.test(ua),
     isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(ua) ||
-      (ua.includes("Mac") && hasTouch),
+      (ua.includes("Mac") && hasTouch) || isMobileSize,
     hasTouch
   };
 }
