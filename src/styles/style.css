@@ -265,11 +265,13 @@
 
 /* Input container at bottom */
 #app-chat-container .input-container {
+  position: relative !important;
   display: flex !important;
   align-items: center !important;
   padding: 1em !important;
   gap: 0.5em !important;
   border-top: 1px solid #333 !important;
+  background-color: #1e1e1e !important;
 }
 
 #app-chat-container #message-input {
