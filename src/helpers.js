@@ -1262,9 +1262,9 @@ export function compactXML(xmlString) {
  * @returns {boolean} - Returns true if setup was applied (mobile device), false otherwise
  */
 export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
-  // Detect if device is iOS or Android
-  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-  const isAndroid = /Android/.test(navigator.userAgent);
+  // Use the existing detection function
+  const device = detectMobileDevice();
+  const { isIOS, isAndroid } = device;
 
   if (!isIOS && !isAndroid) return false; // Only apply to mobile devices
 
@@ -1297,7 +1297,7 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
     inputContainer.style.zIndex = '1000';
 
     // Add padding to ensure messages aren't hidden behind input container
-    messagesPanel.style.marginBottom = inputHeight;
+    messagesPanel.style.marginBottom = `${inputHeight}px`;
 
     // Scroll to ensure the most recent messages are visible
     messagesPanel.scrollTop = messagesPanel.scrollHeight;
@@ -1339,7 +1339,13 @@ export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
 
   // For Android, we need to use a combination of focus/blur events and window resize
   if (isAndroid) {
+    // First try to find the message-input element
     const messageInput = document.getElementById('message-input');
+    
+    if (!messageInput) {
+      console.error('Message input element not found');
+      return false;
+    }
 
     // Track initial window height
     const initialWindowHeight = window.innerHeight;
