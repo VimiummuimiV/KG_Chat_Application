@@ -22,15 +22,18 @@ import { EmojiPanel } from "./components/emojiPanel.js";
 export function createChatUI() {
   const chatContainer = document.createElement('div');
   chatContainer.id = 'app-chat-container';
+
   // Add resize handles
   ['top', 'left', 'right'].forEach(type => {
     const handle = document.createElement('div');
     handle.className = `resize-handle ${type}`;
     chatContainer.appendChild(handle);
   });
+
   // Chat wrapper for content and user list
   const chatWrapper = document.createElement('div');
   chatWrapper.className = 'chat-wrapper';
+
   // Left side: messages panel and input
   const chatContent = document.createElement('div');
   chatContent.className = 'chat-content';
@@ -39,6 +42,40 @@ export function createChatUI() {
   messagesPanel.className = 'messages-panel';
   const inputContainer = document.createElement('div');
   inputContainer.className = 'input-container';
+
+  // Add this function to handle mobile/touch devices
+  function handleMobileLayout() {
+    const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
+      (window.innerWidth <= 768) ||
+      ('ontouchstart' in window);
+
+    if (isMobile) {
+      // Make input container floating for mobile
+      inputContainer.style.position = 'absolute';
+      inputContainer.style.top = '0';
+      inputContainer.style.left = '0';
+      inputContainer.style.right = '0';
+      inputContainer.style.borderBottom = '1px solid #333';
+      inputContainer.style.zIndex = '100'; // Ensure it's above content
+
+      // Add padding to messages panel to prevent content from hiding behind fixed input
+      messagesPanel.style.paddingTop = `${inputContainer.offsetHeight}px`;
+    } else {
+      // Reset styles for desktop
+      inputContainer.style.position = '';
+      inputContainer.style.top = '';
+      inputContainer.style.left = '';
+      inputContainer.style.right = '';
+      inputContainer.style.borderBottom = '';
+      inputContainer.style.zIndex = '';
+      messagesPanel.style.paddingTop = '';
+    }
+  }
+
+  // Call initially and on resize
+  window.addEventListener('resize', handleMobileLayout);
+  handleMobileLayout();
+
   // Create emoji button
   const emojiButton = document.createElement('button');
   emojiButton.className = 'emoji-trigger filled-button';
