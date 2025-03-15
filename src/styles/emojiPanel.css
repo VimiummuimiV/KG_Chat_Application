@@ -6,7 +6,7 @@
   opacity: 0;
   transition: opacity 0.3s ease;
   position: absolute !important;
-  top: 45% !important;
+  top: 50% !important;
   left: 50% !important;
   transform: translate(-50%, -50%) !important;
   background: #1e1e1e !important;

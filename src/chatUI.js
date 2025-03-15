@@ -57,11 +57,26 @@ export function createChatUI() {
       inputContainer.style.borderBottom = '1px solid #333';
       inputContainer.style.zIndex = '100'; // Ensure it's above content
 
-      // Initial margin update
-      let previousHeight = inputContainer.offsetHeight;
-      messagesPanel.style.marginTop = `${previousHeight}px`;
+      // Set initial margin for messages panel
+      messagesPanel.style.marginTop = `${inputContainer.offsetHeight}px`;
 
-      // Set up a ResizeObserver to monitor the input container's height
+      // Add a styles for the emoji panel on mobile devices
+      const emojiPanelMobileStyles = document.createElement('style');
+      emojiPanelMobileStyles.classList.add('emoji-panel-mobile-styles');
+      
+      styleTag.textContent = `
+      .emoji-panel {
+        transform: unset !important;
+        height: calc(100% - ${inputContainer.offsetHeight}px) !important;
+        bottom: 0 !important; 
+        left: unset !important;
+        right: unset !important;
+      }
+    `;
+      document.head.appendChild(emojiPanelMobileStyles);
+
+      // Set up height observer
+      let previousHeight = inputContainer.offsetHeight;
       const resizeObserver = new ResizeObserver(() => {
         const currentHeight = inputContainer.offsetHeight;
         if (currentHeight !== previousHeight) {
@@ -70,7 +85,6 @@ export function createChatUI() {
         }
       });
 
-      // Start observing the input container
       resizeObserver.observe(inputContainer);
     }
   }
