@@ -1254,110 +1254,62 @@ export function compactXML(xmlString) {
 
 // =================================================================================================
 
-/**
- * Sets up keyboard handling for mobile devices to float the input container above virtual keyboards
- * @param {HTMLElement} inputContainer - The input container element to float
- * @param {HTMLElement} messagesPanel - The messages panel to adjust padding for
- * @returns {boolean} - Returns true if setup was applied (mobile device), false otherwise
- */
 export function setupMobileKeyboardHandling(inputContainer, messagesPanel) {
-  // Use the detectMobileDevice function to determine device type
   const deviceInfo = detectMobileDevice();
-  
-  if (!deviceInfo.isMobile) return false; // Only apply to mobile devices
-  
-  // Store original position values to restore later
+  if (!deviceInfo.isMobile) return false;
+
   let originalStyles = {
     position: inputContainer.style.position,
-    top: inputContainer.style.top,
+    bottom: inputContainer.style.bottom,
     left: inputContainer.style.left,
     right: inputContainer.style.right,
     zIndex: inputContainer.style.zIndex
   };
-  
-  // Function to make input container float at the top
-  function floatInputContainer() {
+
+  function floatInputContainer(bottomBottom = '0') {
     inputContainer.style.position = 'fixed';
-    inputContainer.style.top = '0'; // Position at the top
+    inputContainer.style.bottom = customBottom;
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
     inputContainer.style.zIndex = '1000';
-    
-    // Adjust the messages panel to give space at the top for the floating input
-    messagesPanel.style.paddingTop = `${inputContainer.offsetHeight}px`;
+    messagesPanel.style.paddingBottom = `${inputContainer.offsetHeight}px`;
   }
-  
-  // Function to restore input container to its original position
+
   function restoreInputContainer() {
     Object.keys(originalStyles).forEach(key => {
       inputContainer.style[key] = originalStyles[key];
     });
-    messagesPanel.style.paddingTop = '0';
+    messagesPanel.style.paddingBottom = '0';
   }
-  
-  // For iOS, use the visualViewport API
-  if (deviceInfo.isIOS && window.visualViewport) {
-    window.visualViewport.addEventListener('resize', () => {
-      if (window.visualViewport.height < window.innerHeight * 0.85) {
-        // Keyboard is likely visible
-        floatInputContainer();
+
+  if (window.visualViewport) {
+    const handleResize = () => {
+      const keyboardHeight = window.innerHeight - window.visualViewport.height;
+      if (keyboardHeight > 0) {
+        floatInputContainer(`${keyboardHeight}px`);
       } else {
-        // Keyboard is likely hidden
         restoreInputContainer();
       }
-    });
-  }
-  
-  // For Android, use a combination of focus/blur events and window resize
-  if (deviceInfo.isAndroid) {
-    // Find the input element within the inputContainer
+    };
+    window.visualViewport.addEventListener('resize', handleResize);
+    handleResize(); // Check initial state
+  } else {
+    // Fallback for older browsers
     const messageInput = inputContainer.querySelector('input, textarea');
-    
-    if (!messageInput) {
-      // Fallback to window resize only if no input element is found
+    if (messageInput) {
+      messageInput.addEventListener('focus', () => floatInputContainer());
+      messageInput.addEventListener('blur', () => setTimeout(restoreInputContainer, 100));
+    } else {
       window.addEventListener('resize', () => {
-        const currentHeight = window.innerHeight;
-        if (currentHeight < window.outerHeight * 0.85) {
+        if (window.innerHeight < window.outerHeight * 0.85) {
           floatInputContainer();
         } else {
           restoreInputContainer();
         }
       });
-      return true;
     }
-    
-    // Track initial window height
-    const initialWindowHeight = window.innerHeight;
-    
-    // On focus, check if keyboard appears (by detecting significant height change)
-    messageInput.addEventListener('focus', () => {
-      // Use setTimeout to allow the keyboard to appear
-      setTimeout(() => {
-        if (window.innerHeight < initialWindowHeight * 0.85) {
-          floatInputContainer();
-        }
-      }, 300);
-    });
-    
-    // On blur, restore the input container
-    messageInput.addEventListener('blur', () => {
-      setTimeout(restoreInputContainer, 100);
-    });
-    
-    // Also handle orientation changes
-    window.addEventListener('resize', () => {
-      if (document.activeElement === messageInput) {
-        setTimeout(() => {
-          if (window.innerHeight < initialWindowHeight * 0.85) {
-            floatInputContainer();
-          } else {
-            restoreInputContainer();
-          }
-        }, 300);
-      }
-    });
   }
-  
+
   return true;
 }
 
