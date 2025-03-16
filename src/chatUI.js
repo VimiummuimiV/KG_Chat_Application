@@ -246,7 +246,14 @@ export function createChatUI() {
     const messagesPanel = document.getElementById('messages-panel');
     const messageInput = document.getElementById('message-input');
     if (messagesPanel && messageInput) {
-      messagesPanel.scrollTop = messagesPanel.scrollHeight; // Scroll to bottom on load
+      const isMobile = checkIsMobile();
+      if (!isMobile) {
+        messagesPanel.scrollTop = messagesPanel.scrollHeight;
+      } else {
+        setTimeout(() => {
+          messagesPanel.scrollTop = messagesPanel.scrollHeight;
+        }, 2000);
+      }
       messageInput.value = ''; // Clear input field on load
       // Pass the input element and messages panel into the helper functions.
       createLengthPopup(messagesPanel);

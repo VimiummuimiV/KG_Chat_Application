@@ -739,21 +739,14 @@ export function highlightMentionWords() {
   }
 }
 
-let firstTime = true;
 const scrollThreshold = 600;
-
 export function scrollToBottom() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
-
-  if (firstTime) {
+  
+  const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+  if (distanceFromBottom <= scrollThreshold) {
     container.scrollTop = container.scrollHeight;
-    firstTime = false;
-  } else {
-    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
-    if (distanceFromBottom <= scrollThreshold) {
-      container.scrollTop = container.scrollHeight;
-    }
   }
 }
 
