@@ -91,7 +91,7 @@
   }
 
   /* Hide everything except #app-chat-container */
-  body > *:not(#app-chat-container) {
+  body > *:not(#app-chat-container):not(.dimming-element):not(.scaled-thumbnail) {
     display: none !important;
   }
 
