@@ -1,5 +1,5 @@
 import { reconnectionDelay, userListDelay } from "./definitions.js";
-import { compactXML, extractUsername, privateMessageState, showChatAlert } from "./helpers.js";
+import { compactXML, extractUsername, optimizeColor, privateMessageState, showChatAlert } from "./helpers.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.
@@ -8,6 +8,50 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
   const safeProcessMessages = (xmlResponse) =>
     xmlResponse && messageManager.processMessages(xmlResponse);
+
+  // Initialize userInfo as null
+  let userInfo = null;
+
+  // Function to calculate or retrieve user info
+  function getUserInfo() {
+    // If userInfo already exists, return it immediately
+    if (userInfo) {
+      return userInfo;
+    }
+
+    // Only proceed if the sessionStorage key exists
+    if (!sessionStorage.getItem('usernameColors')) {
+      console.log('usernameColors key does not exist in sessionStorage, skipping userInfo calculation');
+      return null; // Or any appropriate value to indicate we didn't calculate
+    }
+
+    // If we reach here, sessionStorage key exists
+    try {
+      const usernameColors = JSON.parse(sessionStorage.getItem('usernameColors'));
+
+      const cleanedUsername = extractUsername(username);
+      const usernameKey = cleanedUsername.toLowerCase();
+      const storedColor = usernameColors[usernameKey] || '#ff00c6';
+      const optimizedColor = optimizeColor(storedColor);
+      const baseAvatarPath = `/storage/avatars/${username.split('#')[0]}.png`;
+      const timestamp = Math.floor(Date.now() / 1000);
+
+      // Store the calculated info
+      userInfo = {
+        cleanedUsername,
+        usernameKey,
+        storedColor,
+        optimizedColor,
+        baseAvatarPath,
+        timestamp
+      };
+
+      return userInfo;
+    } catch (error) {
+      console.error('Error parsing usernameColors from sessionStorage:', error);
+      return null; // Or any appropriate value to indicate failure
+    }
+  }
 
   const xmppClient = {
     userManager,
@@ -20,21 +64,16 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
-      const usernameColors = JSON.parse(sessionStorage.getItem('usernameColors')) || {};
-      const cleanedUsername = extractUsername(username);
-      const usernameKey = cleanedUsername.toLowerCase(); // use lowercase for lookup
-      const backgroundColor = usernameColors[usernameKey] || '#ff00c6';
+      // Get user info, calculating it if necessary
+      const info = getUserInfo();
 
-      // Generate timestamp for the avatar
-      const timestamp = Math.floor(Date.now() / 1000);
-
-      // Create the user data block
+      // Create the user data block using pre-calculated properties
       const userDataBlock = `
       <x xmlns='klavogonki:userdata'>
         <user>
-          <login>${cleanedUsername}</login>
-          <avatar>/storage/avatars/${username.split('#')[0]}.png?updated=${timestamp}</avatar>
-          <background>${backgroundColor}</background>
+          <login>${info.cleanedUsername}</login>
+          <avatar>${info.baseAvatarPath}?updated=${info.timestamp}</avatar>
+          <background>${info.optimizedColor}</background>
         </user>
       </x>
       `;
@@ -98,25 +137,28 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             const session = await xmppConnection.connect();
             console.log('💬 Step 8: Joining chat room...');
 
+            // Get user info, calculating it if necessary
+            const info = getUserInfo();
+
+            // Create user data block, using either info or fallbacks
+            const cleanedUsername = info ? info.cleanedUsername : extractUsername(username);
+            const baseAvatarPath = info ? info.baseAvatarPath : `/storage/avatars/${username.split('#')[0]}.png`;
+            const timestamp = info ? info.timestamp : Math.floor(Date.now() / 1000);
+            const backgroundColor = info ? info.optimizedColor : "#000000";
+
             const joinPayload = compactXML(`
-              <body 
-                rid='${xmppConnection.nextRid()}' 
-                xmlns='http://jabber.org/protocol/httpbind' 
-                sid='${session.sid}'>
-                <presence 
-                  from='${username}@jabber.klavogonki.ru/web' 
-                  to='general@conference.jabber.klavogonki.ru/${username}' 
-                  xmlns='jabber:client'>
-                  <x xmlns='http://jabber.org/protocol/muc'/>
-                  <x xmlns='klavogonki:userdata'>
-                    <user>
-                      <login>${username.replace(/^\d+#/, '')}</login>
-                      <avatar>/storage/avatars/${username.split('#')[0]}.png</avatar>
-                      <background>#000000</background>
-                    </user>
-                  </x>
-                </presence>
-              </body>
+            <body rid='${xmppConnection.nextRid()}' xmlns='http://jabber.org/protocol/httpbind' sid='${session.sid}'>
+              <presence from='${username}@jabber.klavogonki.ru/web' to='general@conference.jabber.klavogonki.ru/${username}' xmlns='jabber:client'>
+                <x xmlns='http://jabber.org/protocol/muc'/>
+                <x xmlns='klavogonki:userdata'>
+                  <user>
+                    <login>${cleanedUsername}</login>
+                    <avatar>${baseAvatarPath}?updated=${timestamp}</avatar>
+                    <background>${backgroundColor}</background>
+                  </user>
+                </x>
+              </presence>
+            </body>
             `);
 
             const joinResponse = await xmppConnection.sendRequestWithRetry(joinPayload);

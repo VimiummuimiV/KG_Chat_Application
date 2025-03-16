@@ -18,6 +18,8 @@ export const getAuthData = () => {
   };
 };
 
+// ==================================================================================================
+
 function colorGenerator(config) {
   // Helper: Convert HSL (with h in [0,360] and s,l in percentage numbers) to hex
   function hslToHex(h, s, l) {
@@ -243,6 +245,75 @@ export const mentionColors = colorGenerator({
   saturation: '80',
   lightness: '50'
 });
+
+// ==================================================================================================
+
+// Calculate relative luminance from hex
+const getLuminance = hex => {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.slice(0, 2), 16) / 255;
+  const g = parseInt(hex.slice(2, 4), 16) / 255;
+  const b = parseInt(hex.slice(4, 6), 16) / 255;
+  const convert = c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+  return 0.2126 * convert(r) + 0.7152 * convert(g) + 0.0722 * convert(b);
+};
+
+// Contrast ratio between two colors
+const contrastRatio = (fg, bg) => {
+  const L1 = getLuminance(fg);
+  const L2 = getLuminance(bg);
+  return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+};
+
+// Convert hex to HSL
+const hexToHSL = hex => {
+  hex = hex.replace("#", "");
+  const r = parseInt(hex.slice(0, 2), 16) / 255;
+  const g = parseInt(hex.slice(2, 4), 16) / 255;
+  const b = parseInt(hex.slice(4, 6), 16) / 255;
+  const max = Math.max(r, g, b), min = Math.min(r, g, b);
+  let h = 0, s = 0, l = (max + min) / 2;
+  if (max !== min) {
+    const d = max - min;
+    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+    h = max === r ? (g - b) / d + (g < b ? 6 : 0)
+      : max === g ? (b - r) / d + 2
+        : (r - g) / d + 4;
+    h *= 60;
+  }
+  return { h, s: s * 100, l: l * 100 };
+};
+
+// Convert HSL back to hex
+const hslToHex = (h, s, l) => {
+  s /= 100; l /= 100;
+  const c = (1 - Math.abs(2 * l - 1)) * s,
+    x = c * (1 - Math.abs((h / 60) % 2 - 1)),
+    m = l - c / 2;
+  let r, g, b;
+  if (h < 60) { r = c; g = x; b = 0; }
+  else if (h < 120) { r = x; g = c; b = 0; }
+  else if (h < 180) { r = 0; g = c; b = x; }
+  else if (h < 240) { r = 0; g = x; b = c; }
+  else if (h < 300) { r = x; g = 0; b = c; }
+  else { r = c; g = 0; b = x; }
+  return "#" + [r, g, b].map(v =>
+    Math.round((v + m) * 255).toString(16).padStart(2, "0")
+  ).join("").toUpperCase();
+};
+
+// Darken the color until it meets 4.5:1 contrast on white
+export const optimizeColor = hex => {
+  console.log("Optimizing color for contrast:", hex);
+  let { h, s, l } = hexToHSL(hex);
+  let newHex = hex;
+  while (contrastRatio(newHex, "#FFFFFF") < 4.5 && l > 0) {
+    newHex = hslToHex(h, s, --l);
+  }
+  return newHex;
+};
+
+// ==================================================================================================
 
 let lastEmojiAvatar = null;
 export function getRandomEmojiAvatar() {
