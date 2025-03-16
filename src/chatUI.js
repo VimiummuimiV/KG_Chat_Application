@@ -73,19 +73,6 @@ export function createChatUI() {
           left: 50% !important;
           right: unset !important;
         }
-
-        /* Hide specific elements inside #app-chat-container */
-        #app-chat-container .resize-handle,
-        #app-chat-container .font-size-control,
-        #app-chat-container .header-button,
-        #app-chat-container #send-button {
-          display: none !important;
-        }
-
-        /* Hide everything except #app-chat-container */
-        body > *:not(#app-chat-container) {
-          display: none !important;
-        }
       `;
       document.head.appendChild(globalMobileStyles);
 
