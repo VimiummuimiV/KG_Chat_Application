@@ -20,9 +20,9 @@ export const getAuthData = () => {
 
 // ==================================================================================================
 
-function colorGenerator(config) {
-  // Helper: Convert HSL (with h in [0,360] and s,l in percentage numbers) to hex
-  function hslToHex(h, s, l) {
+const colorUtils = {
+  // Convert HSL (with h in [0,360] and s,l in percentage numbers) to hex
+  hslToHex(h, s, l) {
     s /= 100;
     l /= 100;
     const c = (1 - Math.abs(2 * l - 1)) * s;
@@ -47,10 +47,10 @@ function colorGenerator(config) {
     b = Math.round((b + m) * 255);
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b)
       .toString(16).slice(1);
-  }
+  },
 
-  // Helper: Convert a hex color (e.g. "#ff00c6") to its hue value.
-  function hexToHue(hex) {
+  // Convert hex to HSL object {h, s, l}
+  hexToHSL(hex) {
     hex = hex.replace(/^#/, '');
     if (hex.length === 3) {
       hex = hex.split('').map(c => c + c).join('');
@@ -60,11 +60,14 @@ function colorGenerator(config) {
     const b = parseInt(hex.substring(4, 6), 16) / 255;
     const max = Math.max(r, g, b);
     const min = Math.min(r, g, b);
-    let h;
-    if (max === min) {
-      h = 0;
-    } else {
+    let h = 0;
+    let s = 0;
+    const l = (max + min) / 2;
+    
+    if (max !== min) {
       const d = max - min;
+      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+      
       if (max === r) {
         h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
       } else if (max === g) {
@@ -73,9 +76,35 @@ function colorGenerator(config) {
         h = ((r - g) / d + 4) * 60;
       }
     }
-    return Math.round(h);
-  }
+    
+    return { h: Math.round(h), s: s * 100, l: l * 100 };
+  },
 
+  // Extract just the hue from a hex color
+  hexToHue(hex) {
+    return this.hexToHSL(hex).h;
+  },
+
+  // Calculate relative luminance from hex for accessibility calculations
+  getLuminance(hex) {
+    hex = hex.replace("#", "");
+    const r = parseInt(hex.slice(0, 2), 16) / 255;
+    const g = parseInt(hex.slice(2, 4), 16) / 255;
+    const b = parseInt(hex.slice(4, 6), 16) / 255;
+    const convert = c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    return 0.2126 * convert(r) + 0.7152 * convert(g) + 0.0722 * convert(b);
+  },
+
+  // Calculate contrast ratio between two colors
+  contrastRatio(fg, bg) {
+    const L1 = this.getLuminance(fg);
+    const L2 = this.getLuminance(bg);
+    return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
+  }
+};
+
+// Color generator factory function (not exported)
+function colorGenerator(config) {
   // Use sessionStorage as required
   const storageKey = config.storageKey || 'usernameColors';
   let colorMap;
@@ -112,7 +141,7 @@ function colorGenerator(config) {
   // Extract used hues from stored hex values by converting back to hue
   Object.values(colorMap).forEach(colorStr => {
     try {
-      usedHues.add(hexToHue(colorStr));
+      usedHues.add(colorUtils.hexToHue(colorStr));
     } catch (e) {
       // Ignore parsing errors
     }
@@ -144,7 +173,7 @@ function colorGenerator(config) {
       if (!username) {
         const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) : 50;
         const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) : 50;
-        return hslToHex(0, satVal, lightVal);
+        return colorUtils.hslToHex(0, satVal, lightVal);
       }
 
       // Normalize the username to ensure consistency
@@ -178,7 +207,7 @@ function colorGenerator(config) {
         const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) :
           Math.floor(Math.random() * lightRange) + minLight;
 
-        const newColor = hslToHex(hue, satVal, lightVal);
+        const newColor = colorUtils.hslToHex(hue, satVal, lightVal);
 
         // Check if this color is unique
         if (!existingColorValues.has(newColor)) {
@@ -196,7 +225,7 @@ function colorGenerator(config) {
           Math.floor(Math.random() * satRange) + minSat;
         const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) :
           Math.floor(Math.random() * lightRange) + minLight;
-        color = hslToHex(hue, satVal, lightVal);
+        color = colorUtils.hslToHex(hue, satVal, lightVal);
       }
 
       // Save the new color
@@ -224,6 +253,18 @@ function colorGenerator(config) {
   };
 }
 
+// Darken the color until it meets 4.5:1 contrast on white (exported)
+export const optimizeColor = hex => {
+  console.log("Optimizing color for contrast:", hex);
+  let { h, s, l } = colorUtils.hexToHSL(hex);
+  let newHex = hex;
+  while (colorUtils.contrastRatio(newHex, "#FFFFFF") < 4.5 && l > 0) {
+    newHex = colorUtils.hslToHex(h, s, --l);
+  }
+  return newHex;
+};
+
+// Pre-configured color generators (exported)
 export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
   hueRanges: [
@@ -245,73 +286,6 @@ export const mentionColors = colorGenerator({
   saturation: '80',
   lightness: '50'
 });
-
-// ==================================================================================================
-
-// Calculate relative luminance from hex
-const getLuminance = hex => {
-  hex = hex.replace("#", "");
-  const r = parseInt(hex.slice(0, 2), 16) / 255;
-  const g = parseInt(hex.slice(2, 4), 16) / 255;
-  const b = parseInt(hex.slice(4, 6), 16) / 255;
-  const convert = c => c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
-  return 0.2126 * convert(r) + 0.7152 * convert(g) + 0.0722 * convert(b);
-};
-
-// Contrast ratio between two colors
-const contrastRatio = (fg, bg) => {
-  const L1 = getLuminance(fg);
-  const L2 = getLuminance(bg);
-  return (Math.max(L1, L2) + 0.05) / (Math.min(L1, L2) + 0.05);
-};
-
-// Convert hex to HSL
-const hexToHSL = hex => {
-  hex = hex.replace("#", "");
-  const r = parseInt(hex.slice(0, 2), 16) / 255;
-  const g = parseInt(hex.slice(2, 4), 16) / 255;
-  const b = parseInt(hex.slice(4, 6), 16) / 255;
-  const max = Math.max(r, g, b), min = Math.min(r, g, b);
-  let h = 0, s = 0, l = (max + min) / 2;
-  if (max !== min) {
-    const d = max - min;
-    s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-    h = max === r ? (g - b) / d + (g < b ? 6 : 0)
-      : max === g ? (b - r) / d + 2
-        : (r - g) / d + 4;
-    h *= 60;
-  }
-  return { h, s: s * 100, l: l * 100 };
-};
-
-// Convert HSL back to hex
-const hslToHex = (h, s, l) => {
-  s /= 100; l /= 100;
-  const c = (1 - Math.abs(2 * l - 1)) * s,
-    x = c * (1 - Math.abs((h / 60) % 2 - 1)),
-    m = l - c / 2;
-  let r, g, b;
-  if (h < 60) { r = c; g = x; b = 0; }
-  else if (h < 120) { r = x; g = c; b = 0; }
-  else if (h < 180) { r = 0; g = c; b = x; }
-  else if (h < 240) { r = 0; g = x; b = c; }
-  else if (h < 300) { r = x; g = 0; b = c; }
-  else { r = c; g = 0; b = x; }
-  return "#" + [r, g, b].map(v =>
-    Math.round((v + m) * 255).toString(16).padStart(2, "0")
-  ).join("").toUpperCase();
-};
-
-// Darken the color until it meets 4.5:1 contrast on white
-export const optimizeColor = hex => {
-  console.log("Optimizing color for contrast:", hex);
-  let { h, s, l } = hexToHSL(hex);
-  let newHex = hex;
-  while (contrastRatio(newHex, "#FFFFFF") < 4.5 && l > 0) {
-    newHex = hslToHex(h, s, --l);
-  }
-  return newHex;
-};
 
 // ==================================================================================================
 
