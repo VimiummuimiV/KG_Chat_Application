@@ -199,7 +199,11 @@ export class EmojiPanel {
     this.options.container.appendChild(this.container);
     // Fade in the panel
     adjustVisibility(this.container, 'show', '1');
-    this.searchInput.focus();
+
+    // Perform mobile check and focus only when the panel is created
+    if (!checkIsMobile()) {
+      this.searchInput.focus();
+    }
   }
 
   /** Load initial batch of emojis for all categories */
@@ -557,10 +561,6 @@ export class EmojiPanel {
     this.createPanel();
     this.bindEvents();
     this.loadAllEmojis();
-
-    if (!checkIsMobile()) {
-      this.searchInput.focus();
-    }
   }
 
   /** Completely remove the emoji panel from DOM and clean up */
