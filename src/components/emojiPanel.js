@@ -1,5 +1,5 @@
 import { emojiData, emojiKeywords } from '../data/emojiData.js';
-import { adjustVisibility } from '../helpers.js';
+import { adjustVisibility, checkIsMobile } from '../helpers.js';
 
 // Create a single global shortcut handler
 const setupGlobalEmojiShortcut = (() => {
@@ -557,7 +557,10 @@ export class EmojiPanel {
     this.createPanel();
     this.bindEvents();
     this.loadAllEmojis();
-    this.searchInput.focus();
+
+    if (!checkIsMobile()) {
+      this.searchInput.focus();
+    }
   }
 
   /** Completely remove the emoji panel from DOM and clean up */

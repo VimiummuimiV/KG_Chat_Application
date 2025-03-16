@@ -66,11 +66,11 @@ export function createChatUI() {
 
       globalMobileStyles.textContent = `
         .emoji-panel {
-          transform: none !important;
+          transform: translate(-50%, 0) !important;
           height: 60vh !important;
-          bottom: 0 !important;
+          bottom: 10px !important;
           top: unset !important;
-          left: unset !important;
+          left: 50% !important;
           right: unset !important;
         }
 
