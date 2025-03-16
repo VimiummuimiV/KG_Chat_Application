@@ -5,7 +5,9 @@ import {
   decodeURL,
   isEncodedURL,
   isTrustedDomain,
-  removeBigImageEventListeners
+  removeBigImageEventListeners,
+  checkIsMobile,
+  scrollToBottom
 } from "../helpers"; // helpers
 
 // definitions
@@ -53,9 +55,9 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
   let zoomScale = 1;
   let isMMBPressed = false;
   let lastMouseX = 0,
-      lastMouseY = 0;
+    lastMouseY = 0;
   let translateX = 0,
-      translateY = 0;
+    translateY = 0;
   const movementSpeed = 5;
 
   // Get or create the dimming element
@@ -64,6 +66,73 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
     dimmingElement = document.createElement('div');
     dimmingElement.classList.add('dimming-element');
     document.body.appendChild(dimmingElement);
+  }
+
+  // Add mobile touch support
+  if (checkIsMobile()) {
+    // Variables to track touch state
+    let prevTouches = 0;
+    let prevDistance = 0;
+    let prevTouchX = 0;
+    let prevTouchY = 0;
+
+    const handleTouchStart = (event) => {
+      event.preventDefault();
+    };
+
+    const handleTouchMove = (event) => {
+      event.preventDefault(); // Prevent scrolling
+
+      const currentTouches = event.touches.length;
+
+      if (currentTouches === 2) {
+        // Pinch zoom with two fingers
+        const touch1 = event.touches[0];
+        const touch2 = event.touches[1];
+        const currentDistance = Math.hypot(
+          touch1.clientX - touch2.clientX,
+          touch1.clientY - touch2.clientY
+        );
+
+        if (prevTouches === 2) {
+          // Apply zoom only if previous event also had 2 touches
+          const zoomFactor = currentDistance / prevDistance;
+          zoomScale *= zoomFactor;
+          zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
+          imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+        }
+        prevDistance = currentDistance;
+      } else if (currentTouches === 1) {
+        // Pan with one finger
+        const touch = event.touches[0];
+        const currentX = touch.clientX;
+        const currentY = touch.clientY;
+
+        if (prevTouches === 1) {
+          // Apply pan only if previous event also had 1 touch
+          const deltaX = currentX - prevTouchX;
+          const deltaY = currentY - prevTouchY;
+          translateX += deltaX;
+          translateY += deltaY;
+          imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+        }
+        prevTouchX = currentX;
+        prevTouchY = currentY;
+      }
+
+      prevTouches = currentTouches; // Update previous touch count
+    };
+
+    const handleTouchEnd = (event) => {
+      if (event.touches.length === 0) {
+        prevTouches = 0; // Reset when all fingers are lifted
+      }
+    };
+
+    // Add touch event listeners with passive: false to allow preventDefault
+    imageElement.addEventListener('touchstart', handleTouchStart, { passive: false });
+    imageElement.addEventListener('touchmove', handleTouchMove, { passive: false });
+    imageElement.addEventListener('touchend', handleTouchEnd);
   }
 
   // Define closeExpandedView function
@@ -75,7 +144,7 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
     removeBigImageEventListeners();
   };
 
-  // Define event listeners for the expanded image
+  // Define event listeners for the expanded image (desktop)
   state.bigImageEvents['click'] = (event) => {
     if (!imageElement.contains(event.target)) {
       imageElement.remove();
@@ -98,8 +167,6 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
     const direction = event.deltaY < 0 ? 1 : -1;
     zoomScale += direction * zoomLimits.factor * zoomScale;
     zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
-    
-    // Update transform to maintain center positioning while zooming
     imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
   };
 
@@ -117,10 +184,7 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
         translateX += deltaX;
         translateY += deltaY;
       }
-      
-      // Update transform to maintain center positioning while moving and zooming
       imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
-      
       lastMouseX = event.clientX;
       lastMouseY = event.clientY;
     }
@@ -139,7 +203,7 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
       } else {
         navigateImages(1);
       }
-    } else if (button === 1) { // Middle mouse button
+    } else if (button === 1) {
       isMMBPressed = true;
       lastMouseX = clientX;
       lastMouseY = clientY;
@@ -179,7 +243,7 @@ const navigateImages = (direction) => {
   }
 };
 
-export function convertImageLinksToImage(containerType) {
+export function convertImageLinksToImage() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
 
@@ -221,6 +285,7 @@ export function convertImageLinksToImage(containerType) {
     img.onload = () => {
       thumbnail.appendChild(img);
       link.parentNode.insertBefore(thumbnail, link.nextSibling);
+      scrollToBottom();
     };
 
     img.onerror = () => {

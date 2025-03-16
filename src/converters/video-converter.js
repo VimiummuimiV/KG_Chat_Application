@@ -1,7 +1,8 @@
 import {
   decodeURL,
   isEncodedURL,
-  isTrustedDomain
+  isTrustedDomain,
+  scrollToBottom
 } from "../helpers"; // helpers
 
 const emojis = { image: '🎥', domain: '🖥️', untrusted: '💀️️' };
@@ -72,6 +73,7 @@ export function convertVideoLinksToPlayer(containerType) {
 
     link.parentNode.insertBefore(wrapper, link);
     wrapper.append(link, embed);
+    scrollToBottom(); 
   }
 
   function getVideoInfo(url) {
