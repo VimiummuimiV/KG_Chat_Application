@@ -6,6 +6,8 @@ import { openSVG, closeSVG } from "./icons.js";
 import { addShakeEffect } from "./animations.js";
 import { emojiKeywords } from "./data/emojiData.js";
 
+// ==================================================================================================
+
 export const getAuthData = () => {
   const pageData = JSON.parse([...document.scripts]
     .find(s => s.text.includes('PageData'))
@@ -63,11 +65,11 @@ const colorUtils = {
     let h = 0;
     let s = 0;
     const l = (max + min) / 2;
-    
+
     if (max !== min) {
       const d = max - min;
       s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      
+
       if (max === r) {
         h = ((g - b) / d + (g < b ? 6 : 0)) * 60;
       } else if (max === g) {
@@ -76,7 +78,7 @@ const colorUtils = {
         h = ((r - g) / d + 4) * 60;
       }
     }
-    
+
     return { h: Math.round(h), s: s * 100, l: l * 100 };
   },
 
@@ -299,6 +301,8 @@ export function getRandomEmojiAvatar() {
   return newEmoji;
 }
 
+// ==================================================================================================
+
 export function handleElementsBehavior() {
   const wrapper = document.querySelector('#app-chat-container .chat-wrapper');
   if (!wrapper) return;
@@ -387,6 +391,8 @@ export function handleElementsBehavior() {
   });
 }
 
+// ==================================================================================================
+
 export function observeMessagesPanel() {
   const messagesPanel = document.getElementById('messages-panel');
   if (!messagesPanel) return;
@@ -400,6 +406,8 @@ export function observeMessagesPanel() {
 
   observer.observe(messagesPanel, { childList: true, subtree: true });
 }
+
+// ==================================================================================================
 
 export function restoreChatState() {
   const chat = document.getElementById('app-chat-container');
@@ -528,6 +536,12 @@ export function saveChatState(state) {
   localStorage.setItem('chatState', JSON.stringify(state));
 }
 
+export function clamp(value, min, max) {
+  return Math.min(Math.max(value, min), max);
+}
+
+// ==================================================================================================
+
 export const parseMessageText = text => {
   let i = 0, urls = [];
 
@@ -562,9 +576,7 @@ export const parseMessageText = text => {
   return text;
 }
 
-export function clamp(value, min, max) {
-  return Math.min(Math.max(value, min), max);
-}
+// ==================================================================================================
 
 export function parseUsername(username) {
   if (typeof username !== 'string') return username;
@@ -594,6 +606,8 @@ export function extractUsername(login) {
   return login.replace(/^\d+#/, '');
 }
 
+// ==================================================================================================
+
 export function addBigImageEventListeners() {
   Object.entries(state.bigImageEvents).forEach(([event, handler]) => {
     document.addEventListener(event, handler);
@@ -605,6 +619,8 @@ export function removeBigImageEventListeners() {
     document.removeEventListener(event, handler);
   });
 }
+
+// ==================================================================================================
 
 export function adjustVisibility(element, action, opacity) {
   if (!element) return;
@@ -620,6 +636,8 @@ export function adjustVisibility(element, action, opacity) {
   }
 }
 
+// ==================================================================================================
+
 export const isTrustedDomain = url => {
   try {
     const { hostname } = new URL(url);
@@ -631,6 +649,8 @@ export const isTrustedDomain = url => {
   }
 };
 
+// ==================================================================================================
+
 export function isEncodedURL(url) {
   const urlPattern = /^https?:\/\//;
   const encodedPattern = /%[0-9A-Fa-f]{2}/;
@@ -641,6 +661,8 @@ export function decodeURL(url) {
   const [base] = url.split('#');
   return decodeURIComponent(base).replace(/ /g, '_');
 }
+
+// ==================================================================================================
 
 export function playMentionSound() {
   const audio = new Audio('https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/notification-pluck-on.mp3');
@@ -739,16 +761,20 @@ export function highlightMentionWords() {
   }
 }
 
+// ==================================================================================================
+
 const scrollThreshold = 600;
 export function scrollToBottom() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
-  
+
   const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
   if (distanceFromBottom <= scrollThreshold) {
     container.scrollTop = container.scrollHeight;
   }
 }
+
+// ==================================================================================================
 
 export function showChatAlert(message, options = {}) {
   const dragArea = document.querySelector('.chat-drag-area');
@@ -831,6 +857,8 @@ export function showChatAlert(message, options = {}) {
   animateAlert();
 }
 
+// ==================================================================================================
+
 export function focusTextInput() {
   const chatContainer = document.getElementById('app-chat-container');
   const element = document.getElementById('message-input');
@@ -840,6 +868,8 @@ export function focusTextInput() {
   }
   return false;
 }
+
+// ==================================================================================================
 
 // Helper to fetch JSON and validate response
 export async function fetchJSON(url) {
@@ -874,12 +904,6 @@ export async function getExactUserIdByName(userName) {
     showChatAlert(`Could not find user "${userName}"`, { type: 'error', duration: 5000 });
     return null;
   }
-}
-
-// Function to extract target username from message input
-export function extractTargetUsername(input) {
-  const match = input.match(/<([^>]+)>/);
-  return match ? match[1] : null;
 }
 
 // State management for private messaging
@@ -1026,10 +1050,14 @@ export function setupPrivateMessageEvents() {
   });
 }
 
+// ==================================================================================================
+
 // Only the sleep function is exported from here.
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
+
+// ==================================================================================================
 
 // Helper function to check if an image exists
 export function checkImageExists(url) {
@@ -1040,6 +1068,8 @@ export function checkImageExists(url) {
     img.src = url;
   });
 }
+
+// ==================================================================================================
 
 // Function to randomize emoji and add shake effect
 export function setupRandomEmojiAttention(emojiButton, frequency) {
@@ -1091,6 +1121,8 @@ export function getRandomInterval(minMs, maxMs) {
   return Math.floor(Math.random() * (maxMs - minMs + 1)) + minMs;
 }
 
+// ==================================================================================================
+
 export function addViewportMeta() {
   if (!document.querySelector('meta[name="viewport"]')) {
     const viewportMeta = document.createElement('meta');
@@ -1100,6 +1132,8 @@ export function addViewportMeta() {
     console.log('Viewport meta tag added dynamically');
   }
 }
+
+// ==================================================================================================
 
 // Instead of getting the elements immediately, we declare module-level variables.
 let chatField = null;
@@ -1231,6 +1265,8 @@ export function initChatLengthPopupEvents(field) {
   chatField.addEventListener('keydown', handleKeydownEvent);
 }
 
+// ==================================================================================================
+
 /**
  * Converts a given local time to Moscow time (UTC+3) based on the system's timezone.
  *
@@ -1279,6 +1315,8 @@ export function calibrateToMoscowTime(time) {
     `${adjustedMins.toString().padStart(2, '0')}:` +
     `${seconds.toString().padStart(2, '0')}`;
 }
+
+// ==================================================================================================
 
 // Removes newlines and excess whitespace from XML strings to create a compact single-line format while preserving content.
 export function compactXML(xmlString) {
