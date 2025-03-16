@@ -73,6 +73,10 @@ export function createChatUI() {
           left: 50% !important;
           right: unset !important;
         }
+
+        #app-chat-container .length-field-popup {
+          bottom: unset !important;
+        }
       `;
       document.head.appendChild(globalMobileStyles);
 
@@ -151,6 +155,7 @@ export function createChatUI() {
   messageInput.type = 'text';
   messageInput.id = 'message-input';
   messageInput.maxLength = 300;
+  messageInput.autocomplete = 'off';
   // Create send button
   const sendButton = document.createElement('button');
   sendButton.id = 'send-button';
@@ -241,7 +246,8 @@ export function createChatUI() {
     const messagesPanel = document.getElementById('messages-panel');
     const messageInput = document.getElementById('message-input');
     if (messagesPanel && messageInput) {
-      messagesPanel.scrollTop = messagesPanel.scrollHeight;
+      messagesPanel.scrollTop = messagesPanel.scrollHeight; // Scroll to bottom on load
+      messageInput.value = ''; // Clear input field on load
       // Pass the input element and messages panel into the helper functions.
       createLengthPopup(messagesPanel);
       initChatLengthPopupEvents(messageInput);

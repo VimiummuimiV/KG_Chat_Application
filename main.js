@@ -93,7 +93,7 @@ async function initializeApp() {
       const text = input.value.trim();
       if (!text) return;
       xmppClient.sendMessage(text);
-      input.value = '';
+      input.value = ''; // Clear the input field after sending
       input.focus();
     };
 
