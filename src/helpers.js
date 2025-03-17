@@ -1163,31 +1163,35 @@ function updateLengthPopupColor(length) {
     console.error('lengthPopup is not defined');
     return;
   }
-  let textColor;
+  
+  let h, s = 100, l = 50;
+  
   if (length === 0) {
-    textColor = 'hsl(200, 20%, 50%)'; // Light Blue
-  } else if (length >= 1 && length <= 90) {
-    textColor = 'hsl(120, 100%, 40%)'; // Bright Green
-  } else if (length > 90 && length <= 100) {
-    const factor = (length - 90) / 10;
-    const h = Math.round(120 + factor * (60 - 120)); // Interpolating hue
-    textColor = `hsl(${h}, 100%, 40%)`;
-  } else if (length > 100 && length <= 190) {
-    textColor = 'hsl(60, 100%, 50%)'; // Bright Yellow
-  } else if (length > 190 && length <= 200) {
-    const factor = (length - 190) / 10;
-    const h = Math.round(60 + factor * (30 - 60)); // Interpolating hue
-    textColor = `hsl(${h}, 100%, 50%)`;
-  } else if (length > 200 && length <= 250) {
-    textColor = 'hsl(40, 100%, 50%)'; // Orange
-  } else if (length > 250 && length <= 300) {
-    const factor = (length - 250) / 50;
-    const h = Math.round(40 + factor * (0 - 40)); // Interpolating hue
-    textColor = `hsl(${h}, 100%, 70%)`;
+    h = 200; s = 20; l = 50;
+  } else if (length <= 90) {
+    h = 120;
+  } else if (length <= 100) {
+    h = 120 - ((length - 90) / 10) * 60;
+  } else if (length <= 190) {
+    h = 60;
+  } else if (length <= 200) {
+    h = 60 - ((length - 190) / 10) * 20;
+  } else if (length <= 250) {
+    h = 40;
+  } else if (length <= 300) {
+    h = 40 - ((length - 250) / 50) * 40;
   } else {
-    textColor = 'hsl(0, 100%, 70%)'; // Red
+    h = 0;
   }
-  lengthPopup.style.color = textColor;
+  
+  const textColor = `hsl(${h}, ${s}%, ${l}%)`;
+  const backgroundColor = `hsl(${h}, ${s}%, ${Math.max(l - (length > 250 ? 35 : 30), 8)}%)`;
+  const borderColor = `hsla(${h}, ${s}%, ${l}%, 0.5)`;
+  
+  lengthPopup.style.setProperty('color', textColor, 'important');
+  lengthPopup.style.setProperty('background-color', backgroundColor, 'important');
+  lengthPopup.style.setProperty('border', `1px solid ${borderColor}`, 'important');
+  lengthPopup.style.setProperty('border-radius', '0.4em', 'important');
 }
 
 function updatePopupMetrics(text) {
