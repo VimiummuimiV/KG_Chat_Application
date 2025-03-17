@@ -434,7 +434,7 @@
   display: flex;
   flex-direction: row;
   border-radius: var(--border-radius) !important;
-  width: fit-content !important;
+  width: 100% !important;
   max-width: 100% !important;
   word-break: break-word !important;
 }
@@ -826,7 +826,7 @@
 /* Chat messages manual remover */
 /* Delete button base styles */
 .delete-btn {
-  z-index: 1010;
+  z-index: 1020 !important;
   padding: 8px 16px;
   background-color: hsl(0, 50%, 20%);
   color: hsl(0, 60%, 70%);
