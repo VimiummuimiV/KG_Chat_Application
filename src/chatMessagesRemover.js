@@ -70,6 +70,9 @@ export default class ChatMessagesRemover {
       });
 
       document.addEventListener("touchmove", (e) => {
+        if (this.isDragging) {
+          e.preventDefault(); // Prevent scrolling during multi-selection drag
+        }
         const touchX = e.touches[0].clientX;
         const touchY = e.touches[0].clientY;
         const moveX = Math.abs(touchX - this.touchStartX);
@@ -81,7 +84,7 @@ export default class ChatMessagesRemover {
             this.longPressTimer = null;
           }
         }
-      });
+      }, { passive: false });
 
       document.addEventListener("touchend", () => {
         if (this.longPressTimer) {
@@ -358,17 +361,15 @@ export default class ChatMessagesRemover {
           }
         });
 
-        if (this.toggleBtn) {
-          this.toggleBtn.addEventListener('touchend', () => {
-            clearTimeout(longPressTimer);
-            if (isLongPress) {
-              this.toggleBtn.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-              }, { once: true });
-            }
-          });
-        }
+        this.toggleBtn.addEventListener('touchend', () => {
+          clearTimeout(longPressTimer);
+          if (isLongPress) {
+            this.toggleBtn.addEventListener('click', (e) => {
+              e.preventDefault();
+              e.stopPropagation();
+            }, { once: true });
+          }
+        });
       }
 
       messagesPanel.append(this.toggleBtn);
