@@ -244,19 +244,23 @@
 }
 
 /* Custom scrollbar styling for WebKit browsers */
-#app-chat-container .messages-panel::-webkit-scrollbar {
+#app-chat-container .messages-panel::-webkit-scrollbar,
+#app-chat-container .user-list-container::-webkit-scrollbar {
   width: 8px !important;
 }
 
-#app-chat-container .messages-panel::-webkit-scrollbar-thumb {
+#app-chat-container .messages-panel::-webkit-scrollbar-thumb,
+#app-chat-container .user-list-container::-webkit-scrollbar-thumb {
   background-color: #333 !important;
 }
 
-#app-chat-container .messages-panel::-webkit-scrollbar-thumb:hover {
+#app-chat-container .messages-panel::-webkit-scrollbar-thumb:hover,
+#app-chat-container .user-list-container::-webkit-scrollbar-thumb:hover {
   background-color: #444 !important;
 }
 
-#app-chat-container .messages-panel::-webkit-scrollbar-track {
+#app-chat-container .messages-panel::-webkit-scrollbar-track,
+#app-chat-container .user-list-container::-webkit-scrollbar-track {
   background-color: #1e1e1e !important;
 }
 
@@ -373,6 +377,8 @@
   padding: 1em !important;
   background: #1e1e1e !important;
   border-left: 1px solid #333 !important;
+  scrollbar-width: thin !important;
+  scrollbar-color: #333 #1e1e1e !important;
 }
 
 .reveal-userlist-btn {
