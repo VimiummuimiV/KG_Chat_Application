@@ -93,7 +93,7 @@ export default class MessageManager {
     this.sentMessageTexts.add(text);
 
     // Generate a unique ID using the same format as processMessages
-    const uniqueId = `[${this.currentUsername}] ${text}`;
+    const uniqueId = `<${this.currentUsername}>${text}`;
 
     const messageObj = {
       id: uniqueId,
