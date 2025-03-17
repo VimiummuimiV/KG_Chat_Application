@@ -791,3 +791,106 @@
   height: 200px !important;
   width: 356px !important;
 }
+
+/* toggleHiddenMessages */
+.toggle-button-hidden {
+  background-color: hsl(0, 20%, 10%);
+  color: hsl(0, 50%, 50%);
+  border: 1px solid hsl(0, 50%, 50%);
+}
+
+.toggle-button-show {
+  background-color: hsl(90, 20%, 10%);
+  color: hsl(90, 50%, 50%);
+  border: 1px solid hsl(90, 50%, 50%);
+}
+
+.toggle-button-hide {
+  background-color: hsl(50, 20%, 10%);
+  color: hsl(50, 50%, 50%);
+  border: 1px solid hsl(50, 50%, 50%);
+}
+
+/* Chat messages manual remover */
+/* Delete button base styles */
+.delete-btn {
+  z-index: 1010;
+  padding: 8px 16px;
+  background-color: hsl(0, 50%, 20%);
+  color: hsl(0, 60%, 70%);
+  border: 1px solid hsl(0, 50%, 35%);
+  transition: all 0.3s;
+  cursor: pointer;
+  filter: brightness(1);
+  border-radius: 0.2em !important;
+}
+
+.delete-btn:hover {
+  filter: brightness(1.5);
+}
+
+/* Common styles for all selected messages */
+.selected-message {
+  background-clip: padding-box !important;
+}
+
+/* message-mode */
+.selected-message.message-mode {
+  background-color: hsla(0, 50%, 50%, 0.2) !important;
+  box-shadow: inset 0px 0px 0px 1px hsl(0, 50%, 50%, 0.4) !important;
+}
+
+/* username-mode */
+.selected-message.username-mode {
+  background-color: hsla(145, 50%, 30%, 0.2) !important;
+  box-shadow: inset 0px 0px 0px 1px hsl(145, 50%, 50%, 0.4) !important;
+}
+
+/* time-mode */
+.selected-message.time-mode {
+  background-color: hsla(200, 50%, 30%, 0.2) !important;
+  box-shadow: inset 0px 0px 0px 1px hsl(200, 50%, 50%, 0.4) !important;
+}
+
+.shown-message {
+  background-color: hsla(30, 60%, 30%, 0.2) !important;
+  box-shadow: inset 0px 0px 0px 1px hsl(30, 60%, 50%, 0.4) !important;
+  background-clip: padding-box !important;
+}
+
+.hidden-message {
+  display: none !important;
+}
+
+/* Toggle button base styles */
+.toggle-button {
+  font: bold 0.9em 'Montserrat', sans-serif;
+  position: absolute;
+  top: 0;
+  right: 2em;
+  padding: 8px 16px;
+  transition: filter 0.3s;
+  border-radius: 0 0 0.2em 0.2em !important;
+  border-top: none;
+  min-width: 4em;
+}
+
+.toggle-button.toggle-hidden {
+  background: linear-gradient(to top, hsl(0, 50%, 20%), hsl(0, 50%, 25%));
+  color: hsl(0, 60%, 70%);
+  border-left: 1px solid hsl(0, 50%, 35%);
+  border-right: 1px solid hsl(0, 50%, 35%);
+  border-bottom: 1px solid hsl(0, 50%, 35%);
+}
+
+.toggle-button.toggle-shown {
+  background: linear-gradient(to top, hsl(30, 50%, 20%), hsl(30, 50%, 25%));
+  color: hsl(30, 60%, 70%);
+  border-left: 1px solid hsl(30, 50%, 35%);
+  border-right: 1px solid hsl(30, 50%, 35%);
+  border-bottom: 1px solid hsl(30, 50%, 35%);
+}
+
+.toggle-button:hover {
+  filter: brightness(1.5);
+}

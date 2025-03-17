@@ -9,6 +9,8 @@ import {
   calibrateToMoscowTime
 } from './helpers.js';
 
+import ChatMessagesRemover from './ChatMessagesRemover.js';
+
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
     this.panel = document.getElementById(panelId);
@@ -19,6 +21,9 @@ export default class MessageManager {
     this.processedMessageIds = new Set(); // Now used exclusively for deduplication
     this.chatHistory = new Map(); // Local in-memory map for chat history
     this.initialLoadComplete = false;
+
+    // Integrate the message remover
+    this.chatRemover = new ChatMessagesRemover();
   }
 
   processMessages(xmlResponse) {
@@ -41,7 +46,7 @@ export default class MessageManager {
       const cleanFrom = parseUsername(from);
 
       // Generate a unique id based solely on username and message text.
-      const uniqueId = `[${cleanFrom}] ${text}`;
+      const uniqueId = `<${cleanFrom}>${text}`;
 
       // Skip this message if it has already been processed.
       if (this.processedMessageIds.has(uniqueId)) return;
@@ -225,6 +230,11 @@ export default class MessageManager {
       this.initialLoadComplete = true;
     }
 
+    // Update the message remover so it applies deletion state to new messages.
+    if (this.chatRemover) {
+      this.chatRemover.updateDeletedMessages();
+      this.chatRemover.renderToggle();
+    }
   }
 
   addDelegatedClickListeners() {
