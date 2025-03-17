@@ -189,6 +189,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             this.isConnected = true;
             if (this.isReconnecting) {
               showChatAlert("Chat connected successfully!", { type: 'success' });
+              messageManager.refreshMessages(true);
               this.isReconnecting = false;
             }
             this.startPresencePolling(xmppConnection);
@@ -237,7 +238,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           if (error.message.includes('404') && !this.isReconnecting) {
             console.log('🛑 Connection lost (404). Reconnecting in 5 seconds...');
             showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
-            messageManager.clearMessages();
+            messageManager.refreshMessages(false);
             this.isReconnecting = true;
             this.isConnected = false;
             clearInterval(this.presenceInterval);

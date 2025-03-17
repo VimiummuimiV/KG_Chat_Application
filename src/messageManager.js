@@ -294,12 +294,18 @@ export default class MessageManager {
     return Array.from(this.chatHistory.values());
   }
 
-  clearMessages() {
-    const systemMessageId = `system_${Date.now()}`;
+  refreshMessages(connectionStatus = false) {
+    // Generate a unique ID for each system message using a timestamp
+    const systemMessageId = `system-connection-${Date.now()}`;
+    const messageText = connectionStatus
+      ? "Chat connection established. ✓"
+      : "Chat connection lost. Reconnecting...";
+
+    // Create a new system message object
     const systemMessage = {
       id: systemMessageId,
       from: "System",
-      text: "Chat connection lost. Reconnecting...",
+      text: messageText,
       timestamp: new Date().toISOString(),
       isPrivate: false,
       recipient: null,
@@ -307,9 +313,12 @@ export default class MessageManager {
       pending: false
     };
 
+    // Add the new message to the messages array, chatHistory map, and processed IDs set
     this.messages.push(systemMessage);
     this.chatHistory.set(systemMessageId, systemMessage);
     this.processedMessageIds.add(systemMessageId);
+
+    // Update the UI with the new message
     this.updatePanel();
   }
 }
