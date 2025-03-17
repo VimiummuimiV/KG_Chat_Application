@@ -132,7 +132,7 @@ function colorGenerator(config) {
   const minSat = config.minSaturation || 30;
   const maxSat = config.maxSaturation || 90;
   const minLight = config.minLightness || 50;
-  const maxLight = config.maxLightness || 60;
+  const maxLight = config.maxLightness || 80;
   const satRange = maxSat - minSat;
   const lightRange = maxLight - minLight;
 
@@ -276,7 +276,7 @@ export const usernameColors = colorGenerator({
   minSaturation: 30,
   maxSaturation: 90,
   minLightness: 50,
-  maxLightness: 60
+  maxLightness: 80
 });
 
 export const mentionColors = colorGenerator({
@@ -286,7 +286,7 @@ export const mentionColors = colorGenerator({
     { min: 280, max: 360 }
   ],
   saturation: '80',
-  lightness: '50'
+  lightness: '60'
 });
 
 // ==================================================================================================
