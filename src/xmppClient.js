@@ -1,5 +1,5 @@
 import { reconnectionDelay, userListDelay } from "./definitions.js";
-import { compactXML, extractUsername, optimizeColor, privateMessageState, showChatAlert } from "./helpers.js";
+import { compactXML, extractUsername, optimizeColor, privateMessageState, showChatAlert, sleep } from "./helpers.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.
@@ -291,6 +291,27 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       }
     }
   };
+
+  // --- Network connectivity handling ---
+  // Listen for offline events to stop presence polling.
+  window.addEventListener('offline', () => {
+    console.log("Network offline. Stopping presence polling.");
+    if (xmppClient.presenceInterval) {
+      clearInterval(xmppClient.presenceInterval);
+      xmppClient.presenceInterval = null;
+    }
+    xmppClient.isConnected = false;
+  });
+
+  // Listen for online events to attempt reconnection.
+  window.addEventListener('online', async () => {
+    console.log("Network online. Scheduling reconnection in 5 seconds...");
+    await sleep(5000);
+    if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
+      xmppClient.connect();
+    }
+  });
+  // --- End network handling ---
 
   return xmppClient;
 }

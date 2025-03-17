@@ -1052,7 +1052,6 @@ export function setupPrivateMessageEvents() {
 
 // ==================================================================================================
 
-// Only the sleep function is exported from here.
 export function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
