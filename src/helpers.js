@@ -1186,7 +1186,7 @@ function updateLengthPopupColor(length) {
   
   const textColor = `hsl(${h}, ${s}%, ${l}%)`;
   const backgroundColor = `hsl(${h}, ${s}%, ${Math.max(l - (length > 250 ? 35 : 30), 8)}%)`;
-  const borderColor = `hsla(${h}, ${s}%, ${l}%, 0.5)`;
+  const borderColor = `hsla(${h}, ${s}%, ${l}%, 0.1)`;
   
   lengthPopup.style.setProperty('color', textColor, 'important');
   lengthPopup.style.setProperty('background-color', backgroundColor, 'important');

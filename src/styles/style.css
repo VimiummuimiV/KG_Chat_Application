@@ -103,7 +103,7 @@
   }
 
   /* Hide everything except #app-chat-container */
-  body > *:not(#app-chat-container):not(.dimming-element):not(.scaled-thumbnail):not(.delete-btn):not(.toggle-button) {
+  body>*:not(#app-chat-container):not(.dimming-element):not(.scaled-thumbnail):not(.delete-btn):not(.toggle-button) {
     display: none !important;
   }
 
@@ -313,6 +313,7 @@
   height: 20px !important;
   align-items: center !important;
   justify-content: center !important;
+  padding: 2px 4px;
   opacity: 0;
   border: none !important;
 }
