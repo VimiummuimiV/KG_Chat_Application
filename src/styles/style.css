@@ -9,6 +9,8 @@
   --min-chat-height: 200px;
   --user-list-width: fit-content;
   --emoji-font: "Noto Color Emoji";
+  /* really slight modern box shadow */
+  --box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
 }
 
 /* Main chat container */
@@ -90,8 +92,18 @@
     overflow: hidden !important;
   }
 
+  #app-chat-container .toggle-button {
+    border: none !important;
+    top: unset !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    border-radius: 0.2em !important;
+    margin: 1em !important;
+    box-shadow: var(--box-shadow) !important;
+  }
+
   /* Hide everything except #app-chat-container */
-  body > *:not(#app-chat-container):not(.dimming-element):not(.scaled-thumbnail) {
+  body > *:not(#app-chat-container):not(.dimming-element):not(.scaled-thumbnail):not(.delete-btn):not(.toggle-button) {
     display: none !important;
   }
 
@@ -771,7 +783,7 @@
   max-width: 90vw;
   cursor: pointer;
   border-radius: 0.6em !important;
-  box-shadow: 0 4px 6px #0000004d, 0 1px 3px #00000047 !important;
+  box-shadow: var(--box-shadow) !important;
 }
 
 /* convertVideoLinksToPlayer */

@@ -1,8 +1,15 @@
+import { checkIsMobile } from './helpers.js';
+
 export default class ChatMessagesRemover {
   constructor() {
     this.selected = new Set();
     this.isDragging = false;
     this.toggleBtn = null;
+    this.longPressTimer = null;
+    this.longPressDuration = 500; // milliseconds for long press detection
+    this.touchStartX = 0;
+    this.touchStartY = 0;
+    this.isMobile = checkIsMobile();
     this.init();
   }
 
@@ -13,75 +20,21 @@ export default class ChatMessagesRemover {
   }
 
   attachEvents() {
+    // Desktop right-click and selection
     document.addEventListener("mousedown", (e) => {
-      // Change: get the entire message container instead of just the text element
       const msgEl = e.target.closest(".messages-panel .message");
-      
-      // Guard clause - if no message element is found, return early
       if (!msgEl) return;
 
       if (e.button === 2 && msgEl) {
-        // Time-based selection
-        const timeEl = e.target.closest(".time");
-        if (timeEl) {
-          const messages = Array.from(
-            document.querySelectorAll(".messages-panel .message")
-          );
-          const startIndex = messages.indexOf(msgEl);
-
-          if (startIndex !== -1) {
-            if (e.ctrlKey) {
-              // Select all messages from current downward (ignoring username)
-              messages.slice(startIndex).forEach((m) => {
-                this.toggleSelect(m, true, "time-mode");
-                m.classList.add("time-mode");
-              });
-            } else {
-              // Select only messages by the same user from current downward
-              const usernameEl = msgEl.querySelector(".username");
-              if (usernameEl) {
-                const usernameText = usernameEl.textContent.trim();
-                messages.slice(startIndex).forEach((m) => {
-                  const mUsernameEl = m.querySelector(".username");
-                  if (
-                    mUsernameEl &&
-                    mUsernameEl.textContent.trim() === usernameText
-                  ) {
-                    this.toggleSelect(m, true, "time-mode");
-                    m.classList.add("time-mode");
-                  }
-                });
-              }
-            }
-          }
-        }
-        // Username-based selection
-        else if (e.target.closest(".username")) {
-          const usernameEl = e.target.closest(".username");
-          const usernameText = usernameEl.textContent.trim();
-          document.querySelectorAll(".messages-panel .message").forEach((msg) => {
-            const msgUsernameEl = msg.querySelector(".username");
-            if (
-              msgUsernameEl &&
-              msgUsernameEl.textContent.trim() === usernameText
-            ) {
-              this.toggleSelect(msg, true, "username-mode");
-              msg.classList.add("username-mode");
-            }
-          });
-        }
-        // Default single-message selection
-        else {
-          this.isDragging = true;
-          this.toggleSelect(msgEl, true, "message-mode");
-        }
+        // Handle selection based on where the right-click occurred
+        this.handleSelection(e.target, msgEl, e.ctrlKey);
       }
     });
 
     document.addEventListener("mouseup", () => (this.isDragging = false));
 
     document.addEventListener("mousemove", (e) => {
-      if (!this.isDragging) return; // Skip if not dragging
+      if (!this.isDragging) return;
       
       const msgEl = e.target.closest(".messages-panel .message");
       if (msgEl) {
@@ -96,11 +49,125 @@ export default class ChatMessagesRemover {
         this.showDeleteButton(e, msg);
       }
     });
+
+    // Mobile long press
+    if (this.isMobile) {
+      document.addEventListener("touchstart", (e) => {
+        const msgEl = e.target.closest(".messages-panel .message");
+        if (!msgEl) return;
+        
+        this.touchStartX = e.touches[0].clientX;
+        this.touchStartY = e.touches[0].clientY;
+        
+        this.longPressTimer = setTimeout(() => {
+          // Handle selection using the same logic as desktop
+          this.handleSelection(e.target, msgEl, false);
+          
+          // Show delete button
+          this.showDeleteButton({
+            clientX: this.touchStartX,
+            clientY: this.touchStartY,
+            preventDefault: () => {}
+          }, msgEl);
+          
+          // Provide vibration feedback if available
+          if (navigator.vibrate) {
+            navigator.vibrate(50);
+          }
+        }, this.longPressDuration);
+      });
+
+      document.addEventListener("touchmove", (e) => {
+        const touchX = e.touches[0].clientX;
+        const touchY = e.touches[0].clientY;
+        const moveX = Math.abs(touchX - this.touchStartX);
+        const moveY = Math.abs(touchY - this.touchStartY);
+        
+        if (moveX > 10 || moveY > 10) {
+          if (this.longPressTimer) {
+            clearTimeout(this.longPressTimer);
+            this.longPressTimer = null;
+          }
+        }
+      });
+
+      document.addEventListener("touchend", () => {
+        if (this.longPressTimer) {
+          clearTimeout(this.longPressTimer);
+          this.longPressTimer = null;
+        }
+      });
+    }
+  }
+
+  // Unified selection handler for both desktop and mobile
+  handleSelection(target, msgEl, isCtrlKey) {
+    const timeEl = target.closest(".time");
+    const usernameEl = target.closest(".username");
+    
+    if (timeEl) {
+      this.handleTimeSelection(msgEl, isCtrlKey);
+    } else if (usernameEl) {
+      this.handleUsernameSelection(usernameEl);
+    } else {
+      // Default single-message selection
+      this.isDragging = true;
+      this.toggleSelect(msgEl, true, "message-mode");
+    }
+  }
+
+  // Handle time-based selection
+  handleTimeSelection(msgEl, isCtrlKey) {
+    const messages = Array.from(
+      document.querySelectorAll(".messages-panel .message")
+    );
+    const startIndex = messages.indexOf(msgEl);
+
+    if (startIndex === -1) return;
+
+    if (isCtrlKey) {
+      // Select all messages from current downward (ignoring username)
+      messages.slice(startIndex).forEach((m) => {
+        this.toggleSelect(m, true, "time-mode");
+        m.classList.add("time-mode");
+      });
+    } else {
+      // Select only messages by the same user from current downward
+      const usernameEl = msgEl.querySelector(".username");
+      if (!usernameEl) return;
+      
+      const usernameText = usernameEl.textContent.trim();
+      messages.slice(startIndex).forEach((m) => {
+        const mUsernameEl = m.querySelector(".username");
+        if (
+          mUsernameEl &&
+          mUsernameEl.textContent.trim() === usernameText
+        ) {
+          this.toggleSelect(m, true, "time-mode");
+          m.classList.add("time-mode");
+        }
+      });
+    }
+  }
+
+  // Handle username-based selection
+  handleUsernameSelection(usernameEl) {
+    const usernameText = usernameEl.textContent.trim();
+    document.querySelectorAll(".messages-panel .message").forEach((msg) => {
+      const msgUsernameEl = msg.querySelector(".username");
+      if (
+        msgUsernameEl &&
+        msgUsernameEl.textContent.trim() === usernameText
+      ) {
+        this.toggleSelect(msg, true, "username-mode");
+        msg.classList.add("username-mode");
+      }
+    });
   }
 
   // Handles selection with appropriate modes
   toggleSelect(el, state, mode = "message-mode") {
-    if (!el) return; // Guard clause
+    if (!el) return;
 
     el.classList.toggle("selected-message", state);
 
@@ -120,6 +187,12 @@ export default class ChatMessagesRemover {
 
     const btn = document.createElement("button");
     btn.className = "delete-btn";
+    
+    // Make button bigger on mobile for easier tapping
+    if (this.isMobile) {
+      btn.classList.add("mobile-delete-btn");
+    }
+    
     btn.textContent = "Delete";
 
     document.body.append(btn);
@@ -132,19 +205,7 @@ export default class ChatMessagesRemover {
       left: `${e.clientX - w / 2}px`,
     });
 
-    btn.onclick = () => {
-      document.querySelectorAll(".selected-message").forEach((msg) => {
-        if (!msg) return; // Guard clause
-        
-        msg.classList.remove("selected-message", "username-mode", "time-mode", "message-mode");
-        if (msg.classList.length === 0) msg.removeAttribute("class");
-      });
-      this.storeDeleted([...this.selected]);
-      btn.remove();
-      this.selected.clear();
-      this.updateDeletedMessages();
-      this.renderToggle();
-    };
+    btn.onclick = () => this.deleteSelectedMessages(btn);
 
     let timeoutId;
     btn.addEventListener("mouseenter", () => {
@@ -161,9 +222,23 @@ export default class ChatMessagesRemover {
     document.body.append(btn);
   }
 
+  deleteSelectedMessages(btn) {
+    document.querySelectorAll(".selected-message").forEach((msg) => {
+      if (!msg) return;
+      
+      msg.classList.remove("selected-message", "username-mode", "time-mode", "message-mode");
+      if (msg.classList.length === 0) msg.removeAttribute("class");
+    });
+    this.storeDeleted([...this.selected]);
+    btn.remove();
+    this.selected.clear();
+    this.updateDeletedMessages();
+    this.renderToggle();
+  }
+
   clearSelection() {
     document.querySelectorAll(".selected-message").forEach((msg) => {
-      if (!msg) return; // Guard clause
+      if (!msg) return;
       
       msg.classList.remove("selected-message", "username-mode", "time-mode", "message-mode");
       if (msg.classList.length === 0) {
@@ -187,10 +262,10 @@ export default class ChatMessagesRemover {
     );
     
     const messages = document.querySelectorAll(".messages-panel .message");
-    if (messages.length === 0) return; // Skip if no messages found
+    if (messages.length === 0) return;
     
     messages.forEach((msg) => {
-      if (!msg) return; // Guard clause
+      if (!msg) return;
       
       const id = getMessageId(msg);
       msg.classList.remove("shown-message");
@@ -213,7 +288,7 @@ export default class ChatMessagesRemover {
     }
     
     const messagesPanel = document.querySelector(".messages-panel");
-    if (!messagesPanel) return; // Guard clause
+    if (!messagesPanel) return;
     
     if (!this.toggleBtn) {
       this.toggleBtn = document.createElement("button");
@@ -223,7 +298,7 @@ export default class ChatMessagesRemover {
       this.toggleBtn.onclick = (e) => {
         if (e.ctrlKey) {
           document.querySelectorAll(".messages-panel .message").forEach((msg) => {
-            if (!msg) return; // Guard clause
+            if (!msg) return;
             
             msg.classList.remove("hidden-message", "shown-message");
           });
@@ -240,7 +315,7 @@ export default class ChatMessagesRemover {
         );
         
         document.querySelectorAll(".messages-panel .message").forEach((msg) => {
-          if (!msg) return; // Guard clause
+          if (!msg) return;
           
           const id = getMessageId(msg);
           if (storedIds.includes(id)) {
