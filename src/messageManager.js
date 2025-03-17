@@ -295,30 +295,45 @@ export default class MessageManager {
   }
 
   refreshMessages(connectionStatus = false) {
-    // Generate a unique ID for each system message using a timestamp
-    const systemMessageId = `system-connection-${Date.now()}`;
+    const systemMessageId = "connection-status";
     const messageText = connectionStatus
       ? "Chat connection established. ✓"
       : "Chat connection lost. Reconnecting...";
 
-    // Create a new system message object
-    const systemMessage = {
-      id: systemMessageId,
-      from: "System",
-      text: messageText,
-      timestamp: new Date().toISOString(),
-      isPrivate: false,
-      recipient: null,
-      isSystem: true,
-      pending: false
-    };
+    // Find or create the system message
+    let systemMessage = this.chatHistory.get(systemMessageId);
+    if (systemMessage) {
+      // Update existing message
+      systemMessage.text = messageText;
+      systemMessage.timestamp = new Date().toISOString();
+    } else {
+      // Create new system message if it doesn’t exist
+      systemMessage = {
+        id: systemMessageId,
+        from: "System",
+        text: messageText,
+        timestamp: new Date().toISOString(),
+        isPrivate: false,
+        recipient: null,
+        isSystem: true,
+        pending: false
+      };
+      this.messages.push(systemMessage);
+      this.chatHistory.set(systemMessageId, systemMessage);
+      this.processedMessageIds.add(systemMessageId);
+    }
 
-    // Add the new message to the messages array, chatHistory map, and processed IDs set
-    this.messages.push(systemMessage);
-    this.chatHistory.set(systemMessageId, systemMessage);
-    this.processedMessageIds.add(systemMessageId);
+    // Update the UI with the current status
+    this.updateConnectionStatusInUI(systemMessage);
+  }
 
-    // Update the UI with the new message
+  updateConnectionStatusInUI(systemMessage) {
+    // Remove the old connection status message from the UI, if it exists
+    const messageDiv = this.panel.querySelector(`[data-message-id="${systemMessage.id}"]`);
+    if (messageDiv) {
+      messageDiv.remove();
+    }
+    // Re-render the panel with the updated messages
     this.updatePanel();
   }
 }
