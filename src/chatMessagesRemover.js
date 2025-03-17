@@ -33,7 +33,7 @@ export default class ChatMessagesRemover {
 
     document.addEventListener("mousemove", (e) => {
       if (!this.isDragging) return;
-      
+
       const msgEl = e.target.closest(".messages-panel .message");
       if (msgEl) {
         this.toggleSelect(msgEl, true, "message-mode");
@@ -52,16 +52,16 @@ export default class ChatMessagesRemover {
       document.addEventListener("touchstart", (e) => {
         const msgEl = e.target.closest(".messages-panel .message");
         if (!msgEl) return;
-        
+
         this.touchStartX = e.touches[0].clientX;
         this.touchStartY = e.touches[0].clientY;
-        
+
         this.longPressTimer = setTimeout(() => {
           this.handleSelection(e.target, msgEl, false);
           this.showDeleteButton({
             clientX: this.touchStartX,
             clientY: this.touchStartY,
-            preventDefault: () => {}
+            preventDefault: () => { }
           }, msgEl);
           if (navigator.vibrate) {
             navigator.vibrate(50);
@@ -74,7 +74,7 @@ export default class ChatMessagesRemover {
         const touchY = e.touches[0].clientY;
         const moveX = Math.abs(touchX - this.touchStartX);
         const moveY = Math.abs(touchY - this.touchStartY);
-        
+
         if (moveX > 10 || moveY > 10) {
           if (this.longPressTimer) {
             clearTimeout(this.longPressTimer);
@@ -95,7 +95,7 @@ export default class ChatMessagesRemover {
   handleSelection(target, msgEl, isCtrlKey) {
     const timeEl = target.closest(".time");
     const usernameEl = target.closest(".username");
-    
+
     if (timeEl) {
       this.handleTimeSelection(msgEl, isCtrlKey);
     } else if (usernameEl) {
@@ -122,7 +122,7 @@ export default class ChatMessagesRemover {
     } else {
       const usernameEl = msgEl.querySelector(".username");
       if (!usernameEl) return;
-      
+
       const usernameText = usernameEl.textContent.trim();
       messages.slice(startIndex).forEach((m) => {
         const mUsernameEl = m.querySelector(".username");
@@ -172,12 +172,17 @@ export default class ChatMessagesRemover {
 
     const btn = document.createElement("button");
     btn.className = "delete-btn";
-    
+
     if (this.isMobile) {
       btn.classList.add("mobile-delete-btn");
     }
-    
+
     btn.textContent = "Delete";
+
+    // Prevent touch events on the button from bubbling up to any global "outside tap" handlers.
+    btn.addEventListener("touchstart", (e) => {
+      e.stopPropagation();
+    });
 
     document.body.append(btn);
     const { offsetWidth: w, offsetHeight: h } = btn;
@@ -221,7 +226,7 @@ export default class ChatMessagesRemover {
   deleteSelectedMessages(btn) {
     document.querySelectorAll(".selected-message").forEach((msg) => {
       if (!msg) return;
-      
+
       msg.classList.remove("selected-message", "username-mode", "time-mode", "message-mode");
       if (msg.classList.length === 0) msg.removeAttribute("class");
     });
@@ -238,7 +243,7 @@ export default class ChatMessagesRemover {
   clearSelection() {
     document.querySelectorAll(".selected-message").forEach((msg) => {
       if (!msg) return;
-      
+
       msg.classList.remove("selected-message", "username-mode", "time-mode", "message-mode");
       if (msg.classList.length === 0) {
         msg.removeAttribute("class");
@@ -259,25 +264,25 @@ export default class ChatMessagesRemover {
     const stored = new Set(
       JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]")
     );
-    
+
     const messages = document.querySelectorAll(".messages-panel .message");
     if (messages.length === 0) return;
-    
+
     messages.forEach((msg) => {
       if (!msg) return;
-      
+
       const id = getMessageId(msg);
       msg.classList.remove("shown-message");
       msg.classList.toggle("hidden-message", stored.has(id));
     });
-    
+
     localStorage.setItem("deletedChatMessagesContent", JSON.stringify([...stored]));
   }
 
   renderToggle() {
     const storedItems = JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]");
     const hasDeleted = storedItems.length > 0;
-    
+
     if (!hasDeleted) {
       if (this.toggleBtn) {
         this.toggleBtn.remove();
@@ -285,10 +290,10 @@ export default class ChatMessagesRemover {
       }
       return;
     }
-    
+
     const messagesPanel = document.querySelector(".messages-panel");
     if (!messagesPanel) return;
-    
+
     if (!this.toggleBtn) {
       this.toggleBtn = document.createElement("button");
       this.toggleBtn.className = "toggle-button toggle-hidden";
@@ -299,22 +304,22 @@ export default class ChatMessagesRemover {
           this.restoreAllMessages();
           return;
         }
-        
+
         const shouldShow = this.toggleBtn.textContent === "Show";
         const storedIds = JSON.parse(
           localStorage.getItem("deletedChatMessagesContent") || "[]"
         );
-        
+
         document.querySelectorAll(".messages-panel .message").forEach((msg) => {
           if (!msg) return;
-          
+
           const id = getMessageId(msg);
           if (storedIds.includes(id)) {
             msg.classList.toggle("hidden-message", !shouldShow);
             msg.classList.toggle("shown-message", shouldShow);
           }
         });
-        
+
         if (shouldShow) {
           this.toggleBtn.textContent = "Hide";
           this.toggleBtn.classList.remove("toggle-hidden");
@@ -353,15 +358,17 @@ export default class ChatMessagesRemover {
           }
         });
 
-        this.toggleBtn.addEventListener('touchend', () => {
-          clearTimeout(longPressTimer);
-          if (isLongPress) {
-            this.toggleBtn.addEventListener('click', (e) => {
-              e.preventDefault();
-              e.stopPropagation();
-            }, { once: true });
-          }
-        });
+        if (this.toggleBtn) {
+          this.toggleBtn.addEventListener('touchend', () => {
+            clearTimeout(longPressTimer);
+            if (isLongPress) {
+              this.toggleBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+              }, { once: true });
+            }
+          });
+        }
       }
 
       messagesPanel.append(this.toggleBtn);
@@ -371,7 +378,7 @@ export default class ChatMessagesRemover {
   restoreAllMessages() {
     document.querySelectorAll(".messages-panel .message").forEach((msg) => {
       if (!msg) return;
-      
+
       msg.classList.remove("hidden-message", "shown-message");
     });
     localStorage.setItem("deletedChatMessagesContent", JSON.stringify([]));
@@ -407,17 +414,17 @@ function getMessageId(el) {
 export function pruneDeletedMessages() {
   const messages = document.querySelectorAll(".messages-panel .message");
   if (messages.length === 0) return;
-  
+
   const currentIds = new Set(
     Array.from(messages).map((msg) => getMessageId(msg))
   );
-  
+
   const stored = new Set(
     JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]")
   );
-  
+
   localStorage.setItem(
-    "deletedChatMessagesContent", 
+    "deletedChatMessagesContent",
     JSON.stringify([...stored].filter((id) => currentIds.has(id)))
   );
 }
