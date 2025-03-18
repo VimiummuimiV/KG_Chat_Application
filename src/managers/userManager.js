@@ -1,6 +1,6 @@
-import { BASE_URL } from "./data/definitions.js";
-import { usernameColors, getRandomEmojiAvatar, extractUsername, extractUserId, handlePrivateMessageInput } from "./helpers.js";
-import { addShakeEffect } from "./data/animations.js";
+import { BASE_URL } from "../data/definitions.js";
+import { usernameColors, getRandomEmojiAvatar, extractUsername, extractUserId, handlePrivateMessageInput } from "../helpers.js";
+import { addShakeEffect } from "../data/animations.js";
 
 export default class UserManager {
   constructor(containerId = 'user-list') {
