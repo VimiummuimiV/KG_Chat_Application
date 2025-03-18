@@ -1,5 +1,5 @@
-import { reconnectionDelay, userListDelay } from "./definitions.js";
-import { compactXML, extractUsername, optimizeColor, privateMessageState, showChatAlert, sleep } from "./helpers.js";
+import { reconnectionDelay, userListDelay } from "../data/definitions.js";
+import { compactXML, extractUsername, optimizeColor, privateMessageState, showChatAlert, sleep } from "../helpers.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.

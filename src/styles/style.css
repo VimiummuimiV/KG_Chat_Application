@@ -458,6 +458,7 @@
   border: 1px solid #ffa60030 !important;
   border-left: 3px solid #ffa500 !important;
   width: fit-content !important;
+  align-items: center !important;
 }
 
 #app-chat-container .message.system .time {

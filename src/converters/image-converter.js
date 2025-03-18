@@ -11,7 +11,7 @@ import {
 } from "../helpers"; // helpers
 
 // definitions
-import { state } from "../definitions";
+import { state } from "../data/definitions.js";
 
 // Image constants
 const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];

@@ -1,4 +1,4 @@
-import { closeSVG, openSVG } from "./icons.js";
+import { closeSVG, openSVG } from "./data/icons.js";
 import { focusTextInput, saveChatState, showChatAlert } from "./helpers.js";
 import { toggleChatMaximize } from "./chatUI.js";
 

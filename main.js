@@ -1,20 +1,19 @@
 import {
   delay,
-  XMPP_BIND_URL,
-} from "./src/definitions.js";
-import XMPPConnection from './src/xmppConnection.js';
+  XMPP_BIND_URL
+} from "./src/data/definitions.js";
+import XMPPConnection from './src/xmpp/xmppConnection.js';
 import UserManager from './src/userManager.js';
 import MessageManager from './src/messageManager.js';
 import { createChatUI } from "./src/chatUI.js";
 import { addChatToggleFeature } from "./src/chatFeatures.js";
 import { setupDragHandlers, setupResizeHandlers, setupWindowResizeHandler } from './src/events.js';
-import { createXMPPClient } from './src/xmppClient.js';
-import { config } from "./src/definitions.js";
+import { createXMPPClient } from './src/xmpp/xmppClient.js';
+import { config } from "./src/data/definitions.js";
 import { observeMessagesPanel, setupPrivateMessageEvents, parseUsername, handlePrivateMessageInput, addViewportMeta } from "./src/helpers.js";
 import { getAuthData } from "./src/auth.js";
 import { HelpPanel } from './src/components/helpPanel.js';
-import './src/styles/emojiPanel.css';
-import './src/styles/helpPanel.css';
+
 
 // Function to detect if running in an iframe
 function isInIframe() {

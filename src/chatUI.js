@@ -16,7 +16,7 @@ import {
   checkIsMobile
 } from "./helpers.js";
 
-import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./icons.js";
+import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./data/icons.js";
 import { HelpPanel } from "./components/helpPanel.js";
 import { EmojiPanel } from "./components/emojiPanel.js";
 

@@ -1,9 +1,9 @@
 import { convertImageLinksToImage } from "./converters/image-converter.js";
 import { convertVideoLinksToPlayer } from "./converters/video-converter.js";
-import { emojiFaces, trustedDomains } from "./definitions.js";
-import { state } from "./definitions.js";
-import { openSVG, closeSVG } from "./icons.js";
-import { addShakeEffect } from "./animations.js";
+import { emojiFaces, trustedDomains } from "./data/definitions.js";
+import { state } from "./data/definitions.js";
+import { openSVG, closeSVG } from "./data/icons.js";
+import { addShakeEffect } from "./data/animations.js";
 import { emojiKeywords } from "./data/emojiData.js";
 
 // ==================================================================================================
@@ -1163,9 +1163,9 @@ function updateLengthPopupColor(length) {
     console.error('lengthPopup is not defined');
     return;
   }
-  
+
   let h, s = 100, l = 50;
-  
+
   if (length === 0) {
     h = 200; s = 20; l = 50;
   } else if (length <= 90) {
@@ -1183,11 +1183,11 @@ function updateLengthPopupColor(length) {
   } else {
     h = 0;
   }
-  
+
   const textColor = `hsl(${h}, ${s}%, ${l}%)`;
   const backgroundColor = `hsl(${h}, ${s}%, ${Math.max(l - (length > 250 ? 35 : 30), 8)}%)`;
   const borderColor = `hsla(${h}, ${s}%, ${l}%, 0.1)`;
-  
+
   lengthPopup.style.setProperty('color', textColor, 'important');
   lengthPopup.style.setProperty('background-color', backgroundColor, 'important');
   lengthPopup.style.setProperty('border', `1px solid ${borderColor}`, 'important');
