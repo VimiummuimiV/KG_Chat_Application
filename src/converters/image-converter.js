@@ -15,7 +15,7 @@ import { state } from "../data/definitions.js";
 
 // Image constants
 const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
-const emojis = { image: '📸', domain: '🖥️', untrusted: '💀️️' };
+const emojis = { image: '📷', domain: '🖥️', untrusted: '💀️️' };
 const zoomLimits = { min: 0.2, max: 10, factor: 0.1 };
 const navigationDelay = 50;
 
