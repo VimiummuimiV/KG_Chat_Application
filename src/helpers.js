@@ -126,9 +126,9 @@ function colorGenerator(config) {
 
   const hasFixedSaturation = Boolean(config.saturation);
   const hasFixedLightness = Boolean(config.lightness);
-  const minSat = config.minSaturation || 30;
+  const minSat = config.minSaturation || 40;
   const maxSat = config.maxSaturation || 90;
-  const minLight = config.minLightness || 50;
+  const minLight = config.minLightness || 55;
   const maxLight = config.maxLightness || 80;
   const satRange = maxSat - minSat;
   const lightRange = maxLight - minLight;
@@ -294,9 +294,9 @@ export const optimizeColor = hex => {
 // Pre-configured color generators (exported)
 export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
-  minSaturation: 30,
+  minSaturation: 40,
   maxSaturation: 90,
-  minLightness: 50,
+  minLightness: 55,
   maxLightness: 80
 });
 
