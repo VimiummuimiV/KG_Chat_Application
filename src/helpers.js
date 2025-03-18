@@ -117,11 +117,8 @@ function colorGenerator(config) {
     colorMap = {};
   }
 
-  // Configure hue ranges - support multiple ranges to enable skipping
-  const hueRanges = config.hueRanges || [
-    { min: 0, max: 210 },
-    { min: 280, max: 360 }
-  ];
+  // Allow the entire hue circle by default.
+  const hueRanges = config.hueRanges || [{ min: 0, max: 360 }];
 
   // Calculate total available hue space
   const totalHueSpace = hueRanges.reduce((sum, range) =>
@@ -158,7 +155,7 @@ function colorGenerator(config) {
     for (let range of hueRanges) {
       const rangeSize = range.max - range.min;
       if (randomValue < rangeSize) {
-        // This is our range, map the value
+        // Map the value to the range
         return range.min + randomValue;
       }
       // Move to the next range
@@ -174,7 +171,8 @@ function colorGenerator(config) {
       // If username is falsy, return a default color (converted to hex)
       if (!username) {
         const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) : 50;
-        const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) : 50;
+        let lightVal = hasFixedLightness ? parseInt(config.lightness, 10) : 50;
+        // Ensure default follows the rule if hue is 0 (which is not in 210–280, so no check needed)
         return colorUtils.hslToHex(0, satVal, lightVal);
       }
 
@@ -203,11 +201,26 @@ function colorGenerator(config) {
           } while (usedHues.has(hue) && usedHues.size < totalHueSpace);
         }
 
-        // Generate saturation and lightness as numbers
+        // Generate saturation as a number
         const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) :
           Math.floor(Math.random() * satRange) + minSat;
-        const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) :
-          Math.floor(Math.random() * lightRange) + minLight;
+
+        // Generate lightness with a special rule:
+        // For hues between 210 and 280, the lightness must be at least 65.
+        let lightVal;
+        if (hasFixedLightness) {
+          lightVal = parseInt(config.lightness, 10);
+          if (hue >= 210 && hue < 280 && lightVal < 65) {
+            lightVal = 65;
+          }
+        } else {
+          let effectiveMinLight = minLight;
+          if (hue >= 210 && hue < 280) {
+            effectiveMinLight = Math.max(minLight, 65);
+          }
+          const effectiveLightRange = maxLight - effectiveMinLight;
+          lightVal = Math.floor(Math.random() * effectiveLightRange) + effectiveMinLight;
+        }
 
         const newColor = colorUtils.hslToHex(hue, satVal, lightVal);
 
@@ -225,8 +238,20 @@ function colorGenerator(config) {
         const hue = generateRandomHue();
         const satVal = hasFixedSaturation ? parseInt(config.saturation, 10) :
           Math.floor(Math.random() * satRange) + minSat;
-        const lightVal = hasFixedLightness ? parseInt(config.lightness, 10) :
-          Math.floor(Math.random() * lightRange) + minLight;
+        let lightVal;
+        if (hasFixedLightness) {
+          lightVal = parseInt(config.lightness, 10);
+          if (hue >= 210 && hue < 280 && lightVal < 65) {
+            lightVal = 65;
+          }
+        } else {
+          let effectiveMinLight = minLight;
+          if (hue >= 210 && hue < 280) {
+            effectiveMinLight = Math.max(minLight, 65);
+          }
+          const effectiveLightRange = maxLight - effectiveMinLight;
+          lightVal = Math.floor(Math.random() * effectiveLightRange) + effectiveMinLight;
+        }
         color = colorUtils.hslToHex(hue, satVal, lightVal);
       }
 
@@ -269,10 +294,6 @@ export const optimizeColor = hex => {
 // Pre-configured color generators (exported)
 export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
-  hueRanges: [
-    { min: 0, max: 210 },
-    { min: 280, max: 360 }
-  ],
   minSaturation: 30,
   maxSaturation: 90,
   minLightness: 50,
@@ -281,13 +302,10 @@ export const usernameColors = colorGenerator({
 
 export const mentionColors = colorGenerator({
   storageKey: 'mentionColors',
-  hueRanges: [
-    { min: 0, max: 210 },
-    { min: 280, max: 360 }
-  ],
   saturation: '80',
   lightness: '60'
 });
+
 
 // ==================================================================================================
 
