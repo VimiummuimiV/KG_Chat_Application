@@ -312,6 +312,7 @@ export function handleElementsBehavior() {
   const isExtremelyNarrow = wrapper.offsetWidth <= 340;
   const isMaximized = chatContainer.classList.contains('maximized');
   const userList = document.querySelector('#app-chat-container .user-list-container');
+  const systemMessage = document.querySelector('#app-chat-container .message.system');
 
   let isUserListOpen = false;
 
@@ -324,6 +325,8 @@ export function handleElementsBehavior() {
       userList.style.transition = 'transform 0.3s ease';
       userList.style.zIndex = '1001';
       userList.style.transform = 'translateX(100%)';
+
+      if (systemMessage) systemMessage.style.setProperty('align-items', 'start', 'important');
 
       let revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       if (!revealButton) {
@@ -364,6 +367,8 @@ export function handleElementsBehavior() {
       userList.style.right = '';
       userList.style.transform = '';
       userList.style.zIndex = '';
+
+      if (systemMessage) systemMessage.style.removeProperty('align-items');
 
       const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       if (revealButton) {
