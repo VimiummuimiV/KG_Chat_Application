@@ -1551,6 +1551,7 @@ export function toggleChatMaximize() {
 // ==================================================================================================
 
 // Add this function to handle mobile/touch devices
+// Add this function to handle mobile/touch devices
 export function handleMobileLayout(messagesPanel, inputContainer) {
   const isMobile = checkIsMobile();
   if (isMobile) {
@@ -1602,7 +1603,7 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
       /* Position the length-field-popup relative to bottom */
       #app-chat-container .length-field-popup {
         position: fixed !important;
-        bottom: initial !important;
+        z-index: 101 !important;
       }
     `;
     document.head.appendChild(globalMobileStyles);
@@ -1631,9 +1632,10 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
     const updateLengthFieldPosition = () => {
       const lengthField = document.querySelector('#app-chat-container .length-field-popup');
       if (lengthField && inputContainer) {
-        // Position the length field above the input container
-        const inputHeight = inputContainer.offsetHeight;
-        lengthField.style.bottom = `${inputHeight}px`;
+        // Get the current input container position
+        const inputRect = inputContainer.getBoundingClientRect();
+        // Position the length field just above the input container
+        lengthField.style.bottom = `${window.innerHeight - inputRect.top}px`;
       }
     };
     
@@ -1650,17 +1652,14 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
         // Update input container position
         inputContainer.style.bottom = `${bottomOffset}px`;
         
-        // Update length field popup position
-        const lengthField = document.querySelector('#app-chat-container .length-field-popup');
-        if (lengthField) {
-          lengthField.style.bottom = `${bottomOffset + inputContainer.offsetHeight}px`;
-        }
-        
         // Recalculate the messages panel bottom margin
         messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
         
-        // Update the reveal button position based on the new input container position
+        // Update the reveal button position
         updateRevealButtonPosition();
+        
+        // Update length field popup position directly after input is repositioned
+        setTimeout(updateLengthFieldPosition, 10); // Small delay to ensure input position is updated
       });
     }
   }
