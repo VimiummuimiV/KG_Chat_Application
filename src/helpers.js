@@ -1557,14 +1557,14 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
   if (isMobile) {
     // Make input container floating for mobile at the top
     inputContainer.style.position = 'absolute';
-    inputContainer.style.top = '0';
+    inputContainer.style.bottom = '0';
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
     inputContainer.style.borderBottom = '1px solid #333';
     inputContainer.style.zIndex = '100'; // Ensure it's above content
 
     // Set initial margin for messages panel
-    messagesPanel.style.marginTop = `${inputContainer.offsetHeight}px`;
+    messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
 
     // Add a styles for the emoji panel on mobile devices
     const globalMobileStyles = document.createElement('style');
@@ -1572,7 +1572,7 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
 
     globalMobileStyles.textContent = `
         #app-chat-container .emoji-panel {
-          transform: translate(-50%, 0) !important;
+          transform: translate(-50%, -50%) !important;
           height: 60vh !important;
           bottom: 10px !important;
           top: unset !important;
@@ -1586,10 +1586,20 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
 
         #app-chat-container .user-list-container {
           top: 1em !important;
-          height: 80vh !important;
+          height: fit-content !important;
+          max-height: 80vh !important;
           border-top: 1px solid #333 !important;
           border-bottom: 1px solid #333 !important;
           border-radius: 0.5em 0 0 0.5em !important;
+        }
+
+        #app-chat-container .toggle-button {
+          border: none !important;
+          top: 0 !important;
+          right: 0 !important;
+          border-radius: 0.2em !important;
+          margin: 1em !important;
+          box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1) !important;
         }
       `;
     document.head.appendChild(globalMobileStyles);
@@ -1599,7 +1609,7 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
     const resizeObserver = new ResizeObserver(() => {
       const currentHeight = inputContainer.offsetHeight;
       if (currentHeight !== previousHeight) {
-        messagesPanel.style.marginTop = `${currentHeight}px`;
+        messagesPanel.style.marginBottom = `${currentHeight}px`;
         previousHeight = currentHeight;
       }
     });
