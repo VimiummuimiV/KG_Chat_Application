@@ -1561,10 +1561,8 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
     inputContainer.style.right = '0';
     inputContainer.style.borderBottom = '1px solid #333';
     inputContainer.style.zIndex = '100';
-
     // Set margin for messages panel
     messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
-
     // Add styles for mobile view
     const globalMobileStyles = document.createElement('style');
     globalMobileStyles.classList.add('global-mobile-styles');
@@ -1597,12 +1595,18 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1) !important;
       }
       /* Add transition for smoother position changes */
-      #app-chat-container .input-container {
+      #app-chat-container .input-container, 
+      #app-chat-container .length-field-popup {
         transition: bottom 0.2s ease-out;
+      }
+      /* Position the length-field-popup relative to bottom */
+      #app-chat-container .length-field-popup {
+        position: fixed !important;
+        bottom: initial !important;
       }
     `;
     document.head.appendChild(globalMobileStyles);
-
+    
     // Function to update the reveal button's vertical position
     const updateRevealButtonPosition = () => {
       const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
@@ -1611,31 +1615,50 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
         // Use visualViewport height instead of innerHeight when available
         const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         const buttonHeight = revealButton.offsetHeight || 0;
-
+        
         // Calculate the middle of the visible viewport
         const middle = viewportHeight / 2 - buttonHeight / 2;
-
+        
         // Adjust for visualViewport offsetTop (scroll position) if available
         const offsetTop = window.visualViewport ? window.visualViewport.offsetTop : 0;
-
+        
         // Position the button at the middle of the visible screen area
         revealButton.style.setProperty('top', `${middle + offsetTop}px`, 'important');
       }
     };
-
-    // Initial update
+    
+    // Function to update the length-field-popup position
+    const updateLengthFieldPosition = () => {
+      const lengthField = document.querySelector('#app-chat-container .length-field-popup');
+      if (lengthField && inputContainer) {
+        // Position the length field above the input container
+        const inputHeight = inputContainer.offsetHeight;
+        lengthField.style.bottom = `${inputHeight}px`;
+      }
+    };
+    
+    // Initial updates
     updateRevealButtonPosition();
-
+    updateLengthFieldPosition();
+    
     // Use Visual Viewport API for keyboard detection and correct positioning
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', () => {
         // Calculate the bottom offset taking into account the viewport offset when scrolling
         const bottomOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+        
+        // Update input container position
         inputContainer.style.bottom = `${bottomOffset}px`;
-
+        
+        // Update length field popup position
+        const lengthField = document.querySelector('#app-chat-container .length-field-popup');
+        if (lengthField) {
+          lengthField.style.bottom = `${bottomOffset + inputContainer.offsetHeight}px`;
+        }
+        
         // Recalculate the messages panel bottom margin
         messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
-
+        
         // Update the reveal button position based on the new input container position
         updateRevealButtonPosition();
       });
