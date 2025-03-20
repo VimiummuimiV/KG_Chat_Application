@@ -1551,7 +1551,7 @@ export function toggleChatMaximize() {
 // ==================================================================================================
 
 // Add this function to handle mobile/touch devices
-export function handleMobileLayout(messagesPanel, inputContainer, messageInput) {
+export function handleMobileLayout(messagesPanel, inputContainer) {
   const isMobile = checkIsMobile();
   if (isMobile) {
     // Initial setup - fixed positioning for input container
