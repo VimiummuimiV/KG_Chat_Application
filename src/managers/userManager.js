@@ -12,7 +12,7 @@ export default class UserManager {
 
     // Role-based icons
     this.roleIcons = {
-      'visitor': '🐥',
+      'visitor': '🚫',
       'participant': '',
       'moderator': '⚔️️'
     };
