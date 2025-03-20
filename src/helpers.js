@@ -1565,24 +1565,6 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
     // Set margin for messages panel
     messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
     
-    // Track the initial viewport height
-    const initialViewportHeight = window.innerHeight;
-    
-    // Listen for viewport resize (which happens when keyboard opens/closes)
-    window.addEventListener('resize', () => {
-      const currentViewportHeight = window.innerHeight;
-      
-      // If the viewport is significantly smaller, the keyboard is likely open
-      if (currentViewportHeight < initialViewportHeight * 0.75) {
-        // Keyboard is open - adjust bottom margin to stay above keyboard
-        const heightDifference = initialViewportHeight - currentViewportHeight;
-        inputContainer.style.bottom = `${heightDifference}px`;
-      } else {
-        // Keyboard is closed - reset position
-        inputContainer.style.bottom = '0';
-      }
-    });
-    
     // Add styles for mobile view
     const globalMobileStyles = document.createElement('style');
     globalMobileStyles.classList.add('global-mobile-styles');
@@ -1620,6 +1602,21 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
       }
     `;
     document.head.appendChild(globalMobileStyles);
+    
+    // Use Visual Viewport API for keyboard detection
+    if (window.visualViewport) {
+      const originalHeight = window.visualViewport.height;
+      
+      window.visualViewport.addEventListener('resize', () => {
+        const heightDifference = originalHeight - window.visualViewport.height;
+        
+        if (heightDifference > 150) {  // Threshold to detect keyboard
+          inputContainer.style.bottom = `${heightDifference}px`;
+        } else {
+          inputContainer.style.bottom = '0';
+        }
+      });
+    }
   }
 }
 
