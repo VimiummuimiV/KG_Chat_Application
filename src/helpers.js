@@ -1607,17 +1607,19 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
     const updateRevealButtonPosition = () => {
       const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       const container = document.getElementById('app-chat-container');
-
       if (revealButton && container) {
-        // Get viewport height
-        const viewportHeight = window.innerHeight;
+        // Use visualViewport height instead of innerHeight when available
+        const viewportHeight = window.visualViewport ? window.visualViewport.height : window.innerHeight;
         const buttonHeight = revealButton.offsetHeight || 0;
 
-        // Calculate the middle of the screen
+        // Calculate the middle of the visible viewport
         const middle = viewportHeight / 2 - buttonHeight / 2;
 
-        // Position the button at the middle of the screen
-        revealButton.style.setProperty('top', `${middle}px`, 'important');
+        // Adjust for visualViewport offsetTop (scroll position) if available
+        const offsetTop = window.visualViewport ? window.visualViewport.offsetTop : 0;
+
+        // Position the button at the middle of the visible screen area
+        revealButton.style.setProperty('top', `${middle + offsetTop}px`, 'important');
       }
     };
 
