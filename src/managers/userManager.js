@@ -13,7 +13,7 @@ export default class UserManager {
     // Role-based icons
     this.roleIcons = {
       'visitor': '🐥',
-      'participant': '🗿',
+      'participant': '',
       'moderator': '⚔️️'
     };
 
@@ -263,7 +263,7 @@ export default class UserManager {
         userElement = document.createElement('div');
         userElement.classList.add('user-item');
         userElement.setAttribute('data-jid', user.jid);
-        const roleIcon = this.roleIcons[user.role] || '👤';
+        const roleIcon = this.roleIcons[user.role];
 
         const avatarContainer = document.createElement('span');
         avatarContainer.className = 'avatar-container';
@@ -296,7 +296,7 @@ export default class UserManager {
 
         // Update role icon if changed
         const roleElement = userElement.querySelector('.role');
-        const newRoleIcon = this.roleIcons[user.role] || '👤';
+        const newRoleIcon = this.roleIcons[user.role];
         if (roleElement && roleElement.textContent !== newRoleIcon) {
           roleElement.textContent = newRoleIcon;
           if (!roleElement.classList.contains(user.role)) {
