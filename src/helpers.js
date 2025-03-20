@@ -1577,12 +1577,6 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
         left: 50% !important;
         right: unset !important;
       }
-      #app-chat-container .reveal-userlist-btn {
-        /* The top position will be dynamically updated */
-      }
-      #app-chat-container .length-field-popup {
-        bottom: unset !important;
-      }
       #app-chat-container .user-list-container {
         top: 1em !important;
         height: fit-content !important;
