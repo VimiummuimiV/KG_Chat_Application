@@ -1555,7 +1555,7 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
   const isMobile = checkIsMobile();
   if (isMobile) {
     // Make input container fixed for mobile
-    inputContainer.style.position = 'fixed';
+    inputContainer.style.position = 'absolute';
     inputContainer.style.bottom = '0';
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
