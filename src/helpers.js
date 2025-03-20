@@ -1577,6 +1577,9 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
         left: 50% !important;
         right: unset !important;
       }
+      #app-chat-container .reveal-userlist-btn {
+        transform: none !important; 
+      }
       #app-chat-container .user-list-container {
         top: 1em !important;
         height: fit-content !important;
@@ -1604,13 +1607,17 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
     const updateRevealButtonPosition = () => {
       const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       const container = document.getElementById('app-chat-container');
+
       if (revealButton && container) {
-        // Get bounding rectangles
-        const inputRect = inputContainer.getBoundingClientRect();
-        const containerRect = container.getBoundingClientRect();
-        // Calculate the button's new top position relative to the container
-        const middle = inputRect.top + (inputRect.height / 2) - containerRect.top;
-        revealButton.style.top = `${middle}px`;
+        // Get viewport height
+        const viewportHeight = window.innerHeight;
+        const buttonHeight = revealButton.offsetHeight || 0;
+
+        // Calculate the middle of the screen
+        const middle = viewportHeight / 2 - buttonHeight / 2;
+
+        // Position the button at the middle of the screen
+        revealButton.style.setProperty('top', `${middle}px`, 'important');
       }
     };
 
