@@ -15,15 +15,21 @@ export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
     this.panel = document.getElementById(panelId);
     this.messages = [];
-    this.messageIdCounter = 0;
     this.currentUsername = currentUsername;
-    this.sentMessageTexts = new Set(); // Track recently sent messages
-    this.processedMessageIds = new Set(); // Now used exclusively for deduplication
+    this.processedMessageIds = new Set(); // For deduplication of public messages only
     this.chatHistory = new Map(); // Local in-memory map for chat history
     this.initialLoadComplete = false;
 
     // Integrate the message remover
     this.chatRemover = new ChatMessagesRemover();
+  }
+
+  // Helper to generate a unique ID based on whether the message is private.
+  _generateUniqueId(isPrivate, username, text) {
+    if (isPrivate) {
+      return `pm-${Math.random().toString(36).slice(2)}`;
+    }
+    return `<${username}>${text}`;
   }
 
   processMessages(xmlResponse) {
@@ -45,19 +51,6 @@ export default class MessageManager {
       const from = fromAttr ? fromAttr.split('#')[1]?.split('@')[0] || "unknown" : "unknown";
       const cleanFrom = parseUsername(from);
 
-      // Generate a unique id based solely on username and message text.
-      const uniqueId = `<${cleanFrom}>${text}`;
-
-      // Skip this message if it has already been processed.
-      if (this.processedMessageIds.has(uniqueId)) return;
-
-      // Get timestamp from <delay> if available, otherwise use current time.
-      let timestamp = new Date().toISOString();
-      const delayNodes = msg.getElementsByTagName("delay");
-      if (delayNodes.length && delayNodes[0].getAttribute("stamp")) {
-        timestamp = delayNodes[0].getAttribute("stamp");
-      }
-
       const toAttr = msg.getAttribute("to");
       const type = msg.getAttribute("type");
       const isPrivate = type === 'chat';
@@ -65,6 +58,15 @@ export default class MessageManager {
       if (isPrivate && toAttr) {
         recipient = toAttr.split('#')[1]?.split('@')[0] || toAttr;
         recipient = parseUsername(recipient);
+      }
+
+      const uniqueId = this._generateUniqueId(isPrivate, cleanFrom, text);
+      if (!isPrivate && this.processedMessageIds.has(uniqueId)) return;
+
+      let timestamp = new Date().toISOString();
+      const delayNodes = msg.getElementsByTagName("delay");
+      if (delayNodes.length && delayNodes[0].getAttribute("stamp")) {
+        timestamp = delayNodes[0].getAttribute("stamp");
       }
 
       const messageObj = {
@@ -79,9 +81,16 @@ export default class MessageManager {
 
       this.messages.push(messageObj);
       this.chatHistory.set(uniqueId, messageObj);
-      this.processedMessageIds.add(uniqueId);
+      if (!isPrivate) {
+        this.processedMessageIds.add(uniqueId);
+      }
       newMessagesAdded = true;
     });
+
+    // Limit the size of the processedMessageIds set for public messages.
+    while (this.processedMessageIds.size > 20) {
+      this.processedMessageIds.delete(this.processedMessageIds.values().next().value);
+    }
 
     if (newMessagesAdded) {
       this.updatePanel();
@@ -90,41 +99,30 @@ export default class MessageManager {
 
   // Method to add a sent message.
   addSentMessage(text, options = {}) {
-    this.sentMessageTexts.add(text);
-
-    // Generate a unique ID using the same format as processMessages
-    const uniqueId = `<${this.currentUsername}>${text}`;
+    const isPrivate = options.isPrivate || false;
+    const uniqueId = this._generateUniqueId(isPrivate, this.currentUsername, text);
+    if (!isPrivate && this.processedMessageIds.has(uniqueId)) return;
 
     const messageObj = {
       id: uniqueId,
       from: this.currentUsername,
       text,
       timestamp: new Date().toISOString(),
-      isPrivate: options.isPrivate || false,
+      isPrivate,
       recipient: options.recipient || null,
       pending: options.pending || false
     };
 
-    // Skip if this exact message has already been processed
-    if (this.processedMessageIds.has(uniqueId)) return;
-
     this.messages.push(messageObj);
     this.chatHistory.set(uniqueId, messageObj);
-    this.processedMessageIds.add(uniqueId);
+    if (!isPrivate) {
+      this.processedMessageIds.add(uniqueId);
+    }
     this.updatePanel();
 
-    // Limit the size of the sent messages set.
-    if (this.sentMessageTexts.size > 20) {
-      const entries = Array.from(this.sentMessageTexts);
-      for (let i = 0; i < entries.length - 20; i++) {
-        this.sentMessageTexts.delete(entries[i]);
-      }
-    }
-
-    return uniqueId; // Return the ID so it can be used for updating pending status
+    return uniqueId;
   }
 
-  // New: Update pending status of a message by ID.
   updatePendingStatus(messageId, pendingStatus) {
     const msg = this.chatHistory.get(messageId);
     if (msg) {
@@ -135,17 +133,14 @@ export default class MessageManager {
 
   updatePanel() {
     if (!this.panel) return;
-    // Ensure messages are in chronological order.
     this.messages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp));
 
-    // Get IDs of messages already rendered.
     const renderedIds = new Set(
       Array.from(this.panel.querySelectorAll('.message')).map(el => el.getAttribute('data-message-id'))
     );
 
     let mentionDetected = false;
 
-    // Append only messages that haven't been rendered.
     this.messages.forEach(msg => {
       if (!renderedIds.has(msg.id)) {
         const date = new Date(msg.timestamp);
@@ -194,7 +189,6 @@ export default class MessageManager {
         messageTextDiv.className = 'message-text';
         messageTextDiv.innerHTML = parseMessageText(msg.text);
 
-        // Append pending icon if message is pending.
         if (msg.pending) {
           const pendingIcon = document.createElement('span');
           pendingIcon.className = 'pending-emoji';
@@ -206,7 +200,6 @@ export default class MessageManager {
         messageDiv.appendChild(messageTextDiv);
         this.panel.appendChild(messageDiv);
 
-        // Check if the message contains a mention of the current user
         if (this.currentUsername && msg.text.includes(this.currentUsername)) {
           mentionDetected = true;
         }
@@ -220,17 +213,14 @@ export default class MessageManager {
       scrollToBottom();
     });
 
-    // Only play mention sound if initial messages have already loaded
     if (this.initialLoadComplete && mentionDetected) {
       playMentionSound();
     }
 
-    // Mark initial load as complete after the first call
     if (!this.initialLoadComplete) {
       this.initialLoadComplete = true;
     }
 
-    // Update the message remover so it applies deletion state to new messages.
     if (this.chatRemover) {
       this.chatRemover.updateDeletedMessages();
       this.chatRemover.renderToggle();
@@ -238,15 +228,12 @@ export default class MessageManager {
   }
 
   addDelegatedClickListeners() {
-    // Attach the listener only once using a custom flag.
     if (!this.panel._delegatedClickAttached) {
       this.panel.addEventListener("click", (event) => {
-        // --- Username click handling --- 
         const usernameEl = event.target.closest('.username');
         if (usernameEl && this.panel.contains(usernameEl)) {
           const usernameText = usernameEl.textContent.trim();
           let selectedUsername = usernameText;
-          // Handle arrow formatting used in private messages.
           if (selectedUsername.includes('→')) {
             if (selectedUsername.startsWith('→')) {
               selectedUsername = selectedUsername.replace('→', '').trim();
@@ -256,11 +243,9 @@ export default class MessageManager {
           }
           const messageInput = document.getElementById('message-input');
           if (event.ctrlKey) {
-            // Ctrl+Click: Prepare for a private message.
             messageInput.value = `/pm ${selectedUsername} `;
             handlePrivateMessageInput(messageInput);
           } else {
-            // Normal click: Append username if not already present.
             const appendUsername = `${selectedUsername}, `;
             if (!messageInput.value.includes(appendUsername)) {
               messageInput.value += appendUsername;
@@ -269,23 +254,15 @@ export default class MessageManager {
           messageInput.focus();
         }
 
-        // --- Time element click handling --- 
         const timeEl = event.target.closest('.time');
         if (timeEl && this.panel.contains(timeEl)) {
-          // Extract the local time text (assumed format "HH:MM:SS")
           const localTime = timeEl.textContent.trim();
-          // Calibrate the time using the provided function.
           const moscowTime = calibrateToMoscowTime(localTime);
-          // Create today's date in the format "YYYY-MM-DD"
           const today = new Intl.DateTimeFormat('en-CA').format(new Date());
-          // Build the URL to the chat logs with the calibrated time as the hash.
           const url = `https://klavogonki.ru/chatlogs/${today}.html#${moscowTime}`;
-
-          // Open in a new tab.
           window.open(url, '_blank');
         }
       });
-      // Use a unified flag to ensure the listener is attached only once.
       this.panel._delegatedClickAttached = true;
     }
   }
@@ -300,14 +277,11 @@ export default class MessageManager {
       ? "Chat connection established. ✓"
       : "Chat connection lost. Reconnecting...";
 
-    // Find or create the system message
     let systemMessage = this.chatHistory.get(systemMessageId);
     if (systemMessage) {
-      // Update existing message
       systemMessage.text = messageText;
       systemMessage.timestamp = new Date().toISOString();
     } else {
-      // Create new system message if it doesn’t exist
       systemMessage = {
         id: systemMessageId,
         from: "System",
@@ -323,17 +297,14 @@ export default class MessageManager {
       this.processedMessageIds.add(systemMessageId);
     }
 
-    // Update the UI with the current status
     this.updateConnectionStatusInUI(systemMessage);
   }
 
   updateConnectionStatusInUI(systemMessage) {
-    // Remove the old connection status message from the UI, if it exists
     const messageDiv = this.panel.querySelector(`[data-message-id="${systemMessage.id}"]`);
     if (messageDiv) {
       messageDiv.remove();
     }
-    // Re-render the panel with the updated messages
     this.updatePanel();
   }
 }
