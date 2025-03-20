@@ -1603,18 +1603,12 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
     `;
     document.head.appendChild(globalMobileStyles);
     
-    // Use Visual Viewport API for keyboard detection
+    // Use Visual Viewport API for keyboard detection and correct positioning
     if (window.visualViewport) {
-      const originalHeight = window.visualViewport.height;
-      
       window.visualViewport.addEventListener('resize', () => {
-        const heightDifference = originalHeight - window.visualViewport.height;
-        
-        if (heightDifference > 150) {  // Threshold to detect keyboard
-          inputContainer.style.bottom = `${heightDifference}px`;
-        } else {
-          inputContainer.style.bottom = '0';
-        }
+        // Calculate the bottom offset taking into account the viewport offset when scrolling
+        const bottomOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
+        inputContainer.style.bottom = `${bottomOffset}px`;
       });
     }
   }
