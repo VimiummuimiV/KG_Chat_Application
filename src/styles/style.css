@@ -386,7 +386,7 @@
 
 .reveal-userlist-btn {
   position: absolute !important;
-  top: 50% !important;
+  top: 50vh !important;
   right: -1px !important;
   transform: translateY(-50%) !important;
   z-index: 1000 !important;
