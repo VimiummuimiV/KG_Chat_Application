@@ -1554,8 +1554,8 @@ export function toggleChatMaximize() {
 export function handleMobileLayout(messagesPanel, inputContainer, messageInput) {
   const isMobile = checkIsMobile();
   if (isMobile) {
-    // Make input container fixed for mobile
-    inputContainer.style.position = 'absolute';
+    // Initial setup - fixed positioning
+    inputContainer.style.position = 'fixed';
     inputContainer.style.bottom = '0';
     inputContainer.style.left = '0';
     inputContainer.style.right = '0';
@@ -1565,39 +1565,23 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
     // Set margin for messages panel
     messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
     
-    // Add focus event to force scroll when keyboard appears
-    if (messageInput) {
-      // Handle focus event
-      messageInput.addEventListener('focus', () => {
-        forceScroll();
-      });
-      
-      // Handle touch event specifically for mobile
-      messageInput.addEventListener('touchstart', () => {
-        forceScroll();
-      });
-      
-      // Handle click event as well
-      messageInput.addEventListener('click', () => {
-        forceScroll();
-      });
-    }
+    // Track the initial viewport height
+    const initialViewportHeight = window.innerHeight;
     
-    // Function to force scrolling
-    function forceScroll() {
-      // Force scroll immediately
-      window.scrollTo(0, document.body.scrollHeight);
-      messagesPanel.scrollTop = messagesPanel.scrollHeight;
+    // Listen for viewport resize (which happens when keyboard opens/closes)
+    window.addEventListener('resize', () => {
+      const currentViewportHeight = window.innerHeight;
       
-      // Also schedule multiple scroll attempts with increasing delays
-      // to account for keyboard animation
-      [50, 150, 300, 500].forEach(delay => {
-        setTimeout(() => {
-          window.scrollTo(0, document.body.scrollHeight);
-          messagesPanel.scrollTop = messagesPanel.scrollHeight;
-        }, delay);
-      });
-    }
+      // If the viewport is significantly smaller, the keyboard is likely open
+      if (currentViewportHeight < initialViewportHeight * 0.75) {
+        // Keyboard is open - adjust bottom margin to stay above keyboard
+        const heightDifference = initialViewportHeight - currentViewportHeight;
+        inputContainer.style.bottom = `${heightDifference}px`;
+      } else {
+        // Keyboard is closed - reset position
+        inputContainer.style.bottom = '0';
+      }
+    });
     
     // Add styles for mobile view
     const globalMobileStyles = document.createElement('style');
@@ -1630,8 +1614,29 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
         margin: 1em !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1) !important;
       }
+      /* Add transition for smoother position changes */
+      #app-chat-container .input-container {
+        transition: bottom 0.2s ease-out;
+      }
     `;
     document.head.appendChild(globalMobileStyles);
+    
+    // Use Visual Viewport API if available (more accurate for keyboard detection)
+    if (window.visualViewport) {
+      const originalHeight = window.visualViewport.height;
+      
+      window.visualViewport.addEventListener('resize', () => {
+        const heightDifference = originalHeight - window.visualViewport.height;
+        
+        if (heightDifference > 150) {  // Threshold to detect keyboard
+          // Keyboard is open - adjust position
+          inputContainer.style.bottom = `${heightDifference}px`;
+        } else {
+          // Keyboard is closed - reset position
+          inputContainer.style.bottom = '0';
+        }
+      });
+    }
   }
 }
 
