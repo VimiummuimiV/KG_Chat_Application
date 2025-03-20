@@ -1620,23 +1620,6 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
       }
     `;
     document.head.appendChild(globalMobileStyles);
-    
-    // Use Visual Viewport API if available (more accurate for keyboard detection)
-    if (window.visualViewport) {
-      const originalHeight = window.visualViewport.height;
-      
-      window.visualViewport.addEventListener('resize', () => {
-        const heightDifference = originalHeight - window.visualViewport.height;
-        
-        if (heightDifference > 150) {  // Threshold to detect keyboard
-          // Keyboard is open - adjust position
-          inputContainer.style.bottom = `${heightDifference}px`;
-        } else {
-          // Keyboard is closed - reset position
-          inputContainer.style.bottom = '0';
-        }
-      });
-    }
   }
 }
 
