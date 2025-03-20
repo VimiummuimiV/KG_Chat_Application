@@ -1568,10 +1568,9 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
     globalMobileStyles.classList.add('global-mobile-styles');
     globalMobileStyles.textContent = `
       #app-chat-container .emoji-panel {
-        transform: translate(-50%, -50%) !important;
+        transform: translate(-50%, 0%) !important;
         height: 60vh !important;
-        bottom: 10px !important;
-        top: unset !important;
+        top: 1em !important;
         left: 50% !important;
         right: unset !important;
       }
