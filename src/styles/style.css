@@ -298,7 +298,7 @@
   font-size: 12px !important;
   font-weight: bold !important;
   font-family: "Montserrat", Iansui, sans-serif !important;
-  bottom: 60px !important;
+  bottom: 60px;
   transition: left 100ms ease-out !important;
   height: 20px !important;
   align-items: center !important;
