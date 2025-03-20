@@ -1578,7 +1578,7 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
         right: unset !important;
       }
       #app-chat-container .reveal-userlist-btn {
-        top: 5em !important;
+        top: 10em !important;
         transform: none !important;
       }
       #app-chat-container .length-field-popup {
@@ -1587,7 +1587,7 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
       #app-chat-container .user-list-container {
         top: 1em !important;
         height: fit-content !important;
-        max-height: 80vh !important;
+        max-height: 60vh !important;
         border-top: 1px solid #333 !important;
         border-bottom: 1px solid #333 !important;
         border-radius: 0.5em 0 0 0.5em !important;
