@@ -410,14 +410,14 @@
 }
 
 /* When user list is hidden */
-.hidden-userlist {
+/* .hidden-userlist {
   display: flex !important;
-}
+} */
 
 /* When user list is shown */
-.shown-userlist {
+/* .shown-userlist {
   display: none !important;
-}
+} */
 
 /* Message styles */
 #app-chat-container .message {
