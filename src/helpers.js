@@ -1569,9 +1569,6 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
     const globalMobileStyles = document.createElement('style');
     globalMobileStyles.classList.add('global-mobile-styles');
     globalMobileStyles.textContent = `
-      html, body {
-        overflow: hidden !important;
-      }
       #app-chat-container .emoji-panel {
         transform: translate(-50%, -50%) !important;
         height: 60vh !important;
@@ -1579,6 +1576,10 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
         top: unset !important;
         left: 50% !important;
         right: unset !important;
+      }
+      #app-chat-container .reveal-userlist-btn {
+        top: 5em !important;
+        transform: none !important;
       }
       #app-chat-container .length-field-popup {
         bottom: unset !important;
