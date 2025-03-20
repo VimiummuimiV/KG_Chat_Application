@@ -1567,18 +1567,35 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
     
     // Add focus event to force scroll when keyboard appears
     if (messageInput) {
+      // Handle focus event
       messageInput.addEventListener('focus', () => {
-        // Force scroll to bottom when keyboard appears
+        forceScroll();
+      });
+      
+      // Handle touch event specifically for mobile
+      messageInput.addEventListener('touchstart', () => {
+        forceScroll();
+      });
+      
+      // Handle click event as well
+      messageInput.addEventListener('click', () => {
+        forceScroll();
+      });
+    }
+    
+    // Function to force scrolling
+    function forceScroll() {
+      // Force scroll immediately
+      window.scrollTo(0, document.body.scrollHeight);
+      messagesPanel.scrollTop = messagesPanel.scrollHeight;
+      
+      // Also schedule multiple scroll attempts with increasing delays
+      // to account for keyboard animation
+      [50, 150, 300, 500].forEach(delay => {
         setTimeout(() => {
-          // Force scroll both the window and the messages panel
           window.scrollTo(0, document.body.scrollHeight);
           messagesPanel.scrollTop = messagesPanel.scrollHeight;
-          
-          // Add another timeout to ensure scrolling happens after keyboard is fully shown
-          setTimeout(() => {
-            messagesPanel.scrollTop = messagesPanel.scrollHeight;
-          }, 300);
-        }, 100);
+        }, delay);
       });
     }
     
