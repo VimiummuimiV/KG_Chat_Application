@@ -49,7 +49,7 @@ export function createChatUI() {
 
   // Initial setup after DOM is ready
   requestAnimationFrame(() => {
-    handleMobileLayout(messagesPanel, inputContainer);
+    handleMobileLayout(messagesPanel, inputContainer, messageInput);
   });
 
   // Create emoji button
