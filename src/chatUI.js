@@ -65,7 +65,7 @@ export function createChatUI() {
       globalMobileStyles.classList.add('global-mobile-styles');
 
       globalMobileStyles.textContent = `
-        .emoji-panel {
+        #app-chat-container .emoji-panel {
           transform: translate(-50%, 0) !important;
           height: 60vh !important;
           bottom: 10px !important;
@@ -76,6 +76,14 @@ export function createChatUI() {
 
         #app-chat-container .length-field-popup {
           bottom: unset !important;
+        }
+
+        #app-chat-container .user-list-container {
+          top: 1em !important;
+          height: 80vh !important;
+          border-top: 1px solid #333 !important;
+          border-bottom: 1px solid #333 !important;
+          border-radius: 0.5em 0 0 0.5em !important;
         }
       `;
       document.head.appendChild(globalMobileStyles);
