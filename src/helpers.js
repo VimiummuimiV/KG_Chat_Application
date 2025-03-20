@@ -1554,7 +1554,7 @@ export function toggleChatMaximize() {
 export function handleMobileLayout(messagesPanel, inputContainer, messageInput) {
   const isMobile = checkIsMobile();
   if (isMobile) {
-    // Initial setup - fixed positioning
+    // Initial setup - fixed positioning for input container
     inputContainer.style.position = 'fixed';
     inputContainer.style.bottom = '0';
     inputContainer.style.left = '0';
@@ -1578,8 +1578,7 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
         right: unset !important;
       }
       #app-chat-container .reveal-userlist-btn {
-        top: 10em !important;
-        transform: none !important;
+        /* The top position will be dynamically updated */
       }
       #app-chat-container .length-field-popup {
         bottom: unset !important;
@@ -1607,12 +1606,35 @@ export function handleMobileLayout(messagesPanel, inputContainer, messageInput) 
     `;
     document.head.appendChild(globalMobileStyles);
     
+    // Function to update the reveal button's vertical position
+    const updateRevealButtonPosition = () => {
+      const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
+      const container = document.getElementById('app-chat-container');
+      if (revealButton && container) {
+        // Get bounding rectangles
+        const inputRect = inputContainer.getBoundingClientRect();
+        const containerRect = container.getBoundingClientRect();
+        // Calculate the button's new top position relative to the container
+        const middle = inputRect.top + (inputRect.height / 2) - containerRect.top;
+        revealButton.style.top = `${middle}px`;
+      }
+    };
+    
+    // Initial update
+    updateRevealButtonPosition();
+    
     // Use Visual Viewport API for keyboard detection and correct positioning
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', () => {
         // Calculate the bottom offset taking into account the viewport offset when scrolling
         const bottomOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
         inputContainer.style.bottom = `${bottomOffset}px`;
+        
+        // Recalculate the messages panel bottom margin
+        messagesPanel.style.marginBottom = `${inputContainer.offsetHeight}px`;
+        
+        // Update the reveal button position based on the new input container position
+        updateRevealButtonPosition();
       });
     }
   }
