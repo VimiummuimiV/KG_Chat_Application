@@ -1,5 +1,3 @@
-// emojiData.js
-
 export const emojiData = {
   smileys: [
     // Face smiling

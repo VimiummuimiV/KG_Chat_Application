@@ -1,4 +1,4 @@
-import { checkIsMobile } from './helpers.js';
+import { checkIsMobile } from "../helpers.js";
 
 export default class ChatMessagesRemover {
   constructor() {

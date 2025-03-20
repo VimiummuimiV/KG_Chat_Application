@@ -1,4 +1,9 @@
-import { getChatState, applyFontSize, createFontSizeControl, restoreFontSize } from "./helpers.js";
+import {
+  getChatState,
+  applyFontSize,
+  createFontSizeControl,
+  restoreFontSize
+} from "../helpers.js";
 
 // Function to initialize font size controls
 export function initFontSizeControls() {

@@ -1,24 +1,22 @@
 import { convertImageLinksToImage } from "./converters/image-converter.js";
 import { convertVideoLinksToPlayer } from "./converters/video-converter.js";
-import { emojiFaces, trustedDomains } from "./data/definitions.js";
+
+import {
+  emojiFaces,
+  trustedDomains
+} from "./data/definitions.js";
+
 import { state } from "./data/definitions.js";
-import { openSVG, closeSVG } from "./data/icons.js";
+
+import {
+  openSVG,
+  closeSVG,
+  expandSVG,
+  collapseSVG
+} from "./data/icons.js";
+
 import { addShakeEffect } from "./data/animations.js";
 import { emojiKeywords } from "./data/emojiData.js";
-
-// ==================================================================================================
-
-export const getAuthData = () => {
-  const pageData = JSON.parse([...document.scripts]
-    .find(s => s.text.includes('PageData'))
-    ?.text.match(/\.constant\('PageData', ({[\s\S]*?})\)/)?.[1]
-    .replace(/(\w+):/g, '"$1":').replace(/'/g, '"') || '{}');
-
-  return pageData?.chatParams && {
-    username: `${pageData.chatParams.user.id}#${pageData.chatParams.user.login}`,
-    password: pageData.chatParams.pass
-  };
-};
 
 // ==================================================================================================
 
@@ -1359,6 +1357,255 @@ export function compactXML(xmlString) {
 export function checkIsMobile() {
   return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ||
     ('ontouchstart' in window);
+}
+
+// ==================================================================================================
+
+export function toggleChatVisibility() {
+  const chatContainer = document.getElementById('app-chat-container');
+  const toggleButton = document.querySelector('.chat-toggle-button');
+  if (!chatContainer) return;
+
+  // Prevent toggling visibility if chat is maximized
+  if (chatContainer.classList.contains('maximized')) {
+    showChatAlert('Chat is currently maximized', {
+      type: 'warning',
+      duration: 1000
+    });
+    return;
+  }
+
+  const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
+  const isFloating = chatState.floating || false;
+
+  if (isFloating) {
+    const isBecomingVisible = chatContainer.style.opacity === '0';
+    chatContainer.style.opacity = isBecomingVisible ? '1' : '0';
+    setTimeout(() => {
+      chatContainer.style.display = isBecomingVisible ? 'flex' : 'none';
+      toggleButton.innerHTML = isBecomingVisible ? closeSVG : openSVG;
+      saveChatState({
+        ...chatState,
+        isVisible: isBecomingVisible
+      });
+      if (isBecomingVisible) {
+        focusTextInput(); // Focus input after chat becomes visible
+      }
+    }, 300);
+  } else {
+    const isCurrentlyVisible = chatContainer.classList.contains('visible-chat');
+    const isBecomingVisible = !isCurrentlyVisible;
+    chatContainer.classList.remove('visible-chat', 'hidden-chat');
+    chatContainer.classList.add(isBecomingVisible ? 'visible-chat' : 'hidden-chat');
+    toggleButton.innerHTML = isBecomingVisible ? closeSVG : openSVG;
+    saveChatState({
+      ...chatState,
+      isVisible: isBecomingVisible
+    });
+    if (isBecomingVisible) {
+      focusTextInput(); // Focus input immediately when shown
+    }
+  }
+}
+
+// ==================================================================================================
+
+export function addChatToggleFeature() {
+  const chatContainer = document.getElementById('app-chat-container');
+  const closeButton = document.getElementById('chat-close-btn');
+  const draggableHeader = document.getElementById('chat-header');
+  if (!chatContainer) return;
+
+  // Restore initial visibility from saved state
+  const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
+  const isFloating = chatState.floating || false;
+  const isVisible = chatState.isVisible !== false;
+
+  if (isFloating) {
+    chatContainer.style.display = isVisible ? 'flex' : 'none';
+    chatContainer.style.opacity = isVisible ? '1' : '0';
+  } else {
+    chatContainer.classList.remove('visible-chat', 'hidden-chat');
+    chatContainer.classList.add(isVisible ? 'visible-chat' : 'hidden-chat');
+  }
+
+  // Keyboard shortcuts
+  document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.shiftKey && e.code === 'Space') {
+      e.preventDefault();
+      toggleChatMaximize();
+    } else if (e.ctrlKey && e.code === 'Space') {
+      e.preventDefault();
+      toggleChatVisibility();
+    }
+  });
+
+  if (closeButton) {
+    closeButton.addEventListener('click', toggleChatVisibility);
+  }
+
+  if (draggableHeader) {
+    draggableHeader.addEventListener('dblclick', toggleChatVisibility);
+  }
+}
+
+// ==================================================================================================
+
+let originalChatState = null;
+
+export function toggleChatMaximize() {
+  const chat = document.getElementById('app-chat-container');
+  const maximizeButton = document.querySelector('.chat-maximize-button');
+  if (!chat) return;
+  if (!chat.classList.contains('maximized')) {
+    const hasVisibilityClass = !chat.classList.contains('visible-chat') && !chat.classList.contains('hidden-chat');
+    originalChatState = getChatState();
+    const calculateHeight = () => `${Math.floor(window.innerHeight * 0.9)}px`;
+    chat.style.cssText = `
+      width: 100vw !important;
+      height: ${calculateHeight()} !important;
+      max-width: 100vw !important;
+      min-width: 100vw !important;
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      top: auto !important;
+      margin: 0 !important;
+      transform: none !important;
+    `;
+    if (hasVisibilityClass) {
+      chat.classList.remove('visible-chat', 'hidden-chat');
+    }
+    chat.classList.add('maximized');
+    maximizeButton.classList.add('maximized');
+    maximizeButton.innerHTML = collapseSVG;
+    const resizeHandler = () => {
+      chat.style.height = calculateHeight();
+      chat.style.bottom = '0';
+      chat.style.top = 'auto';
+    };
+    window.addEventListener('resize', resizeHandler);
+    chat.maximizeResizeHandler = resizeHandler;
+    handleElementsBehavior();
+    focusTextInput();
+    restoreFontSize();
+  } else {
+    const container = document.getElementById('messages-panel');
+    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
+    const shouldScrollToBottom = distanceFromBottom <= 300;
+    if (chat.maximizeResizeHandler) {
+      window.removeEventListener('resize', chat.maximizeResizeHandler);
+      delete chat.maximizeResizeHandler;
+    }
+    if (originalChatState) {
+      chat.style.width = `${originalChatState.width}px`;
+      chat.style.height = `${originalChatState.height}px`;
+      chat.style.left = `${originalChatState.left}px`;
+      chat.style.maxWidth = '';
+      chat.style.minWidth = '';
+      chat.style.position = 'fixed';
+      chat.style.right = '';
+      chat.style.margin = '';
+      chat.style.transform = '';
+      chat.style.top = 'auto';
+      if (originalChatState.floating) {
+        const viewportHeight = window.innerHeight;
+        const proposedTop = originalChatState.top;
+        if (proposedTop + originalChatState.height <= viewportHeight) {
+          chat.style.top = `${proposedTop}px`;
+        } else {
+          chat.style.bottom = '0';
+          chat.style.top = 'auto';
+        }
+      } else {
+        chat.style.bottom = '0';
+        chat.style.top = '';
+      }
+      const currentState = getChatState();
+      const newState = {
+        ...currentState,
+        width: originalChatState.width,
+        height: originalChatState.height,
+        left: originalChatState.left,
+        top: originalChatState.top,
+        floating: originalChatState.floating,
+        isVisible: originalChatState.isVisible,
+      };
+      saveChatState(newState);
+    }
+    chat.classList.remove('maximized');
+    maximizeButton.classList.remove('maximized');
+    maximizeButton.innerHTML = expandSVG;
+    requestAnimationFrame(() => {
+      handleElementsBehavior();
+      if (shouldScrollToBottom) {
+        container.scrollTop = container.scrollHeight;
+      }
+      focusTextInput();
+      restoreFontSize();
+    });
+  }
+}
+
+// ==================================================================================================
+
+// Add this function to handle mobile/touch devices
+export function handleMobileLayout(messagesPanel, inputContainer) {
+  const isMobile = checkIsMobile();
+
+  if (isMobile) {
+    // Make input container floating for mobile at the top
+    inputContainer.style.position = 'absolute';
+    inputContainer.style.top = '0';
+    inputContainer.style.left = '0';
+    inputContainer.style.right = '0';
+    inputContainer.style.borderBottom = '1px solid #333';
+    inputContainer.style.zIndex = '100'; // Ensure it's above content
+
+    // Set initial margin for messages panel
+    messagesPanel.style.marginTop = `${inputContainer.offsetHeight}px`;
+
+    // Add a styles for the emoji panel on mobile devices
+    const globalMobileStyles = document.createElement('style');
+    globalMobileStyles.classList.add('global-mobile-styles');
+
+    globalMobileStyles.textContent = `
+        #app-chat-container .emoji-panel {
+          transform: translate(-50%, 0) !important;
+          height: 60vh !important;
+          bottom: 10px !important;
+          top: unset !important;
+          left: 50% !important;
+          right: unset !important;
+        }
+
+        #app-chat-container .length-field-popup {
+          bottom: unset !important;
+        }
+
+        #app-chat-container .user-list-container {
+          top: 1em !important;
+          height: 80vh !important;
+          border-top: 1px solid #333 !important;
+          border-bottom: 1px solid #333 !important;
+          border-radius: 0.5em 0 0 0.5em !important;
+        }
+      `;
+    document.head.appendChild(globalMobileStyles);
+
+    // Set up height observer
+    let previousHeight = inputContainer.offsetHeight;
+    const resizeObserver = new ResizeObserver(() => {
+      const currentHeight = inputContainer.offsetHeight;
+      if (currentHeight !== previousHeight) {
+        messagesPanel.style.marginTop = `${currentHeight}px`;
+        previousHeight = currentHeight;
+      }
+    });
+
+    resizeObserver.observe(inputContainer);
+  }
 }
 
 // ==================================================================================================

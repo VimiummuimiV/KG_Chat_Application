@@ -1,5 +1,12 @@
-import { emojiData, emojiKeywords } from '../data/emojiData.js';
-import { adjustVisibility, checkIsMobile } from '../helpers.js';
+import {
+  emojiData,
+  emojiKeywords
+} from "../data/emojiData.js";
+
+import {
+  adjustVisibility,
+  checkIsMobile
+} from "../helpers.js";
 
 // Create a single global shortcut handler
 const setupGlobalEmojiShortcut = (() => {

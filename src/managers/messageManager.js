@@ -7,9 +7,9 @@ import {
   usernameColors,
   handlePrivateMessageInput,
   calibrateToMoscowTime
-} from '../helpers.js';
+} from "../helpers.js";
 
-import ChatMessagesRemover from '../ChatMessagesRemover.js';
+import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {

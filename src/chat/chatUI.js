@@ -1,11 +1,5 @@
-import { toggleChatVisibility } from "./chatFeatures.js";
-
 import {
   restoreChatState,
-  getChatState,
-  saveChatState,
-  handleElementsBehavior,
-  focusTextInput,
   createFontSizeControl,
   restoreFontSize,
   showChatAlert,
@@ -13,12 +7,21 @@ import {
   getRandomInterval,
   initChatLengthPopupEvents,
   createLengthPopup,
-  checkIsMobile
-} from "./helpers.js";
+  checkIsMobile,
+  toggleChatVisibility,
+  toggleChatMaximize,
+  handleMobileLayout
+} from "../helpers.js";
 
-import { sendSVG, closeSVG, expandSVG, collapseSVG, helpSVG } from "./data/icons.js";
-import { HelpPanel } from "./components/helpPanel.js";
-import { EmojiPanel } from "./components/emojiPanel.js";
+import {
+  sendSVG,
+  closeSVG,
+  expandSVG,
+  helpSVG
+} from "../data/icons.js";
+
+import { HelpPanel } from "../components/helpPanel.js";
+import { EmojiPanel } from "../components/emojiPanel.js";
 
 export function createChatUI() {
   const chatContainer = document.createElement('div');
@@ -44,67 +47,9 @@ export function createChatUI() {
   const inputContainer = document.createElement('div');
   inputContainer.className = 'input-container';
 
-  // Add this function to handle mobile/touch devices
-  function handleMobileLayout() {
-    const isMobile = checkIsMobile();
-
-    if (isMobile) {
-      // Make input container floating for mobile at the top
-      inputContainer.style.position = 'absolute';
-      inputContainer.style.top = '0';
-      inputContainer.style.left = '0';
-      inputContainer.style.right = '0';
-      inputContainer.style.borderBottom = '1px solid #333';
-      inputContainer.style.zIndex = '100'; // Ensure it's above content
-
-      // Set initial margin for messages panel
-      messagesPanel.style.marginTop = `${inputContainer.offsetHeight}px`;
-
-      // Add a styles for the emoji panel on mobile devices
-      const globalMobileStyles = document.createElement('style');
-      globalMobileStyles.classList.add('global-mobile-styles');
-
-      globalMobileStyles.textContent = `
-        #app-chat-container .emoji-panel {
-          transform: translate(-50%, 0) !important;
-          height: 60vh !important;
-          bottom: 10px !important;
-          top: unset !important;
-          left: 50% !important;
-          right: unset !important;
-        }
-
-        #app-chat-container .length-field-popup {
-          bottom: unset !important;
-        }
-
-        #app-chat-container .user-list-container {
-          top: 1em !important;
-          height: 80vh !important;
-          border-top: 1px solid #333 !important;
-          border-bottom: 1px solid #333 !important;
-          border-radius: 0.5em 0 0 0.5em !important;
-        }
-      `;
-      document.head.appendChild(globalMobileStyles);
-
-      // Set up height observer
-      let previousHeight = inputContainer.offsetHeight;
-      const resizeObserver = new ResizeObserver(() => {
-        const currentHeight = inputContainer.offsetHeight;
-        if (currentHeight !== previousHeight) {
-          messagesPanel.style.marginTop = `${currentHeight}px`;
-          previousHeight = currentHeight;
-        }
-      });
-
-      resizeObserver.observe(inputContainer);
-    }
-  }
-
   // Initial setup after DOM is ready
   requestAnimationFrame(() => {
-    handleMobileLayout();
+    handleMobileLayout(messagesPanel, inputContainer);
   });
 
   // Create emoji button
@@ -123,8 +68,8 @@ export function createChatUI() {
     emojiButton.innerHTML = "🙂";
   });
 
-  // Setup random emoji appearance with range (10min - 30min)
-  setupRandomEmojiAttention(emojiButton, getRandomInterval(600000, 1800000));
+  // Setup random emoji appearance with range (5min - 10min)
+  setupRandomEmojiAttention(emojiButton, getRandomInterval(300000, 600000));
 
   // Setup emoji panel toggle functionality
   let emojiPanelInstance = null;
@@ -267,101 +212,4 @@ export function createChatUI() {
       initChatLengthPopupEvents(messageInput);
     }
   });
-}
-
-let originalChatState = null;
-
-export function toggleChatMaximize() {
-  const chat = document.getElementById('app-chat-container');
-  const maximizeButton = document.querySelector('.chat-maximize-button');
-  if (!chat) return;
-  if (!chat.classList.contains('maximized')) {
-    const hasVisibilityClass = !chat.classList.contains('visible-chat') && !chat.classList.contains('hidden-chat');
-    originalChatState = getChatState();
-    const calculateHeight = () => `${Math.floor(window.innerHeight * 0.9)}px`;
-    chat.style.cssText = `
-      width: 100vw !important;
-      height: ${calculateHeight()} !important;
-      max-width: 100vw !important;
-      min-width: 100vw !important;
-      position: fixed !important;
-      bottom: 0 !important;
-      left: 0 !important;
-      right: 0 !important;
-      top: auto !important;
-      margin: 0 !important;
-      transform: none !important;
-    `;
-    if (hasVisibilityClass) {
-      chat.classList.remove('visible-chat', 'hidden-chat');
-    }
-    chat.classList.add('maximized');
-    maximizeButton.classList.add('maximized');
-    maximizeButton.innerHTML = collapseSVG;
-    const resizeHandler = () => {
-      chat.style.height = calculateHeight();
-      chat.style.bottom = '0';
-      chat.style.top = 'auto';
-    };
-    window.addEventListener('resize', resizeHandler);
-    chat.maximizeResizeHandler = resizeHandler;
-    handleElementsBehavior();
-    focusTextInput();
-    restoreFontSize();
-  } else {
-    const container = document.getElementById('messages-panel');
-    const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
-    const shouldScrollToBottom = distanceFromBottom <= 300;
-    if (chat.maximizeResizeHandler) {
-      window.removeEventListener('resize', chat.maximizeResizeHandler);
-      delete chat.maximizeResizeHandler;
-    }
-    if (originalChatState) {
-      chat.style.width = `${originalChatState.width}px`;
-      chat.style.height = `${originalChatState.height}px`;
-      chat.style.left = `${originalChatState.left}px`;
-      chat.style.maxWidth = '';
-      chat.style.minWidth = '';
-      chat.style.position = 'fixed';
-      chat.style.right = '';
-      chat.style.margin = '';
-      chat.style.transform = '';
-      chat.style.top = 'auto';
-      if (originalChatState.floating) {
-        const viewportHeight = window.innerHeight;
-        const proposedTop = originalChatState.top;
-        if (proposedTop + originalChatState.height <= viewportHeight) {
-          chat.style.top = `${proposedTop}px`;
-        } else {
-          chat.style.bottom = '0';
-          chat.style.top = 'auto';
-        }
-      } else {
-        chat.style.bottom = '0';
-        chat.style.top = '';
-      }
-      const currentState = getChatState();
-      const newState = {
-        ...currentState,
-        width: originalChatState.width,
-        height: originalChatState.height,
-        left: originalChatState.left,
-        top: originalChatState.top,
-        floating: originalChatState.floating,
-        isVisible: originalChatState.isVisible,
-      };
-      saveChatState(newState);
-    }
-    chat.classList.remove('maximized');
-    maximizeButton.classList.remove('maximized');
-    maximizeButton.innerHTML = expandSVG;
-    requestAnimationFrame(() => {
-      handleElementsBehavior();
-      if (shouldScrollToBottom) {
-        container.scrollTop = container.scrollHeight;
-      }
-      focusTextInput();
-      restoreFontSize();
-    });
-  }
 }
