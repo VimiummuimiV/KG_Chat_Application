@@ -40,7 +40,6 @@ export default class MessageManager {
     this.messageMap.set(id, messageObj);
     this.trimMessages();
 
-    console.log(this.messageMap);
     return true;
   }
 
