@@ -1665,3 +1665,10 @@ export function handleMobileLayout(messagesPanel, inputContainer) {
 }
 
 // ==================================================================================================
+
+// Helper function to generate a random string
+export function generateRandomString() {
+  return Math.random().toString(36).slice(2);
+}
+
+// ==================================================================================================

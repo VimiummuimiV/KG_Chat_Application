@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         KG_Chat_Application
 // @namespace    klavogonki
-// @version      2.1.0
+// @version      2.1.1
 // @description  Enhance the chat abilities
 // @author       Patcher
 // @match        *://klavogonki.ru/*
