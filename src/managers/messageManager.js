@@ -14,48 +14,44 @@ import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
     this.panel = document.getElementById(panelId);
-    this.messageMap = new Map(); // Single map to store all messages
+    this.messageMap = new Map();
     this.currentUsername = currentUsername;
-    this.maxMessages = 20; // Maximum number of messages to keep
+    this.maxMessages = 20;
     this.initialLoadComplete = false;
-    // Integrate the message remover
     this.chatRemover = new ChatMessagesRemover();
+    this.messageInput = document.getElementById('message-input');
+    this._delegatedClickAttached = false;
   }
 
-  // Helper to generate a unique ID based on message type
-  generateUniqueId(messageType, username, text) {
-    if (messageType === 'system') {
-      return 'chat-connection';
-    } else if (messageType === 'private') {
-      return `private-${generateRandomString()}`;
-    } else {
-      return `<${username}>${text}`;
+  // Consolidated unique ID generation
+  generateUniqueId(type, username, text) {
+    switch (type) {
+      case 'system':
+        return 'chat-connection';
+      case 'private':
+        return `private-${generateRandomString()}`;
+      default:
+        return `<${username}>${text}`;
     }
   }
 
-  // Helper to add a message to the map
   addMessage(messageObj) {
-    const { id } = messageObj;
-
-    this.messageMap.set(id, messageObj);
+    this.messageMap.set(messageObj.id, messageObj);
     this.trimMessages();
-
     return true;
   }
 
-  // Helper to trim excess messages
   trimMessages() {
-    const messages = Array.from(this.messageMap.entries());
-    if (messages.length > this.maxMessages) {
-      const toRemove = messages.slice(0, messages.length - this.maxMessages);
-      toRemove.forEach(([id]) => this.messageMap.delete(id));
+    while (this.messageMap.size > this.maxMessages) {
+      // Delete the oldest message (first inserted)
+      const oldestKey = this.messageMap.keys().next().value;
+      this.messageMap.delete(oldestKey);
     }
   }
 
   processMessages(xmlResponse) {
-    if (!xmlResponse || typeof xmlResponse !== 'string') return;
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlResponse, "text/xml");
+    if (typeof xmlResponse !== 'string' || !xmlResponse) return;
+    const doc = new DOMParser().parseFromString(xmlResponse, "text/xml");
     const messageElements = doc.getElementsByTagName("message");
     let newMessagesAdded = false;
 
@@ -70,13 +66,11 @@ export default class MessageManager {
       const cleanFrom = parseUsername(from);
 
       const toAttr = msg.getAttribute("to");
-      const type = msg.getAttribute("type");
-      const isPrivate = type === 'chat';
+      const typeAttr = msg.getAttribute("type");
+      const isPrivate = typeAttr === 'chat';
       let recipient = null;
-
       if (isPrivate && toAttr) {
-        recipient = toAttr.split('#')[1]?.split('@')[0] || toAttr;
-        recipient = parseUsername(recipient);
+        recipient = parseUsername(toAttr.split('#')[1]?.split('@')[0] || toAttr);
       }
 
       const uniqueId = this.generateUniqueId(isPrivate ? 'private' : 'public', cleanFrom, text);
@@ -99,7 +93,6 @@ export default class MessageManager {
     }
   }
 
-  // Method to add a sent message.
   addSentMessage(text, options = {}) {
     const isPrivate = options.isPrivate || false;
     const uniqueId = this.generateUniqueId(isPrivate ? 'private' : 'public', this.currentUsername, text);
@@ -127,20 +120,22 @@ export default class MessageManager {
 
   updatePanel() {
     if (!this.panel) return;
+    // Create a fragment to batch DOM updates
+    const fragment = document.createDocumentFragment();
     const renderedIds = new Set(
-      Array.from(this.panel.querySelectorAll('.message')).map(el => el.getAttribute('data-message-id'))
+      Array.from(this.panel.querySelectorAll('.message'))
+        .map(el => el.getAttribute('data-message-id'))
     );
     let mentionDetected = false;
 
-    // Render messages from the map
-    const messageEntries = Array.from(this.messageMap.entries());
-    messageEntries.forEach(([id, msg]) => {
+    this.messageMap.forEach((msg, id) => {
       if (!renderedIds.has(id)) {
         const formattedTime = new Date().toLocaleTimeString('en-GB', { hour12: false });
         const normalizedUsername = parseUsername(msg.from);
         const usernameColor = usernameColors.getColor(normalizedUsername);
         const messageEl = document.createElement('div');
         messageEl.className = 'message';
+        messageEl.setAttribute('data-message-id', id);
 
         if (msg.isPrivate) {
           messageEl.classList.add('private-message');
@@ -154,31 +149,28 @@ export default class MessageManager {
           messageEl.classList.add('system');
           msg.text = `${msg.from} ${msg.text.substring(msg.text.indexOf(' ') + 1)}`;
         }
-
         if (msg.isSystem) {
           messageEl.classList.add('system');
         }
 
-        messageEl.setAttribute('data-message-id', id);
+        // Build message info
         const messageInfoEl = document.createElement('div');
         messageInfoEl.className = 'message-info';
         let usernameDisplay = msg.from;
-
         if (msg.isPrivate) {
           usernameDisplay = msg.from === this.currentUsername && msg.recipient
             ? `→ ${msg.recipient}`
             : `${msg.from} →`;
         }
-
         messageInfoEl.innerHTML = `
-        <span class="time">${formattedTime}</span>
-        <span class="username" style="color: ${usernameColor}">${usernameDisplay}</span>
-      `;
+          <span class="time">${formattedTime}</span>
+          <span class="username" style="color: ${usernameColor}">${usernameDisplay}</span>
+        `;
 
+        // Build message text
         const messageTextEl = document.createElement('div');
         messageTextEl.className = 'message-text';
         messageTextEl.innerHTML = parseMessageText(msg.text);
-
         if (msg.pending) {
           const pendingIconEl = document.createElement('span');
           pendingIconEl.className = 'pending-emoji';
@@ -188,7 +180,7 @@ export default class MessageManager {
 
         messageEl.appendChild(messageInfoEl);
         messageEl.appendChild(messageTextEl);
-        this.panel.appendChild(messageEl);
+        fragment.appendChild(messageEl);
 
         if (this.currentUsername && msg.text.includes(this.currentUsername)) {
           mentionDetected = true;
@@ -196,6 +188,8 @@ export default class MessageManager {
       }
     });
 
+    // Append all new messages at once
+    this.panel.appendChild(fragment);
     this.addDelegatedClickListeners();
     highlightMentionWords([this.currentUsername]);
 
@@ -206,10 +200,7 @@ export default class MessageManager {
     if (this.initialLoadComplete && mentionDetected) {
       playMentionSound();
     }
-
-    if (!this.initialLoadComplete) {
-      this.initialLoadComplete = true;
-    }
+    this.initialLoadComplete = true;
 
     if (this.chatRemover) {
       this.chatRemover.updateDeletedMessages();
@@ -233,18 +224,18 @@ export default class MessageManager {
             }
           }
 
-          const messageInput = document.getElementById('message-input');
           if (event.ctrlKey) {
-            messageInput.value = `/pm ${selectedUsername}`;
-            handlePrivateMessageInput(messageInput);
+            // Use the cached messageInput and ensure a trailing space
+            this.messageInput.value = `/pm ${selectedUsername} `;
+            handlePrivateMessageInput(this.messageInput);
           } else {
             const appendUsername = `${selectedUsername},`;
-            if (!messageInput.value.includes(appendUsername)) {
-              messageInput.value += appendUsername;
+            if (!this.messageInput.value.includes(appendUsername)) {
+              this.messageInput.value += appendUsername;
             }
           }
 
-          messageInput.focus();
+          this.messageInput.focus();
         }
 
         const timeEl = event.target.closest('.time');
@@ -271,7 +262,7 @@ export default class MessageManager {
       : "Chat connection lost. Reconnecting...";
 
     // Remove previous system messages
-    Array.from(this.messageMap.entries()).forEach(([id, msg]) => {
+    this.messageMap.forEach((msg, id) => {
       if (msg.isSystem) {
         this.messageMap.delete(id);
       }
@@ -293,16 +284,13 @@ export default class MessageManager {
   }
 
   updateConnectionStatusInUI(systemMessage) {
-    // Ensure the clock icon is removed if present
+    // Remove all pending icons
     this.panel.querySelectorAll('.pending-emoji').forEach(el => el.remove());
-
-    // Find the system message element and remove it if it exists
+    // Remove any existing system message element with the same id
     const systemMessageElement = this.panel.querySelector(`[data-message-id="${systemMessage.id}"]`);
     if (systemMessageElement) {
       systemMessageElement.remove();
     }
-
-    // Update the panel to reflect changes
     this.updatePanel();
   }
 }
