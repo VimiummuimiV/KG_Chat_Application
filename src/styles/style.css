@@ -804,6 +804,7 @@
 
 .youtube-thumb {
   cursor: pointer !important;
+  object-fit: cover !important;
 }
 
 /* toggleHiddenMessages */

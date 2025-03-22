@@ -329,9 +329,9 @@ export function handleElementsBehavior() {
   const isMaximized = chatContainer.classList.contains('maximized');
   const userList = document.querySelector('#app-chat-container .user-list-container');
   const systemMessage = document.querySelector('#app-chat-container .message.system');
-
   let isUserListOpen = false;
-
+  
+  // Handle user list for narrow screens
   if (userList) {
     if (isNarrow && !isMaximized) {
       userList.style.position = 'absolute';
@@ -341,17 +341,13 @@ export function handleElementsBehavior() {
       userList.style.transition = 'transform 0.3s ease';
       userList.style.zIndex = '1001';
       userList.style.transform = 'translateX(100%)';
-
       if (systemMessage) systemMessage.style.setProperty('align-items', 'start', 'important');
-
       let revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       if (!revealButton) {
         revealButton = document.createElement('button');
         revealButton.className = 'reveal-userlist-btn hidden-userlist';
         revealButton.textContent = '📋';
-
         chatContainer.appendChild(revealButton);
-
         function closeUserList(event) {
           if (!userList.contains(event.target) && event.target !== revealButton) {
             userList.style.transform = 'translateX(100%)';
@@ -361,7 +357,6 @@ export function handleElementsBehavior() {
             document.removeEventListener('click', closeUserList, true);
           }
         }
-
         revealButton.addEventListener('click', (event) => {
           event.stopPropagation();
           if (!isUserListOpen) {
@@ -369,7 +364,6 @@ export function handleElementsBehavior() {
             revealButton.classList.remove('hidden-userlist');
             revealButton.classList.add('shown-userlist');
             isUserListOpen = true;
-
             setTimeout(() => {
               document.addEventListener('click', closeUserList, true);
             }, 10);
@@ -383,31 +377,36 @@ export function handleElementsBehavior() {
       userList.style.right = '';
       userList.style.transform = '';
       userList.style.zIndex = '';
-
       if (systemMessage) systemMessage.style.removeProperty('align-items');
-
       const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       if (revealButton) {
         revealButton.remove();
       }
     }
   }
-
+  
+  // Adjust message layout for narrow screens
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
     msg.style.flexDirection = (isNarrow && !isMaximized) ? 'column' : 'row';
     msg.style.marginBottom = (isNarrow && !isMaximized) ? '0.4em' : '0';
   });
-
-  document.querySelectorAll('#app-chat-container .video-container').forEach(video => {
+  
+  // Apply scaling to video containers and YouTube thumbnails
+  const mediaElements = document.querySelectorAll('#app-chat-container .video-container, #app-chat-container .youtube-thumb');
+  
+  mediaElements.forEach(element => {
     if (isExtremelyNarrow) {
-      video.style.transformOrigin = 'left';
-      video.style.transform = 'scale(0.8)';
+      element.style.transformOrigin = 'left';
+      element.style.transform = 'scale(0.8)';
+      element.style.maxWidth = '100%';
     } else if (isVeryNarrow) {
-      video.style.transformOrigin = 'left';
-      video.style.transform = 'scale(0.9)';
+      element.style.transformOrigin = 'left';
+      element.style.transform = 'scale(0.9)';
+      element.style.maxWidth = '100%';
     } else {
-      video.style.transformOrigin = '';
-      video.style.transform = '';
+      element.style.transformOrigin = '';
+      element.style.transform = '';
+      element.style.maxWidth = '';
     }
   });
 }
