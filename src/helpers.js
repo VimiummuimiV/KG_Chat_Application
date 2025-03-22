@@ -422,7 +422,7 @@ export function observeMessagesPanel() {
     handleElementsBehavior();
     convertVideoLinksToPlayer();
     convertImageLinksToImage();
-    scrollToBottom();
+    scrollToBottom(200);
   });
 
   observer.observe(messagesPanel, { childList: true, subtree: true });
@@ -784,8 +784,7 @@ export function highlightMentionWords() {
 
 // ==================================================================================================
 
-const scrollThreshold = 600;
-export function scrollToBottom() {
+export function scrollToBottom(scrollThreshold) {
   const container = document.getElementById('messages-panel');
   if (!container) return;
 

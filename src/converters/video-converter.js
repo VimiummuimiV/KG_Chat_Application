@@ -1,7 +1,8 @@
 import {
   decodeURL,
   isEncodedURL,
-  isTrustedDomain
+  isTrustedDomain,
+  scrollToBottom
 } from "../helpers"; // helpers
 
 const emojis = { image: '🎥', domain: '🖥️', untrusted: '💀️️' };
@@ -37,6 +38,7 @@ function renderYouTubePreview(placeholder, videoId, videoType) {
   thumb.alt = videoType;
   thumb.classList.add("youtube-thumb");
   placeholder.appendChild(thumb);
+  scrollToBottom(600);
 }
 
 export function convertVideoLinksToPlayer() {

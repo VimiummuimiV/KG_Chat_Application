@@ -6,7 +6,8 @@ import {
   isEncodedURL,
   isTrustedDomain,
   removeBigImageEventListeners,
-  checkIsMobile
+  checkIsMobile,
+  scrollToBottom
 } from "../helpers"; // helpers
 
 // definitions
@@ -284,6 +285,7 @@ export function convertImageLinksToImage() {
     img.onload = () => {
       thumbnail.appendChild(img);
       link.parentNode.insertBefore(thumbnail, link.nextSibling);
+      scrollToBottom(600);
     };
 
     img.onerror = () => {
@@ -293,7 +295,7 @@ export function convertImageLinksToImage() {
 
     if (isUntrusted) {
       if (!link.querySelector(".clickable-thumbnail")) {
-        link.addEventListener("click", (e) => {
+        link.addEventListener("click", () => {
           if (!link.querySelector(".clickable-thumbnail")) {
             thumbnail.appendChild(img);
             link.parentNode.insertBefore(thumbnail, link.nextSibling);
