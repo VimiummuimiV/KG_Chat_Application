@@ -6,8 +6,7 @@ import {
   isEncodedURL,
   isTrustedDomain,
   removeBigImageEventListeners,
-  checkIsMobile,
-  scrollToBottom
+  checkIsMobile
 } from "../helpers"; // helpers
 
 // definitions
@@ -285,7 +284,6 @@ export function convertImageLinksToImage() {
     img.onload = () => {
       thumbnail.appendChild(img);
       link.parentNode.insertBefore(thumbnail, link.nextSibling);
-      scrollToBottom();
     };
 
     img.onerror = () => {

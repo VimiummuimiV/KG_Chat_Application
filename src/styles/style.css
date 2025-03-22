@@ -107,14 +107,16 @@
 }
 
 @media screen and (max-width: 367px) {
-  #app-chat-container .video-container {
+  #app-chat-container .video-container,
+  #app-chat-container .youtube-thumb {
     transform-origin: left !important;
     transform: scale(0.9) !important;
   }
 }
 
 @media screen and (max-width: 350px) {
-  #app-chat-container .video-container {
+  #app-chat-container .video-container,
+  #app-chat-container .youtube-thumb {
     transform-origin: left !important;
     transform: scale(0.8) !important;
   }
@@ -791,12 +793,17 @@
   margin-bottom: 0.6em !important;
 }
 
-.video-container {
+.video-container,
+.youtube-thumb {
   border-radius: 0.4em !important;
   display: flex;
   border: none;
   height: 200px !important;
   width: 356px !important;
+}
+
+.youtube-thumb {
+  cursor: pointer !important;
 }
 
 /* toggleHiddenMessages */
