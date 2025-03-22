@@ -17,6 +17,9 @@ export default class UserManager {
     this.isFirstLoad = true;
     this.avatarCache = this.loadAvatarCache();
     this.cacheDate = new Date().toDateString();
+    this.changes = false;
+    this.newUserJIDs = [];
+    this.updatedUserJIDs = [];
 
     // Role-based icons
     this.roleIcons = {
@@ -110,9 +113,10 @@ export default class UserManager {
       return;
     }
 
-    let changes = false;
-    const newUserJIDs = [];
-    const updatedUserJIDs = [];
+    // Reset change tracking variables for this update cycle
+    this.changes = false;
+    this.newUserJIDs = [];
+    this.updatedUserJIDs = [];
 
     for (let i = 0; i < presences.length; i++) {
       const presence = presences[i];
@@ -144,7 +148,7 @@ export default class UserManager {
             // console.log(`🚪 User left: ${cleanLogin} ID: (${userId})`);
           }
           this.activeUsers.delete(from);
-          changes = true;
+          this.changes = true;
         }
         continue;
       }
@@ -169,16 +173,16 @@ export default class UserManager {
       const xElements = presence.getElementsByTagName("x");
       let foundAvatar = false;
 
-      for (let j = 0; j < xElements.length; j++) {
-        const xmlns = xElements[j].getAttribute("xmlns");
+      Array.from(xElements).forEach(element => {
+        const xmlns = element.getAttribute("xmlns");
+
         if (xmlns === "klavogonki:userdata") {
-          const userNode = xElements[j].getElementsByTagName("user")[0];
+          const userNode = element.getElementsByTagName("user")[0];
+
           if (userNode) {
             const loginElement = userNode.getElementsByTagName("login")[0];
-            // Later, when the login element is updated:
             if (loginElement && loginElement.textContent) {
               userData.login = loginElement.textContent;
-              // Again, normalize the username for color generation:
               userData.usernameColor = usernameColors.getColor(extractUsername(userData.login));
             }
 
@@ -194,14 +198,14 @@ export default class UserManager {
             }
           }
 
-          const gameIdElement = xElements[j].getElementsByTagName("game_id")[0];
+          const gameIdElement = element.getElementsByTagName("game_id")[0];
           if (gameIdElement && gameIdElement.textContent) {
             userData.gameId = gameIdElement.textContent;
           }
         }
 
         if (xmlns === "http://jabber.org/protocol/muc#user") {
-          const itemNode = xElements[j].getElementsByTagName("item")[0];
+          const itemNode = element.getElementsByTagName("item")[0];
           if (itemNode) {
             const role = itemNode.getAttribute("role");
             if (role && userData.role !== 'moderator') {
@@ -209,7 +213,7 @@ export default class UserManager {
             }
           }
         }
-      }
+      });
 
       // If no avatar in update but exists in user data, keep it
       if (!foundAvatar && existingUser && existingUser.avatar) {
@@ -231,21 +235,21 @@ export default class UserManager {
           // console.log(`👤 User joined: ${cleanLogin} ID: (${userId})`);
         }
         this.activeUsers.set(from, userData);
-        changes = true;
-        newUserJIDs.push(from);
+        this.changes = true;
+        this.newUserJIDs.push(from);
       } else if (JSON.stringify(existingUser) !== JSON.stringify(userData)) {
         this.activeUsers.set(from, userData);
-        changes = true;
-        updatedUserJIDs.push(from);
+        this.changes = true;
+        this.updatedUserJIDs.push(from);
       }
     }
 
-    if (changes) {
-      this.updateUI(newUserJIDs, updatedUserJIDs);
+    if (this.changes) {
+      this.updateUI();
     }
   }
 
-  updateUI(newUserJIDs = [], updatedUserJIDs = []) {
+  updateUI() {
     // Build map of existing DOM elements
     const existingElements = new Map();
     this.container.querySelectorAll('.user-item').forEach(el => {
@@ -339,7 +343,7 @@ export default class UserManager {
 
     // Apply shake effect for new users
     if (!this.isFirstLoad) {
-      newUserJIDs.forEach(jid => {
+      this.newUserJIDs.forEach(jid => {
         const userElement = this.container.querySelector(`.user-item[data-jid="${jid}"]`);
         if (userElement && userElement.parentNode) {
           addShakeEffect(userElement);
