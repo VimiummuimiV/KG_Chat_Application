@@ -422,7 +422,7 @@ export function observeMessagesPanel() {
     handleElementsBehavior();
     convertVideoLinksToPlayer();
     convertImageLinksToImage();
-    scrollToBottom(200);
+    scrollToBottom(250);
   });
 
   observer.observe(messagesPanel, { childList: true, subtree: true });

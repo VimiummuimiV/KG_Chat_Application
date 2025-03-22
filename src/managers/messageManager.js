@@ -194,7 +194,7 @@ export default class MessageManager {
     highlightMentionWords([this.currentUsername]);
 
     requestAnimationFrame(() => {
-      scrollToBottom(200);
+      scrollToBottom(250);
     });
 
     if (this.initialLoadComplete && mentionDetected) {
