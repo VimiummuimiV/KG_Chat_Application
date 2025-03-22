@@ -15,6 +15,7 @@ export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
     this.panel = document.getElementById(panelId);
     this.messageMap = new Map();
+    this.renderedMessageIds = new Set(); // Track which messages are already in the DOM
     this.currentUsername = currentUsername;
     this.maxMessages = 20;
     this.initialLoadComplete = false;
@@ -43,9 +44,9 @@ export default class MessageManager {
 
   trimMessages() {
     while (this.messageMap.size > this.maxMessages) {
-      // Delete the oldest message (first inserted)
       const oldestKey = this.messageMap.keys().next().value;
       this.messageMap.delete(oldestKey);
+      this.renderedMessageIds.delete(oldestKey);
     }
   }
 
@@ -120,16 +121,13 @@ export default class MessageManager {
 
   updatePanel() {
     if (!this.panel) return;
-    // Create a fragment to batch DOM updates
+    // Create a single fragment for new messages
     const fragment = document.createDocumentFragment();
-    const renderedIds = new Set(
-      Array.from(this.panel.querySelectorAll('.message'))
-        .map(el => el.getAttribute('data-message-id'))
-    );
     let mentionDetected = false;
 
+    // Iterate over our messages without querying the DOM
     this.messageMap.forEach((msg, id) => {
-      if (!renderedIds.has(id)) {
+      if (!this.renderedMessageIds.has(id)) {
         const formattedTime = new Date().toLocaleTimeString('en-GB', { hour12: false });
         const normalizedUsername = parseUsername(msg.from);
         const usernameColor = usernameColors.getColor(normalizedUsername);
@@ -182,13 +180,16 @@ export default class MessageManager {
         messageEl.appendChild(messageTextEl);
         fragment.appendChild(messageEl);
 
+        // Mark as rendered
+        this.renderedMessageIds.add(id);
+
         if (this.currentUsername && msg.text.includes(this.currentUsername)) {
           mentionDetected = true;
         }
       }
     });
 
-    // Append all new messages at once
+    // Append all new messages in one DOM operation
     this.panel.appendChild(fragment);
     this.addDelegatedClickListeners();
     highlightMentionWords([this.currentUsername]);
