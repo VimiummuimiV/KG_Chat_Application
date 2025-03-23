@@ -916,6 +916,7 @@
 .new-messages-separator {
   display: flex;
   align-items: center;
+  height: 1em !important;
 }
 
 .separator-line {
