@@ -15,7 +15,8 @@ export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
     this.panel = document.getElementById(panelId);
     this.messageMap = new Map();
-    this.renderedMessageIds = new Set(); // Track which messages are already in the DOM
+    // renderedMessageIds will be maintained in sync with the DOM
+    this.renderedMessageIds = new Set();
     this.currentUsername = currentUsername;
     this.maxMessages = 20;
     this.initialLoadComplete = false;
@@ -26,14 +27,10 @@ export default class MessageManager {
 
   // Consolidated unique ID generation
   generateUniqueId(type, username, text) {
-    switch (type) {
-      case 'system':
-        return 'chat-connection';
-      case 'private':
-        return `private-${generateRandomString()}`;
-      default:
-        return `<${username}>${text}`;
+    if (type === 'private') {
+      return `private-${generateRandomString()}`;
     }
+    return `<${username}>${text}`;
   }
 
   addMessage(messageObj) {
@@ -63,7 +60,9 @@ export default class MessageManager {
       if (text === "This room is not anonymous") return;
 
       const fromAttr = msg.getAttribute("from");
-      const from = fromAttr ? fromAttr.split('#')[1]?.split('@')[0] || "unknown" : "unknown";
+      const from = fromAttr
+        ? fromAttr.split('#')[1]?.split('@')[0] || "unknown"
+        : "unknown";
       const cleanFrom = parseUsername(from);
 
       const toAttr = msg.getAttribute("to");
@@ -74,18 +73,45 @@ export default class MessageManager {
         recipient = parseUsername(toAttr.split('#')[1]?.split('@')[0] || toAttr);
       }
 
-      const uniqueId = this.generateUniqueId(isPrivate ? 'private' : 'public', cleanFrom, text);
-      const messageObj = {
-        id: uniqueId,
-        from: cleanFrom,
-        text,
-        isPrivate,
-        recipient,
-        pending: false
-      };
+      // Extract timestamp from delay element
+      let timestamp = null;
+      const delayEl = msg.getElementsByTagName("delay")[0];
+      if (delayEl && delayEl.getAttribute("stamp")) {
+        const stampStr = delayEl.getAttribute("stamp");
+        try {
+          const stampDate = new Date(stampStr);
+          timestamp = stampDate.toLocaleTimeString('en-GB', { hour12: false });
+        } catch (e) {
+          console.error("Error parsing timestamp:", e);
+        }
+      }
+      // Fallback to current time if no timestamp found
+      if (!timestamp) {
+        timestamp = new Date().toLocaleTimeString('en-GB', { hour12: false });
+      }
 
-      if (this.addMessage(messageObj)) {
-        newMessagesAdded = true;
+      // Check if a message with the same username and text already exists
+      const isDuplicate = Array.from(this.messageMap.values()).some(existingMsg =>
+        existingMsg.from === cleanFrom &&
+        existingMsg.text === text
+      );
+
+      // Only add the message if it's not a duplicate
+      if (!isDuplicate) {
+        const uniqueId = this.generateUniqueId(isPrivate ? 'private' : 'public', cleanFrom, text);
+        const messageObj = {
+          id: uniqueId,
+          from: cleanFrom,
+          text,
+          isPrivate,
+          recipient,
+          pending: false,
+          timestamp
+        };
+
+        if (this.addMessage(messageObj)) {
+          newMessagesAdded = true;
+        }
       }
     });
 
@@ -103,7 +129,8 @@ export default class MessageManager {
       text,
       isPrivate,
       recipient: options.recipient || null,
-      pending: options.pending || false
+      pending: options.pending || false,
+      timestamp: new Date().toLocaleTimeString('en-GB', { hour12: false })
     };
     if (this.addMessage(messageObj)) {
       this.updatePanel();
@@ -121,14 +148,21 @@ export default class MessageManager {
 
   updatePanel() {
     if (!this.panel) return;
-    // Create a single fragment for new messages
+    // Compute the set of IDs already rendered in the DOM.
+    const domRenderedIds = new Set(
+      Array.from(this.panel.querySelectorAll('.message')).map(el => el.getAttribute('data-message-id'))
+    );
+    // Synchronize the in‑memory set with the DOM.
+    this.renderedMessageIds = domRenderedIds;
+
+    // Create a single fragment for new messages.
     const fragment = document.createDocumentFragment();
     let mentionDetected = false;
 
-    // Iterate over our messages without querying the DOM
+    // Iterate over our messages from the messageMap.
     this.messageMap.forEach((msg, id) => {
       if (!this.renderedMessageIds.has(id)) {
-        const formattedTime = new Date().toLocaleTimeString('en-GB', { hour12: false });
+        const formattedTime = msg.timestamp || new Date().toLocaleTimeString('en-GB', { hour12: false });
         const normalizedUsername = parseUsername(msg.from);
         const usernameColor = usernameColors.getColor(normalizedUsername);
         const messageEl = document.createElement('div');
@@ -151,7 +185,7 @@ export default class MessageManager {
           messageEl.classList.add('system');
         }
 
-        // Build message info
+        // Build message info.
         const messageInfoEl = document.createElement('div');
         messageInfoEl.className = 'message-info';
         let usernameDisplay = msg.from;
@@ -165,7 +199,7 @@ export default class MessageManager {
           <span class="username" style="color: ${usernameColor}">${usernameDisplay}</span>
         `;
 
-        // Build message text
+        // Build message text.
         const messageTextEl = document.createElement('div');
         messageTextEl.className = 'message-text';
         messageTextEl.innerHTML = parseMessageText(msg.text);
@@ -180,7 +214,7 @@ export default class MessageManager {
         messageEl.appendChild(messageTextEl);
         fragment.appendChild(messageEl);
 
-        // Mark as rendered
+        // Mark this message as rendered.
         this.renderedMessageIds.add(id);
 
         if (this.currentUsername && msg.text.includes(this.currentUsername)) {
@@ -189,7 +223,7 @@ export default class MessageManager {
       }
     });
 
-    // Append all new messages in one DOM operation
+    // Append all new messages in one DOM operation.
     this.panel.appendChild(fragment);
     this.addDelegatedClickListeners();
     highlightMentionWords([this.currentUsername]);
@@ -226,7 +260,7 @@ export default class MessageManager {
           }
 
           if (event.ctrlKey) {
-            // Use the cached messageInput and ensure a trailing space
+            // Use the cached messageInput and ensure a trailing space.
             this.messageInput.value = `/pm ${selectedUsername} `;
             handlePrivateMessageInput(this.messageInput);
           } else {
@@ -235,7 +269,6 @@ export default class MessageManager {
               this.messageInput.value += appendUsername;
             }
           }
-
           this.messageInput.focus();
         }
 
@@ -248,7 +281,6 @@ export default class MessageManager {
           window.open(url, '_blank');
         }
       });
-
       this.panel._delegatedClickAttached = true;
     }
   }
@@ -262,14 +294,14 @@ export default class MessageManager {
       ? "Chat connection established. ✓"
       : "Chat connection lost. Reconnecting...";
 
-    // Remove previous system messages
-    this.messageMap.forEach((msg, id) => {
-      if (msg.isSystem) {
-        this.messageMap.delete(id);
-      }
-    });
+    // Use a consistent ID for the connection status message.
+    const systemMessageId = 'chat-connection';
 
-    const systemMessageId = this.generateUniqueId('system', 'System', messageText);
+    // Remove the specific system connection message from our map and from our in‑memory rendered IDs.
+    this.messageMap.delete(systemMessageId);
+    this.renderedMessageIds.delete(systemMessageId);
+
+    // Create and add the new system message.
     const systemMessage = {
       id: systemMessageId,
       from: "System",
@@ -277,7 +309,8 @@ export default class MessageManager {
       isPrivate: false,
       recipient: null,
       isSystem: true,
-      pending: false
+      pending: false,
+      timestamp: new Date().toLocaleTimeString('en-GB', { hour12: false })
     };
 
     this.messageMap.set(systemMessageId, systemMessage);
@@ -285,13 +318,16 @@ export default class MessageManager {
   }
 
   updateConnectionStatusInUI(systemMessage) {
-    // Remove all pending icons
+    // Remove all pending icons.
     this.panel.querySelectorAll('.pending-emoji').forEach(el => el.remove());
-    // Remove any existing system message element with the same id
+
+    // Remove the existing system message element (if any).
     const systemMessageElement = this.panel.querySelector(`[data-message-id="${systemMessage.id}"]`);
     if (systemMessageElement) {
       systemMessageElement.remove();
     }
+
+    // Re-render messages (using the updated DOM as the source of rendered IDs).
     this.updatePanel();
   }
 }
