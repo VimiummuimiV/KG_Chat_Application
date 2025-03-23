@@ -9,7 +9,8 @@ import {
   calibrateToMoscowTime,
   generateRandomString,
   createNewMessagesSeparator,
-  removeNewMessagesSeparator
+  removeNewMessagesSeparator,
+  getExactUserIdByName
 } from "../helpers.js";
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 
@@ -274,7 +275,11 @@ export default class MessageManager {
 
   addDelegatedClickListeners() {
     if (!this.panel._delegatedClickAttached) {
-      this.panel.addEventListener("click", (event) => {
+      // Track click count and timing for double-click detection
+      let lastClickTime = 0;
+      let lastClickUsername = '';
+
+      this.panel.addEventListener("click", async (event) => {
         const usernameEl = event.target.closest('.username');
         if (usernameEl && this.panel.contains(usernameEl)) {
           const usernameText = usernameEl.textContent.trim();
@@ -288,19 +293,68 @@ export default class MessageManager {
             }
           }
 
+          // Handle Shift+Click to navigate to user profile
+          if (event.shiftKey) {
+            // Get the stored username IDs object from sessionStorage
+            let usernameIds = {};
+            const storedIds = sessionStorage.getItem('usernameIds');
+            if (storedIds) {
+              try {
+                usernameIds = JSON.parse(storedIds);
+              } catch (e) {
+                console.error('Error parsing stored username IDs:', e);
+                usernameIds = {};
+              }
+            }
+
+            // Check if the username already has a stored ID
+            let userId = usernameIds[selectedUsername];
+
+            if (!userId) {
+              // If not cached, fetch the user ID and store it
+              userId = await getExactUserIdByName(selectedUsername);
+              if (userId) {
+                // Update the object and save it back to sessionStorage
+                usernameIds[selectedUsername] = userId;
+                sessionStorage.setItem('usernameIds', JSON.stringify(usernameIds));
+              }
+            }
+
+            if (userId) {
+              const navigateToProfileUrl = `https://klavogonki.ru/u/#/${userId}/`;
+              window.location.href = navigateToProfileUrl;
+            }
+            return;
+          }
+
+          // Original Ctrl+Click behavior for private messaging
           if (event.ctrlKey) {
-            // Use the cached messageInput and ensure a trailing space.
             this.messageInput.value = `/pm ${selectedUsername} `;
             handlePrivateMessageInput(this.messageInput);
           } else {
-            const appendUsername = `${selectedUsername},`;
-            if (!this.messageInput.value.includes(appendUsername)) {
-              this.messageInput.value += appendUsername;
+            // Detect double-click
+            const now = Date.now();
+            const isDoubleClick = (now - lastClickTime < 300) && (lastClickUsername === selectedUsername);
+
+            if (isDoubleClick) {
+              // Double-click: Replace entire input with username
+              this.messageInput.value = `${selectedUsername}, `;
+            } else {
+              // Single-click: Append username
+              const appendUsername = `${selectedUsername}, `;
+              if (!this.messageInput.value.includes(appendUsername)) {
+                this.messageInput.value += appendUsername;
+              }
             }
+
+            // Update tracking variables
+            lastClickTime = now;
+            lastClickUsername = selectedUsername;
           }
           this.messageInput.focus();
         }
 
+        // Original time element click behavior
         const timeEl = event.target.closest('.time');
         if (timeEl && this.panel.contains(timeEl)) {
           const localTime = timeEl.textContent.trim();
