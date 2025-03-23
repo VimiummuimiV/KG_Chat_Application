@@ -330,10 +330,10 @@ export function handleElementsBehavior() {
   const userList = document.querySelector('#app-chat-container .user-list-container');
   const systemMessage = document.querySelector('#app-chat-container .message.system');
   let isUserListOpen = false;
-  
+
   // Handle user list for narrow screens
   if (userList) {
-    if (isNarrow && !isMaximized) {
+    if (isNarrow) {
       userList.style.position = 'absolute';
       userList.style.height = '100%';
       userList.style.top = '0';
@@ -384,16 +384,16 @@ export function handleElementsBehavior() {
       }
     }
   }
-  
+
   // Adjust message layout for narrow screens
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
-    msg.style.flexDirection = (isNarrow && !isMaximized) ? 'column' : 'row';
-    msg.style.marginBottom = (isNarrow && !isMaximized) ? '0.4em' : '0';
+    msg.style.flexDirection = (isNarrow) ? 'column' : 'row';
+    msg.style.marginBottom = (isNarrow) ? '0.4em' : '0';
   });
-  
+
   // Apply scaling to video containers and YouTube thumbnails
   const mediaElements = document.querySelectorAll('#app-chat-container .video-container, #app-chat-container .youtube-thumb');
-  
+
   mediaElements.forEach(element => {
     if (isExtremelyNarrow) {
       element.style.transformOrigin = 'left';
