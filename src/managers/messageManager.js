@@ -7,7 +7,9 @@ import {
   usernameColors,
   handlePrivateMessageInput,
   calibrateToMoscowTime,
-  generateRandomString
+  generateRandomString,
+  createNewMessagesSeparator,
+  removeNewMessagesSeparator
 } from "../helpers.js";
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 
@@ -22,7 +24,16 @@ export default class MessageManager {
     this.initialLoadComplete = false;
     this.chatRemover = new ChatMessagesRemover();
     this.messageInput = document.getElementById('message-input');
+    this.newSeparatorAdded = false; // flag for separator insertion
     this._delegatedClickAttached = false;
+
+    // Listen for tab visibility changes to remove the separator only when the tab becomes inactive.
+    document.addEventListener("visibilitychange", () => {
+      if (document.hidden) {
+        removeNewMessagesSeparator(this.panel);
+        this.newSeparatorAdded = false;
+      }
+    });
   }
 
   // Consolidated unique ID generation
@@ -222,6 +233,13 @@ export default class MessageManager {
         }
       }
     });
+
+    // If the tab is inactive and new messages have arrived, insert the separator.
+    if (document.hidden && fragment.childNodes.length > 0 && !this.newSeparatorAdded) {
+      const separator = createNewMessagesSeparator();
+      fragment.insertBefore(separator, fragment.firstChild); // Insert at the beginning of the fragment
+      this.newSeparatorAdded = true;
+    }
 
     // Append all new messages in one DOM operation.
     this.panel.appendChild(fragment);

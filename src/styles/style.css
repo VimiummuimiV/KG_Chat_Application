@@ -107,6 +107,7 @@
 }
 
 @media screen and (max-width: 367px) {
+
   #app-chat-container .video-container,
   #app-chat-container .youtube-thumb {
     transform-origin: left !important;
@@ -115,6 +116,7 @@
 }
 
 @media screen and (max-width: 350px) {
+
   #app-chat-container .video-container,
   #app-chat-container .youtube-thumb {
     transform-origin: left !important;
@@ -908,4 +910,24 @@
 
 .toggle-button:hover {
   filter: brightness(1.5);
+}
+
+/* Container for the NEW messages separator */
+.new-messages-separator {
+  display: flex;
+  align-items: center;
+}
+
+.separator-line {
+  flex-grow: 1 !important;
+  border: none !important;
+  border-top: 1px solid #ff840091 !important;
+  margin: 0 !important;
+}
+
+.separator-icon {
+  background-color: #ff840040 !important;
+  border-radius: 0.2em !important;
+  padding: 0.2em 0.4em !important;
+  font-family: var(--emoji-font) !important;
 }
