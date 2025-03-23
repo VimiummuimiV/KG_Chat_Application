@@ -25,7 +25,7 @@ function getSharedYouTubePlayer() {
     sharedYouTubePlayer.classList.add("video-container");
     sharedYouTubePlayer.allowFullscreen = true;
     // Simplified allow attribute to reduce unsupported warnings.
-    sharedYouTubePlayer.setAttribute("allow", "autoplay; fullscreen");
+    sharedYouTubePlayer.setAttribute("allow", "fullscreen");
   }
   return sharedYouTubePlayer;
 }
