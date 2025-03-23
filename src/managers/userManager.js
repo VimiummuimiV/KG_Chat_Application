@@ -73,8 +73,8 @@ export default class UserManager {
     this.container.addEventListener('click', (event) => {
       // Handle username clicks
       if (event.target.classList.contains('username-clickable')) {
-        const userId = event.target.getAttribute('data-user-id');
-        if (userId) {
+        const dataUserId = event.target.getAttribute('data-user-id');
+        if (dataUserId) {
           if (event.ctrlKey) {
             // Ctrl+Click: Start private chat with user
             const username = event.target.textContent.trim();
@@ -84,8 +84,9 @@ export default class UserManager {
             messageInput.focus();
           } else {
             // Normal click: Navigate to profile
-            const userIdWithoutDomain = userId.split('/')[1].split('#')[0];
-            window.location.href = `https://klavogonki.ru/u/#/${userIdWithoutDomain}/`;
+            const userIdValue = dataUserId.split('/')[1].split('#')[0]; 
+            const navigateToProfileUrl = `https://klavogonki.ru/u/#/${userIdValue}/`;
+            window.location.href = navigateToProfileUrl;
           }
         }
       }
