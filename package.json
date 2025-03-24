@@ -6,6 +6,7 @@
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
     "build:version": "node update-version.js && webpack --mode production",
+    "build:nomin": "webpack --mode production --env minimize=false",
     "none": "webpack --mode none"
   },
   "keywords": [
