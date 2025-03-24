@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "webpack --mode development --watch",
     "build": "webpack --mode production",
-    "build:version": "node update-version.js && webpack --mode production"
+    "build:version": "node update-version.js && webpack --mode production",
+    "none": "webpack --mode none"
   },
   "keywords": [
     "klavogonki",
