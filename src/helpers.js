@@ -328,7 +328,7 @@ export function handleElementsBehavior() {
   const isExtremelyNarrow = wrapper.offsetWidth <= 340;
   const isMaximized = chatContainer.classList.contains('maximized');
   const userList = document.querySelector('#app-chat-container .user-list-container');
-  const systemMessage = document.querySelector('#app-chat-container .message.system');
+  const systemMessages = document.querySelectorAll('#app-chat-container .message.system');
   let isUserListOpen = false;
 
   // Handle user list for narrow screens
@@ -341,7 +341,14 @@ export function handleElementsBehavior() {
       userList.style.transition = 'transform 0.3s ease';
       userList.style.zIndex = '1001';
       userList.style.transform = 'translateX(100%)';
-      if (systemMessage) systemMessage.style.setProperty('align-items', 'start', 'important');
+
+      // Apply alignment to all system messages if they exist
+      if (systemMessages && systemMessages.length > 0) {
+        systemMessages.forEach(message => {
+          message.style.setProperty('align-items', 'start', 'important');
+        });
+      }
+
       let revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       if (!revealButton) {
         revealButton = document.createElement('button');
@@ -377,7 +384,14 @@ export function handleElementsBehavior() {
       userList.style.right = '';
       userList.style.transform = '';
       userList.style.zIndex = '';
-      if (systemMessage) systemMessage.style.removeProperty('align-items');
+
+      // Remove alignment property from all system messages if they exist
+      if (systemMessages && systemMessages.length > 0) {
+        systemMessages.forEach(message => {
+          message.style.removeProperty('align-items');
+        });
+      }
+
       const revealButton = document.querySelector('#app-chat-container .reveal-userlist-btn');
       if (revealButton) {
         revealButton.remove();
