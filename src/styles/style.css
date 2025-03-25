@@ -448,6 +448,22 @@
   font-weight: 500 !important;
 }
 
+#app-chat-container .message.banned {
+  background-color: #8a2be220 !important;
+  border: 1px solid #8a2be230 !important;
+  border-left: 3px solid #8a2be2 !important;
+  width: fit-content !important;
+}
+
+#app-chat-container .message.banned .time {
+  color: #8a2be2 !important;
+}
+
+#app-chat-container .message.banned .username,
+#app-chat-container .message.banned .message-text {
+  color: #b875f7 !important;
+}
+
 #app-chat-container .message.system {
   background-color: #ffa50020 !important;
   border: 1px solid #ffa60030 !important;

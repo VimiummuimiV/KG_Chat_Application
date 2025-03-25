@@ -192,6 +192,11 @@ export default class MessageManager {
         messageEl.className = 'message';
         messageEl.setAttribute('data-message-id', id);
 
+        // Add classname 'banned' for Клавобот
+        if (msg.from === 'Клавобот') {
+          messageEl.classList.add('banned');
+        }
+
         if (msg.isPrivate) {
           messageEl.classList.add('private-message');
           messageEl.classList.add(msg.from === this.currentUsername ? 'sent' : 'received');
