@@ -26,9 +26,19 @@ export default (env = {}, argv) => {
     },
     module: {
       rules: [
+        // Rule for CSS files
         {
           test: /\.css$/i,
           use: ['style-loader', 'css-loader'],
+        },
+        // Rule for SCSS/Sass files
+        {
+          test: /\.s[ac]ss$/i,
+          use: [
+            'style-loader', // Injects styles into DOM
+            'css-loader',   // Turns CSS into CommonJS modules
+            'sass-loader',  // Compiles Sass to CSS
+          ],
         },
       ],
     },

@@ -54,7 +54,7 @@ export function createChatUI() {
 
   // Create emoji button
   const emojiButton = document.createElement('button');
-  emojiButton.className = 'emoji-trigger filled-button';
+  emojiButton.className = 'emoji-trigger button';
   emojiButton.innerHTML = "🙂";
   emojiButton.classList.add('emoji-button');
   emojiButton.title = 'Open emoji picker';
@@ -112,7 +112,7 @@ export function createChatUI() {
   // Create send button
   const sendButton = document.createElement('button');
   sendButton.id = 'send-button';
-  sendButton.className = 'filled-button send-button';
+  sendButton.className = 'button send-button';
   sendButton.innerHTML = sendSVG;
   // Append elements in order
   inputContainer.appendChild(emojiButton);
@@ -131,13 +131,13 @@ export function createChatUI() {
   chatContainer.appendChild(chatWrapper);
   // Maximize button
   const maximizeButton = document.createElement('button');
-  maximizeButton.className = 'filled-button header-button chat-maximize-button';
+  maximizeButton.className = 'button header-button chat-maximize-button';
   maximizeButton.innerHTML = expandSVG;
   maximizeButton.addEventListener('click', toggleChatMaximize);
   chatContainer.appendChild(maximizeButton);
   // Help button next to maximize button
   const helpButton = document.createElement('button');
-  helpButton.className = 'filled-button header-button chat-help-button';
+  helpButton.className = 'button header-button chat-help-button';
   helpButton.innerHTML = helpSVG; // Replace with desired icon if available
   helpButton.title = 'Show chat help';
   // Declare a variable to track the help panel instance.
@@ -180,7 +180,7 @@ export function createChatUI() {
   chatContainer.appendChild(helpButton);
   // Toggle visibility button
   const toggleButton = document.createElement('button');
-  toggleButton.className = 'filled-button header-button chat-toggle-button';
+  toggleButton.className = 'button header-button chat-toggle-button';
   toggleButton.innerHTML = closeSVG;
   toggleButton.addEventListener('click', toggleChatVisibility);
   chatContainer.appendChild(toggleButton);
