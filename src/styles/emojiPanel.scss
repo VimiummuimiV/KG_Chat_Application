@@ -133,7 +133,7 @@ $emoji-font: "Noto Color Emoji";
         align-content: start;
 
         .emoji-btn {
-          font-family: var(--emoji-font), sans-serif !important;
+          font-family: $emoji-font !important;
           background: none;
           border: none;
           padding: 4px !important;
@@ -192,7 +192,7 @@ $emoji-font: "Noto Color Emoji";
       background: #1e1e1e !important;
 
       .emoji-info-icon {
-        font-family: var(--emoji-font) !important;
+        font-family: $emoji-font !important;
         font-size: 1.5em !important;
       }
 
