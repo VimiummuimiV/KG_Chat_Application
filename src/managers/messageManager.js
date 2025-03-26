@@ -197,7 +197,9 @@ export default class MessageManager {
         // Add classname 'banned' for Клавобот
         if (msg.from === 'Клавобот') {
           messageEl.classList.add('banned');
-          playAudio(banned);
+          if (this.initialLoadComplete) {
+            playAudio(banned);
+          }
         }
 
         if (msg.isPrivate) {
