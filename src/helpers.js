@@ -698,8 +698,11 @@ export function decodeURL(url) {
 
 // ==================================================================================================
 
-export function playMentionSound() {
-  const audio = new Audio('https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/notification-pluck-on.mp3');
+export const notification = 'https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/notification-pluck-on.mp3';
+export const banned = 'https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/mario-game-over.mp3';
+
+export function playAudio(url) {
+  const audio = new Audio(url);
   audio.volume = 1;
   audio.play();
 }

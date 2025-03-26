@@ -3,14 +3,16 @@ import {
   parseMessageText,
   scrollToBottom,
   highlightMentionWords,
-  playMentionSound,
   usernameColors,
   handlePrivateMessageInput,
   calibrateToMoscowTime,
   generateRandomString,
   createNewMessagesSeparator,
   removeNewMessagesSeparator,
-  getExactUserIdByName
+  getExactUserIdByName,
+  playAudio,
+  notification,
+  banned
 } from "../helpers.js";
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 
@@ -195,6 +197,7 @@ export default class MessageManager {
         // Add classname 'banned' for Клавобот
         if (msg.from === 'Клавобот') {
           messageEl.classList.add('banned');
+          playAudio(banned);
         }
 
         if (msg.isPrivate) {
@@ -268,7 +271,7 @@ export default class MessageManager {
     });
 
     if (this.initialLoadComplete && mentionDetected) {
-      playMentionSound();
+      playAudio(notification);
     }
     this.initialLoadComplete = true;
 
