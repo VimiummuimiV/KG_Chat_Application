@@ -23,9 +23,8 @@ function getSharedYouTubePlayer() {
   if (!sharedYouTubePlayer) {
     sharedYouTubePlayer = document.createElement('iframe');
     sharedYouTubePlayer.classList.add("video-container");
+    
     sharedYouTubePlayer.allowFullscreen = true;
-    // Simplified allow attribute to reduce unsupported warnings.
-    sharedYouTubePlayer.setAttribute("allow", "fullscreen");
   }
   return sharedYouTubePlayer;
 }
