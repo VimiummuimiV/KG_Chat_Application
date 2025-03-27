@@ -5,7 +5,7 @@ import {
   scrollToBottom
 } from "../helpers"; // helpers
 
-const emojis = { image: '🎥', domain: '🖥️', untrusted: '💀️️' };
+const emojis = { image: '🎬️', domain: '🖥️', untrusted: '💀️️' };
 const allowedVideoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
 
 const isAllowedVideoExtension = url => {
