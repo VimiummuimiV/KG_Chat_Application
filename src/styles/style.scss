@@ -306,6 +306,7 @@ $box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
     word-break: break-word !important;
 
     .message-text {
+
       .emoji-adjuster {
         font-family: $emoji-font, sans-serif !important;
         font-size: 1.5em !important;
@@ -317,6 +318,65 @@ $box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
         font-family: Montserrat !important;
         font-weight: 500 !important;
       }
+
+      .md-heading {
+        font-family: "Montserrat", sans-serif !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        color: #bf9d70 !important; // slightly darker than chat text color 
+
+        &.md-h1 {
+          font-size: 1.8em !important;
+          font-weight: bold !important;
+        }
+        &.md-h2 {
+          font-size: 1.6em !important;
+          font-weight: bold !important;
+        }
+        &.md-h3 {
+          font-size: 1.4em !important;
+          font-weight: bold !important;
+        }
+        &.md-h4 {
+          font-size: 1.2em !important;
+          font-weight: bold !important;
+        }
+        &.md-h5 {
+          font-size: 1.1em !important;
+          font-weight: bold !important;
+        }
+        &.md-h6 {
+          font-size: 1em !important;
+          font-weight: bold !important;
+        }
+      }
+
+      code, .md-code {
+        font-size: 1em !important;
+        font-family: "Consolas", monospace !important;
+        background-color: #2a2a2a !important; // slightly lighter than chat background
+        border: 1px solid #333 !important;
+        border-radius: 0.2em !important;
+        padding: 0.1em 0.2em !important;
+        color: #82b32a !important; // same green as links
+        filter: none !important;
+      }
+
+      .md-bold {
+        font-weight: bold !important;
+        color: #deb887 !important;
+      }
+
+      .md-italic {
+        font-style: italic !important;
+        color: #deb887 !important;
+      }
+
+      .md-strikethrough {
+        text-decoration: line-through !important;
+        color: #deb887 !important;
+      }
+
     }
 
     &.banned {

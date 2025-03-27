@@ -56,6 +56,7 @@ export class HelpPanel {
               { key: "Ctrl + Click", desc: "Activate private chat mode with the clicked user" }
             ]
           },
+
           {
             heading: "Emoji Panel Actions & Hotkeys",
             subSections: [
@@ -81,6 +82,7 @@ export class HelpPanel {
               }
             ]
           },
+
           {
             heading: "Image Manipulations",
             subSections: [
@@ -108,9 +110,22 @@ export class HelpPanel {
                 ]
               }
             ]
+          },
+
+          {
+            heading: "Markdown Formatting",
+            items: [
+              { key: "# Heading", desc: "Headings: use # for h1, ## for h2, up to ###### for h6" },
+              { key: "`code`", desc: "Inline code" },
+              { key: "**text** or __text__", desc: "Bold text" },
+              { key: "*text* or _text_", desc: "Italic text" },
+              { key: "~~text~~", desc: "Strikethrough text" }
+            ]
           }
+
         ]
       },
+
       ru: {
         heading: "Команды чата и горячие клавиши",
         sections: [
@@ -131,6 +146,7 @@ export class HelpPanel {
               { key: "Ctrl + Click", desc: "Активировать приватный чат для выбранного пользователя" }
             ]
           },
+
           {
             heading: "Действия и горячие клавиши панели эмодзи",
             subSections: [
@@ -156,6 +172,7 @@ export class HelpPanel {
               }
             ]
           },
+
           {
             heading: "Манипуляции с изображением",
             subSections: [
@@ -183,7 +200,19 @@ export class HelpPanel {
                 ]
               }
             ]
+          },
+
+          {
+            heading: "Форматирование Markdown",
+            items: [
+              { key: "# Заголовок", desc: "Заголовки: используйте # для h1, ## для h2, до ###### для h6" },
+              { key: "`код`", desc: "Встроенный код" },
+              { key: "**текст** или __текст__", desc: "Жирный текст" },
+              { key: "*текст* или _текст_", desc: "Курсивный текст" },
+              { key: "~~текст~~", desc: "Зачеркнутый текст" }
+            ]
           }
+
         ]
       }
     };
