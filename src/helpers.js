@@ -401,8 +401,11 @@ export function handleElementsBehavior() {
 
   // Adjust message layout for narrow screens
   document.querySelectorAll('#app-chat-container .message').forEach(msg => {
+    const msgText = msg.querySelector('.message-text');
+
     msg.style.flexDirection = (isNarrow) ? 'column' : 'row';
     msg.style.marginBottom = (isNarrow) ? '0.4em' : '0';
+    msgText.style.marginTop = (isNarrow) ? '0.4em' : '0';
   });
 
   // Apply scaling to video containers and YouTube thumbnails

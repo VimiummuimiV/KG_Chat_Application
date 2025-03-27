@@ -352,6 +352,7 @@ $box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1);
       }
 
       code, .md-code {
+        display: flex !important;
         font-size: 1em !important;
         font-family: "Consolas", monospace !important;
         background-color: #2a2a2a !important; // slightly lighter than chat background
