@@ -7,7 +7,7 @@ import {
 
 // Constants
 const emojis = {
-  channel: '📺',  
+  channel: '📺',
   title: '📹',
   type: '🎬️',
   domain: '🖥️',
@@ -77,7 +77,10 @@ async function renderYouTubePreview(placeholder, videoId, videoType) {
   thumb.classList.add("youtube-thumb");
   placeholder.appendChild(thumb);
 
-  scrollToBottom(600);
+  // Wait for the thumbnail to load before scrolling
+  thumb.addEventListener('load', () => {
+    scrollToBottom(600);
+  });
 }
 
 /** Extracts video information from a URL */
