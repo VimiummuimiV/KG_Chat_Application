@@ -3,43 +3,103 @@ import {
   isEncodedURL,
   isTrustedDomain,
   scrollToBottom
-} from "../helpers"; // helpers
+} from "../helpers"; // Helper functions assumed to be defined elsewhere
 
-const emojis = { image: '🎬️', domain: '🖥️', untrusted: '💀️️' };
+// Constants
+const emojis = {
+  channel: '📺',  
+  title: '📹',
+  type: '🎬️',
+  domain: '🖥️',
+  untrusted: '💀️️'
+};
 const allowedVideoExtensions = ['mp4', 'webm', 'ogg', 'mov', 'avi'];
 
+// Utility Functions
+
+/** Checks if a URL has an allowed video extension */
 const isAllowedVideoExtension = url => {
   const ext = url.match(/\.([^?#.]+)(?:[?#]|$)/i)?.[1]?.toLowerCase() || '';
   return { allowed: allowedVideoExtensions.includes(ext), extension: ext };
 };
 
-// Global variable for the shared YouTube player instance.
-let sharedYouTubePlayer = null;
-// Global variable to track the currently active YouTube preview placeholder.
-let activeYouTubePlaceholder = null;
+// Global Variables
+let sharedYouTubePlayer = null; // Shared YouTube player instance
+let activeYouTubePlaceholder = null; // Tracks the currently active YouTube preview
 
-// Returns the shared YouTube iframe, creating it if necessary.
+/** Returns or creates a shared YouTube iframe player */
 function getSharedYouTubePlayer() {
   if (!sharedYouTubePlayer) {
     sharedYouTubePlayer = document.createElement('iframe');
     sharedYouTubePlayer.classList.add("video-container");
-    
     sharedYouTubePlayer.allowFullscreen = true;
   }
   return sharedYouTubePlayer;
 }
 
-// Renders the YouTube preview thumbnail for the given placeholder.
-function renderYouTubePreview(placeholder, videoId, videoType) {
+/** Fetches YouTube metadata using the oEmbed endpoint */
+async function fetchYouTubeMetadata(videoId) {
+  const oembedUrl = `https://www.youtube.com/oembed?url=https://www.youtube.com/watch?v=${videoId}&format=json`;
+  try {
+    const response = await fetch(oembedUrl);
+    const data = await response.json();
+    const title = data.title || 'Title not found';
+    const channel = data.author_name || 'Channel not found';
+    return { title, channel };
+  } catch (error) {
+    console.error('Error fetching YouTube metadata:', error);
+    return { title: 'Error', channel: 'Error' };
+  }
+}
+
+/** Renders a YouTube preview with metadata and thumbnail */
+async function renderYouTubePreview(placeholder, videoId, videoType) {
   placeholder.innerHTML = "";
+  const infoContainer = document.createElement('div');
+  infoContainer.classList.add("youtube-info");
+
+  const metadata = await fetchYouTubeMetadata(videoId);
+
+  const channel = document.createElement('span');
+  channel.classList.add("channel-name");
+  channel.textContent = `${emojis.channel} ${metadata.channel}`;
+
+  const title = document.createElement('span');
+  title.classList.add("video-title");
+  title.textContent = `${emojis.title} ${metadata.title}`;
+
+  infoContainer.append(channel, title);
+  placeholder.appendChild(infoContainer);
+
   const thumb = document.createElement('img');
   thumb.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   thumb.alt = videoType;
   thumb.classList.add("youtube-thumb");
   placeholder.appendChild(thumb);
+
   scrollToBottom(600);
 }
 
+/** Extracts video information from a URL */
+function getVideoInfo(url) {
+  const youtubeMatch = url.match(/(?:shorts\/|live\/|watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
+  if (youtubeMatch) {
+    const videoId = youtubeMatch[1];
+    const videoType = url.includes('shorts/') ? 'Shorts' :
+      url.includes('live/') ? 'Live' :
+        url.includes('watch?v=') ? 'Watch' :
+          url.includes('youtu.be/') ? 'Share' : 'YouTube';
+    return { youtubeMatch: true, videoId, videoType };
+  }
+
+  const extension = url.split('.').pop().toLowerCase();
+  if (allowedVideoExtensions.includes(extension)) {
+    return { youtubeMatch: false, videoType: `Video (${extension.toUpperCase()})` };
+  }
+  return false;
+}
+
+/** Main function to convert video links to players or previews */
 export function convertVideoLinksToPlayer() {
   const container = document.getElementById('messages-panel');
   if (!container) return;
@@ -59,7 +119,7 @@ export function convertVideoLinksToPlayer() {
 
     if (!isTrusted) {
       link.classList.add("skipped");
-      link.textContent = `${emojis.image} ${videoInfo.videoType} ${emojis.domain} Hostname (${domain}) ${emojis.untrusted} Untrusted`;
+      link.textContent = `${emojis.type} ${videoInfo.videoType} ${emojis.domain} Hostname (${domain}) ${emojis.untrusted} Untrusted`;
       link.addEventListener("click", e => {
         if (!link.classList.contains("processed-video")) {
           e.preventDefault();
@@ -73,48 +133,39 @@ export function convertVideoLinksToPlayer() {
     processVideoLink(link, url, domain, videoInfo);
   });
 
-  function processVideoLink(link, url, domain, videoInfo) {
+  /** Processes a single video link */
+  async function processVideoLink(link, url, domain, videoInfo) {
     const { youtubeMatch, videoType, videoId } = videoInfo;
     const videoCheck = isAllowedVideoExtension(url);
     if (!youtubeMatch && !videoCheck.allowed) return;
 
     link.classList.add("processed-video");
 
-    // Create a wrapper element.
     const wrapper = document.createElement('div');
     wrapper.classList.add("video-wrapper");
 
-    // Update link text and title.
-    link.textContent = `${emojis.image} ${videoType} ${emojis.domain} Hostname (${domain})`;
+    link.textContent = `${emojis.type} ${videoType} ${emojis.domain} Hostname (${domain})`;
     link.title = isEncodedURL(url) ? decodeURL(url) : url;
     link.style.display = 'inline-flex';
 
     if (youtubeMatch) {
-      // Create a placeholder for the YouTube video.
       const placeholder = document.createElement('div');
       placeholder.classList.add("youtube-placeholder");
-      // Store video info for later re-rendering.
       placeholder.dataset.videoId = videoId;
       placeholder.dataset.videoType = videoType;
 
-      // Render the preview thumbnail.
-      renderYouTubePreview(placeholder, videoId, videoType);
+      await renderYouTubePreview(placeholder, videoId, videoType);
 
-      // Add a click listener to load the shared player with autoplay.
       placeholder.addEventListener("click", () => {
-        // If another placeholder is active, revert it back to preview.
         if (activeYouTubePlaceholder && activeYouTubePlaceholder !== placeholder) {
           const prevVideoId = activeYouTubePlaceholder.dataset.videoId;
           const prevVideoType = activeYouTubePlaceholder.dataset.videoType;
           renderYouTubePreview(activeYouTubePlaceholder, prevVideoId, prevVideoType);
         }
-        // Set this placeholder as the active one.
         activeYouTubePlaceholder = placeholder;
 
         const player = getSharedYouTubePlayer();
-        // Add autoplay parameter.
         player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        // Replace the placeholder content with the shared player.
         placeholder.innerHTML = "";
         placeholder.appendChild(player);
       });
@@ -122,7 +173,6 @@ export function convertVideoLinksToPlayer() {
       link.parentNode.insertBefore(wrapper, link);
       wrapper.append(link, placeholder);
     } else {
-      // For non–YouTube videos, create a new video element.
       const embed = document.createElement('video');
       embed.classList.add("video-container");
       embed.src = url;
@@ -131,25 +181,5 @@ export function convertVideoLinksToPlayer() {
       link.parentNode.insertBefore(wrapper, link);
       wrapper.append(link, embed);
     }
-  }
-
-  function getVideoInfo(url) {
-    // Check for YouTube URL patterns.
-    const youtubeMatch = url.match(/(?:shorts\/|live\/|watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/i);
-    if (youtubeMatch) {
-      const videoId = youtubeMatch[1];
-      const videoType = url.includes('shorts/') ? 'Shorts' :
-        url.includes('live/') ? 'Live' :
-          url.includes('watch?v=') ? 'Watch' :
-            url.includes('youtu.be/') ? 'Share' : 'YouTube';
-      return { youtubeMatch: true, videoId, videoType };
-    }
-
-    // Check if the URL ends with a supported video extension.
-    const extension = url.split('.').pop().toLowerCase();
-    if (allowedVideoExtensions.includes(extension)) {
-      return { youtubeMatch: false, videoType: `Video (${extension.toUpperCase()})` };
-    }
-    return false;
   }
 }

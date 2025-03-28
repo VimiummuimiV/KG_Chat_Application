@@ -618,6 +618,19 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     }
   }
 
+  .youtube-placeholder {
+    .youtube-info {
+      display: flex !important;
+      flex-direction: column !important;
+      margin-bottom: 0.2em !important;
+      font-family: "Montserrat", sans-serif !important;
+      font-size: 0.9em !important;
+      color: #8ede87 !important;
+      font-weight: 500 !important;
+      white-space: break-spaces !important;
+    }
+  }
+
   .video-container,
   .youtube-thumb {
     border-radius: 0.4em !important;
