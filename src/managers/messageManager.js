@@ -1,6 +1,5 @@
 import {
   parseUsername,
-  parseMessageText,
   scrollToBottom,
   highlightMentionWords,
   usernameColors,
@@ -14,7 +13,10 @@ import {
   notification,
   banned
 } from "../helpers.js";
+
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
+import { parseMessageText } from "../parser.js";
+
 
 export default class MessageManager {
   constructor(panelId = 'messages-panel', currentUsername = '') {
