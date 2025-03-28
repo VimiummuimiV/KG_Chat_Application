@@ -697,10 +697,9 @@ export function highlightMentionWords() {
 
   // Use username as the only term to highlight
   const highlightTerms = [username];
-
   const globalProcessed = new WeakSet();
-  const messages = container.querySelectorAll('.message-text:not(.processed-mention-word)');
 
+  const messages = container.querySelectorAll('.message-text:not(.processed-for-mention)');
   messages.forEach((message) => {
     const walker = document.createTreeWalker(
       message,
@@ -730,7 +729,7 @@ export function highlightMentionWords() {
       });
 
       // Mark this message as processed
-      message.classList.add('processed-mention-word');
+      message.classList.add('processed-for-mention');
     }
   });
 
