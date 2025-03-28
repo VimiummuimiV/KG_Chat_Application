@@ -48,13 +48,11 @@ export const parseMarkdown = text => {
   // Convert inline code enclosed in backticks
   text = text.replace(/`([^`]+)`/g, '<code class="md-code">$1</code>');
 
-  // Convert bold text (using ** or __)
+  // Convert bold text (using ** only)
   text = text.replace(/\*\*(.+?)\*\*/g, '<strong class="md-bold">$1</strong>');
-  text = text.replace(/__(.+?)__/g, '<strong class="md-bold">$1</strong>');
 
-  // Convert italic text (using * or _)
-  text = text.replace(/\*(.+?)\*/g, '<em class="md-italic">$1</em>');
-  text = text.replace(/_(.+?)_/g, '<em class="md-italic">$1</em>');
+  // Convert italic text (using __ only)
+  text = text.replace(/__(.+?)__/g, '<em class="md-italic">$1</em>');
 
   // Convert markdown strikethrough using ~~text~~
   text = text.replace(/~~(.+?)~~/g, '<del class="md-strikethrough">$1</del>');

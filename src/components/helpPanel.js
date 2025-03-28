@@ -117,8 +117,8 @@ export class HelpPanel {
             items: [
               { key: "# Heading", desc: "Headings: use # for h1, ## for h2, up to ###### for h6" },
               { key: "`code`", desc: "Inline code" },
-              { key: "**text** or __text__", desc: "Bold text" },
-              { key: "*text* or _text_", desc: "Italic text" },
+              { key: "**text**", desc: "Bold text" },
+              { key: "__text__", desc: "Italic text" },
               { key: "~~text~~", desc: "Strikethrough text" }
             ]
           }
@@ -207,8 +207,8 @@ export class HelpPanel {
             items: [
               { key: "# Заголовок", desc: "Заголовки: используйте # для h1, ## для h2, до ###### для h6" },
               { key: "`код`", desc: "Встроенный код" },
-              { key: "**текст** или __текст__", desc: "Жирный текст" },
-              { key: "*текст* или _текст_", desc: "Курсивный текст" },
+              { key: "**текст**", desc: "Жирный текст" },
+              { key: "__текст__", desc: "Курсивный текст" },
               { key: "~~текст~~", desc: "Зачёркнутый текст" }
             ]
           }
