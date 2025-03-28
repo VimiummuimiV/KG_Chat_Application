@@ -625,7 +625,6 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     border: none;
     height: 200px !important;
     width: 356px !important;
-    box-shadow: $slight-box-shadow !important;
   }
 
   .youtube-thumb {
@@ -664,7 +663,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   max-width: 90vw;
   cursor: pointer;
   border-radius: 0.6em !important;
-  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1) !important;
+  box-shadow: $slight-box-shadow !important;
 }
 
 .delete-btn {
