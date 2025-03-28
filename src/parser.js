@@ -6,7 +6,7 @@ export const parseMessageText = text => {
 
   let i = 0, urls = [];
   // Extract URLs and replace them with placeholders
-  text = text.replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~_|!:,.;]*[-A-Z0-9+&@#\/%=~_|])/ig, m => {
+  text = text.replace(/(\b(https?|ftp):\/\/[-A-Z0-9+&@#\/%?=~|!:,.;()_]*[-A-Z0-9+&@#\/%=~|()_])/ig, m => {
     urls.push(m);
     return `___URL${i++}___`;
   });
