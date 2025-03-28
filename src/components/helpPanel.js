@@ -121,6 +121,28 @@ export class HelpPanel {
               { key: "__text__", desc: "Italic text" },
               { key: "~~text~~", desc: "Strikethrough text" }
             ]
+          },
+
+          {
+            heading: "Delete / Show / Restore Messages",
+            subSections: [
+              {
+                title: "Deletion",
+                items: [
+                  { key: "(RMB) + Message", desc: "Delete message" },
+                  { key: "(RMB) + Nickname", desc: "Delete user's messages" },
+                  { key: "(RMB) + Time", desc: "Delete his messages from the selected time" },
+                  { key: "Ctrl + (RMB) + Time", desc: "Delete all messages from the selected time" }
+                ]
+              },
+              {
+                title: "Show / Restore",
+                items: [
+                  { key: "(LMB) + Toggle", desc: "Show/Hide messages" },
+                  { key: "Ctrl + (LMB) + Toggle", desc: "Restore hidden messages" }
+                ]
+              }
+            ]
           }
 
         ]
@@ -210,6 +232,28 @@ export class HelpPanel {
               { key: "**текст**", desc: "Жирный текст" },
               { key: "__текст__", desc: "Курсивный текст" },
               { key: "~~текст~~", desc: "Зачёркнутый текст" }
+            ]
+          },
+
+          {
+            heading: "Удаление / Показ / Восстановление сообщений",
+            subSections: [
+              {
+                title: "Удаление",
+                items: [
+                  { key: "(ПКМ) + Сообщение", desc: "Удалить сообщение" },
+                  { key: "(ПКМ) + Никнейм", desc: "Удалить сообщения пользователя" },
+                  { key: "(ПКМ) + Время", desc: "Удалить его сообщения с выбранного времени" },
+                  { key: "Ctrl + (ПКМ) + Время", desc: "Удалить все сообщения с выбранного времени" }
+                ]
+              },
+              {
+                title: "Показ / Восстановление",
+                items: [
+                  { key: "(ЛКМ) + Toggle", desc: "Показать/Скрыть сообщения" },
+                  { key: "Ctrl + (ЛКМ) + Toggle", desc: "Восстановить скрытые сообщения" },
+                ]
+              }
             ]
           }
 
