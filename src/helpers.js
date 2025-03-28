@@ -404,8 +404,8 @@ export function handleElementsBehavior() {
     const msgText = msg.querySelector('.message-text');
 
     msg.style.flexDirection = (isNarrow) ? 'column' : 'row';
-    msg.style.marginBottom = (isNarrow) ? '0.4em' : '0';
-    msgText.style.marginTop = (isNarrow) ? '0.4em' : '0';
+    msg.style.marginBottom = (isNarrow) ? '0.8em' : '0';
+    msgText.style.marginTop = (isNarrow) ? '0.2em' : '0';
   });
 
   // Apply scaling to video containers and YouTube thumbnails
