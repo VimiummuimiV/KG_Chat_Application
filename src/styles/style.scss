@@ -10,6 +10,7 @@ $min-chat-height: 200px;
 $user-list-width: fit-content;
 $emoji-font: "Noto Color Emoji";
 $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+$usual-color: #cdb398;
 
 // Main Chat Container
 #app-chat-container {
@@ -22,7 +23,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   border: 1px solid #333 !important;
   display: flex;
   font-family: sans-serif;
-  color: #deb887 !important;
+  color: $usual-color !important;
   z-index: 999;
   min-width: $min-chat-width !important;
   min-height: $min-chat-height !important;
@@ -95,7 +96,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         width: 10px !important;
         height: 10px !important;
         border-radius: 50% !important;
-        background: #deb887 !important;
+        background: $usual-color !important;
         cursor: pointer !important;
       }
 
@@ -103,7 +104,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         width: 10px !important;
         height: 10px !important;
         border-radius: 50% !important;
-        background: #deb887 !important;
+        background: $usual-color !important;
         cursor: pointer !important;
         border: none !important;
       }
@@ -210,7 +211,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     outline: none !important;
     flex: 1 !important;
     background: #2a2a2a !important;
-    color: #deb887 !important;
+    color: $usual-color !important;
     padding: 0.5em !important;
     border-radius: $border-radius !important;
     min-width: 0 !important;
@@ -366,17 +367,17 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 
       .md-bold {
         font-weight: bold !important;
-        color: #deb887 !important;
+        color: $usual-color !important;
       }
 
       .md-italic {
         font-style: italic !important;
-        color: #deb887 !important;
+        color: $usual-color !important;
       }
 
       .md-strikethrough {
         text-decoration: line-through !important;
-        color: #deb887 !important;
+        color: $usual-color !important;
       }
 
     }

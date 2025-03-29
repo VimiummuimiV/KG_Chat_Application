@@ -1,3 +1,5 @@
+$usual-color: #cdb398;
+
 .help-panel {
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -15,7 +17,7 @@
   padding: 1em;
   border-radius: 0.4em !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-  color: #deb887 !important;
+  color: $usual-color !important;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   z-index: 1100;
 
@@ -45,7 +47,7 @@
   .help-section-subheader {
     margin: 0.8em 0 1.2em 1em;
     font-size: 0.9em;
-    color: #ffcc00 !important;
+    color: #00ff58 !important;
     font-weight: normal;
     text-align: left;
   }

@@ -3,7 +3,6 @@ const iconSize = 24;
 
 // SVG icon
 const buttonAccentColdColor = "#096AD9";
-const buttonAccentWarmColor = "#deb887";
 const buttonOpenedColor = "#82B32A";
 const buttonClosedColor = "#B34A2A";
 export const sendSVG = `
