@@ -121,7 +121,7 @@ export function convertVideoLinksToPlayer() {
 
     if (!isTrusted) {
       link.classList.add("skipped");
-      link.textContent = `${emojis.type} ${videoInfo.videoType} ${emojis.domain} Hostname (${domain}) ${emojis.untrusted} Untrusted`;
+      link.textContent = `${emojis.type} ${videoInfo.videoType} ${emojis.domain} ${domain} ${emojis.untrusted} Untrusted`;
       link.addEventListener("click", e => {
         if (!link.classList.contains("processed-video")) {
           e.preventDefault();
@@ -146,7 +146,7 @@ export function convertVideoLinksToPlayer() {
     const wrapper = document.createElement('div');
     wrapper.classList.add("video-wrapper");
 
-    link.textContent = `${emojis.type} ${videoType} ${emojis.domain} Hostname (${domain})`;
+    link.textContent = `${emojis.type} ${videoType} ${emojis.domain} ${domain}`;
     link.title = isEncodedURL(url) ? decodeURL(url) : url;
     link.style.display = 'inline-flex';
 

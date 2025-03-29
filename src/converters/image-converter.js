@@ -327,7 +327,7 @@ export function convertImageLinksToImage() {
 
   function handleUntrustedLink(link, extension, domain) {
     link.classList.add("skipped");
-    link.textContent = `${emojis.image} Image (${extension.toUpperCase()}) ${emojis.domain} Hostname (${domain}) ${emojis.untrusted} Untrusted`;
+    link.textContent = `${emojis.image} ${extension.toUpperCase()} ${emojis.domain} ${domain} ${emojis.untrusted} Untrusted`;
     link.addEventListener("click", (e) => {
       if (!link.classList.contains("processed-image")) {
         e.preventDefault();
@@ -339,7 +339,7 @@ export function convertImageLinksToImage() {
   }
 
   function handleTrustedLink(link, extension, domain) {
-    link.textContent = `${emojis.image} Image (${extension.toUpperCase()}) ${emojis.domain} Hostname (${domain})`;
+    link.textContent = `${emojis.image} ${extension.toUpperCase()} ${emojis.domain} ${domain}`;
     link.classList.add("processed-image");
     createThumbnail(link, false);
   }
