@@ -985,7 +985,7 @@ export function enterPrivateMode(username) {
     let exitButton = document.querySelector('.private-mode-exit');
     if (!exitButton) {
       exitButton = document.createElement('span');
-      exitButton.className = 'private-mode-exit';
+      exitButton.className = 'button private-mode-exit';
 
       // Add click event to exit private mode
       exitButton.addEventListener('click', () => {
