@@ -45,7 +45,8 @@ export class HelpPanel {
               { key: "/help", desc: "Show this help panel" },
               { key: "/me message", desc: "Send an action message" },
               { key: "/pm username", desc: "Activate private chat mode with the specified user" },
-              { key: "/exit", desc: "Exit private chat mode" }
+              { key: "/exit", desc: "Exit private chat mode" },
+              { key: "/reset", desc: "Reset the chat data" }
             ]
           },
           {
@@ -157,7 +158,8 @@ export class HelpPanel {
               { key: "/help", desc: "Показать панель помощи" },
               { key: "/me сообщение", desc: "Отправить сообщение действия" },
               { key: "/pm username", desc: "Активировать приватный чат для указанного пользователя" },
-              { key: "/exit", desc: "Выйти из приватного чата" }
+              { key: "/exit", desc: "Выйти из приватного чата" },
+              { key: "/reset", desc: "Сбросить данные чата" }
             ]
           },
           {
