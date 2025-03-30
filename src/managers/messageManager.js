@@ -52,12 +52,13 @@ export default class MessageManager {
     });
   }
 
-  // Consolidated unique ID generation
-  generateUniqueId(type, username, text) {
+  // Updated unique ID generator to include the timestamp
+  generateUniqueId(type, timestamp, username, text) {
+    const time = timestamp || new Date().toLocaleTimeString('en-GB', { hour12: false });
     if (type === 'private') {
       return `private-${generateRandomString()}`;
     }
-    return `<${username}>${text}`;
+    return `${time}-${username}-${text}`;
   }
 
   addMessage(messageObj) {
@@ -112,20 +113,26 @@ export default class MessageManager {
           console.error("Error parsing timestamp:", e);
         }
       }
-      // Fallback to current time if no timestamp found
       if (!timestamp) {
         timestamp = new Date().toLocaleTimeString('en-GB', { hour12: false });
       }
 
-      // Check if a message with the same username and text already exists
+      // Prevent loading my own messages if already loaded
+      if (cleanFrom === this.currentUsername && this.initialLoadComplete) return;
+
+      // Check for duplicate
       const isDuplicate = Array.from(this.messageMap.values()).some(existingMsg =>
         existingMsg.from === cleanFrom &&
         existingMsg.text === text
       );
 
-      // Only add the message if it's not a duplicate
       if (!isDuplicate) {
-        const uniqueId = this.generateUniqueId(isPrivate ? 'private' : 'public', cleanFrom, text);
+        const uniqueId = this.generateUniqueId(
+          isPrivate ? 'private' : 'public',
+          timestamp, // server timestamp
+          cleanFrom,
+          text
+        );
         const messageObj = {
           id: uniqueId,
           from: cleanFrom,
@@ -149,7 +156,13 @@ export default class MessageManager {
 
   addSentMessage(text, options = {}) {
     const isPrivate = options.isPrivate || false;
-    const uniqueId = this.generateUniqueId(isPrivate ? 'private' : 'public', this.currentUsername, text);
+    const currentTime = new Date().toLocaleTimeString('en-GB', { hour12: false });
+    const uniqueId = this.generateUniqueId(
+      isPrivate ? 'private' : 'public',
+      currentTime, // local timestamp
+      this.currentUsername,
+      text
+    );
     const messageObj = {
       id: uniqueId,
       from: this.currentUsername,
@@ -157,7 +170,7 @@ export default class MessageManager {
       isPrivate,
       recipient: options.recipient || null,
       pending: options.pending || false,
-      timestamp: new Date().toLocaleTimeString('en-GB', { hour12: false })
+      timestamp: currentTime
     };
     if (this.addMessage(messageObj)) {
       this.updatePanel();
