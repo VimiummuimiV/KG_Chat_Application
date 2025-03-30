@@ -16,6 +16,7 @@ import {
 
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 import { parseMessageText } from "../parser.js";
+import { removeChatParams } from "../auth.js";
 
 
 export default class MessageManager {
@@ -148,6 +149,15 @@ export default class MessageManager {
   }
 
   addSentMessage(text, options = {}) {
+    // Reset the authentication data and remove chatUsernameColor from localStorage if the /reset command is used
+    if (text.trim() === '/reset') {
+      removeChatParams();
+      setTimeout(() => {
+        window.location.reload();
+      }, 500);
+      return; // Command handled; do not add message.
+    }
+
     const isPrivate = options.isPrivate || false;
     const uniqueId = this.generateUniqueId(isPrivate ? 'private' : 'public', this.currentUsername, text);
     const messageObj = {

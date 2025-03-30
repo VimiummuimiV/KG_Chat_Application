@@ -78,13 +78,17 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       // Get user info, calculating it if necessary
       const info = getUserInfo();
 
-      // Create the user data block using pre-calculated properties
+      // Retrieve chatUsernameColor from localStorage or fallback to precalculated optimizedColor if available
+      const storedColor = localStorage.getItem('chatUsernameColor');
+      const chatUsernameColor = storedColor ? storedColor : (info ? info.optimizedColor : "#777");
+
+      // Create the user data block using pre-calculated properties and the determined background color
       const userDataBlock = `
       <x xmlns='klavogonki:userdata'>
         <user>
           <login>${info.cleanedUsername}</login>
           <avatar>${info.baseAvatarPath}?updated=${info.timestamp}</avatar>
-          <background>${info.optimizedColor}</background>
+          <background>${chatUsernameColor}</background>
         </user>
       </x>
       `;

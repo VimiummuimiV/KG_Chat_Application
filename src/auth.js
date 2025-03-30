@@ -1,3 +1,8 @@
+export function removeChatParams() {
+  localStorage.removeItem('klavoauth');
+  localStorage.removeItem('chatUsernameColor');
+}
+
 export function getAuthData() {
   // Only proceed if on the gamelist page
   if (!window.location.href.startsWith('https://klavogonki.ru/gamelist/')) return;
@@ -22,15 +27,16 @@ export function getAuthData() {
     if (!localStorage.getItem('klavoauth')) {
       // Always update klavoauth with the latest data
       localStorage.setItem('klavoauth', JSON.stringify({ username, password }));
+      // Save separate key for chat color background value
+      localStorage.setItem('chatUsernameColor', parsedData.chatParams.user.background);
       setTimeout(() => {
         window.location.href = 'https://klavogonki.ru';
       }, 500);
     }
   } catch (e) {
     console.error('Auth error:', e);
-    localStorage.removeItem('klavoauth');
-    // Optional: Reset redirect flag to allow retry after error
-    // localStorage.removeItem('klavoauth_redirected');
+    removeChatParams();
+
     alert(`Auth failed: ${e.message}\nPlease refresh the page.`);
   }
 }
