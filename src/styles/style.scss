@@ -610,7 +610,7 @@ $usual-color: #cdb398;
   }
 
   .video-wrapper {
-    display: inline-flex;
+    display: flex;
     flex-direction: column;
 
     .processed-video {
