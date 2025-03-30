@@ -155,7 +155,7 @@ export default class MessageManager {
       setTimeout(() => {
         window.location.reload();
       }, 500);
-      return; // Command handled; do not add message.
+      return null; // Return null to indicate message should not be sent
     }
 
     const isPrivate = options.isPrivate || false;
