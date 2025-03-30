@@ -259,7 +259,7 @@ export default class MessageManager {
     });
 
     // If the tab is inactive and new messages have arrived, insert the separator.
-    if (document.hidden && fragment.childNodes.length > 0 && !this.newSeparatorAdded) {
+    if (document.hidden && this.initialLoadComplete && fragment.childNodes.length > 0 && !this.newSeparatorAdded) {
       const separator = createNewMessagesSeparator();
       fragment.insertBefore(separator, fragment.firstChild); // Insert at the beginning of the fragment
       this.newSeparatorAdded = true;
