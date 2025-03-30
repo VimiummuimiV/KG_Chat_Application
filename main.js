@@ -101,13 +101,30 @@ async function initializeApp() {
       config.username
     );
 
-    // Message sending setup
     const input = document.getElementById('message-input');
+    let lastMessageSent = '';
+    let lastMessageTime = 0;
+    const debounceTime = 1000; // 1 second cooldown between identical messages
+
     const sendMessage = () => {
       const text = input.value.trim();
       if (!text) return;
-      xmppClient.sendMessage(text);
-      input.value = ''; // Clear the input field after sending
+
+      const currentTime = Date.now();
+      // Check if this is a duplicate message sent within the debounce time
+      if (text === lastMessageSent && (currentTime - lastMessageTime) < debounceTime) {
+        console.log('Prevented duplicate message:', text);
+      } else {
+        // Update the tracking variables
+        lastMessageSent = text;
+        lastMessageTime = currentTime;
+
+        // Send the message
+        xmppClient.sendMessage(text);
+      }
+
+      // Clear input field and focus regardless of whether message was sent
+      input.value = '';
       input.focus();
     };
 
