@@ -1,6 +1,9 @@
 export function removeChatParams() {
   localStorage.removeItem('klavoauth');
   localStorage.removeItem('chatUsernameColor');
+  setTimeout(() => {
+    window.location.href = 'https://klavogonki.ru/gamelist/';
+  }, 500);
 }
 
 export function getAuthData() {

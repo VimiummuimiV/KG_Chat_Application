@@ -6,6 +6,7 @@ import XMPPConnection from "./src/xmpp/xmppConnection.js";
 import UserManager from "./src/managers/userManager.js";
 import MessageManager from "./src/managers/messageManager.js";
 import { createChatUI } from "./src/chat/chatUI.js";
+import { removeChatParams } from "./src/auth.js";
 
 import {
   setupDragHandlers,
@@ -19,8 +20,8 @@ import { config } from "./src/data/definitions.js";
 import {
   observeMessagesPanel,
   setupPrivateMessageEvents,
+  setupResetCommandEvent,
   parseUsername,
-  handlePrivateMessageInput,
   addViewportMeta,
   addChatToggleFeature
 } from "./src/helpers.js";
@@ -114,7 +115,9 @@ async function initializeApp() {
     input.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
 
     // Set up private messaging events
-    setupPrivateMessageEvents();
+    setupPrivateMessageEvents(input);
+    // Set up reset command event
+    setupResetCommandEvent(input);
     // New: Set up help command events (similar to /pm command)
     HelpPanel.setupHelpCommandEvents();
 
@@ -122,14 +125,9 @@ async function initializeApp() {
     await xmppClient.connect();
     window.xmppClient = xmppClient; // For debugging
 
-    // Detect /pm username command and activate private mode, and /exit to exit private mode
-    input.addEventListener('input', function (event) {
-      handlePrivateMessageInput(event.target);
-    });
   } catch (error) {
     console.error('App init error:', error);
-    localStorage.removeItem('klavoauth');
-    window.location.href = 'https://klavogonki.ru/gamelist/';
+    removeChatParams();
   }
 }
 

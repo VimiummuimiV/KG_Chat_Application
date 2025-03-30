@@ -17,6 +17,8 @@ import {
 
 import { addShakeEffect } from "./data/animations.js";
 import { emojiKeywords } from "./data/emojiData.js";
+import { removeChatParams } from "./auth.js";
+
 
 // ==================================================================================================
 
@@ -1034,22 +1036,53 @@ export function exitPrivateMode() {
 }
 
 // Handle ESC key to exit private mode
-export function setupPrivateMessageEvents() {
-  const input = document.getElementById('message-input');
-  if (!input) return;
-
+export function setupPrivateMessageEvents(inputElement) {
+  if (!inputElement) return;
+  
   // Add ESC key handler to exit private mode
-  input.addEventListener('keydown', (e) => {
+  inputElement.addEventListener('keydown', (e) => {
     if (e.key === 'Escape' && privateMessageState.isPrivateMode) {
       exitPrivateMode();
       e.preventDefault();
     }
   });
-
+  
   // Check for private message mode on input changes
-  input.addEventListener('input', () => {
-    handlePrivateMessageInput(input);
+  inputElement.addEventListener('input', () => {
+    handlePrivateMessageInput(inputElement);
   });
+}
+
+// ==================================================================================================
+
+// Setup event handlers for the reset command
+export function setupResetCommandEvent(inputElement) {
+  if (!inputElement) return;
+  
+  // Add input event handler for reset command
+  inputElement.addEventListener('input', () => {
+    handleResetCommand(inputElement);
+  });
+}
+
+// Handle reset command when typed in the input field
+function handleResetCommand(inputElement) {
+  if (!inputElement) return false;
+  const input = inputElement.value;
+  const resetCommandRegex = /^\/reset\s*$/;
+
+  // Check if the input matches the reset command pattern
+  if (resetCommandRegex.test(input)) {
+    // Call removeChatParams function
+    removeChatParams();
+    // Show a confirmation message
+    showChatAlert('Chat settings have been reset. Reloading...', { type: 'info', duration: 1000 });
+    // Clear the input field
+    inputElement.value = '';
+    return true; // Return true to indicate the command was handled
+  }
+
+  return false; // Return false if this wasn't a reset command
 }
 
 // ==================================================================================================
