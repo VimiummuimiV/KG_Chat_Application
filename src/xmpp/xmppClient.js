@@ -273,38 +273,47 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       // Only mark as pending if we're disconnected
       const isPending = !this.isConnected || this.isReconnecting;
 
-      // Use original condition for private messages.
       if (privateMessageState.isPrivateMode && privateMessageState.fullJid) {
         isPrivate = true;
         fullJid = privateMessageState.fullJid;
         recipient = privateMessageState.targetUsername;
-        // Only mark as pending if we're disconnected
         messageManager.addSentMessage(text, {
           isPrivate: true,
           recipient,
           pending: isPending
         });
       } else {
-        messageManager.addSentMessage(text, {
-          pending: isPending
-        });
+        messageManager.addSentMessage(text, { pending: isPending });
       }
 
-      // Enqueue the message
+      // Debounce check before enqueuing
+      const now = Date.now();
+      const debounceTime = 1000; // 1 second
+      if (this.messageQueue.length > 0) {
+        const lastMsg = this.messageQueue[this.messageQueue.length - 1];
+        if (lastMsg.text === text && (now - lastMsg.enqueueTime) < debounceTime) {
+          console.log('Prevented duplicate message in queue:', text);
+          return;
+        }
+      }
+
+      // Enqueue the message with timestamp
       this.messageQueue.push({
         text,
         id: messageId,
         isPrivate,
         fullJid,
         recipient,
-        pending: isPending
+        pending: isPending,
+        enqueueTime: now
       });
 
-      // Process the queue if connected.
+      // Process the queue on connection establishment
       if (this.isConnected && !this.isReconnecting) {
         this.processQueue();
       }
     }
+
   };
 
   // --- Network connectivity handling ---
