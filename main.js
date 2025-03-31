@@ -28,6 +28,7 @@ import {
 
 import { getAuthData } from "./src/auth.js";
 import { HelpPanel } from "./src/components/helpPanel.js";
+import { checkForUpdates } from "./src/updateCheck.js";
 
 
 // Function to detect if running in an iframe
@@ -133,3 +134,6 @@ async function initializeApp() {
 
 // Start the app
 initializeApp();
+
+// Just call the update check function (update URL is defined in update-check.js)
+checkForUpdates();
