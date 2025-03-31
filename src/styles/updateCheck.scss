@@ -24,6 +24,7 @@ $usual-color: #cdb398;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   z-index: 1250; // On top of the overlay
   max-width: 400px;
+  min-width: 300px;
 
   h2 {
     margin-top: 0;

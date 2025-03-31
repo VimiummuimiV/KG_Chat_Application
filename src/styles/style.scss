@@ -307,7 +307,6 @@ $usual-color: #cdb398;
     word-break: break-word !important;
 
     .message-text {
-
       .emoji-adjuster {
         font-family: $emoji-font, sans-serif !important;
         font-size: 1.5em !important;
@@ -324,7 +323,7 @@ $usual-color: #cdb398;
         font-family: "Montserrat", sans-serif !important;
         margin: 0 !important;
         padding: 0 !important;
-        color: #bf9d70 !important; // slightly darker than chat text color 
+        color: #bf9d70 !important; // slightly darker than chat text color
 
         &.md-h1 {
           font-size: 1.8em !important;
@@ -352,7 +351,8 @@ $usual-color: #cdb398;
         }
       }
 
-      code, .md-code {
+      code,
+      .md-code {
         display: inline-flex !important;
         font-size: 1em !important;
         font-family: "Consolas", monospace !important;
@@ -379,7 +379,6 @@ $usual-color: #cdb398;
         text-decoration: line-through !important;
         color: $usual-color !important;
       }
-
     }
 
     &.banned {
@@ -864,9 +863,13 @@ $usual-color: #cdb398;
   }
 
   body
-    > *:not(#app-chat-container):not(.dimming-element):not(
-      .scaled-thumbnail
-    ):not(.delete-btn):not(.toggle-button) {
+    > *:not(#app-chat-container)
+    :not(.dimming-element)
+    :not(.scaled-thumbnail)
+    :not(.delete-btn)
+    :not(.toggle-button)
+    :not(.update-overlay)
+    :not(.update-popup) {
     display: none !important;
   }
 }
