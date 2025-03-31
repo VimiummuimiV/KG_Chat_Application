@@ -47,9 +47,10 @@ function showUpdatePopup(newVersion, currentVersion, downloadUrl, onUpdateComple
   popup.className = 'update-popup';
 
   popup.innerHTML = `
-      <h2>Update Available</h2>
-      <p>A new version (${newVersion}) of KG_Chat_Application is available.</p>
-      <p>You are currently using version ${currentVersion}.</p>
+      <h2 class="update-header">Update Available</h2>
+      <h2 class="update-script">KG_Chat_Application</h2>
+      <p>A new version <span class="version">${newVersion}</span> is available.</p>
+      <p>You are currently using version <span class="version">${currentVersion}</span>.</p>
       <div class="button-container">
         <button id="update-later" class="update-later">Later</button>
         <button id="update-skip" class="update-skip">Skip</button>
