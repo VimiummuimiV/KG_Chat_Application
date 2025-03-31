@@ -25,7 +25,7 @@ export default class MessageManager {
     // renderedMessageIds will be maintained in sync with the DOM
     this.renderedMessageIds = new Set();
     this.currentUsername = currentUsername;
-    this.maxMessages = 20;
+    this.maxMessages = 30;
     this.initialLoadComplete = false;
     this.chatRemover = new ChatMessagesRemover();
     this.messageInput = document.getElementById('message-input');
