@@ -3,8 +3,8 @@ export function checkForUpdates() {
   const localVersionKey = "KG_Chat_App_Version";
   const metaUrl = 'https://update.greasyfork.org/scripts/529368/KG_Chat_Application.meta.js';
   const fullMetaUrl = metaUrl + '?rand=' + Date.now();
-  // Fallback download URL (user script URL)
-  const fallbackDownloadUrl = 'https://update.greasyfork.org/scripts/529368/KG_Chat_Application.user.js';
+  // Fallback download URL (user script URL) renamed to downloadUrl
+  const downloadUrl = 'https://update.greasyfork.org/scripts/529368/KG_Chat_Application.user.js';
 
   // Initialize localStorage version to initialVersion if not set yet
   if (!localStorage.getItem(localVersionKey)) {
@@ -19,7 +19,6 @@ export function checkForUpdates() {
     .then(text => {
       // Updated regex: allow an optional "v" or "V" prefix and trim extra spaces
       const versionMatch = text.match(/@version\s+v?([\d.]+)/i);
-      const downloadUrlMatch = text.match(/@downloadURL\s+(https?:\/\/\S+)/i);
 
       if (!versionMatch) {
         throw new Error("Version not found in meta file");
@@ -28,11 +27,7 @@ export function checkForUpdates() {
       // Trim to remove any accidental whitespace
       const latestVersion = versionMatch[1].trim();
 
-      // Get download URL from meta or fallback to a known URL
-      let downloadUrl = (downloadUrlMatch && downloadUrlMatch[1]) || fallbackDownloadUrl;
-      // Ensure that the download URL points to the user script, not the meta file
-      downloadUrl = downloadUrl.replace('.meta.js', '.user.js');
-
+      // Always use the fallback downloadUrl (named downloadUrl above)
       // Compare the remote version with the stored version
       if (compareVersions(latestVersion, storedVersion) > 0) {
         showUpdatePopup(latestVersion, storedVersion, downloadUrl, () => {
