@@ -1,6 +1,7 @@
 import "../styles/style.scss"; // main styles
 import "../styles/emojiPanel.scss"; // emoji panel styles
 import "../styles/helpPanel.scss"; // help panel styles
+import "../styles/updateCheck.scss"; // update panel styles
 
 // URL constants
 export const BASE_URL = 'https://klavogonki.ru';
