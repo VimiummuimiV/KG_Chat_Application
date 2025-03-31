@@ -22,7 +22,7 @@ $usual-color: #cdb398;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
   color: $usual-color !important;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  z-index: 1100;
+  z-index: 1250; // On top of the overlay
   max-width: 400px;
 
   h2 {
