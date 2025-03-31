@@ -2,6 +2,7 @@ export function checkForUpdates() {
   const initialVersion = "0.0.0"; // Version used only for first run
   const localVersionKey = "KG_Chat_App_Version";
   const metaUrl = 'https://update.greasyfork.org/scripts/529368/KG_Chat_Application.meta.js';
+  const fullMetaUrl = metaUrl + '?rand=' + Date.now();
   // Fallback download URL (user script URL)
   const fallbackDownloadUrl = 'https://update.greasyfork.org/scripts/529368/KG_Chat_Application.user.js';
 
@@ -13,27 +14,27 @@ export function checkForUpdates() {
   // Get the stored version (which is now guaranteed to exist)
   const storedVersion = localStorage.getItem(localVersionKey);
 
-  fetch(metaUrl)
+  fetch(fullMetaUrl)
     .then(response => response.text())
     .then(text => {
-      // Extract version and download URL with regex
-      const versionMatch = text.match(/@version\s+([\d.]+)/);
-      const downloadUrlMatch = text.match(/@downloadURL\s+(https?:\/\/\S+)/);
+      // Updated regex: allow an optional "v" or "V" prefix and trim extra spaces
+      const versionMatch = text.match(/@version\s+v?([\d.]+)/i);
+      const downloadUrlMatch = text.match(/@downloadURL\s+(https?:\/\/\S+)/i);
 
       if (!versionMatch) {
         throw new Error("Version not found in meta file");
       }
 
-      const latestVersion = versionMatch[1];
+      // Trim to remove any accidental whitespace
+      const latestVersion = versionMatch[1].trim();
 
       // Get download URL from meta or fallback to a known URL
-      let downloadUrl = downloadUrlMatch?.[1] || fallbackDownloadUrl;
+      let downloadUrl = (downloadUrlMatch && downloadUrlMatch[1]) || fallbackDownloadUrl;
       // Ensure that the download URL points to the user script, not the meta file
       downloadUrl = downloadUrl.replace('.meta.js', '.user.js');
 
       // Compare the remote version with the stored version
-      if (latestVersion > storedVersion) {
-        // Only update localStorage with the latest version after user explicitly chooses to skip the update
+      if (compareVersions(latestVersion, storedVersion) > 0) {
         showUpdatePopup(latestVersion, storedVersion, downloadUrl, () => {
           localStorage.setItem(localVersionKey, latestVersion);
         });
@@ -52,8 +53,8 @@ function showUpdatePopup(newVersion, currentVersion, downloadUrl, onUpdateComple
 
   popup.innerHTML = `
       <h2>Update Available</h2>
-      <p>A new version (${newVersion}) of KG_Chat_Application available.</p>
-      <p>You are currently using version ${currentVersion}</p>
+      <p>A new version (${newVersion}) of KG_Chat_Application is available.</p>
+      <p>You are currently using version ${currentVersion}.</p>
       <div class="button-container">
         <button id="update-later" class="update-later">Later</button>
         <button id="update-skip" class="update-skip">Skip</button>
@@ -83,4 +84,18 @@ function showUpdatePopup(newVersion, currentVersion, downloadUrl, onUpdateComple
     overlay.remove();
     popup.remove();
   });
+}
+
+// Version compare helper function that supports versions with different lengths (e.g., 1.0 vs 1.0.1)
+function compareVersions(v1, v2) {
+  const parts1 = v1.split('.').map(Number);
+  const parts2 = v2.split('.').map(Number);
+  const maxLen = Math.max(parts1.length, parts2.length);
+  for (let i = 0; i < maxLen; i++) {
+    const num1 = parts1[i] || 0;
+    const num2 = parts2[i] || 0;
+    if (num1 > num2) return 1;
+    if (num1 < num2) return -1;
+  }
+  return 0;
 }
