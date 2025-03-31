@@ -132,8 +132,7 @@ async function initializeApp() {
   }
 }
 
-// Start the app
-initializeApp();
-
-// Just call the update check function (update URL is defined in update-check.js)
-checkForUpdates();
+// Start the app and check for updates
+initializeApp().then(() => {
+  checkForUpdates();
+});
