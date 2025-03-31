@@ -863,13 +863,11 @@ $usual-color: #cdb398;
   }
 
   body
-    > *:not(#app-chat-container)
-    :not(.dimming-element)
-    :not(.scaled-thumbnail)
-    :not(.delete-btn)
-    :not(.toggle-button)
-    :not(.update-overlay)
-    :not(.update-popup) {
+    > *:not(#app-chat-container):not(.dimming-element):not(
+      .scaled-thumbnail
+    ):not(.delete-btn):not(.toggle-button):not(.update-overlay):not(
+      .update-popup
+    ) {
     display: none !important;
   }
 }
