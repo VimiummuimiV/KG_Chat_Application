@@ -289,7 +289,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       }
 
       const now = Date.now();
-      const debounceTime = 1000; // 1 second debounce
+      const debounceTime = 2000; // 2 seconds to prevent duplicates
 
       // Check against the last sent message.
       if (this.lastSentMessage && this.lastSentMessage.text === text && (now - this.lastSentMessage.timestamp) < debounceTime) {
