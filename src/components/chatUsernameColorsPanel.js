@@ -117,6 +117,9 @@ const createOrUpdateRemoveButton = (entry, username, color, updateCb) => {
   return removeBtn;
 };
 
+// Validate hex color code (#FFFFFF format only)
+const isValidHex = (hex) => /^#[0-9A-Fa-f]{6}$/.test(hex);
+
 export const openUsernameColors = () => {
   const sessionColors = storageOps.getColors();
   let savedBlock = null;
@@ -142,7 +145,7 @@ export const openUsernameColors = () => {
     });
   };
 
-  // Create an entry element.
+  // Create an entry element with long press functionality.
   const createEntry = (username, color, isSaved = false) => {
     const entry = createElement('div', 'username-entry');
     const label = createElement('div', 'user-label', { text: username });
@@ -195,11 +198,101 @@ export const openUsernameColors = () => {
     }, 1000);
 
     colorInput.addEventListener('input', debouncedUpdate);
-    entry.addEventListener('click', (e) => {
-      if (!entry.classList.contains('disabled') && (!removeBtn || !removeBtn.contains(e.target))) {
+
+    // Long press detection variables
+    let longPressTimer;
+    let isLongPress = false;
+    const longPressDuration = 500; // milliseconds
+
+    const startLongPress = () => {
+      longPressTimer = setTimeout(() => {
+        isLongPress = true;
+        showCustomInput();
+      }, longPressDuration);
+    };
+
+    const cancelLongPress = () => {
+      clearTimeout(longPressTimer);
+      isLongPress = false;
+    };
+
+    const handleNormalClick = (e) => {
+      if (!entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
         colorInput.click();
       }
+    };
+
+    const showCustomInput = () => {
+      if (entry.querySelector('.custom-color-input')) return; // Prevent multiple inputs
+
+      const customInputContainer = createElement('div', 'custom-color-input');
+      const hexInput = createElement('input', 'hex-input', { type: 'text', placeholder: 'Enter hex color' });
+      const confirmBtn = createElement('button', 'confirm-btn', { text: 'Confirm' });
+      customInputContainer.append(hexInput, confirmBtn);
+      entry.appendChild(customInputContainer);
+      hexInput.focus();
+
+      const handleConfirm = () => {
+        const hexValue = hexInput.value.trim();
+        if (isValidHex(hexValue)) {
+          const newColor = hexValue;
+          colorInput.value = newColor;
+          debouncedUpdate();
+          entry.removeChild(customInputContainer);
+        } else {
+          alert('Invalid hex color');
+        }
+      };
+
+      confirmBtn.addEventListener('click', handleConfirm);
+      hexInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          handleConfirm();
+        }
+      });
+
+      customInputContainer.addEventListener('click', (e) => {
+        e.stopPropagation();
+      });
+    };
+
+    // Mouse event handlers for long press
+    entry.addEventListener('mousedown', (e) => {
+      if (e.button === 0 && !entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
+        startLongPress();
+      }
     });
+
+    entry.addEventListener('mouseup', (e) => {
+      if (e.button === 0) {
+        if (!isLongPress) {
+          cancelLongPress();
+          handleNormalClick(e);
+        } else {
+          isLongPress = false;
+        }
+      }
+    });
+
+    entry.addEventListener('mouseleave', cancelLongPress);
+
+    // Touch event handlers for long press
+    entry.addEventListener('touchstart', (e) => {
+      if (!entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
+        startLongPress();
+      }
+    });
+
+    entry.addEventListener('touchend', (e) => {
+      if (!isLongPress) {
+        cancelLongPress();
+        handleNormalClick(e);
+      } else {
+        isLongPress = false;
+      }
+    });
+
+    entry.addEventListener('touchcancel', cancelLongPress);
 
     return entry;
   };
