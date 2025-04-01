@@ -108,12 +108,14 @@ export default class MessageManager {
         const stampStr = delayEl.getAttribute("stamp");
         try {
           const stampDate = new Date(stampStr);
+          // Always use the server timestamp here.
           timestamp = stampDate.toLocaleTimeString('en-GB', { hour12: false });
         } catch (e) {
           console.error("Error parsing timestamp:", e);
         }
       }
       if (!timestamp) {
+        // Only fall back to local time if there's no server timestamp at all.
         timestamp = new Date().toLocaleTimeString('en-GB', { hour12: false });
       }
 
@@ -122,8 +124,7 @@ export default class MessageManager {
 
       const isDuplicate = Array.from(this.messageMap.values()).some(existingMsg =>
         existingMsg.from === cleanFrom &&
-        existingMsg.text === text &&
-        existingMsg.timestamp === timestamp
+        existingMsg.text === text
       );
 
       if (!isDuplicate) {
