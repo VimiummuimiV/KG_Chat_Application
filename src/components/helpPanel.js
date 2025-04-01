@@ -1,7 +1,7 @@
 import {
   showChatAlert,
   adjustVisibility
-} from "../helpers.js";
+} from "../helpers/helpers.js";
 
 export class HelpPanel {
   constructor(options = {}) {

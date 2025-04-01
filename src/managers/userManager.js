@@ -1,14 +1,14 @@
 import { BASE_URL } from "../data/definitions.js";
 
 import {
-  usernameColors,
   getRandomEmojiAvatar,
   extractUsername,
   extractUserId,
   handlePrivateMessageInput
-} from "../helpers.js";
+} from "../helpers/helpers.js";
 
 import { addShakeEffect } from "../data/animations.js";
+import { usernameColors } from "../helpers/chatUsernameColors.js";
 
 export default class UserManager {
   constructor(containerId = 'user-list') {

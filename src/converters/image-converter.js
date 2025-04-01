@@ -8,7 +8,7 @@ import {
   removeBigImageEventListeners,
   checkIsMobile,
   scrollToBottom
-} from "../helpers"; // helpers
+} from "../helpers/helpers"; // helpers
 
 // definitions
 import { state } from "../data/definitions.js";

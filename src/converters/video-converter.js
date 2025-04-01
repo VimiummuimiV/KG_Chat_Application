@@ -3,7 +3,7 @@ import {
   isEncodedURL,
   isTrustedDomain,
   scrollToBottom
-} from "../helpers";
+} from "../helpers/helpers.js";
 
 // Constants
 const emojis = {

@@ -3,7 +3,7 @@ import {
   applyFontSize,
   createFontSizeControl,
   restoreFontSize
-} from "../helpers.js";
+} from "../helpers/helpers.js";
 
 // Function to initialize font size controls
 export function initFontSizeControls() {

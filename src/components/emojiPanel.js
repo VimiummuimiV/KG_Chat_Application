@@ -6,7 +6,7 @@ import {
 import {
   adjustVisibility,
   checkIsMobile
-} from "../helpers.js";
+} from "../helpers/helpers.js";
 
 // Create a single global shortcut handler
 const setupGlobalEmojiShortcut = (() => {

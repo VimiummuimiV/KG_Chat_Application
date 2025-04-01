@@ -1,4 +1,4 @@
-import { adjustVisibility, debounce } from "../helpers";
+import { adjustVisibility, debounce } from "../helpers/helpers";
 
 // Storage operations helper functions.
 const storageKey = 'usernameColors';
@@ -122,7 +122,7 @@ export const openUsernameColors = () => {
   let savedBlock = null;
 
   const container = createElement('div', 'chat-username-color-picker', { html: '<h2>Username Colors</h2>' });
-  
+
   // Create saved colors block if needed.
   const createSavedBlock = () => {
     if (!savedBlock) {
@@ -149,7 +149,7 @@ export const openUsernameColors = () => {
     const colorBox = createElement('div', 'color-box');
     updateStyles(label, colorBox, color);
     const colorInput = createElement('input', null, { type: 'color', value: color });
-    
+
     entry.append(label, colorBox, colorInput);
 
     let removeBtn = null;

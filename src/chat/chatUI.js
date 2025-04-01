@@ -11,7 +11,7 @@ import {
   toggleChatVisibility,
   toggleChatMaximize,
   handleMobileLayout
-} from "../helpers.js";
+} from "../helpers/helpers.js";
 
 import {
   sendSVG,

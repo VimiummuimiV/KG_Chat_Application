@@ -2,7 +2,6 @@ import {
   parseUsername,
   scrollToBottom,
   highlightMentionWords,
-  usernameColors,
   handlePrivateMessageInput,
   calibrateToMoscowTime,
   generateRandomString,
@@ -12,10 +11,11 @@ import {
   playAudio,
   notification,
   banned
-} from "../helpers.js";
+} from "../helpers/helpers.js";
 
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 import { parseMessageText } from "../parser.js";
+import { usernameColors } from "../helpers/chatUsernameColors.js";
 
 
 export default class MessageManager {

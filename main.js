@@ -24,7 +24,7 @@ import {
   parseUsername,
   addViewportMeta,
   addChatToggleFeature
-} from "./src/helpers.js";
+} from "./src/helpers/helpers.js";
 
 import { getAuthData } from "./src/auth.js";
 import { HelpPanel } from "./src/components/helpPanel.js";

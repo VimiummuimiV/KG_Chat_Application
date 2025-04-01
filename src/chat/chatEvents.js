@@ -4,7 +4,7 @@ import {
   handleElementsBehavior,
   restoreChatState,
   saveChatState
-} from "../helpers.js";
+} from "../helpers/helpers.js";
 
 // ------------------------- Drag Handlers (Floating) -------------------------
 let isDragging = false,
