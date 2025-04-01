@@ -120,10 +120,10 @@ export default class MessageManager {
       // Prevent loading my own messages if already loaded
       if (cleanFrom === this.currentUsername && this.initialLoadComplete) return;
 
-      // Check for duplicate
       const isDuplicate = Array.from(this.messageMap.values()).some(existingMsg =>
         existingMsg.from === cleanFrom &&
-        existingMsg.text === text
+        existingMsg.text === text &&
+        existingMsg.timestamp === timestamp
       );
 
       if (!isDuplicate) {
