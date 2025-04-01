@@ -46,7 +46,8 @@ export class HelpPanel {
               { key: "/me message", desc: "Send an action message" },
               { key: "/pm username", desc: "Activate private chat mode with the specified user" },
               { key: "/exit", desc: "Exit private chat mode" },
-              { key: "/reset", desc: "Reset the chat data" }
+              { key: "/reset", desc: "Reset the chat data" },
+              { key: "/colors", desc: "Show the username color panel" },
             ]
           },
           {
@@ -159,7 +160,8 @@ export class HelpPanel {
               { key: "/me сообщение", desc: "Отправить сообщение действия" },
               { key: "/pm username", desc: "Активировать приватный чат для указанного пользователя" },
               { key: "/exit", desc: "Выйти из приватного чата" },
-              { key: "/reset", desc: "Сбросить данные чата" }
+              { key: "/reset", desc: "Сбросить данные чата" },
+              { key: "/colors", desc: "Показать панель цветов имен пользователей" }
             ]
           },
           {
