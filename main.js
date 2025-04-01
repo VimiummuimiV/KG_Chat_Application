@@ -20,7 +20,7 @@ import { config } from "./src/data/definitions.js";
 import {
   observeMessagesPanel,
   setupPrivateMessageEvents,
-  setupResetCommandEvent,
+  setupCommandEvents,
   parseUsername,
   addViewportMeta,
   addChatToggleFeature
@@ -118,7 +118,7 @@ async function initializeApp() {
     // Set up private messaging events
     setupPrivateMessageEvents(input);
     // Set up reset command event
-    setupResetCommandEvent(input);
+    setupCommandEvents(input);
     // New: Set up help command events (similar to /pm command)
     HelpPanel.setupHelpCommandEvents();
 

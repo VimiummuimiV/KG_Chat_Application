@@ -18,6 +18,7 @@ import {
 import { addShakeEffect } from "./data/animations.js";
 import { emojiKeywords } from "./data/emojiData.js";
 import { removeChatParams } from "./auth.js";
+import { openUsernameColors } from "./components/chatUsernameColor.js";
 
 
 // ==================================================================================================
@@ -1055,34 +1056,59 @@ export function setupPrivateMessageEvents(inputElement) {
 
 // ==================================================================================================
 
-// Setup event handlers for the reset command
-export function setupResetCommandEvent(inputElement) {
+// Define available commands with their handlers
+const chatCommands = [
+  {
+    name: 'reset',
+    pattern: /^\/reset\s*$/,
+    handler: () => {
+      removeChatParams();
+      showChatAlert('Chat settings have been reset. Reloading...', { type: 'info', duration: 1000 });
+      return true;
+    }
+  },
+  {
+    name: 'colors',
+    pattern: /^\/colors\s*$/,
+    handler: () => {
+      openUsernameColors();
+      showChatAlert('Username color picker has been opened', { type: 'info', duration: 1000 });
+      return true;
+    }
+  }
+];
+
+// Setup event handlers for commands
+export function setupCommandEvents(inputElement) {
   if (!inputElement) return;
   
-  // Add input event handler for reset command
+  // Add input event handler for all commands
   inputElement.addEventListener('input', () => {
-    handleResetCommand(inputElement);
+    handleCommands(inputElement);
   });
 }
 
-// Handle reset command when typed in the input field
-function handleResetCommand(inputElement) {
+// Handle any command entered in the input field
+function handleCommands(inputElement) {
   if (!inputElement) return false;
   const input = inputElement.value;
-  const resetCommandRegex = /^\/reset\s*$/;
-
-  // Check if the input matches the reset command pattern
-  if (resetCommandRegex.test(input)) {
-    // Call removeChatParams function
-    removeChatParams();
-    // Show a confirmation message
-    showChatAlert('Chat settings have been reset. Reloading...', { type: 'info', duration: 1000 });
-    // Clear the input field
-    inputElement.value = '';
-    return true; // Return true to indicate the command was handled
+  
+  // Check each command to see if it matches
+  for (const command of chatCommands) {
+    if (command.pattern.test(input)) {
+      // Execute the command's handler
+      const result = command.handler();
+      
+      // Clear the input field if command was successfully handled
+      if (result) {
+        inputElement.value = '';
+      }
+      
+      return result;
+    }
   }
-
-  return false; // Return false if this wasn't a reset command
+  
+  return false; // Return false if no command matched
 }
 
 // ==================================================================================================
@@ -1721,3 +1747,14 @@ export function removeNewMessagesSeparator(panel) {
 }
 
 // ==================================================================================================
+
+// Debounce helper
+export const debounce = (func, wait) => {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+};
+
+// ===================================================================================================
