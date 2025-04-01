@@ -72,6 +72,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     isConnected: false,
     // Queue of messages waiting to be sent.
     messageQueue: [],
+    // Store last sent message to prevent duplicates
+    lastSentMessage: null,
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
@@ -286,18 +288,22 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         messageManager.addSentMessage(text, { pending: isPending });
       }
 
-      // Debounce check before enqueuing
       const now = Date.now();
-      const debounceTime = 1000; // 1 second
-      if (this.messageQueue.length > 0) {
-        const lastMsg = this.messageQueue[this.messageQueue.length - 1];
-        if (lastMsg.text === text && (now - lastMsg.enqueueTime) < debounceTime) {
-          console.log('Prevented duplicate message in queue:', text);
-          return;
-        }
+      const debounceTime = 1000; // 1 second debounce
+
+      // Check against the last sent message.
+      if (this.lastSentMessage && this.lastSentMessage.text === text && (now - this.lastSentMessage.timestamp) < debounceTime) {
+        console.log('Duplicate message prevented:', text);
+        return;
       }
 
-      // Enqueue the message with timestamp
+      // Update lastSentMessage info.
+      this.lastSentMessage = {
+        text,
+        timestamp: now
+      };
+
+      // Enqueue the message with timestamp.
       this.messageQueue.push({
         text,
         id: messageId,
@@ -308,7 +314,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         enqueueTime: now
       });
 
-      // Process the queue on connection establishment
+      // Process the queue on connection establishment.
       if (this.isConnected && !this.isReconnecting) {
         this.processQueue();
       }
