@@ -867,7 +867,7 @@ $usual-color: #cdb398;
       .scaled-thumbnail
     ):not(.delete-btn):not(.toggle-button):not(.update-overlay):not(
       .update-popup
-    ) {
+    ):not(.chat-username-color-picker) {
     display: none !important;
   }
 }
