@@ -1,4 +1,4 @@
-import { debounce } from "../helpers";
+import { adjustVisibility, debounce } from "../helpers";
 
 // Storage operations helper functions.
 const storageKey = 'usernameColors';
@@ -231,9 +231,13 @@ export const openUsernameColors = () => {
   container.appendChild(generatedBlock);
   document.body.appendChild(container);
 
+  // Smoothly fade in the container.
+  adjustVisibility(container, 'show', 1);
+
+  // Handle clicks outside the container to fade it out.
   const handleOutsideClick = (e) => {
     if (!container.contains(e.target)) {
-      container.remove();
+      adjustVisibility(container, 'hide', 0);
       document.removeEventListener('click', handleOutsideClick, true);
     }
   };
