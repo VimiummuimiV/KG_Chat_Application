@@ -155,7 +155,19 @@ function colorGenerator(config) {
       // Normalize the username to ensure consistency
       const key = username.trim().toLowerCase();
 
-      // Return the color if it already exists
+      // First, check localStorage
+      let localColors = {};
+      try {
+        const storedLocal = localStorage.getItem(storageKey);
+        localColors = storedLocal ? JSON.parse(storedLocal) : {};
+      } catch (e) {
+        // Ignore parsing errors
+      }
+      if (localColors[key]) {
+        return localColors[key];
+      }
+
+      // Next, check sessionStorage cache from colorMap
       if (colorMap[key]) {
         return colorMap[key];
       }
