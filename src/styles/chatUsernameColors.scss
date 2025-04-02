@@ -52,7 +52,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    cursor: pointer;
     padding: 0.3em;
     border-bottom: 1px dashed #444 !important;
 
@@ -65,6 +64,7 @@
     }
 
     .color-box {
+      cursor: pointer !important;
       border-radius: 0.2em !important;
       margin-left: 1em;
       padding: 0.6em;

@@ -1,49 +1,56 @@
 import { adjustVisibility, debounce } from "../helpers/helpers";
 
-// Storage operations helper functions.
+// Centralized storage wrapper.
 const storageKey = 'usernameColors';
-const getStorageData = (storage) => {
-  try {
-    const stored = storage.getItem(storageKey);
-    return stored ? JSON.parse(stored) : {};
-  } catch (e) {
-    console.error(`Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data:`, e);
-    return {};
-  }
-};
-
-const setStorageData = (storage, data) => {
-  try {
-    storage.setItem(storageKey, JSON.stringify(data));
-    return true;
-  } catch (e) {
-    console.error(`Error saving data to ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'}:`, e);
-    return false;
+const storageWrapper = {
+  get: (storage) => {
+    try {
+      const stored = storage.getItem(storageKey);
+      return stored ? JSON.parse(stored) : {};
+    } catch (e) {
+      console.error(
+        `Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data:`,
+        e
+      );
+      return {};
+    }
+  },
+  set: (storage, data) => {
+    try {
+      storage.setItem(storageKey, JSON.stringify(data));
+      return true;
+    } catch (e) {
+      console.error(
+        `Error saving data to ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'}:`,
+        e
+      );
+      return false;
+    }
   }
 };
 
 const storageOps = {
-  getColors: () => getStorageData(sessionStorage),
+  getColors: () => storageWrapper.get(sessionStorage),
   saveColor: (username, color) => {
-    const localColors = getStorageData(localStorage);
+    const localColors = storageWrapper.get(localStorage);
     localColors[username] = color;
-    return setStorageData(localStorage, localColors);
+    return storageWrapper.set(localStorage, localColors);
   },
   removeColor: (username) => {
-    const localColors = getStorageData(localStorage);
+    const localColors = storageWrapper.get(localStorage);
     if (username in localColors) {
       delete localColors[username];
-      return setStorageData(localStorage, localColors);
+      return storageWrapper.set(localStorage, localColors);
     }
     return false;
   },
   isColorSaved: (username) => {
-    const localColors = getStorageData(localStorage);
+    const localColors = storageWrapper.get(localStorage);
     return username in localColors;
   }
 };
 
-// Create DOM element helper.
+// DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {
   const element = document.createElement(tag);
   if (className) element.className = className;
@@ -88,7 +95,7 @@ const createRemoveSVG = () => {
 
 // Update styling for label and color box.
 const updateStyles = (label, colorBox, color) => {
-  Object.assign(label.style, { color });
+  label.style.color = color;
   Object.assign(colorBox.style, {
     backgroundColor: hexWithAlpha(color, 0.4),
     color
@@ -96,35 +103,20 @@ const updateStyles = (label, colorBox, color) => {
   colorBox.textContent = color;
 };
 
-// Create or update the remove button.
-const createOrUpdateRemoveButton = (entry, username, color, updateCb) => {
-  let removeBtn = entry.querySelector('.remove-btn');
-  if (removeBtn) entry.removeChild(removeBtn);
-  removeBtn = createElement('div', 'remove-btn');
-  removeBtn.appendChild(createRemoveSVG());
-  removeBtn.title = "Remove saved color";
-  Object.assign(removeBtn.style, {
-    backgroundColor: hexWithAlpha(color, 0.4),
-    color
-  });
-  removeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    storageOps.removeColor(username);
-    entry.removeChild(removeBtn);
-    if (typeof updateCb === 'function') updateCb();
-  });
-  entry.appendChild(removeBtn);
-  return removeBtn;
-};
-
-// Validate hex color code (#FFFFFF format only)
+// Validate hex color (#FFFFFF format)
 const isValidHex = (hex) => /^#[0-9A-Fa-f]{6}$/.test(hex);
 
+// The main exported function.
 export const openUsernameColors = () => {
   const sessionColors = storageOps.getColors();
   let savedBlock = null;
+  let longPressTimer = null;
+  let currentEntry = null;
+  const longPressDuration = 500;
 
+  // Create container and blocks.
   const container = createElement('div', 'chat-username-color-picker', { html: '<h2>Username Colors</h2>' });
+  const generatedBlock = createElement('div', 'generated-username-colors', { html: '<h3>Generated Colors</h3>' });
 
   // Create saved colors block if needed.
   const createSavedBlock = () => {
@@ -135,9 +127,6 @@ export const openUsernameColors = () => {
     }
   };
 
-  // Block for generated colors.
-  const generatedBlock = createElement('div', 'generated-username-colors', { html: '<h3>Generated Colors</h3>' });
-
   const updateGeneratedBlockStatus = () => {
     generatedBlock.querySelectorAll('.username-entry').forEach(entry => {
       const username = entry.querySelector('.user-label').textContent;
@@ -145,7 +134,7 @@ export const openUsernameColors = () => {
     });
   };
 
-  // Create an entry element with long press functionality.
+  // Create an entry element.
   const createEntry = (username, color, isSaved = false) => {
     const entry = createElement('div', 'username-entry');
     const label = createElement('div', 'user-label', { text: username });
@@ -153,14 +142,14 @@ export const openUsernameColors = () => {
     updateStyles(label, colorBox, color);
     const colorInput = createElement('input', null, { type: 'color', value: color });
 
+    // We keep a reference to the input element on the entry.
+    entry._colorInput = colorInput;
+
     entry.append(label, colorBox, colorInput);
 
-    // Add a flag to indicate when the custom input is active.
-    let customInputActive = false;
-
-    let removeBtn = null;
     if (isSaved) {
-      removeBtn = createOrUpdateRemoveButton(entry, username, color, () => {
+      // Create remove button on initialization.
+      const removeBtn = createOrUpdateRemoveButton(entry, username, color, () => {
         entry.remove();
         updateGeneratedBlockStatus();
         if (savedBlock && !savedBlock.querySelector('.username-entry')) {
@@ -168,6 +157,8 @@ export const openUsernameColors = () => {
           savedBlock = null;
         }
       });
+      // Save a reference for later update.
+      entry._removeBtn = removeBtn;
     }
 
     const debouncedUpdate = debounce(() => {
@@ -175,15 +166,16 @@ export const openUsernameColors = () => {
       updateStyles(label, colorBox, newColor);
       if (!isSaved) {
         sessionColors[username] = newColor;
-        setStorageData(sessionStorage, sessionColors);
+        storageWrapper.set(sessionStorage, sessionColors);
         storageOps.saveColor(username, newColor);
         createSavedBlock();
         renderSavedBlock();
         updateGeneratedBlockStatus();
       } else {
         storageOps.saveColor(username, newColor);
-        if (!removeBtn || !entry.contains(removeBtn)) {
-          removeBtn = createOrUpdateRemoveButton(entry, username, newColor, () => {
+        // Update or recreate the remove button.
+        if (!entry._removeBtn || !entry.contains(entry._removeBtn)) {
+          entry._removeBtn = createOrUpdateRemoveButton(entry, username, newColor, () => {
             entry.remove();
             updateGeneratedBlockStatus();
             if (savedBlock && !savedBlock.querySelector('.username-entry')) {
@@ -192,7 +184,7 @@ export const openUsernameColors = () => {
             }
           });
         } else {
-          Object.assign(removeBtn.style, {
+          Object.assign(entry._removeBtn.style, {
             backgroundColor: hexWithAlpha(newColor, 0.4),
             color: newColor
           });
@@ -201,118 +193,13 @@ export const openUsernameColors = () => {
     }, 1000);
 
     colorInput.addEventListener('input', debouncedUpdate);
-
-    // Long press detection variables
-    let longPressTimer;
-    let isLongPress = false;
-    const longPressDuration = 500; // milliseconds
-
-    const startLongPress = () => {
-      longPressTimer = setTimeout(() => {
-        isLongPress = true;
-        showCustomInput();
-      }, longPressDuration);
-    };
-
-    const cancelLongPress = () => {
-      clearTimeout(longPressTimer);
-      isLongPress = false;
-    };
-
-    // Modify normal click handling: do not trigger system picker if custom input is active.
-    const handleNormalClick = (e) => {
-      if (!customInputActive && !entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
-        colorInput.click();
-      }
-    };
-
-    const showCustomInput = () => {
-      if (entry.querySelector('.custom-color-input')) return; // Prevent multiple inputs
-      customInputActive = true;
-      const customInputContainer = createElement('div', 'custom-color-input');
-      const hexInput = createElement('input', 'hex-input', { type: 'text', placeholder: 'Enter hex color' });
-      const confirmBtn = createElement('button', 'confirm-btn', { text: 'Confirm' });
-      customInputContainer.append(hexInput, confirmBtn);
-      entry.appendChild(customInputContainer);
-      hexInput.focus();
-
-      const handleConfirm = () => {
-        const hexValue = hexInput.value.trim();
-        if (isValidHex(hexValue)) {
-          const newColor = hexValue;
-          colorInput.value = newColor;
-          debouncedUpdate();
-          entry.removeChild(customInputContainer);
-          customInputActive = false;
-        } else {
-          alert('Invalid hex color');
-        }
-      };
-
-      confirmBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        handleConfirm();
-      });
-      hexInput.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter') {
-          e.stopPropagation();
-          handleConfirm();
-        }
-      });
-      customInputContainer.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-    };
-
-    // Mouse event handlers for long press
-    entry.addEventListener('mousedown', (e) => {
-      if (e.button === 0 && !entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
-        startLongPress();
-      }
-    });
-
-    entry.addEventListener('mouseup', (e) => {
-      if (e.button === 0) {
-        if (!isLongPress) {
-          cancelLongPress();
-          handleNormalClick(e);
-        } else {
-          isLongPress = false;
-        }
-      }
-    });
-
-    entry.addEventListener('mouseleave', cancelLongPress);
-
-    // Touch event handlers for long press
-    entry.addEventListener('touchstart', (e) => {
-      if (!entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
-        startLongPress();
-      }
-    });
-
-    entry.addEventListener('touchend', (e) => {
-      if (!isLongPress) {
-        cancelLongPress();
-        handleNormalClick(e);
-      } else {
-        isLongPress = false;
-      }
-    });
-
-    entry.addEventListener('touchcancel', cancelLongPress);
-
-    entry.addEventListener('click', (e) => {
-      handleNormalClick(e);
-    });
-
     return entry;
   };
 
-  // Render saved block based on localStorage.
+  // Render saved colors block.
   const renderSavedBlock = () => {
     if (!savedBlock) return;
-    const localColors = getStorageData(localStorage);
+    const localColors = storageWrapper.get(localStorage);
     savedBlock.innerHTML = '<h3>Saved Colors</h3>';
     Object.entries(localColors).forEach(([username, color]) => {
       const entry = createEntry(username, color, true);
@@ -336,10 +223,9 @@ export const openUsernameColors = () => {
   container.appendChild(generatedBlock);
   document.body.appendChild(container);
 
-  // Smoothly fade in the container.
   adjustVisibility(container, 'show', 1);
 
-  // Handle clicks outside the container to fade it out.
+  // Hide container on outside click.
   const handleOutsideClick = (e) => {
     if (!container.contains(e.target)) {
       adjustVisibility(container, 'hide', 0);
@@ -347,5 +233,120 @@ export const openUsernameColors = () => {
     }
   };
   document.addEventListener('click', handleOutsideClick, true);
+
+  // Delegate click events on the container.
+  container.addEventListener('click', (e) => {
+    // Handle remove button clicks.
+    const removeBtn = e.target.closest('.remove-btn');
+    if (removeBtn) {
+      const entry = removeBtn.closest('.username-entry');
+      if (!entry) return;
+      const username = entry.querySelector('.user-label').textContent;
+      storageOps.removeColor(username);
+      entry.remove();
+      updateGeneratedBlockStatus();
+      if (savedBlock && !savedBlock.querySelector('.username-entry')) {
+        savedBlock.remove();
+        savedBlock = null;
+      }
+      return;
+    }
+    
+    // Handle color box click.
+    const colorBox = e.target.closest('.color-box');
+    if (colorBox) {
+      const entry = colorBox.closest('.username-entry');
+      if (!entry || entry.classList.contains('disabled-entry') || entry._customInputActive) return;
+      // Trigger the color input.
+      if (entry._colorInput) {
+        entry._colorInput.click();
+      }
+    }
+  });
+
+  // Delegate pointer events for long press on color boxes.
+  container.addEventListener('pointerdown', (e) => {
+    const colorBox = e.target.closest('.color-box');
+    if (!colorBox) return;
+    const entry = colorBox.closest('.username-entry');
+    if (!entry || entry.classList.contains('disabled-entry')) return;
+    // Start long press timer.
+    longPressTimer = setTimeout(() => {
+      entry._isLongPress = true;
+      showCustomInput(entry);
+    }, longPressDuration);
+    // Save the current entry for pointerup/leave events.
+    currentEntry = entry;
+  });
+  
+  container.addEventListener('pointerup', clearLongPress);
+  container.addEventListener('pointerleave', clearLongPress);
+  container.addEventListener('pointercancel', clearLongPress);
+  
+  function clearLongPress() {
+    clearTimeout(longPressTimer);
+    if (currentEntry) {
+      currentEntry._isLongPress = false;
+      currentEntry = null;
+    }
+  }
+
+  // Delegated function to show custom input.
+  function showCustomInput(entry) {
+    if (entry.querySelector('.custom-color-input')) return;
+    entry._customInputActive = true;
+    const customInputContainer = createElement('div', 'custom-color-input');
+    const hexInput = createElement('input', 'hex-input', { type: 'text', placeholder: 'Enter hex color' });
+    const confirmBtn = createElement('button', 'confirm-btn', { text: 'Confirm' });
+    customInputContainer.append(hexInput, confirmBtn);
+    entry.appendChild(customInputContainer);
+    hexInput.focus();
+    const handleConfirm = () => {
+      const hexValue = hexInput.value.trim();
+      if (isValidHex(hexValue)) {
+        if (entry._colorInput) {
+          entry._colorInput.value = hexValue;
+          entry._colorInput.dispatchEvent(new Event('input', { bubbles: true }));
+        }
+        entry.removeChild(customInputContainer);
+        entry._customInputActive = false;
+      } else {
+        alert('Invalid hex color');
+      }
+    };
+    confirmBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      handleConfirm();
+    });
+    hexInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        e.stopPropagation();
+        handleConfirm();
+      }
+    });
+    customInputContainer.addEventListener('click', (e) => e.stopPropagation());
+  }
+
   return container;
+};
+
+// Helper to create or update the remove button for an entry.
+const createOrUpdateRemoveButton = (entry, username, color, updateCb) => {
+  let removeBtn = entry.querySelector('.remove-btn');
+  if (removeBtn) entry.removeChild(removeBtn);
+  removeBtn = createElement('div', 'remove-btn');
+  removeBtn.appendChild(createRemoveSVG());
+  removeBtn.title = "Remove saved color";
+  Object.assign(removeBtn.style, {
+    backgroundColor: hexWithAlpha(color, 0.4),
+    color
+  });
+  removeBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    storageOps.removeColor(username);
+    entry.removeChild(removeBtn);
+    if (typeof updateCb === 'function') updateCb();
+  });
+  entry.appendChild(removeBtn);
+  return removeBtn;
 };
