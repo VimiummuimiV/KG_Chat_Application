@@ -116,22 +116,45 @@ export const openUsernameColors = () => {
 
   // Create container and blocks.
   const container = createElement('div', 'chat-username-color-picker', { html: '<h2>Username Colors</h2>' });
-  const generatedBlock = createElement('div', 'generated-username-colors', { html: '<h3>Generated Colors</h3>' });
+  const generatedBlock = createElement(
+    'div',
+    'generated-username-colors',
+    { html: '<h3>Generated Colors <span class="counter">0</span></h3>' }
+  );
 
   // Create saved colors block if needed.
   const createSavedBlock = () => {
     if (!savedBlock) {
-      savedBlock = createElement('div', 'saved-username-colors', { html: '<h3>Saved Colors</h3>' });
+      savedBlock = createElement(
+        'div',
+        'saved-username-colors',
+        { html: '<h3>Saved Colors <span class="counter">0</span></h3>' }
+      );
       const header = container.querySelector('h2');
       header.nextSibling ? container.insertBefore(savedBlock, header.nextSibling) : container.appendChild(savedBlock);
     }
   };
+
+  // New helper to update header counters.
+  function updateCounters() {
+    if (generatedBlock) {
+      const count = generatedBlock.querySelectorAll('.username-entry').length;
+      const counterSpan = generatedBlock.querySelector('h3 .counter');
+      if (counterSpan) { counterSpan.textContent = count; }
+    }
+    if (savedBlock) {
+      const count = savedBlock.querySelectorAll('.username-entry').length;
+      const counterSpan = savedBlock.querySelector('h3 .counter');
+      if (counterSpan) { counterSpan.textContent = count; }
+    }
+  }
 
   const updateGeneratedBlockStatus = () => {
     generatedBlock.querySelectorAll('.username-entry').forEach(entry => {
       const username = entry.querySelector('.user-label').textContent;
       entry.classList.toggle('disabled-entry', storageOps.isColorSaved(username));
     });
+    updateCounters();
   };
 
   // Create an entry element.
@@ -200,7 +223,7 @@ export const openUsernameColors = () => {
   const renderSavedBlock = () => {
     if (!savedBlock) return;
     const localColors = storageWrapper.get(localStorage);
-    savedBlock.innerHTML = '<h3>Saved Colors</h3>';
+    savedBlock.innerHTML = '<h3>Saved Colors <span class="counter">0</span></h3>';
     Object.entries(localColors).forEach(([username, color]) => {
       const entry = createEntry(username, color, true);
       savedBlock.appendChild(entry);
@@ -209,6 +232,7 @@ export const openUsernameColors = () => {
       savedBlock.remove();
       savedBlock = null;
     }
+    updateCounters();
   };
 
   // Render generated colors.
@@ -216,6 +240,7 @@ export const openUsernameColors = () => {
     const entry = createEntry(username, color);
     generatedBlock.appendChild(entry);
   });
+  updateCounters();
   createSavedBlock();
   renderSavedBlock();
   updateGeneratedBlockStatus();
@@ -251,7 +276,7 @@ export const openUsernameColors = () => {
       }
       return;
     }
-    
+
     // Handle color box click.
     const colorBox = e.target.closest('.color-box');
     if (colorBox) {
@@ -278,11 +303,11 @@ export const openUsernameColors = () => {
     // Save the current entry for pointerup/leave events.
     currentEntry = entry;
   });
-  
+
   container.addEventListener('pointerup', clearLongPress);
   container.addEventListener('pointerleave', clearLongPress);
   container.addEventListener('pointercancel', clearLongPress);
-  
+
   function clearLongPress() {
     clearTimeout(longPressTimer);
     if (currentEntry) {
