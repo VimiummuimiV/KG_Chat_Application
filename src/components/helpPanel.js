@@ -48,6 +48,8 @@ export class HelpPanel {
               { key: "/exit", desc: "Exit private chat mode" },
               { key: "/reset", desc: "Reset the chat data" },
               { key: "/colors", desc: "Show the username color panel" },
+              { key: "/import colors", desc: "Import user colors from a json file" },
+              { key: "/export colors", desc: "Export user colors to a json file" }
             ]
           },
           {
@@ -161,7 +163,9 @@ export class HelpPanel {
               { key: "/pm username", desc: "Активировать приватный чат для указанного пользователя" },
               { key: "/exit", desc: "Выйти из приватного чата" },
               { key: "/reset", desc: "Сбросить данные чата" },
-              { key: "/colors", desc: "Показать панель цветов имен пользователей" }
+              { key: "/colors", desc: "Показать панель цветов имен пользователей" },
+              { key: "/import colors", desc: "Импортировать цвета пользователей из json файла" },
+              { key: "/export colors", desc: "Экспортировать цвета пользователей в json файл" }
             ]
           },
           {

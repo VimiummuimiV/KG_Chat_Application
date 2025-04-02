@@ -1,4 +1,4 @@
-import { adjustVisibility, debounce } from "../helpers/helpers";
+import { adjustVisibility, debounce, showChatAlert } from "../helpers/helpers";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';
@@ -350,3 +350,49 @@ const createOrUpdateRemoveButton = (entry, username, color, updateCb) => {
   entry.appendChild(removeBtn);
   return removeBtn;
 };
+
+// Helper to export username colors to a JSON file.
+export function exportUsernameColors() {
+  const usernameColors = localStorage.getItem('usernameColors');
+  if (!usernameColors) {
+    showChatAlert('No username colors found to export', { type: 'error', duration: 2000 });
+    return;
+  }
+  const blob = new Blob([usernameColors], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'usernameColors.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  showChatAlert('Username colors exported as JSON file', { type: 'info', duration: 2000 });
+}
+
+// Helper to import username colors from a JSON file.
+export function importUsernameColors() {
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'application/json';
+  input.style.display = 'none';
+  document.body.appendChild(input);
+  input.addEventListener('change', (event) => {
+    const file = event.target.files[0];
+    if (!file) {
+      showChatAlert('No file selected', { type: 'error', duration: 2000 });
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const jsonData = JSON.parse(e.target.result);
+        localStorage.setItem('usernameColors', JSON.stringify(jsonData));
+        showChatAlert('Username colors imported successfully', { type: 'info', duration: 2000 });
+      } catch (err) {
+        showChatAlert('Invalid JSON file', { type: 'error', duration: 2000 });
+      }
+    };
+    reader.readAsText(file);
+  });
+  input.click();
+  document.body.removeChild(input);
+}

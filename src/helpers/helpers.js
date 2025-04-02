@@ -18,7 +18,13 @@ import {
 import { addShakeEffect } from "../data/animations.js";
 import { emojiKeywords } from "../data/emojiData.js";
 import { removeChatParams } from "../auth.js";
-import { openUsernameColors } from "../components/chatUsernameColorsPanel.js";
+
+import {
+  exportUsernameColors,
+  importUsernameColors,
+  openUsernameColors
+} from "../components/chatUsernameColorsPanel.js";
+
 import { mentionColors } from "./chatUsernameColors.js";
 
 
@@ -787,6 +793,22 @@ const chatCommands = [
     handler: () => {
       openUsernameColors();
       showChatAlert('Username color picker has been opened', { type: 'info', duration: 1000 });
+      return true;
+    }
+  },
+  {
+    name: 'export colors',
+    pattern: /^\/export\s+colors\s*$/,
+    handler: () => {
+      exportUsernameColors();
+      return true;
+    }
+  },
+  {
+    name: 'import colors',
+    pattern: /^\/import\s+colors\s*$/,
+    handler: () => {
+      importUsernameColors();
       return true;
     }
   }
