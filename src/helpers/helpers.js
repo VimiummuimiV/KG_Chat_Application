@@ -19,6 +19,7 @@ import { addShakeEffect } from "../data/animations.js";
 import { emojiKeywords } from "../data/emojiData.js";
 import { removeChatParams } from "../auth.js";
 import { openUsernameColors } from "../components/chatUsernameColorsPanel.js";
+import { mentionColors } from "./chatUsernameColors.js";
 
 
 // ==================================================================================================
