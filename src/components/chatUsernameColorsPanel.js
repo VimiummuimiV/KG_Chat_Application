@@ -358,7 +358,9 @@ export function exportUsernameColors() {
     showChatAlert('No username colors found to export', { type: 'error', duration: 2000 });
     return;
   }
-  const blob = new Blob([usernameColors], { type: 'application/json' });
+  // Parse and stringify with indentation
+  const formattedJson = JSON.stringify(JSON.parse(usernameColors), null, 2);
+  const blob = new Blob([formattedJson], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
