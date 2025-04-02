@@ -155,6 +155,9 @@ export const openUsernameColors = () => {
 
     entry.append(label, colorBox, colorInput);
 
+    // Add a flag to indicate when the custom input is active.
+    let customInputActive = false;
+
     let removeBtn = null;
     if (isSaved) {
       removeBtn = createOrUpdateRemoveButton(entry, username, color, () => {
@@ -216,15 +219,16 @@ export const openUsernameColors = () => {
       isLongPress = false;
     };
 
+    // Modify normal click handling: do not trigger system picker if custom input is active.
     const handleNormalClick = (e) => {
-      if (!entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
+      if (!customInputActive && !entry.classList.contains('disabled-entry') && (!removeBtn || !removeBtn.contains(e.target))) {
         colorInput.click();
       }
     };
 
     const showCustomInput = () => {
       if (entry.querySelector('.custom-color-input')) return; // Prevent multiple inputs
-
+      customInputActive = true;
       const customInputContainer = createElement('div', 'custom-color-input');
       const hexInput = createElement('input', 'hex-input', { type: 'text', placeholder: 'Enter hex color' });
       const confirmBtn = createElement('button', 'confirm-btn', { text: 'Confirm' });
@@ -239,18 +243,22 @@ export const openUsernameColors = () => {
           colorInput.value = newColor;
           debouncedUpdate();
           entry.removeChild(customInputContainer);
+          customInputActive = false;
         } else {
           alert('Invalid hex color');
         }
       };
 
-      confirmBtn.addEventListener('click', handleConfirm);
+      confirmBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        handleConfirm();
+      });
       hexInput.addEventListener('keypress', (e) => {
         if (e.key === 'Enter') {
+          e.stopPropagation();
           handleConfirm();
         }
       });
-
       customInputContainer.addEventListener('click', (e) => {
         e.stopPropagation();
       });
@@ -293,6 +301,10 @@ export const openUsernameColors = () => {
     });
 
     entry.addEventListener('touchcancel', cancelLongPress);
+
+    entry.addEventListener('click', (e) => {
+      handleNormalClick(e);
+    });
 
     return entry;
   };
