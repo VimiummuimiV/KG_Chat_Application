@@ -386,6 +386,12 @@ export function decodeURL(url) {
   return decodeURIComponent(base).replace(/ /g, '_');
 }
 
+export function decodeEncodedURL(text) {
+  return text.replace(/\b(https?:\/\/[^\s]+)/gi, match =>
+    isEncodedURL(match) ? decodeURL(match) : match
+  );
+}
+
 // ==================================================================================================
 
 export const notification = 'https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/notification-pluck-on.mp3';

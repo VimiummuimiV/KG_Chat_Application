@@ -23,7 +23,8 @@ import {
   setupCommandEvents,
   parseUsername,
   addViewportMeta,
-  addChatToggleFeature
+  addChatToggleFeature,
+  decodeEncodedURL 
 } from "./src/helpers/helpers.js";
 
 import { getAuthData } from "./src/auth.js";
@@ -112,8 +113,10 @@ async function initializeApp() {
       input.focus();
     };
 
+    // Set up event listeners
     document.getElementById('send-button').addEventListener('click', sendMessage);
     input.addEventListener('keypress', e => e.key === 'Enter' && sendMessage());
+    input.addEventListener('paste', e => requestAnimationFrame(() => input.value = decodeEncodedURL(input.value)));
 
     // Set up private messaging events
     setupPrivateMessageEvents(input);
