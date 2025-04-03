@@ -108,6 +108,12 @@ const isValidHex = (hex) => /^#[0-9A-Fa-f]{6}$/.test(hex);
 
 // The main exported function.
 export const openUsernameColors = () => {
+  // Prevent duplicate container creation.
+  const existingContainer = document.querySelector('.chat-username-color-picker');
+  if (existingContainer) {
+    return existingContainer;
+  }
+
   const sessionColors = storageOps.getColors();
   let savedBlock = null;
   let longPressTimer = null;
