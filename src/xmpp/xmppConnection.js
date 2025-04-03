@@ -1,5 +1,8 @@
+import { connectionDelay } from "../data/definitions.js";
+import { sleep, base64Encode } from "../helpers/helpers.js";
+
 export default class XMPPConnection {
-  constructor({ username, password, bindUrl, delay }) {
+  constructor({ username, password, bindUrl, delay = connectionDelay }) {
     this.username = username;
     this.password = password;
     this.bindUrl = bindUrl;
@@ -38,7 +41,7 @@ export default class XMPPConnection {
         if (error.message.includes('429')) {
           const waitTime = baseWaitTime * Math.pow(2, attempt);
           console.log(`⏱️ Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`);
-          await this.sleep(waitTime);
+          await sleep(waitTime);
         } else {
           throw error;
         }
@@ -47,18 +50,10 @@ export default class XMPPConnection {
     throw new Error(`Max retries reached. Last error: ${lastError.message}`);
   }
 
-  sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
-  base64Encode(str) {
-    const encoder = new TextEncoder();
-    const data = encoder.encode(str);
-    return btoa(String.fromCharCode(...data));
-  }
-
   async connect() {
+
     console.log('🌐 Step 1: Connecting to XMPP server...');
+
     const initPayload = `<body xmlns='http://jabber.org/protocol/httpbind'
                rid='${this.nextRid()}'
                to='jabber.klavogonki.ru'
@@ -70,10 +65,14 @@ export default class XMPPConnection {
                xmlns:xmpp='urn:xmpp:xbosh'/>`;
     const initResponse = await this.sendRequestWithRetry(initPayload);
     this.sid = initResponse.match(/sid=['"]([^'"]+)['"]/)[1];
+
     console.log(`🔑 Step 2: Session ID received: ${this.sid}`);
-    await this.sleep(this.delay);
+
+    await sleep(this.delay);
+
     console.log('🔐 Step 3: Authenticating...');
-    const authString = this.base64Encode('\x00' + this.username + '\x00' + this.password);
+
+    const authString = base64Encode('\x00' + this.username + '\x00' + this.password);
     const authPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
                xmlns='http://jabber.org/protocol/httpbind'>
           <auth xmlns='urn:ietf:params:xml:ns:xmpp-sasl' mechanism='PLAIN'>${authString}</auth>
@@ -83,16 +82,22 @@ export default class XMPPConnection {
       throw new Error('❌ Authentication failed');
     }
     console.log('✅ Step 4: Authentication successful!');
-    await this.sleep(this.delay);
+
+    await sleep(this.delay);
+
     console.log('🔄 Step 5: Restarting stream...');
+
     const restartPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
                xmlns='http://jabber.org/protocol/httpbind'
                to='jabber.klavogonki.ru'
                xmpp:restart='true'
                xmlns:xmpp='urn:xmpp:xbosh'/>`;
     await this.sendRequestWithRetry(restartPayload);
-    await this.sleep(this.delay);
+
+    await sleep(this.delay);
+
     console.log('📦 Step 6: Binding resource...');
+
     const bindPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
                xmlns='http://jabber.org/protocol/httpbind'>
           <iq type='set' id='bind_1' xmlns='jabber:client'>
@@ -102,8 +107,11 @@ export default class XMPPConnection {
           </iq>
         </body>`;
     await this.sendRequestWithRetry(bindPayload);
-    await this.sleep(this.delay);
+
+    await sleep(this.delay);
+
     console.log('🔌 Step 7: Establishing session...');
+
     const sessionPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
                xmlns='http://jabber.org/protocol/httpbind'>
           <iq type='set' id='session_1' xmlns='jabber:client'>
@@ -111,7 +119,9 @@ export default class XMPPConnection {
           </iq>
         </body>`;
     await this.sendRequestWithRetry(sessionPayload);
-    await this.sleep(this.delay);
+
+    await sleep(this.delay);
+
     // Return session details for further use.
     return { sid: this.sid, rid: this.rid };
   }

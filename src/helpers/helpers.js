@@ -861,6 +861,14 @@ export function sleep(ms) {
 
 // ==================================================================================================
 
+export function base64Encode(str) {
+  const encoder = new TextEncoder();
+  const data = encoder.encode(str);
+  return btoa(String.fromCharCode(...data));
+}
+
+// ==================================================================================================
+
 // Helper function to check if an image exists
 export function checkImageExists(url) {
   return new Promise((resolve) => {
