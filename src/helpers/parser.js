@@ -1,4 +1,4 @@
-import { decodeURL, isEncodedURL } from "./helpers/helpers.js";
+import { decodeURL, isEncodedURL } from "./helpers.js";
 
 export const parseMessageText = text => {
   // First, apply markdown transformations

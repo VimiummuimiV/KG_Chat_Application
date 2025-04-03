@@ -668,6 +668,16 @@ export const privateMessageState = {
   }
 };
 
+// Global reference for ESC key handler
+let escKeyHandler = null;
+
+// Function to handle ESC key press
+function handleEscKeyPress(event) {
+  if (event.key === 'Escape' && privateMessageState.isPrivateMode) {
+    exitPrivateMode();
+  }
+}
+
 // Toggle private message mode based on input value
 export async function handlePrivateMessageInput(inputElement) {
   if (!inputElement) return;
@@ -735,6 +745,12 @@ export function enterPrivateMode(username) {
     showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
     privateMessageState.isPrivateMode = true;
     privateMessageState.targetUsername = username;
+
+    // Add ESC key event listener when entering private mode
+    if (!escKeyHandler) {
+      escKeyHandler = handleEscKeyPress;
+      document.addEventListener('keydown', escKeyHandler);
+    }
   } else if (privateMessageState.targetUsername === username) {
     messageInput.placeholder = `️PM to ➡ ${username}`;
     showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
@@ -753,20 +769,18 @@ export function exitPrivateMode() {
 
     privateMessageState.exitPrivateMode();
     showChatAlert('Exited private chat mode', { type: 'success', duration: 3000 });
+
+    // Remove ESC key event listener when exiting private mode
+    if (escKeyHandler) {
+      document.removeEventListener('keydown', escKeyHandler);
+      escKeyHandler = null;
+    }
   }
 }
 
 // Handle ESC key to exit private mode
 export function setupPrivateMessageEvents(inputElement) {
   if (!inputElement) return;
-
-  // Add ESC key handler to exit private mode
-  inputElement.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && privateMessageState.isPrivateMode) {
-      exitPrivateMode();
-      e.preventDefault();
-    }
-  });
 
   // Check for private message mode on input changes
   inputElement.addEventListener('input', () => {

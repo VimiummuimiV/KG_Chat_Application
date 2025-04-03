@@ -14,7 +14,7 @@ import {
 } from "../helpers/helpers.js";
 
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
-import { parseMessageText } from "../parser.js";
+import { parseMessageText } from "../helpers/parser.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
 
 
