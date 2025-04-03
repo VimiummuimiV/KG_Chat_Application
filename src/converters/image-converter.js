@@ -1,17 +1,25 @@
-// helpers
 import {
-  addBigImageEventListeners,
   adjustVisibility,
   decodeURL,
   isEncodedURL,
   isTrustedDomain,
-  removeBigImageEventListeners,
   checkIsMobile,
   scrollToBottom
 } from "../helpers/helpers"; // helpers
 
-// definitions
-import { state } from "../data/definitions.js";
+let bigImageEvents = {}; // Object to store event handlers
+
+function addBigImageEventListeners() {
+  Object.entries(bigImageEvents).forEach(([event, handler]) => {
+    document.addEventListener(event, handler);
+  });
+}
+
+function removeBigImageEventListeners() {
+  Object.entries(bigImageEvents).forEach(([event, handler]) => {
+    document.removeEventListener(event, handler);
+  });
+}
 
 // Image constants
 const imageExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
@@ -145,14 +153,14 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
   };
 
   // Define event listeners for the expanded image (desktop)
-  state.bigImageEvents['click'] = (event) => {
+  bigImageEvents.click = (event) => {
     if (!imageElement.contains(event.target)) {
       imageElement.remove();
       removeBigImageEventListeners();
     }
   };
 
-  state.bigImageEvents['keydown'] = (event) => {
+  bigImageEvents.keydown = (event) => {
     if (event.code === 'Escape' || event.code === 'Space') {
       event.preventDefault();
       closeExpandedView(imageElement);
@@ -163,14 +171,14 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
     }
   };
 
-  state.bigImageEvents['wheel'] = (event) => {
+  bigImageEvents.wheel = (event) => {
     const direction = event.deltaY < 0 ? 1 : -1;
     zoomScale += direction * zoomLimits.factor * zoomScale;
     zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
     imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
   };
 
-  state.bigImageEvents['mousemove'] = (event) => {
+  bigImageEvents.mousemove = (event) => {
     if (isMMBPressed) {
       if (event.ctrlKey) {
         const deltaY = event.clientY - lastMouseY;
@@ -190,7 +198,7 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
     }
   };
 
-  state.bigImageEvents['mousedown'] = (event) => {
+  bigImageEvents.mousedown = (event) => {
     const { button, clientX, clientY, target, ctrlKey } = event;
     if ((button === 0 || button === 2) && target !== imageElement) return;
     if (button === 0) {
@@ -211,13 +219,13 @@ const createExpandedView = (src, clickedThumbnailIndex) => {
     }
   };
 
-  state.bigImageEvents['mouseup'] = (event) => {
+  bigImageEvents.mouseup = (event) => {
     if (event.button === 1) {
       isMMBPressed = false;
     }
   };
 
-  state.bigImageEvents['contextmenu'] = (event) => event.preventDefault();
+  bigImageEvents.contextmenu = (event) => event.preventDefault();
 
   // Add the event listeners using your helper function
   addBigImageEventListeners();

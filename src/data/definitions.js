@@ -10,21 +10,9 @@ export const GAME_URL = `${BASE_URL}/g/?gmid=`;
 export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 
 // Sleep time (ms)
-export const delay = 200;
+export const connectionDelay = 30000;
 export const userListDelay = 5000;
 export const reconnectionDelay = 5000;
-
-// Configuration with localStorage integration
-export const config = {
-  get username() {
-    const data = localStorage.getItem('klavoauth');
-    return data ? JSON.parse(data).username : '';
-  },
-  get password() {
-    const data = localStorage.getItem('klavoauth');
-    return data ? JSON.parse(data).password : '';
-  }
-};
 
 export const emojiFaces = [
   // People Emojis (Facial expressions)
@@ -46,10 +34,6 @@ export const emojiFaces = [
   '🐨', '🐯', '🦁', '🐮', '🐷', '🐸', '🐵',
   '🙈', '🙉', '🙊', '🐔', '🦄'
 ];
-
-export let state = {
-  bigImageEvents: {}
-};
 
 // List of trusted domains
 export const trustedDomains = [

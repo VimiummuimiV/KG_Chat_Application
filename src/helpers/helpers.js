@@ -332,20 +332,6 @@ export function extractUsername(login) {
 
 // ==================================================================================================
 
-export function addBigImageEventListeners() {
-  Object.entries(state.bigImageEvents).forEach(([event, handler]) => {
-    document.addEventListener(event, handler);
-  });
-}
-
-export function removeBigImageEventListeners() {
-  Object.entries(state.bigImageEvents).forEach(([event, handler]) => {
-    document.removeEventListener(event, handler);
-  });
-}
-
-// ==================================================================================================
-
 export function adjustVisibility(element, action, opacity) {
   if (!element) return;
   void element.offsetHeight; // Force reflow

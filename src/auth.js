@@ -6,6 +6,17 @@ export function removeChatParams() {
   }, 500);
 }
 
+export const klavoauth = {
+  get username() {
+    const data = localStorage.getItem('klavoauth');
+    return data ? JSON.parse(data).username : '';
+  },
+  get password() {
+    const data = localStorage.getItem('klavoauth');
+    return data ? JSON.parse(data).password : '';
+  }
+};
+
 export function getAuthData() {
   // Only proceed if on the gamelist page
   if (!window.location.href.startsWith('https://klavogonki.ru/gamelist/')) return;

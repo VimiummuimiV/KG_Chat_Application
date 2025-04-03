@@ -1,7 +1,8 @@
 import {
-  delay,
+  connectionDelay,
   XMPP_BIND_URL
 } from "./src/data/definitions.js";
+
 import XMPPConnection from "./src/xmpp/xmppConnection.js";
 import UserManager from "./src/managers/userManager.js";
 import MessageManager from "./src/managers/messageManager.js";
@@ -15,7 +16,7 @@ import {
 } from "./src/chat/chatEvents.js";
 
 import { createXMPPClient } from "./src/xmpp/xmppClient.js";
-import { config } from "./src/data/definitions.js";
+import { klavoauth } from "./src/auth.js";
 
 import {
   observeMessagesPanel,
@@ -24,7 +25,7 @@ import {
   parseUsername,
   addViewportMeta,
   addChatToggleFeature,
-  decodeEncodedURL 
+  decodeEncodedURL
 } from "./src/helpers/helpers.js";
 
 import { getAuthData } from "./src/auth.js";
@@ -60,7 +61,7 @@ function checkAuth() {
     return false;
   }
   const authData = localStorage.getItem('klavoauth');
-  if (!authData || !config.username || !config.password) {
+  if (!authData || !klavoauth.username || !klavoauth.password) {
     localStorage.removeItem('klavoauth');
     window.location.href = 'https://klavogonki.ru/gamelist/';
     return false;
@@ -88,19 +89,19 @@ async function initializeApp() {
 
     // Initialize managers and XMPP connection
     const userManager = new UserManager('user-list');
-    const messageManager = new MessageManager('messages-panel', parseUsername(config.username));
+    const messageManager = new MessageManager('messages-panel', parseUsername(klavoauth.username));
     const xmppConnection = new XMPPConnection({
-      username: config.username,
-      password: config.password,
+      username: klavoauth.username,
+      password: klavoauth.password,
       bindUrl: XMPP_BIND_URL,
-      delay
+      connectionDelay
     });
 
     const xmppClient = createXMPPClient(
       xmppConnection,
       userManager,
       messageManager,
-      config.username
+      klavoauth.username
     );
 
     const input = document.getElementById('message-input');

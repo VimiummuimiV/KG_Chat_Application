@@ -1,5 +1,5 @@
 export default class XMPPConnection {
-  constructor({ username, password, bindUrl, delay = 1000 }) {
+  constructor({ username, password, bindUrl, delay }) {
     this.username = username;
     this.password = password;
     this.bindUrl = bindUrl;
@@ -71,7 +71,7 @@ export default class XMPPConnection {
     const initResponse = await this.sendRequestWithRetry(initPayload);
     this.sid = initResponse.match(/sid=['"]([^'"]+)['"]/)[1];
     console.log(`🔑 Step 2: Session ID received: ${this.sid}`);
-    await this.sleep(this.delay / 8);
+    await this.sleep(this.delay);
     console.log('🔐 Step 3: Authenticating...');
     const authString = this.base64Encode('\x00' + this.username + '\x00' + this.password);
     const authPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
@@ -83,7 +83,7 @@ export default class XMPPConnection {
       throw new Error('❌ Authentication failed');
     }
     console.log('✅ Step 4: Authentication successful!');
-    await this.sleep(this.delay / 8);
+    await this.sleep(this.delay);
     console.log('🔄 Step 5: Restarting stream...');
     const restartPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
                xmlns='http://jabber.org/protocol/httpbind'
@@ -91,7 +91,7 @@ export default class XMPPConnection {
                xmpp:restart='true'
                xmlns:xmpp='urn:xmpp:xbosh'/>`;
     await this.sendRequestWithRetry(restartPayload);
-    await this.sleep(this.delay / 8);
+    await this.sleep(this.delay);
     console.log('📦 Step 6: Binding resource...');
     const bindPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
                xmlns='http://jabber.org/protocol/httpbind'>
@@ -102,7 +102,7 @@ export default class XMPPConnection {
           </iq>
         </body>`;
     await this.sendRequestWithRetry(bindPayload);
-    await this.sleep(this.delay / 8);
+    await this.sleep(this.delay);
     console.log('🔌 Step 7: Establishing session...');
     const sessionPayload = `<body rid='${this.nextRid()}' sid='${this.sid}'
                xmlns='http://jabber.org/protocol/httpbind'>
@@ -111,7 +111,7 @@ export default class XMPPConnection {
           </iq>
         </body>`;
     await this.sendRequestWithRetry(sessionPayload);
-    await this.sleep(this.delay / 8);
+    await this.sleep(this.delay);
     // Return session details for further use.
     return { sid: this.sid, rid: this.rid };
   }
