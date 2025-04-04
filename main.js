@@ -8,6 +8,10 @@ import UserManager from "./src/managers/userManager.js";
 import MessageManager from "./src/managers/messageManager.js";
 import { createChatUI } from "./src/chat/chatUI.js";
 import { removeChatParams } from "./src/auth.js";
+import { getAuthData } from "./src/auth.js";
+import { HelpPanel } from "./src/components/helpPanel.js";
+import { checkForUpdates } from "./src/components/updateCheck.js";
+import { setupCommandEvents } from "./src/helpers/commands.js";
 
 import {
   setupDragHandlers,
@@ -21,16 +25,11 @@ import { klavoauth } from "./src/auth.js";
 import {
   observeMessagesPanel,
   setupPrivateMessageEvents,
-  setupCommandEvents,
   parseUsername,
   addViewportMeta,
   addChatToggleFeature,
   decodeEncodedURL
 } from "./src/helpers/helpers.js";
-
-import { getAuthData } from "./src/auth.js";
-import { HelpPanel } from "./src/components/helpPanel.js";
-import { checkForUpdates } from "./src/components/updateCheck.js";
 
 
 // Function to detect if running in an iframe
