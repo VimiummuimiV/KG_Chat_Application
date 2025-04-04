@@ -9,7 +9,6 @@ import MessageManager from "./src/managers/messageManager.js";
 import { createChatUI } from "./src/chat/chatUI.js";
 import { removeChatParams } from "./src/auth.js";
 import { getAuthData } from "./src/auth.js";
-import { HelpPanel } from "./src/components/helpPanel.js";
 import { checkForUpdates } from "./src/components/updateCheck.js";
 import { setupCommandEvents } from "./src/helpers/commands.js";
 
@@ -122,8 +121,6 @@ async function initializeApp() {
     setupPrivateMessageEvents(input);
     // Set up reset command event
     setupCommandEvents(input);
-    // New: Set up help command events (similar to /pm command)
-    HelpPanel.setupHelpCommandEvents();
 
     // Connect to XMPP and join the room
     await xmppClient.connect();

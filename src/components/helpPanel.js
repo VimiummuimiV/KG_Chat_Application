@@ -374,31 +374,6 @@ export class HelpPanel {
       this.show();
     }
   }
-
-  static setupHelpCommandEvents() {
-    const input = document.getElementById('message-input');
-    if (input) {
-      input.addEventListener('keydown', (e) => {
-        if (input.value.trim() === "/help" && e.code === 'Space') {
-          e.preventDefault();
-          if (!HelpPanel.instance) {
-            const helpPanelInstance = new HelpPanel({
-              onDestroy: () => {
-                // Callback if needed.
-              }
-            });
-            helpPanelInstance.init();
-            helpPanelInstance.show();
-            showChatAlert("Help panel is now visible.");
-          } else {
-            HelpPanel.instance.remove();
-          }
-          input.value = "";
-        }
-      });
-    }
-    return HelpPanel.instance;
-  }
 }
 
 // Static instance tracker
