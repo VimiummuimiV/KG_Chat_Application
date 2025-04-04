@@ -360,9 +360,12 @@ export default class UserManager {
   setUserAvatar(avatarContainer, user, userId, cleanLogin) {
     const cachedAvatarInfo = this.avatarCache[userId];
 
+    // Helper function to generate a dynamic timestamp for the rand parameter
+    const generateRandomParam = () => `rand=${Date.now()}`;
+
     // Display avatar based on available information
     if (user.avatar) {
-      const avatarUrl = `${BASE_URL}/storage/avatars/${userId}_big.png`;
+      const avatarUrl = `${BASE_URL}/storage/avatars/${userId}_big.png?${generateRandomParam()}`;
       const avatarImg = document.createElement('img');
       avatarImg.className = 'user-avatar image-avatar';
       avatarImg.src = avatarUrl;
@@ -443,7 +446,7 @@ export default class UserManager {
       }
     } else {
       // No cached info - try to fetch avatar
-      const avatarUrl = `${BASE_URL}/storage/avatars/${userId}_big.png`;
+      const avatarUrl = `${BASE_URL}/storage/avatars/${userId}_big.png?${generateRandomParam()}`;
       const avatarImg = document.createElement('img');
       avatarImg.className = 'user-avatar image-avatar';
       avatarImg.src = avatarUrl;
