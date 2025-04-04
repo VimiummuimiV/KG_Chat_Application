@@ -6,8 +6,6 @@ import {
   trustedDomains
 } from "../data/definitions.js";
 
-import { state } from "../data/definitions.js";
-
 import {
   openSVG,
   closeSVG,
@@ -204,9 +202,8 @@ export function restoreChatState() {
   handleElementsBehavior();
 }
 
-// 1. Update helpers.js to include the font size in the getChatState function
+// 1. Add a function to get the chat state from localStorage
 
-// In getChatState() function in helpers.js
 export function getChatState() {
   const savedState = localStorage.getItem('chatState');
   const defaultState = {
