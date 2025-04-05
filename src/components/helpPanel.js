@@ -57,7 +57,8 @@ export class HelpPanel {
             items: [
               { key: "Ctrl + Space", desc: "Hide/Show the chat" },
               { key: "Shift + Ctrl + Space", desc: "Expand/Collapse the chat" },
-              { key: "Ctrl + Click", desc: "Activate private chat mode with the clicked user" }
+              { key: "Ctrl + Click", desc: "Activate private chat mode with the clicked user" },
+              { key: "Shift + Click", desc: "Open the user profile by nickname in the message" }
             ]
           },
 
@@ -173,7 +174,8 @@ export class HelpPanel {
             items: [
               { key: "Ctrl + Space", desc: "Скрыть/Показать чат" },
               { key: "Shift + Ctrl + Space", desc: "Развернуть/Свернуть чат" },
-              { key: "Ctrl + Click", desc: "Активировать приватный чат для выбранного пользователя" }
+              { key: "Ctrl + Click", desc: "Активировать приватный чат для выбранного пользователя" },
+              { key: "Shift + Click", desc: "Открыть профиль пользователя по никнейму в сообщении" }
             ]
           },
 
