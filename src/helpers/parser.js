@@ -32,7 +32,30 @@ export const parseMessageText = text => {
     }
   });
 
-  return text;
+  // Define the regex to match anchor tags
+  const anchorRegex = /<a [^>]+>.*?<\/a>/gi;
+
+  // Split the text into parts, separating anchors from plain text
+  const textParts = text.split(anchorRegex);
+
+  // Extract all anchor tags into an array
+  const anchors = text.match(anchorRegex) || [];
+
+  let finalMessage = '';
+
+  // Iterate over text parts and interleave with anchors
+  textParts.forEach((part, index) => {
+    // Wrap non-empty text parts in <p> with both classes
+    if (part.trim()) {
+      finalMessage += `<p class="message-piece break-content">${part}</p>`;
+    }
+    // Append the anchor if it exists at this index
+    if (index < anchors.length) {
+      finalMessage += anchors[index];
+    }
+  });
+
+  return finalMessage;
 }
 
 // Basic markdown support function with additional CSS classes
