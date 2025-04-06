@@ -43,6 +43,27 @@ $usual-color: #cdb398;
     }
   }
 
+  // KG default img styles reset
+  img {
+    text-align: unset !important;
+    position: unset !important;
+    padding: unset;
+    margin: unset;
+    display: unset;
+    max-width: unset;
+  }
+
+  // KG emoticons set margins
+  img[src*="/img/smilies/"] {
+    margin: 0 0.4em !important;
+  }
+
+  // Separate TEXT_NODE from other nodes with a new line
+  .break-content {
+    flex-basis: 100% !important;
+    height: 0 !important;
+  }
+
   // Chat Container States
   &.maximized {
     position: fixed;
@@ -307,6 +328,9 @@ $usual-color: #cdb398;
     word-break: break-word !important;
 
     .message-text {
+      display: inline-flex !important;
+      flex-wrap: wrap !important;
+
       .emoji-adjuster {
         font-family: $emoji-font, sans-serif !important;
         font-size: 1.5em !important;
@@ -447,6 +471,7 @@ $usual-color: #cdb398;
   .message-info {
     margin-right: 1em !important;
     white-space: nowrap !important;
+    height: fit-content !important;
 
     .time {
       font-size: 0.9em !important;
@@ -581,30 +606,36 @@ $usual-color: #cdb398;
   }
 
   // Thumbnails and Media
-  .clickable-thumbnail {
-    display: flex !important;
-    align-items: center;
-    opacity: 1;
-    transition: opacity 0.15s ease-in-out;
-    border: none !important;
-    max-width: 150px !important;
-    max-height: 150px !important;
-    cursor: pointer;
-    background-color: transparent;
-    margin: 6px;
-    overflow: hidden !important;
-    border-radius: $border-radius !important;
-    box-shadow: $slight-box-shadow !important;
-
-    &:hover {
-      opacity: 0.8;
+  .image-container {
+    .processed-image {
+      margin-right: 0.5em !important;
     }
 
-    img {
-      max-height: 100%;
-      max-width: 100%;
+    .clickable-thumbnail {
+      display: flex !important;
+      align-items: center;
+      opacity: 1;
+      transition: opacity 0.15s ease-in-out;
+      border: none !important;
+      max-width: 150px !important;
+      max-height: 150px !important;
+      cursor: pointer;
       background-color: transparent;
-      object-fit: contain;
+      margin: 0.5em 0 0 !important;
+      overflow: hidden !important;
+      border-radius: $border-radius !important;
+      box-shadow: $slight-box-shadow !important;
+
+      &:hover {
+        opacity: 0.8;
+      }
+
+      img {
+        max-height: 100% !important;
+        max-width: 100% !important;
+        background-color: transparent;
+        object-fit: contain;
+      }
     }
   }
 

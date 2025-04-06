@@ -283,6 +283,17 @@ export function convertImageLinksToImage() {
   });
 
   function createThumbnail(link, isUntrusted) {
+    // Ensure the link is wrapped in an image-container.
+    let container = link.parentElement;
+    if (!container.classList.contains('image-container')) {
+      container = document.createElement('div');
+      container.classList.add('image-container');
+      // Insert the container before the link and then move the link into it.
+      link.parentNode.insertBefore(container, link);
+      container.appendChild(link);
+    }
+
+    // Create the thumbnail element.
     const thumbnail = document.createElement("div");
     thumbnail.classList.add("clickable-thumbnail");
     thumbnail.dataset.sourceLink = link.href;
@@ -292,7 +303,8 @@ export function convertImageLinksToImage() {
 
     img.onload = () => {
       thumbnail.appendChild(img);
-      link.parentNode.insertBefore(thumbnail, link.nextSibling);
+      // Append the thumbnail to the container instead of next to the link.
+      container.appendChild(thumbnail);
       scrollToBottom(600);
     };
 
@@ -306,13 +318,13 @@ export function convertImageLinksToImage() {
         link.addEventListener("click", () => {
           if (!link.querySelector(".clickable-thumbnail")) {
             thumbnail.appendChild(img);
-            link.parentNode.insertBefore(thumbnail, link.nextSibling);
+            container.appendChild(thumbnail);
           }
         });
       }
     } else {
       thumbnail.appendChild(img);
-      link.parentNode.insertBefore(thumbnail, link.nextSibling);
+      container.appendChild(thumbnail);
     }
 
     thumbnail.addEventListener("click", (e) => {
