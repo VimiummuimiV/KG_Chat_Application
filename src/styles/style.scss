@@ -328,6 +328,10 @@ $usual-color: #cdb398;
     max-width: 100% !important;
     word-break: break-word !important;
 
+    .pending-emoji {
+      margin-left: 0.5em !important;
+    }
+
     .message-text {
       display: inline-flex !important;
       flex-wrap: wrap !important;
@@ -338,6 +342,7 @@ $usual-color: #cdb398;
         margin: 0 0.4em !important;
         display: inline-flex !important;
       }
+
       .mention {
         display: inline-flex !important;
         font-family: Montserrat !important;

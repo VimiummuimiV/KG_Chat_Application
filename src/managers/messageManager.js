@@ -252,15 +252,17 @@ export default class MessageManager {
         const messageTextEl = document.createElement('div');
         messageTextEl.className = 'message-text';
         messageTextEl.innerHTML = parseMessageText(msg.text);
-        if (msg.pending) {
-          const pendingIconEl = document.createElement('span');
-          pendingIconEl.className = 'pending-emoji';
-          pendingIconEl.textContent = ' ⏱️';
-          messageTextEl.appendChild(pendingIconEl);
-        }
 
         messageEl.appendChild(messageInfoEl);
         messageEl.appendChild(messageTextEl);
+
+        if (msg.pending) {
+          const pendingIconEl = document.createElement('span');
+          pendingIconEl.className = 'pending-emoji';
+          pendingIconEl.textContent = '⏱️';
+          messageEl.appendChild(pendingIconEl); // Append after messageTextEl
+        }
+
         fragment.appendChild(messageEl);
 
         // Mark this message as rendered.
