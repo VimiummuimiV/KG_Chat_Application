@@ -16,6 +16,7 @@ import {
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 import { parseMessageText } from "../helpers/parser.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
+import { connectionMessages } from '../data/definitions.js';
 
 
 export default class MessageManager {
@@ -400,21 +401,19 @@ export default class MessageManager {
     return Array.from(this.messageMap.values());
   }
 
-  refreshMessages(connectionStatus = false) {
+  refreshMessages(connectionStatus = false, connectionType = 'chat') {
+    const messageId = 'connection-status';
     const messageText = connectionStatus
-      ? "Chat connection established. ✓"
-      : "Chat connection lost. Reconnecting...";
-
-    // Use a consistent ID for the connection status message.
-    const systemMessageId = 'chat-connection';
+      ? connectionMessages[connectionType].online
+      : connectionMessages[connectionType].offline;
 
     // Remove the specific system connection message from our map and from our in‑memory rendered IDs.
-    this.messageMap.delete(systemMessageId);
-    this.renderedMessageIds.delete(systemMessageId);
+    this.messageMap.delete(messageId);
+    this.renderedMessageIds.delete(messageId);
 
     // Create and add the new system message.
     const systemMessage = {
-      id: systemMessageId,
+      id: messageId,
       from: "System",
       text: messageText,
       isPrivate: false,
@@ -424,7 +423,7 @@ export default class MessageManager {
       timestamp: new Date().toLocaleTimeString('en-GB', { hour12: false })
     };
 
-    this.messageMap.set(systemMessageId, systemMessage);
+    this.messageMap.set(messageId, systemMessage);
     this.updateConnectionStatusInUI(systemMessage);
   }
 

@@ -14,6 +14,17 @@ export const connectionDelay = 100;
 export const userListDelay = 5000;
 export const reconnectionDelay = 5000;
 
+export const connectionMessages = {
+  chat: {
+    online: 'Chat connection established. ✓',
+    offline: 'Chat connection lost. Reconnecting...'
+  },
+  network: {
+    online: 'Network connection restored. ✓',
+    offline: 'Network connection lost.'
+  }
+};
+
 export const emojiFaces = [
   // People Emojis (Facial expressions)
   '😀', '😁', '😂', '🤣', '😃', '😄', '😅', '😆',

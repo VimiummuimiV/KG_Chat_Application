@@ -326,20 +326,29 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
   // Listen for offline events to stop presence polling.
   window.addEventListener('offline', () => {
     console.log("Network offline. Stopping presence polling.");
+
     if (xmppClient.presenceInterval) {
       clearInterval(xmppClient.presenceInterval);
       xmppClient.presenceInterval = null;
     }
+
     xmppClient.isConnected = false;
+
+    showChatAlert("Network connection lost.", { type: 'warning' });
+    messageManager.refreshMessages(false, 'network');
   });
 
   // Listen for online events to attempt reconnection.
   window.addEventListener('online', async () => {
     console.log("Network online. Scheduling reconnection in 5 seconds...");
+
     await sleep(5000);
     if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
       xmppClient.connect();
     }
+
+    showChatAlert("Network connection restored.", { type: 'success' });
+    messageManager.refreshMessages(true, 'network');
   });
   // --- End network handling ---
 
