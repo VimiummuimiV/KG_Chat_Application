@@ -60,6 +60,7 @@ $usual-color: #cdb398;
 
   // Separate TEXT_NODE from other nodes with a new line
   .break-content {
+    display: inline-flex !important;
     flex-basis: 100% !important;
     margin: 0 !important;
   }
@@ -334,7 +335,7 @@ $usual-color: #cdb398;
       .emoji-adjuster {
         font-family: $emoji-font, sans-serif !important;
         font-size: 1.5em !important;
-        margin: 0 0.1em !important;
+        margin: 0 0.4em !important;
         display: inline-flex !important;
       }
       .mention {
