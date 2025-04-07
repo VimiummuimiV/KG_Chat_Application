@@ -14,12 +14,12 @@ export default (env = {}, argv) => {
     isProduction && env.minimize !== 'false' && env.minimize !== false;
 
   // Paths
-  const headersPath = resolve(__dirname, 'header.js');
+  const headersPath = resolve(__dirname, 'src/header.js');
   const outputPath = resolve(__dirname, 'dist/KG_Chat_App.js');
 
   return {
     mode: isProduction ? 'production' : 'development',
-    entry: './main.js', // Main script file
+    entry: './src/main.js', // Main script file
     output: {
       path: resolve(__dirname, 'dist'),
       filename: 'KG_Chat_App.js', // Output file name

@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 
 // Path to the header file
-const headersPath = path.resolve(__dirname, 'header.js');
+const headersPath = path.resolve(__dirname, 'src/header.js');
 
 try {
   let headerContent = fs.readFileSync(headersPath, 'utf8');

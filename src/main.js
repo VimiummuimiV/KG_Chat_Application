@@ -1,25 +1,25 @@
 import {
   connectionDelay,
   XMPP_BIND_URL
-} from "./src/data/definitions.js";
+} from "./data/definitions.js";
 
-import XMPPConnection from "./src/xmpp/xmppConnection.js";
-import UserManager from "./src/managers/userManager.js";
-import MessageManager from "./src/managers/messageManager.js";
-import { createChatUI } from "./src/chat/chatUI.js";
-import { removeChatParams } from "./src/auth.js";
-import { getAuthData } from "./src/auth.js";
-import { checkForUpdates } from "./src/components/updateCheck.js";
-import { setupCommandEvents } from "./src/helpers/commands.js";
+import XMPPConnection from "./xmpp/xmppConnection.js";
+import UserManager from "./managers/userManager.js";
+import MessageManager from "./managers/messageManager.js";
+import { createChatUI } from "./chat/chatUI.js";
+import { removeChatParams } from "./auth.js";
+import { getAuthData } from "./auth.js";
+import { checkForUpdates } from "./components/updateCheck.js";
+import { setupCommandEvents } from "./helpers/commands.js";
 
 import {
   setupDragHandlers,
   setupResizeHandlers,
   setupWindowResizeHandler
-} from "./src/chat/chatEvents.js";
+} from "./chat/chatEvents.js";
 
-import { createXMPPClient } from "./src/xmpp/xmppClient.js";
-import { klavoauth } from "./src/auth.js";
+import { createXMPPClient } from "./xmpp/xmppClient.js";
+import { klavoauth } from "./auth.js";
 
 import {
   observeMessagesPanel,
@@ -28,7 +28,7 @@ import {
   addViewportMeta,
   addChatToggleFeature,
   decodeEncodedURL
-} from "./src/helpers/helpers.js";
+} from "./helpers/helpers.js";
 
 
 // Function to detect if running in an iframe
