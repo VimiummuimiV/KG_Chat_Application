@@ -71,7 +71,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     isReconnecting: false,
     isConnected: false,
     // Queue of messages waiting to be sent.
-    messageQueue: [],
+    messageQueue: new Map(),
     // Store last sent message to prevent duplicates
     lastSentMessage: null,
 
@@ -124,13 +124,12 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     async processQueue() {
       if (!this.isConnected || this.isReconnecting) return;
 
-      while (this.messageQueue.length > 0) {
-        const msg = this.messageQueue[0]; // Peek the first message.
+      for (const [messageId, msg] of this.messageQueue) {
         const messageStanza = this._createMessageStanza(msg.text, msg.id, msg.isPrivate, msg.fullJid);
         try {
           await xmppConnection.sendRequestWithRetry(messageStanza);
           // On success, remove the message from the queue.
-          this.messageQueue.shift();
+          this.messageQueue.delete(messageId);
           // Optionally, update the UI to remove the pending flag.
           messageManager.updatePendingStatus(msg.id, false);
           safeProcessMessages(null);
@@ -297,6 +296,12 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         return;
       }
 
+      // Prevent duplicate messages in the queue
+      if (this.messageQueue.has(messageId)) {
+        console.log('Message already in queue:', messageId);
+        return;
+      }
+
       // Update lastSentMessage info.
       this.lastSentMessage = {
         text,
@@ -304,7 +309,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       };
 
       // Enqueue the message with timestamp.
-      this.messageQueue.push({
+      this.messageQueue.set(messageId, {
         text,
         id: messageId,
         isPrivate,
