@@ -10,6 +10,9 @@ import {
 import { addShakeEffect } from "../data/animations.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
 
+// Utility function to generate a dynamic timestamp for the rand parameter
+const generateRandomParam = () => `rand=${Date.now()}`;
+
 export default class UserManager {
   constructor(containerId = 'user-list') {
     this.container = document.getElementById(containerId);
@@ -84,7 +87,7 @@ export default class UserManager {
             messageInput.focus();
           } else {
             // Normal click: Navigate to profile
-            const userIdValue = dataUserId.split('/')[1].split('#')[0]; 
+            const userIdValue = dataUserId.split('/')[1].split('#')[0];
             const navigateToProfileUrl = `https://klavogonki.ru/u/#/${userIdValue}/`;
             window.location.href = navigateToProfileUrl;
           }
@@ -360,12 +363,14 @@ export default class UserManager {
   setUserAvatar(avatarContainer, user, userId, cleanLogin) {
     const cachedAvatarInfo = this.avatarCache[userId];
 
-    // Helper function to generate a dynamic timestamp for the rand parameter
-    const generateRandomParam = () => `rand=${Date.now()}`;
+    const logAvatarUpdate = (type, value) => {
+      const icon = type === 'avatar' ? '🖼️' : '😊';
+      console.log(`${icon} Set ${type} for [${cleanLogin}] (${userId}):`, value);
+    };
 
     // Display avatar based on available information
     if (user.avatar) {
-      const avatarUrl = `${BASE_URL}/storage/avatars/${userId}_big.png?${generateRandomParam()}`;
+      const avatarUrl = cachedAvatarInfo?.avatarUrl || `${BASE_URL}/storage/avatars/${userId}_big.png?${generateRandomParam()}`;
       const avatarImg = document.createElement('img');
       avatarImg.className = 'user-avatar image-avatar';
       avatarImg.src = avatarUrl;
@@ -381,24 +386,26 @@ export default class UserManager {
         avatarContainer.appendChild(fallbackSpan);
 
         // Update cache
-        this.avatarCache[userId] = {
-          hasAvatar: false,
-          emoji: fallbackEmoji
-        };
-        this.saveAvatarCache();
+        if (!cachedAvatarInfo || cachedAvatarInfo.hasAvatar) {
+          this.avatarCache[userId] = {
+            hasAvatar: false,
+            emoji: fallbackEmoji
+          };
+            logAvatarUpdate('emoji', fallbackEmoji);
+          this.saveAvatarCache();
+        }
       });
 
-      // On successful load, update cache
+      // On successful load, update cache only if not already set
       avatarImg.addEventListener('load', () => {
-        // Only log first time we detect an avatar
         if (!cachedAvatarInfo || !cachedAvatarInfo.hasAvatar) {
-          // console.log(`🖼️ Using image avatar for User: ${cleanLogin} ID: (${userId})`);
+          this.avatarCache[userId] = {
+            hasAvatar: true,
+            avatarUrl: avatarUrl
+          };
+            logAvatarUpdate('avatar', avatarUrl);
+          this.saveAvatarCache();
         }
-        this.avatarCache[userId] = {
-          hasAvatar: true,
-          avatarUrl: avatarUrl
-        };
-        this.saveAvatarCache();
       });
 
       avatarContainer.appendChild(avatarImg);
@@ -421,11 +428,14 @@ export default class UserManager {
           avatarContainer.appendChild(fallbackSpan);
 
           // Update cache
-          this.avatarCache[userId] = {
-            hasAvatar: false,
-            emoji: fallbackEmoji
-          };
-          this.saveAvatarCache();
+          if (!cachedAvatarInfo || cachedAvatarInfo.hasAvatar) {
+            this.avatarCache[userId] = {
+              hasAvatar: false,
+              emoji: fallbackEmoji
+            };
+            logAvatarUpdate('emoji', fallbackEmoji);
+            this.saveAvatarCache();
+          }
         });
 
         avatarContainer.appendChild(avatarImg);
@@ -435,14 +445,6 @@ export default class UserManager {
         fallbackSpan.className = 'user-avatar svg-avatar';
         fallbackSpan.textContent = cachedAvatarInfo.emoji;
         avatarContainer.appendChild(fallbackSpan);
-
-        // Only log first time we use an emoji avatar
-        if (!this.avatarCache[userId] || !this.avatarCache[userId].hasEmoji) {
-          // console.log(`😊 Using emoji avatar for User: ${cleanLogin} ID: (${userId}): ${cachedAvatarInfo.emoji}`);
-          // Mark that we've logged this emoji usage
-          this.avatarCache[userId].hasEmoji = true;
-          this.saveAvatarCache();
-        }
       }
     } else {
       // No cached info - try to fetch avatar
@@ -461,26 +463,27 @@ export default class UserManager {
         fallbackSpan.textContent = fallbackEmoji;
         avatarContainer.appendChild(fallbackSpan);
 
-        // Log first time using emoji
-        console.log(`😊 Using emoji avatar for User: ${cleanLogin} ID: (${userId}): ${fallbackEmoji}`);
-
         // Cache negative result
-        this.avatarCache[userId] = {
-          hasAvatar: false,
-          emoji: fallbackEmoji,
-          hasEmoji: true
-        };
-        this.saveAvatarCache();
+        if (!cachedAvatarInfo || cachedAvatarInfo.hasAvatar) {
+          this.avatarCache[userId] = {
+            hasAvatar: false,
+            emoji: fallbackEmoji
+          };
+            logAvatarUpdate('emoji', fallbackEmoji);
+          this.saveAvatarCache();
+        }
       });
 
       // On successful load, cache positive result
       avatarImg.addEventListener('load', () => {
-        console.log(`🖼️ Using image avatar for User: ${cleanLogin} ID: (${userId})`);
-        this.avatarCache[userId] = {
-          hasAvatar: true,
-          avatarUrl: avatarUrl
-        };
-        this.saveAvatarCache();
+        if (!cachedAvatarInfo || !cachedAvatarInfo.hasAvatar) {
+          this.avatarCache[userId] = {
+            hasAvatar: true,
+            avatarUrl: avatarUrl
+          };
+            logAvatarUpdate('avatar', avatarUrl);
+          this.saveAvatarCache();
+        }
       });
 
       avatarContainer.appendChild(avatarImg);
@@ -511,4 +514,4 @@ export default class UserManager {
     console.log("📑 Would request full roster here (using existing data for now)");
     this.updateUI();
   }
-}
+} 
