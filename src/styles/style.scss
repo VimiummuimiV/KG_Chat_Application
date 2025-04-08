@@ -55,7 +55,7 @@ $usual-color: #cdb398;
 
   // KG emoticons set margins
   img[src*="/img/smilies/"] {
-    margin: 0 0.4em !important;
+    margin: 0 0.2em !important;
   }
 
   // Separate TEXT_NODE from other nodes with a new line
@@ -338,8 +338,8 @@ $usual-color: #cdb398;
 
       .emoji-adjuster {
         font-family: $emoji-font, sans-serif !important;
-        font-size: 1.5em !important;
-        margin: 0 0.4em !important;
+        font-size: 1.25em !important;
+        margin: 0 0.2em !important;
         display: inline-flex !important;
       }
 
