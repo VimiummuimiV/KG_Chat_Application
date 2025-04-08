@@ -1424,3 +1424,11 @@ export const debounce = (func, wait) => {
 };
 
 // ===================================================================================================
+
+export function removeChatTraces() {
+  // Remove localStorage keys userAvatarCache, chatState
+  localStorage.removeItem('userAvatarCache');
+  localStorage.removeItem('chatState');
+  // Remove sessionStorage keys userAvatarCache
+  sessionStorage.removeItem('userAvatarCache');
+}

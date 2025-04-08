@@ -4,7 +4,7 @@ import {
   openUsernameColors
 } from "../components/chatUsernameColorsPanel.js";
 
-import { showChatAlert } from "./helpers.js";
+import { removeChatTraces, showChatAlert } from "./helpers.js";
 import { removeChatParams } from "../auth.js";
 import { HelpPanel } from "../components/helpPanel.js";
 
@@ -15,6 +15,7 @@ const chatCommands = [
     pattern: /^\/reset\s*$/,
     handler: () => {
       removeChatParams();
+      removeChatTraces();
       showChatAlert('Chat settings have been reset. Reloading...', { type: 'info', duration: 2000 });
       return true;
     }
