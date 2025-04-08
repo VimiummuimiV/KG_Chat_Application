@@ -72,6 +72,34 @@ export default class UserManager {
     }
   }
 
+  /**
+   * Updates the avatar cache for a specific user.
+   * @param {string} userId - The unique identifier of the user.
+   * @param {boolean} hasAvatar - Flag indicating if the user has an avatar url.
+   * @param {string} avatarData - Either the avatar URL or emoji character, depending on hasAvatar.
+   * @param {string} username - The display name of the user.
+   * @returns {boolean} - Returns true if cache was updated, false if no update was needed.
+   */
+  updateAvatarCache(userId, hasAvatar, avatarData, username) {
+    const cached = this.avatarCache[userId];
+    // Only update if there's no previous cache or if hasAvatar status changed
+    if (!cached || cached.hasAvatar !== hasAvatar) {
+      this.avatarCache[userId] = {
+        hasAvatar: hasAvatar,
+        ...(hasAvatar ? { avatarUrl: avatarData } : { emoji: avatarData })
+      };
+      
+      // Log the update
+      const icon = hasAvatar ? '🖼️' : '😊';
+      const type = hasAvatar ? 'avatar' : 'emoji';
+      console.log(`${icon} Set ${type} for [${username}] (${userId}):`, avatarData);
+      
+      this.saveAvatarCache();
+      return true; // Indicate cache was updated
+    }
+    return false; // Indicate no update needed
+  }
+
   setupEventListeners() {
     this.container.addEventListener('click', (event) => {
       // Handle username clicks
@@ -363,11 +391,6 @@ export default class UserManager {
   setUserAvatar(avatarContainer, user, userId, cleanLogin) {
     const cachedAvatarInfo = this.avatarCache[userId];
 
-    const logAvatarUpdate = (type, value) => {
-      const icon = type === 'avatar' ? '🖼️' : '😊';
-      console.log(`${icon} Set ${type} for [${cleanLogin}] (${userId}):`, value);
-    };
-
     // Display avatar based on available information
     if (user.avatar) {
       const avatarUrl = cachedAvatarInfo?.avatarUrl || `${BASE_URL}/storage/avatars/${userId}_big.png?${generateRandomParam()}`;
@@ -385,27 +408,13 @@ export default class UserManager {
         fallbackSpan.textContent = fallbackEmoji;
         avatarContainer.appendChild(fallbackSpan);
 
-        // Update cache
-        if (!cachedAvatarInfo || cachedAvatarInfo.hasAvatar) {
-          this.avatarCache[userId] = {
-            hasAvatar: false,
-            emoji: fallbackEmoji
-          };
-            logAvatarUpdate('emoji', fallbackEmoji);
-          this.saveAvatarCache();
-        }
+        // Update cache using helper
+        this.updateAvatarCache(userId, false, fallbackEmoji, cleanLogin);
       });
 
       // On successful load, update cache only if not already set
       avatarImg.addEventListener('load', () => {
-        if (!cachedAvatarInfo || !cachedAvatarInfo.hasAvatar) {
-          this.avatarCache[userId] = {
-            hasAvatar: true,
-            avatarUrl: avatarUrl
-          };
-            logAvatarUpdate('avatar', avatarUrl);
-          this.saveAvatarCache();
-        }
+        this.updateAvatarCache(userId, true, avatarUrl, cleanLogin);
       });
 
       avatarContainer.appendChild(avatarImg);
@@ -427,15 +436,8 @@ export default class UserManager {
           fallbackSpan.textContent = fallbackEmoji;
           avatarContainer.appendChild(fallbackSpan);
 
-          // Update cache
-          if (!cachedAvatarInfo || cachedAvatarInfo.hasAvatar) {
-            this.avatarCache[userId] = {
-              hasAvatar: false,
-              emoji: fallbackEmoji
-            };
-            logAvatarUpdate('emoji', fallbackEmoji);
-            this.saveAvatarCache();
-          }
+          // Update cache using helper
+          this.updateAvatarCache(userId, false, fallbackEmoji, cleanLogin);
         });
 
         avatarContainer.appendChild(avatarImg);
@@ -463,27 +465,13 @@ export default class UserManager {
         fallbackSpan.textContent = fallbackEmoji;
         avatarContainer.appendChild(fallbackSpan);
 
-        // Cache negative result
-        if (!cachedAvatarInfo || cachedAvatarInfo.hasAvatar) {
-          this.avatarCache[userId] = {
-            hasAvatar: false,
-            emoji: fallbackEmoji
-          };
-            logAvatarUpdate('emoji', fallbackEmoji);
-          this.saveAvatarCache();
-        }
+        // Update cache using helper
+        this.updateAvatarCache(userId, false, fallbackEmoji, cleanLogin);
       });
 
       // On successful load, cache positive result
       avatarImg.addEventListener('load', () => {
-        if (!cachedAvatarInfo || !cachedAvatarInfo.hasAvatar) {
-          this.avatarCache[userId] = {
-            hasAvatar: true,
-            avatarUrl: avatarUrl
-          };
-            logAvatarUpdate('avatar', avatarUrl);
-          this.saveAvatarCache();
-        }
+        this.updateAvatarCache(userId, true, avatarUrl, cleanLogin);
       });
 
       avatarContainer.appendChild(avatarImg);
@@ -514,4 +502,4 @@ export default class UserManager {
     console.log("📑 Would request full roster here (using existing data for now)");
     this.updateUI();
   }
-} 
+}
