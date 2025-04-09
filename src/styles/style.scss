@@ -53,11 +53,6 @@ $usual-color: #cdb398;
     max-width: unset;
   }
 
-  // KG emoticons set margins
-  img[src*="/img/smilies/"] {
-    margin: 0 0.4em 0 0 !important;
-  }
-
   // Separate TEXT_NODE from other nodes with a new line
   .break-content {
     display: inline-flex !important;
@@ -341,7 +336,6 @@ $usual-color: #cdb398;
       .emoji-adjuster {
         font-family: $emoji-font, sans-serif !important;
         font-size: 1.25em !important;
-        margin: 0 0.2em 0 0 !important;
         display: inline-flex !important;
       }
 
@@ -349,7 +343,6 @@ $usual-color: #cdb398;
         display: inline-flex !important;
         font-family: Montserrat !important;
         font-weight: 500 !important;
-        margin-right: 0.4em !important;
         letter-spacing: 0.05em !important;
       }
 
