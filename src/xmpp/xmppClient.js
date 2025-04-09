@@ -3,6 +3,7 @@ import {
   presencePoolDelay
 } from "../data/definitions.js";
 import { optimizeColor } from "../helpers/chatUsernameColors.js";
+import { FALLBACK_COLOR } from "../data/definitions.js";
 
 import {
   compactXML,
@@ -82,7 +83,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
       // Retrieve chatUsernameColor from localStorage or fallback to precalculated optimizedColor if available
       const storedColor = localStorage.getItem('chatUsernameColor');
-      const chatUsernameColor = storedColor ? storedColor : (info ? info.optimizedColor : "#777");
+      const chatUsernameColor = storedColor ? storedColor : (info ? info.optimizedColor : FALLBACK_COLOR);
 
       // Create the user data block using pre-calculated properties and the determined background color
       const userDataBlock = `
@@ -159,7 +160,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             const cleanedUsername = info ? info.cleanedUsername : extractUsername(username);
             const baseAvatarPath = info ? info.baseAvatarPath : `/storage/avatars/${username.split('#')[0]}.png`;
             const timestamp = info ? info.timestamp : Math.floor(Date.now() / 1000);
-            const backgroundColor = info ? info.optimizedColor : "#000000";
+
+            // Retrieve chatUsernameColor from localStorage or fallback to precalculated optimizedColor if available
+            const storedColor = localStorage.getItem('chatUsernameColor');
+            const backgroundColor = storedColor ? storedColor : (info ? info.optimizedColor : FALLBACK_COLOR);
 
             const joinPayload = compactXML(`
             <body rid='${xmppConnection.nextRid()}' xmlns='http://jabber.org/protocol/httpbind' sid='${session.sid}'>
@@ -218,7 +222,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             console.error(`💥 Connection error: ${error.message}`);
             retries--;
             if (retries === 0) {
-              console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay/1000} seconds...`);
+              console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`);
               this.isReconnecting = true;
               setTimeout(() => this.connect(), reconnectionDelay);
             } else {
@@ -231,7 +235,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         console.error(`💥 Final connection error: ${error.message}`);
         this.isConnected = false;
         if (!this.isReconnecting) {
-          console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay/1000} seconds...`);
+          console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`);
           this.isReconnecting = true;
           setTimeout(() => this.connect(), reconnectionDelay);
         }
@@ -278,7 +282,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             } catch (error) {
               console.error('Presence polling error:', error.message);
               if (error.message.includes('404') && !this.isReconnecting) {
-                console.log(`🛑 Connection lost (404). Reconnecting in ${reconnectionDelay/1000} seconds...`);
+                console.log(`🛑 Connection lost (404). Reconnecting in ${reconnectionDelay / 1000} seconds...`);
                 showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
                 messageManager.refreshMessages(false);
                 this.isReconnecting = true;
@@ -383,7 +387,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
   // Listen for online events to attempt reconnection.
   window.addEventListener('online', async () => {
-    console.log(`Network online. Scheduling reconnection in ${reconnectionDelay/1000} seconds...`);
+    console.log(`Network online. Scheduling reconnection in ${reconnectionDelay / 1000} seconds...`);
     await sleep(reconnectionDelay);
     if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
       xmppClient.connect();

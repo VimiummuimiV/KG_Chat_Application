@@ -58,3 +58,6 @@ export const trustedDomains = [
   'yaplakal.com',
   'freepik.com'
 ];
+
+// Define a single fallback username color for consistency
+export const FALLBACK_COLOR = "#1e1e1e";

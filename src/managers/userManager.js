@@ -1,4 +1,4 @@
-import { BASE_URL } from "../data/definitions.js";
+import { BASE_URL, FALLBACK_COLOR } from "../data/definitions.js";
 
 import {
   getRandomEmojiAvatar,
@@ -88,12 +88,12 @@ export default class UserManager {
         hasAvatar: hasAvatar,
         ...(hasAvatar ? { avatarUrl: avatarData } : { emoji: avatarData })
       };
-      
+
       // Log the update
       const icon = hasAvatar ? '🖼️' : '😊';
       const type = hasAvatar ? 'avatar' : 'emoji';
       console.log(`${icon} Set ${type} for [${username}] (${userId}):`, avatarData);
-      
+
       this.saveAvatarCache();
       return true; // Indicate cache was updated
     }
@@ -193,7 +193,7 @@ export default class UserManager {
       let userData = {
         jid: from,
         login: usernameFromJid,
-        color: '#777',
+        color: FALLBACK_COLOR,
         // Normalize the username before calling getColor:
         usernameColor: usernameColors.getColor(extractUsername(usernameFromJid)),
         role: 'participant',
