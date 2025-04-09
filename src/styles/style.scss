@@ -55,7 +55,7 @@ $usual-color: #cdb398;
 
   // KG emoticons set margins
   img[src*="/img/smilies/"] {
-    margin: 0 0.2em !important;
+    margin: 0 0.4em 0 0 !important;
   }
 
   // Separate TEXT_NODE from other nodes with a new line
@@ -63,6 +63,8 @@ $usual-color: #cdb398;
     display: inline-flex !important;
     flex-basis: 100% !important;
     margin: 0 !important;
+    white-space: pre-wrap !important;
+    flex-wrap: wrap !important;
   }
 
   // Chat Container States
@@ -339,7 +341,7 @@ $usual-color: #cdb398;
       .emoji-adjuster {
         font-family: $emoji-font, sans-serif !important;
         font-size: 1.25em !important;
-        margin: 0 0.2em !important;
+        margin: 0 0.2em 0 0 !important;
         display: inline-flex !important;
       }
 
@@ -347,6 +349,8 @@ $usual-color: #cdb398;
         display: inline-flex !important;
         font-family: Montserrat !important;
         font-weight: 500 !important;
+        margin-right: 0.4em !important;
+        letter-spacing: 0.1em !important;
       }
 
       .md-heading {
