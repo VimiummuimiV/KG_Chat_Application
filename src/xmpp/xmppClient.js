@@ -67,7 +67,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
   const xmppClient = {
     userManager,
     messageManager,
-    presenceInterval: null,
+    presenceWorker: null,
     isReconnecting: false,
     isConnected: false,
     // Queue of messages waiting to be sent.
@@ -143,10 +143,9 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
     async connect() {
       try {
-        if (this.presenceInterval) {
-          clearInterval(this.presenceInterval);
-          this.presenceInterval = null;
-        }
+        // Stop any existing worker
+        this.stopPresenceWorker();
+
         let retries = 5;
         while (retries > 0 && !this.isConnected) {
           try {
@@ -200,7 +199,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             `);
 
             await xmppConnection.sendRequestWithRetry(infoPayload);
-            console.log('🚀 Step 10: Connected! Starting presence updates...');
+            console.log('🚀 Step 10: Connected!');
 
             this.isConnected = true;
             if (this.isReconnecting) {
@@ -208,20 +207,23 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
               messageManager.refreshMessages(true);
               this.isReconnecting = false;
             }
-            this.startPresencePolling(xmppConnection);
-            // Process any queued messages.
+
+            // Start presence worker
+            this.startPresenceWorker();
+
+            // Process any queued messages
             this.processQueue();
             break;
           } catch (error) {
             console.error(`💥 Connection error: ${error.message}`);
             retries--;
             if (retries === 0) {
-              console.log('⏳ Scheduling reconnection attempt in 5 seconds...');
+              console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay/1000} seconds...`);
               this.isReconnecting = true;
               setTimeout(() => this.connect(), reconnectionDelay);
             } else {
               console.log(`🔄 Retrying connection... (${retries} attempts left)`);
-              await new Promise(resolve => setTimeout(resolve, 5000));
+              await new Promise(resolve => setTimeout(resolve, reconnectionDelay));
             }
           }
         }
@@ -229,40 +231,83 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         console.error(`💥 Final connection error: ${error.message}`);
         this.isConnected = false;
         if (!this.isReconnecting) {
-          console.log('⏳ Scheduling reconnection attempt in 5 seconds...');
+          console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay/1000} seconds...`);
           this.isReconnecting = true;
           setTimeout(() => this.connect(), reconnectionDelay);
         }
       }
     },
 
-    startPresencePolling(xmppConnection) {
-      this.presenceInterval = setInterval(async () => {
-        if (!this.isConnected) {
-          console.log('⚠️ Skipping presence poll - not connected');
-          return;
-        }
-        try {
-          const xmlResponse = await xmppConnection.sendRequestWithRetry(
-            `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
-          );
-          safeUpdatePresence(xmlResponse);
-          safeProcessMessages(xmlResponse);
-          this.isReconnecting = false;
-        } catch (error) {
-          console.error('Presence polling error:', error.message);
-          if (error.message.includes('404') && !this.isReconnecting) {
-            console.log('🛑 Connection lost (404). Reconnecting in 5 seconds...');
-            showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
-            messageManager.refreshMessages(false);
-            this.isReconnecting = true;
-            this.isConnected = false;
-            clearInterval(this.presenceInterval);
-            this.presenceInterval = null;
-            setTimeout(() => this.connect(), reconnectionDelay);
+    startPresenceWorker() {
+      if (this.presenceWorker) {
+        this.stopPresenceWorker();
+      }
+
+      // Create a minimal worker script
+      const workerScript = `
+        let delay = ${presencePoolDelay};
+
+        self.onmessage = function(e) {
+          if (e.data === 'start') {
+            setInterval(() => {
+              self.postMessage('poll');
+            }, delay);
+          } else if (e.data === 'stop') {
+            self.close();
           }
-        }
-      }, presencePoolDelay);
+        };
+      `;
+
+      // Create a blob with the worker script
+      const blob = new Blob([workerScript], { type: 'application/javascript' });
+      const workerUrl = URL.createObjectURL(blob);
+
+      try {
+        // Create and start the worker
+        this.presenceWorker = new Worker(workerUrl);
+
+        // Handle messages from the worker
+        this.presenceWorker.onmessage = async (e) => {
+          if (e.data === 'poll' && this.isConnected && !this.isReconnecting) {
+            try {
+              const xmlResponse = await xmppConnection.sendRequestWithRetry(
+                `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
+              );
+              safeUpdatePresence(xmlResponse);
+              safeProcessMessages(xmlResponse);
+            } catch (error) {
+              console.error('Presence polling error:', error.message);
+              if (error.message.includes('404') && !this.isReconnecting) {
+                console.log(`🛑 Connection lost (404). Reconnecting in ${reconnectionDelay/1000} seconds...`);
+                showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
+                messageManager.refreshMessages(false);
+                this.isReconnecting = true;
+                this.isConnected = false;
+                this.stopPresenceWorker();
+                setTimeout(() => this.connect(), reconnectionDelay);
+              }
+            }
+          }
+        };
+
+        // Start the polling
+        this.presenceWorker.postMessage('start');
+
+        // Clean up the URL
+        URL.revokeObjectURL(workerUrl);
+
+        console.log(`💬 Presence worker started.`);
+      } catch (error) {
+        console.error('Failed to create worker:', error);
+      }
+    },
+
+    stopPresenceWorker() {
+      if (this.presenceWorker) {
+        this.presenceWorker.postMessage('stop');
+        this.presenceWorker = null;
+        console.log('💬 Presence worker stopped.');
+      }
     },
 
     sendMessage(text) {
@@ -324,36 +369,32 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         this.processQueue();
       }
     }
-
   };
 
   // --- Network connectivity handling ---
   // Listen for offline events to stop presence polling.
   window.addEventListener('offline', () => {
-    console.log("Network offline. Stopping presence polling.");
-
-    if (xmppClient.presenceInterval) {
-      clearInterval(xmppClient.presenceInterval);
-      xmppClient.presenceInterval = null;
-    }
-
+    console.log("Network offline. Stopping presence worker.");
+    xmppClient.stopPresenceWorker();
     xmppClient.isConnected = false;
-
     showChatAlert("Network connection lost.", { type: 'warning' });
     messageManager.refreshMessages(false, 'network');
   });
 
   // Listen for online events to attempt reconnection.
   window.addEventListener('online', async () => {
-    console.log("Network online. Scheduling reconnection in 5 seconds...");
-
-    await sleep(5000);
+    console.log(`Network online. Scheduling reconnection in ${reconnectionDelay/1000} seconds...`);
+    await sleep(reconnectionDelay);
     if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
       xmppClient.connect();
     }
-
     showChatAlert("Network connection restored.", { type: 'success' });
     messageManager.refreshMessages(true, 'network');
+  });
+
+  // Clean up worker on page unload
+  window.addEventListener('beforeunload', () => {
+    xmppClient.stopPresenceWorker();
   });
   // --- End network handling ---
 
