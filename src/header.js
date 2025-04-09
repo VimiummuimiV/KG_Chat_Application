@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name         KG_Chat_Application
 // @namespace    klavogonki
-// @version      3.2.4
+// @version      3.2.5
 // @description  Enhance the chat abilities
 // @author       Patcher
 // @match        *://klavogonki.ru/*
-// @exclude      https://klavogonki.ru/g/?gmid=*
-// @exclude      https://klavogonki.ru/chatlogs/*
+// @exclude      *://klavogonki.ru/g/?gmid=*
+// @exclude      *://klavogonki.ru/chatlogs/*
 // @icon         https://www.google.com/s2/favicons?sz=64&domain=klavogonki.ru
 // @grant        GM_xmlhttpRequest
 // @downloadURL  https://update.greasyfork.org/scripts/529368/KG_Chat_Application.user.js
