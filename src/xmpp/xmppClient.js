@@ -1,6 +1,6 @@
 import {
   reconnectionDelay,
-  userListDelay
+  presencePoolDelay
 } from "../data/definitions.js";
 import { optimizeColor } from "../helpers/chatUsernameColors.js";
 
@@ -262,7 +262,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             setTimeout(() => this.connect(), reconnectionDelay);
           }
         }
-      }, userListDelay);
+      }, presencePoolDelay);
     },
 
     sendMessage(text) {
