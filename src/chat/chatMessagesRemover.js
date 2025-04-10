@@ -420,12 +420,16 @@ export function pruneDeletedMessages() {
     Array.from(messages).map((msg) => getMessageId(msg))
   );
 
-  const stored = new Set(
-    JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]")
-  );
+  const storedItems = JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]");
+  const filteredItems = storedItems.filter((id) => currentIds.has(id));
+  
+  localStorage.setItem("deletedChatMessagesContent", JSON.stringify(filteredItems));
 
-  localStorage.setItem(
-    "deletedChatMessagesContent",
-    JSON.stringify([...stored].filter((id) => currentIds.has(id)))
-  );
+  // Remove the toggle button if no items remain
+  if (filteredItems.length === 0) {
+    const toggleBtn = document.querySelector(".toggle-button");
+    if (toggleBtn) {
+      toggleBtn.remove();
+    }
+  }
 }

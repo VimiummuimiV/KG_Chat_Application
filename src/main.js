@@ -11,6 +11,7 @@ import { removeChatParams } from "./auth.js";
 import { getAuthData } from "./auth.js";
 import { checkForUpdates } from "./components/updateCheck.js";
 import { setupCommandEvents } from "./helpers/commands.js";
+import { pruneDeletedMessages } from "./chat/chatMessagesRemover.js";
 
 import {
   setupDragHandlers,
@@ -132,7 +133,8 @@ async function initializeApp() {
   }
 }
 
-// Start the app and check for updates
+// Start the app and perform initial operations
 initializeApp().then(() => {
-  checkForUpdates();
+  pruneDeletedMessages(); // Remove unexisting deleted messages IDs from localStorage
+  checkForUpdates(); // Check for updates on page load
 });
