@@ -2,11 +2,10 @@ import { adjustVisibility, showChatAlert } from "../helpers/helpers";
 import { getExactUserIdByName } from "../helpers/helpers.js";
 
 // Centralized storage wrapper for ignored users.
-const storageKey = 'ignoredUsers';
-const storageWrapper = {
+export const storageWrapper = {
   get: () => {
     try {
-      const stored = localStorage.getItem(storageKey);
+      const stored = localStorage.getItem('ignoredUsers');
       return stored ? JSON.parse(stored) : [];
     } catch (e) {
       console.error(`Error parsing ignored users data:`, e);
@@ -15,7 +14,7 @@ const storageWrapper = {
   },
   set: (data) => {
     try {
-      localStorage.setItem(storageKey, JSON.stringify(data));
+      localStorage.setItem('ignoredUsers', JSON.stringify(data));
       return true;
     } catch (e) {
       console.error(`Error saving ignored users data:`, e);

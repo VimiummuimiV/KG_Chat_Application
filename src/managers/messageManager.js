@@ -17,6 +17,7 @@ import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 import { parseMessageText } from "../helpers/parser.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
 import { connectionMessages } from '../data/definitions.js';
+import { storageWrapper } from "../components/ignoredUsersPanel.js";
 
 
 export default class MessageManager {
@@ -78,6 +79,10 @@ export default class MessageManager {
 
   processMessages(xmlResponse) {
     if (typeof xmlResponse !== 'string' || !xmlResponse) return;
+
+    // Ignore users from the ignored users list to prevent them from being added to the message map
+    const ignoredUsers = storageWrapper.get();
+
     const doc = new DOMParser().parseFromString(xmlResponse, "text/xml");
     const messageElements = doc.getElementsByTagName("message");
     let newMessagesAdded = false;
@@ -93,6 +98,9 @@ export default class MessageManager {
         ? fromAttr.split('#')[1]?.split('@')[0] || "unknown"
         : "unknown";
       const cleanFrom = parseUsername(from);
+
+      // Skip messages from ignored users
+      if (ignoredUsers.includes(cleanFrom)) return;
 
       const toAttr = msg.getAttribute("to");
       const typeAttr = msg.getAttribute("type");

@@ -9,6 +9,7 @@ import {
 
 import { addShakeEffect } from "../data/animations.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
+import { storageWrapper } from "../components/ignoredUsersPanel.js";
 
 // Utility function to generate a dynamic timestamp for the rand parameter
 const generateRandomParam = () => `rand=${Date.now()}`;
@@ -282,6 +283,8 @@ export default class UserManager {
   }
 
   updateUI() {
+    const ignoredUsers = storageWrapper.get();
+
     // Build map of existing DOM elements
     const existingElements = new Map();
     this.container.querySelectorAll('.user-item').forEach(el => {
@@ -289,7 +292,13 @@ export default class UserManager {
     });
 
     // Sort users by role and username
-    const sortedUsers = Array.from(this.activeUsers.values()).sort((a, b) => {
+    const sortedUsers = Array.from(this.activeUsers.values()).filter(user => {
+      const cleanLogin = extractUsername(user.login);
+
+      // Ignore users in the ignored list to avoid displaying them in the user list
+      return !ignoredUsers.includes(cleanLogin);
+
+    }).sort((a, b) => {
       const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
       return priorityDiff !== 0 ? priorityDiff :
         extractUsername(a.login).localeCompare(extractUsername(b.login));
