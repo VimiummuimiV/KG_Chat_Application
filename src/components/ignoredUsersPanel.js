@@ -175,11 +175,23 @@ export const openIgnoredUsersPanel = () => {
 
   adjustVisibility(container, 'show', 1);
 
+  const handleEscapeKey = (e) => {
+    if (e.key === 'Escape') {
+      adjustVisibility(container, 'hide', 0);
+      document.removeEventListener('keydown', handleEscapeKey);
+    }
+  };
+
+  inputField.focus(); // Focus the input field on panel creation
+
+  document.addEventListener('keydown', handleEscapeKey);
+
   // Hide container on outside click.
   const handleOutsideClick = (e) => {
     if (!container.contains(e.target)) {
       adjustVisibility(container, 'hide', 0);
       document.removeEventListener('click', handleOutsideClick, true);
+      document.removeEventListener('keydown', handleEscapeKey); // Remove ESC key listener
     }
   };
   document.addEventListener('click', handleOutsideClick, true);
