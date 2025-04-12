@@ -3,6 +3,8 @@ import "../styles/emojiPanel.scss"; // emoji panel styles
 import "../styles/helpPanel.scss"; // help panel styles
 import "../styles/updateCheck.scss"; // update panel styles
 import '../styles/chatUsernameColors.scss'; // chat username colors styles
+import "../styles/ignoredUsers.scss"; // ignored users styles
+import "../styles/animationKeyframes.scss"; // animation keyframes styles
 
 // URL constants
 export const BASE_URL = 'https://klavogonki.ru';

@@ -32,10 +32,3 @@ export function addShakeEffect(element) {
     element.classList.remove('shake-effect');
   }, 500);
 }
-
-export function addPulseEffect(element) {
-  element.classList.add('pulse-effect');
-  setTimeout(() => {
-    element.classList.remove('pulse-effect');
-  }, 500);
-}

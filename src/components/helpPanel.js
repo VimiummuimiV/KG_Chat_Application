@@ -49,7 +49,8 @@ export class HelpPanel {
               { key: "/reset", desc: "Reset the chat data" },
               { key: "/colors", desc: "Show the username color panel" },
               { key: "/import colors", desc: "Import user colors from a json file" },
-              { key: "/export colors", desc: "Export user colors to a json file" }
+              { key: "/export colors", desc: "Export user colors to a json file" },
+              { key: "/ignored", desc: "Show the ignored users panel" }
             ]
           },
           {
@@ -166,7 +167,8 @@ export class HelpPanel {
               { key: "/reset", desc: "Сбросить данные чата" },
               { key: "/colors", desc: "Показать панель цветов имен пользователей" },
               { key: "/import colors", desc: "Импортировать цвета пользователей из json файла" },
-              { key: "/export colors", desc: "Экспортировать цвета пользователей в json файл" }
+              { key: "/export colors", desc: "Экспортировать цвета пользователей в json файл" },
+              { key: "/ignored", desc: "Показать панель игнорируемых пользователей" }
             ]
           },
           {

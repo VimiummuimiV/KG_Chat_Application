@@ -7,6 +7,7 @@ import {
 import { removeChatTraces, showChatAlert } from "./helpers.js";
 import { removeChatParams } from "../auth.js";
 import { HelpPanel } from "../components/helpPanel.js";
+import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
 
 // Define available commands with their handlers
 const chatCommands = [
@@ -58,6 +59,15 @@ const chatCommands = [
         HelpPanel.instance.remove();
         showChatAlert('Help panel has been closed.', { type: 'warning', duration: 2000 });
       }
+      return true;
+    }
+  },
+  {
+    name: 'ignored',
+    pattern: /^\/ignored\s*$/,
+    handler: () => {
+      openIgnoredUsersPanel();
+      showChatAlert('Ignored users panel has been opened', { type: 'info', duration: 2000 });
       return true;
     }
   }
