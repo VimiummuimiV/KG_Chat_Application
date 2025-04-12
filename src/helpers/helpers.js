@@ -1432,3 +1432,9 @@ export function removeChatTraces() {
   // Remove sessionStorage keys userAvatarCache
   sessionStorage.removeItem('userAvatarCache');
 }
+
+// ==================================================================================================
+
+export function isTextSelected() {
+  return window.getSelection().toString().length > 0;
+}

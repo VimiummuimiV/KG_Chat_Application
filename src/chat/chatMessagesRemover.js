@@ -1,4 +1,4 @@
-import { checkIsMobile } from "../helpers/helpers.js";
+import { checkIsMobile, isTextSelected } from "../helpers/helpers.js";
 
 export default class ChatMessagesRemover {
   constructor() {
@@ -43,8 +43,10 @@ export default class ChatMessagesRemover {
     document.addEventListener("contextmenu", (e) => {
       const msg = e.target.closest(".messages-panel .message");
       if (msg) {
-        e.preventDefault();
-        this.showDeleteButton(e, msg);
+        if (!isTextSelected()) {
+          e.preventDefault();
+          this.showDeleteButton(e, msg);
+        }
       }
     });
 
@@ -96,6 +98,9 @@ export default class ChatMessagesRemover {
   }
 
   handleSelection(target, msgEl, isCtrlKey) {
+    // Prevent selection if text is already selected in the message
+    if (isTextSelected()) return;
+
     const timeEl = target.closest(".time");
     const usernameEl = target.closest(".username");
 
@@ -170,6 +175,9 @@ export default class ChatMessagesRemover {
   }
 
   showDeleteButton(e, msg) {
+    // Prevent showing the delete button if text is already selected in the message
+    if (isTextSelected()) return;
+
     const existingBtn = document.querySelector(".delete-btn");
     if (existingBtn) existingBtn.remove();
 
@@ -422,7 +430,7 @@ export function pruneDeletedMessages() {
 
   const storedItems = JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]");
   const filteredItems = storedItems.filter((id) => currentIds.has(id));
-  
+
   localStorage.setItem("deletedChatMessagesContent", JSON.stringify(filteredItems));
 
   // Remove the toggle button if no items remain
