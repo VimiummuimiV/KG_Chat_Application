@@ -1,6 +1,5 @@
 import {
-  reconnectionDelay,
-  presencePoolDelay
+  reconnectionDelay
 } from "../data/definitions.js";
 import { optimizeColor } from "../helpers/chatUsernameColors.js";
 import { FALLBACK_COLOR } from "../data/definitions.js";
@@ -68,7 +67,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
   const xmppClient = {
     userManager,
     messageManager,
-    presenceWorker: null,
+    isHttpBindingActive: false,
     isReconnecting: false,
     isConnected: false,
     // Queue of messages waiting to be sent.
@@ -144,8 +143,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
     async connect() {
       try {
-        // Stop any existing worker
-        this.stopPresenceWorker();
+        // Stop any existing HTTP binding
+        this.stopHttpBinding();
 
         let retries = 5;
         while (retries > 0 && !this.isConnected) {
@@ -212,8 +211,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
               this.isReconnecting = false;
             }
 
-            // Start presence worker
-            this.startPresenceWorker();
+            // Start HTTP binding for server updates
+            this.startHttpBinding();
 
             // Process any queued messages
             this.processQueue();
@@ -242,75 +241,54 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       }
     },
 
-    startPresenceWorker() {
-      if (this.presenceWorker) {
-        this.stopPresenceWorker();
-      }
+    // Start HTTP binding for XMPP server updates
+    async startHttpBinding() {
+      if (this.isHttpBindingActive) return;
+      this.isHttpBindingActive = true;
+      console.log('💬 Starting XMPP HTTP binding...');
 
-      // Create a minimal worker script
-      const workerScript = `
-        let delay = ${presencePoolDelay};
+      const pollRequest = async () => {
+        if (!this.isConnected || this.isReconnecting || !this.isHttpBindingActive) {
+          this.isHttpBindingActive = false;
+          return;
+        }
 
-        self.onmessage = function(e) {
-          if (e.data === 'start') {
-            setInterval(() => {
-              self.postMessage('poll');
-            }, delay);
-          } else if (e.data === 'stop') {
-            self.close();
+        try {
+          // Send a request that the server can respond to when it has updates
+          const xmlResponse = await xmppConnection.sendRequestWithRetry(
+            `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
+          );
+
+          // Process any updates in the response
+          safeUpdatePresence(xmlResponse);
+          safeProcessMessages(xmlResponse);
+
+          // Immediately send another request to maintain the HTTP binding connection
+          if (this.isHttpBindingActive) {
+            pollRequest();
           }
-        };
-      `;
-
-      // Create a blob with the worker script
-      const blob = new Blob([workerScript], { type: 'application/javascript' });
-      const workerUrl = URL.createObjectURL(blob);
-
-      try {
-        // Create and start the worker
-        this.presenceWorker = new Worker(workerUrl);
-
-        // Handle messages from the worker
-        this.presenceWorker.onmessage = async (e) => {
-          if (e.data === 'poll' && this.isConnected && !this.isReconnecting) {
-            try {
-              const xmlResponse = await xmppConnection.sendRequestWithRetry(
-                `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
-              );
-              safeUpdatePresence(xmlResponse);
-              safeProcessMessages(xmlResponse);
-            } catch (error) {
-              console.error('Presence polling error:', error.message);
-              if (error.message.includes('404') && !this.isReconnecting) {
-                console.log(`🛑 Connection lost (404). Reconnecting in ${reconnectionDelay / 1000} seconds...`);
-                showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
-                messageManager.refreshMessages(false);
-                this.isReconnecting = true;
-                this.isConnected = false;
-                this.stopPresenceWorker();
-                setTimeout(() => this.connect(), reconnectionDelay);
-              }
-            }
+        } catch (error) {
+          console.error('HTTP binding error:', error.message);
+          if (error.message.includes('404') && !this.isReconnecting) {
+            console.log(`🛑 Chat connection lost. Reconnecting...`);
+            showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
+            messageManager.refreshMessages(false);
+            this.isReconnecting = true;
+            this.isConnected = false;
+            this.isHttpBindingActive = false;
+            this.connect(); // Immediately attempt to reconnect
           }
-        };
+        }
+      };
 
-        // Start the polling
-        this.presenceWorker.postMessage('start');
-
-        // Clean up the URL
-        URL.revokeObjectURL(workerUrl);
-
-        console.log(`💬 Presence worker started.`);
-      } catch (error) {
-        console.error('Failed to create worker:', error);
-      }
+      // Start the initial poll
+      pollRequest();
     },
 
-    stopPresenceWorker() {
-      if (this.presenceWorker) {
-        this.presenceWorker.postMessage('stop');
-        this.presenceWorker = null;
-        console.log('💬 Presence worker stopped.');
+    stopHttpBinding() {
+      if (this.isHttpBindingActive) {
+        this.isHttpBindingActive = false;
+        console.log('💬 HTTP binding stopped.');
       }
     },
 
@@ -376,19 +354,18 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
   };
 
   // --- Network connectivity handling ---
-  // Listen for offline events to stop presence polling.
+  // Listen for offline events to stop HTTP binding.
   window.addEventListener('offline', () => {
-    console.log("Network offline. Stopping presence worker.");
-    xmppClient.stopPresenceWorker();
+    console.log("Network offline. Stopping HTTP binding.");
+    xmppClient.stopHttpBinding();
     xmppClient.isConnected = false;
     showChatAlert("Network connection lost.", { type: 'warning' });
     messageManager.refreshMessages(false, 'network');
   });
 
-  // Listen for online events to attempt reconnection.
-  window.addEventListener('online', async () => {
-    console.log(`Network online. Scheduling reconnection in ${reconnectionDelay / 1000} seconds...`);
-    await sleep(reconnectionDelay);
+  // Listen for online events to attempt reconnection immediately.
+  window.addEventListener('online', () => {
+    console.log("Network online. Reconnecting immediately...");
     if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
       xmppClient.connect();
     }
@@ -396,9 +373,9 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     messageManager.refreshMessages(true, 'network');
   });
 
-  // Clean up worker on page unload
+  // Clean up on page unload
   window.addEventListener('beforeunload', () => {
-    xmppClient.stopPresenceWorker();
+    xmppClient.stopHttpBinding();
   });
   // --- End network handling ---
 

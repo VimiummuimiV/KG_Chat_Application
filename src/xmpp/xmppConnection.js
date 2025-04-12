@@ -51,9 +51,9 @@ export default class XMPPConnection {
   }
 
   async connect() {
-
     console.log('🌐 Step 1: Connecting to XMPP server...');
 
+    // BOSH uses a longer wait time (60s) to enable server-side event pushing
     const initPayload = `<body xmlns='http://jabber.org/protocol/httpbind'
                rid='${this.nextRid()}'
                to='jabber.klavogonki.ru'
