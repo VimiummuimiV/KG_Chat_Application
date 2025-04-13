@@ -33,25 +33,25 @@ export default class MessageManager {
     this.messageInput = document.getElementById('message-input');
     this.newSeparatorAdded = false; // flag for separator insertion
     this._delegatedClickAttached = false;
-    this.separatorTimer = null;
 
-    // Listen for tab visibility changes to handle separator removal
+    // Listen for tab visibility changes
     document.addEventListener("visibilitychange", () => {
-      if (this.separatorTimer) {
-        clearTimeout(this.separatorTimer);
-        this.separatorTimer = null;
-      }
-
       if (document.hidden) {
         removeNewMessagesSeparator(this.panel);
         this.newSeparatorAdded = false;
-      } else if (this.newSeparatorAdded) {
-        this.separatorTimer = setTimeout(() => {
-          removeNewMessagesSeparator(this.panel);
-          this.newSeparatorAdded = false;
-        }, 15000);
       }
     });
+
+    // Remove separator when user focuses on message input
+    if (this.messageInput) {
+      this.messageInput.addEventListener('focus', () => {
+        if (this.newSeparatorAdded) {
+          removeNewMessagesSeparator(this.panel);
+          this.newSeparatorAdded = false;
+        }
+      });
+    }
+
   }
 
   // Updated unique ID generator to include the timestamp
