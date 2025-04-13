@@ -227,6 +227,11 @@ export default class MessageManager {
           }
         }
 
+        // Play audio for private messages that are received (not sent) when document is hidden
+        if (msg.isPrivate && msg.from !== this.currentUsername && document.hidden) {
+          playAudio(notification);
+        }
+
         if (msg.isPrivate) {
           messageEl.classList.add('private-message');
           messageEl.classList.add(msg.from === this.currentUsername ? 'sent' : 'received');
