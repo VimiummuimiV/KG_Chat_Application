@@ -904,23 +904,3 @@ $usual-color: #cdb398;
     display: none !important;
   }
 }
-
-@media screen and (max-width: 367px) {
-  #app-chat-container {
-    .video-container,
-    .youtube-thumb {
-      transform-origin: left !important;
-      transform: scale(0.9) !important;
-    }
-  }
-}
-
-@media screen and (max-width: 350px) {
-  #app-chat-container {
-    .video-container,
-    .youtube-thumb {
-      transform-origin: left !important;
-      transform: scale(0.8) !important;
-    }
-  }
-}
