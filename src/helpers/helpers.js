@@ -41,10 +41,12 @@ export function handleElementsBehavior() {
   const userList = document.querySelector('#app-chat-container .user-list-container');
   const systemMessages = document.querySelectorAll('#app-chat-container .message.system');
   let isUserListOpen = false;
+  const isMobile = checkIsMobile();
 
   // Handle user list for narrow screens
   if (userList) {
-    if (isNarrow) {
+    // Check if the screen (chat) is narrow on PC or mobile devices
+    if (isNarrow || isMobile) {
       userList.style.position = 'absolute';
       userList.style.height = '100%';
       userList.style.top = '0';
