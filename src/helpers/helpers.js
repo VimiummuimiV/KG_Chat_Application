@@ -38,8 +38,6 @@ export function handleElementsBehavior() {
   const chatContainer = document.querySelector('#app-chat-container');
   const isNarrow = wrapper.offsetWidth <= 780;
   const isVeryNarrow = wrapper.offsetWidth <= 380;
-  const isExtremelyNarrow = wrapper.offsetWidth <= 340;
-  const isMaximized = chatContainer.classList.contains('maximized');
   const userList = document.querySelector('#app-chat-container .user-list-container');
   const systemMessages = document.querySelectorAll('#app-chat-container .message.system');
   let isUserListOpen = false;
@@ -123,22 +121,7 @@ export function handleElementsBehavior() {
 
   // Apply scaling to video containers and YouTube thumbnails
   const mediaElements = document.querySelectorAll('#app-chat-container .video-container, #app-chat-container .youtube-thumb');
-
-  mediaElements.forEach(element => {
-    if (isExtremelyNarrow) {
-      element.style.transformOrigin = 'left';
-      element.style.transform = 'scale(0.8)';
-      element.style.maxWidth = '100%';
-    } else if (isVeryNarrow) {
-      element.style.transformOrigin = 'left';
-      element.style.transform = 'scale(0.9)';
-      element.style.maxWidth = '100%';
-    } else {
-      element.style.transformOrigin = '';
-      element.style.transform = '';
-      element.style.maxWidth = '';
-    }
-  });
+  mediaElements.forEach(element => element.style.maxWidth = isVeryNarrow ? '100%' : '');
 }
 
 // ==================================================================================================
