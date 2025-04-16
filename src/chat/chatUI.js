@@ -40,16 +40,13 @@ export function createChatUI() {
   // Left side: messages panel and input
   const chatContent = document.createElement('div');
   chatContent.className = 'chat-content';
+
   const messagesPanel = document.createElement('div');
   messagesPanel.id = 'messages-panel';
   messagesPanel.className = 'messages-panel';
+
   const inputContainer = document.createElement('div');
   inputContainer.className = 'input-container';
-
-  // Initial setup after DOM is ready
-  requestAnimationFrame(() => {
-    handleMobileLayout(chatContainer);
-  });
 
   // Create emoji button
   const emojiButton = document.createElement('button');
@@ -201,10 +198,10 @@ export function createChatUI() {
   chatContainer.appendChild(toggleButton);
 
   // Draggable top area
-  const topArea = document.createElement('div');
-  topArea.className = 'chat-drag-area';
-  topArea.addEventListener('dblclick', toggleChatVisibility);
-  chatContainer.appendChild(topArea);
+  const dragArea = document.createElement('div');
+  dragArea.className = 'chat-drag-area';
+  dragArea.addEventListener('dblclick', toggleChatVisibility);
+  chatContainer.appendChild(dragArea);
   document.body.appendChild(chatContainer);
 
   // Restore chat state and settings
@@ -212,8 +209,6 @@ export function createChatUI() {
   createFontSizeControl();
   restoreFontSize();
   requestAnimationFrame(() => {
-    const messagesPanel = document.getElementById('messages-panel');
-    const messageInput = document.getElementById('message-input');
     if (messagesPanel && messageInput) {
       const isMobile = checkIsMobile();
       if (!isMobile) {
@@ -229,5 +224,10 @@ export function createChatUI() {
       createLengthPopup(messagesPanel);
       initChatLengthPopupEvents(messageInput);
     }
+  });
+
+  // Initial setup after DOM is ready
+  requestAnimationFrame(() => {
+    handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea);
   });
 }

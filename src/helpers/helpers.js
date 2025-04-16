@@ -1252,10 +1252,10 @@ export function toggleChatMaximize() {
 // ==================================================================================================
 
 // Add this function to handle mobile/touch devices
-export function handleMobileLayout(chatContainer) {
+export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea) {
   const isMobile = checkIsMobile();
   if (isMobile) {
-    
+
     // Add styles for mobile view
     const globalMobileStyles = document.createElement('style');
     globalMobileStyles.classList.add('global-mobile-styles');
@@ -1285,14 +1285,9 @@ export function handleMobileLayout(chatContainer) {
         margin: 1em !important;
         box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.1) !important;
       }
-
-      #app-chat-container .length-field-popup {
-        transition: bottom 0.2s ease-out;
-        position: fixed !important;
-      }
     `;
     document.head.appendChild(globalMobileStyles);
-    
+
     // Use Visual Viewport API for keyboard detection and correct positioning
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', () => {
@@ -1300,6 +1295,17 @@ export function handleMobileLayout(chatContainer) {
         const bottomOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
         // Update the chat container height to fit the available space when keyboard is open
         chatContainer.style.setProperty('height', `calc(100% - ${bottomOffset}px)`, 'important');
+
+        // Get the current height of the chat container
+        const hideElements = chatContainer.getBoundingClientRect().height < 100;
+
+        // Hide or show elements based on the chat container height
+        messagesPanel.style.display = hideElements ? 'none' : '';
+        chatContent.style.margin = hideElements ? '0' : '';
+        chatContent.style.marginTop = hideElements ? '0' : '';
+        dragArea.style.display = hideElements ? 'none' : '';
+        const revealBtn = document.querySelector('.reveal-userlist-btn');
+        if (revealBtn) revealBtn.style.display = hideElements ? 'none' : '';
       });
     }
   }

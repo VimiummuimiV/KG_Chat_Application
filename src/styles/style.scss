@@ -6,7 +6,6 @@
 // Variables
 $border-radius: 0.2em;
 $min-chat-width: 320px;
-$min-chat-height: 200px;
 $user-list-width: fit-content;
 $emoji-font: "Noto Color Emoji";
 $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
@@ -26,7 +25,6 @@ $usual-color: #cdb398;
   color: $usual-color !important;
   z-index: 999;
   min-width: $min-chat-width !important;
-  min-height: $min-chat-height !important;
   box-sizing: border-box;
   max-width: 100vw;
   overflow: hidden;
@@ -172,7 +170,7 @@ $usual-color: #cdb398;
 
   // Chat Content
   .chat-content {
-    margin-top: 25px !important;
+    margin-top: 25px;
     background: #1e1e1e !important;
     display: flex !important;
     flex-direction: column !important;
@@ -186,7 +184,7 @@ $usual-color: #cdb398;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     padding: 1em !important;
-    display: flex !important;
+    display: flex;
     flex-direction: column !important;
     gap: 0.2em !important;
     scrollbar-width: thin !important;
@@ -289,7 +287,7 @@ $usual-color: #cdb398;
     right: -1px !important;
     transform: translateY(-50%) !important;
     z-index: 1000 !important;
-    display: flex !important;
+    display: flex;
     align-items: center !important;
     justify-content: center !important;
     padding: 0.4em !important;
@@ -308,11 +306,11 @@ $usual-color: #cdb398;
   }
 
   .hidden-userlist {
-    display: flex !important;
+    display: flex;
   }
 
   .shown-userlist {
-    display: none !important;
+    display: none;
   }
 
   // Message Styles
