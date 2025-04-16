@@ -228,6 +228,6 @@ export function createChatUI() {
 
   // Initial setup after DOM is ready
   requestAnimationFrame(() => {
-    handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea);
+    handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea, inputContainer);
   });
 }

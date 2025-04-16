@@ -1252,7 +1252,7 @@ export function toggleChatMaximize() {
 // ==================================================================================================
 
 // Add this function to handle mobile/touch devices
-export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea) {
+export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea, inputContainer) {
   const isMobile = checkIsMobile();
   if (isMobile) {
 
@@ -1303,6 +1303,8 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
         messagesPanel.style.display = hideElements ? 'none' : '';
         chatContent.style.margin = hideElements ? '0' : '';
         chatContent.style.marginTop = hideElements ? '0' : '';
+        inputContainer.style.position = hideElements ? 'absolute' : '';
+        inputContainer.style.bottom = hideElements ? '0' : '';
         dragArea.style.display = hideElements ? 'none' : '';
         const revealBtn = document.querySelector('.reveal-userlist-btn');
         if (revealBtn) revealBtn.style.display = hideElements ? 'none' : '';
