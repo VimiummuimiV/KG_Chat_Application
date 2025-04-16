@@ -28,6 +28,7 @@ export default class MessageManager {
     this.renderedMessageIds = new Set();
     this.currentUsername = currentUsername;
     this.maxMessages = 30;
+    this.defaultMessagesCount = 20;
     this.initialLoadComplete = false;
     this.chatRemover = new ChatMessagesRemover();
     this.messageInput = document.getElementById('message-input');
@@ -300,14 +301,18 @@ export default class MessageManager {
     this.addDelegatedClickListeners();
     highlightMentionWords([this.currentUsername]);
 
-    requestAnimationFrame(() => {
-      scrollToBottom(1000); // Scroll to bottom after all messages are added
-    });
-
     if (this.initialLoadComplete && mentionDetected) {
       playAudio(notification);
     }
-    this.initialLoadComplete = true;
+
+    requestAnimationFrame(() => {
+      // Scroll to the bottom when all messages are loaded.
+      if (!this.initialLoadComplete && this.messageMap.size >= this.defaultMessagesCount) {
+        // Scroll to the bottom only once when the initial load is complete.
+        this.panel.scrollTop = this.panel.scrollHeight;
+        this.initialLoadComplete = true;
+      }
+    });
 
     if (this.chatRemover) {
       this.chatRemover.updateDeletedMessages();
