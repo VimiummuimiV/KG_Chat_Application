@@ -15,7 +15,6 @@ import {
 
 import {
   sendSVG,
-  closeSVG,
   expandSVG,
   helpSVG
 } from "../data/icons.js";
@@ -103,23 +102,27 @@ export function createChatUI() {
       emojiPanelInstance.destroy();
     }
   });
+
   // Create message input
   const messageInput = document.createElement('input');
   messageInput.type = 'text';
   messageInput.id = 'message-input';
   messageInput.maxLength = 300;
   messageInput.autocomplete = 'off';
+
   // Create send button
   const sendButton = document.createElement('button');
   sendButton.id = 'send-button';
   sendButton.className = 'button send-button';
   sendButton.innerHTML = sendSVG;
+
   // Append elements in order
   inputContainer.appendChild(emojiButton);
   inputContainer.appendChild(messageInput);
   inputContainer.appendChild(sendButton);
   chatContent.appendChild(messagesPanel);
   chatContent.appendChild(inputContainer);
+
   // Right side: user list
   const userListContainer = document.createElement('div');
   userListContainer.className = 'user-list-container';
@@ -129,17 +132,21 @@ export function createChatUI() {
   chatWrapper.appendChild(chatContent);
   chatWrapper.appendChild(userListContainer);
   chatContainer.appendChild(chatWrapper);
+
   // Maximize button
   const maximizeButton = document.createElement('button');
   maximizeButton.className = 'button header-button chat-maximize-button';
   maximizeButton.innerHTML = expandSVG;
+  maximizeButton.title = 'Expand chat';
   maximizeButton.addEventListener('click', toggleChatMaximize);
   chatContainer.appendChild(maximizeButton);
+
   // Help button next to maximize button
   const helpButton = document.createElement('button');
   helpButton.className = 'button header-button chat-help-button';
   helpButton.innerHTML = helpSVG; // Replace with desired icon if available
   helpButton.title = 'Show chat help';
+
   // Declare a variable to track the help panel instance.
   let helpPanelInstance = null;
 
@@ -178,18 +185,28 @@ export function createChatUI() {
   });
 
   chatContainer.appendChild(helpButton);
+
   // Toggle visibility button
   const toggleButton = document.createElement('button');
   toggleButton.className = 'button header-button chat-toggle-button';
-  toggleButton.innerHTML = closeSVG;
+
+  // Get the current chat state to determine initial visibility
+  const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
+  const isVisible = chatState.isVisible !== false; // Default to visible if not set
+
+  // Set the initial title based on the chat state
+  toggleButton.title = isVisible ? 'Hide chat' : 'Show chat';
+
   toggleButton.addEventListener('click', toggleChatVisibility);
   chatContainer.appendChild(toggleButton);
+
   // Draggable top area
   const topArea = document.createElement('div');
   topArea.className = 'chat-drag-area';
   topArea.addEventListener('dblclick', toggleChatVisibility);
   chatContainer.appendChild(topArea);
   document.body.appendChild(chatContainer);
+
   // Restore chat state and settings
   restoreChatState();
   createFontSizeControl();
@@ -207,6 +224,7 @@ export function createChatUI() {
         }, 2000);
       }
       messageInput.value = ''; // Clear input field on load
+
       // Pass the input element and messages panel into the helper functions.
       createLengthPopup(messagesPanel);
       initChatLengthPopupEvents(messageInput);

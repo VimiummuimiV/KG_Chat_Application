@@ -1075,6 +1075,8 @@ export function toggleChatVisibility() {
     setTimeout(() => {
       chatContainer.style.display = isBecomingVisible ? 'flex' : 'none';
       toggleButton.innerHTML = isBecomingVisible ? closeSVG : openSVG;
+      toggleButton.title = isBecomingVisible ? 'Hide chat' : 'Show chat';
+
       saveChatState({
         ...chatState,
         isVisible: isBecomingVisible
@@ -1089,6 +1091,8 @@ export function toggleChatVisibility() {
     chatContainer.classList.remove('visible-chat', 'hidden-chat');
     chatContainer.classList.add(isBecomingVisible ? 'visible-chat' : 'hidden-chat');
     toggleButton.innerHTML = isBecomingVisible ? closeSVG : openSVG;
+    toggleButton.title = isBecomingVisible ? 'Hide chat' : 'Show chat';
+
     saveChatState({
       ...chatState,
       isVisible: isBecomingVisible
@@ -1147,7 +1151,9 @@ let originalChatState = null;
 export function toggleChatMaximize() {
   const chat = document.getElementById('app-chat-container');
   const maximizeButton = document.querySelector('.chat-maximize-button');
+
   if (!chat) return;
+
   if (!chat.classList.contains('maximized')) {
     const hasVisibilityClass = !chat.classList.contains('visible-chat') && !chat.classList.contains('hidden-chat');
     originalChatState = getChatState();
@@ -1171,6 +1177,8 @@ export function toggleChatMaximize() {
     chat.classList.add('maximized');
     maximizeButton.classList.add('maximized');
     maximizeButton.innerHTML = collapseSVG;
+    maximizeButton.title = "Collapse chat";
+
     const resizeHandler = () => {
       chat.style.height = calculateHeight();
       chat.style.bottom = '0';
@@ -1228,6 +1236,8 @@ export function toggleChatMaximize() {
     chat.classList.remove('maximized');
     maximizeButton.classList.remove('maximized');
     maximizeButton.innerHTML = expandSVG;
+    maximizeButton.title = "Expand chat";
+
     requestAnimationFrame(() => {
       handleElementsBehavior();
       if (shouldScrollToBottom) {
