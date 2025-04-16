@@ -212,8 +212,11 @@ export function createChatUI() {
   // Initial setup after DOM is ready
   requestAnimationFrame(() => {
     if (messagesPanel && messageInput) {
-      messagesPanel.scrollTop = messagesPanel.scrollHeight;
-      messageInput.value = ''; // Clear input field on load
+      // Secondary scroll if main scroll is not enough 
+      setTimeout(() => {
+        messagesPanel.scrollTop = messagesPanel.scrollHeight;
+        messageInput.value = ''; // Clear input field on load
+      }, 3000);
 
       // Pass the input element and messages panel into the helper functions.
       createLengthPopup(messagesPanel);
