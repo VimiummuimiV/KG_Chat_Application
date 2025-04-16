@@ -882,7 +882,8 @@ $usual-color: #cdb398;
   #app-chat-container {
     height: 100% !important;
     width: 100vw !important;
-    min-height: 100% !important;
+    top: 0 !important;
+    bottom: unset !important;
     min-width: 100vw !important;
     border: none !important;
     border-radius: 0 !important;

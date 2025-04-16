@@ -48,7 +48,7 @@ export function createChatUI() {
 
   // Initial setup after DOM is ready
   requestAnimationFrame(() => {
-    handleMobileLayout(messagesPanel, inputContainer);
+    handleMobileLayout(chatContainer);
   });
 
   // Create emoji button
