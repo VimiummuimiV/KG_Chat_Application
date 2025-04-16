@@ -208,26 +208,17 @@ export function createChatUI() {
   restoreChatState();
   createFontSizeControl();
   restoreFontSize();
+
+  // Initial setup after DOM is ready
   requestAnimationFrame(() => {
     if (messagesPanel && messageInput) {
-      const isMobile = checkIsMobile();
-      if (!isMobile) {
-        messagesPanel.scrollTop = messagesPanel.scrollHeight;
-      } else {
-        setTimeout(() => {
-          messagesPanel.scrollTop = messagesPanel.scrollHeight;
-        }, 2000);
-      }
+      messagesPanel.scrollTop = messagesPanel.scrollHeight;
       messageInput.value = ''; // Clear input field on load
 
       // Pass the input element and messages panel into the helper functions.
       createLengthPopup(messagesPanel);
       initChatLengthPopupEvents(messageInput);
+      handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea, inputContainer);
     }
-  });
-
-  // Initial setup after DOM is ready
-  requestAnimationFrame(() => {
-    handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea, inputContainer);
   });
 }
