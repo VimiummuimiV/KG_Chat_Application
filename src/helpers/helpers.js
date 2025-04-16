@@ -1308,6 +1308,9 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
         dragArea.style.display = hideElements ? 'none' : '';
         const revealBtn = document.querySelector('.reveal-userlist-btn');
         if (revealBtn) revealBtn.style.display = hideElements ? 'none' : '';
+
+        // Forse to scroll the messages panel to the bottom when keyboard is opened or closed
+        messagesPanel.scrollTop = messagesPanel.scrollHeight;
       });
     }
   }
