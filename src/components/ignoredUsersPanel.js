@@ -5,7 +5,7 @@ import { getExactUserIdByName } from "../helpers/helpers.js";
 export const storageWrapper = {
   get: () => {
     try {
-      const stored = localStorage.getItem('ignoredUsers');
+      const stored = localStorage.getItem('ignored');
       return stored ? JSON.parse(stored) : [];
     } catch (e) {
       console.error(`Error parsing ignored users data:`, e);
@@ -14,7 +14,7 @@ export const storageWrapper = {
   },
   set: (data) => {
     try {
-      localStorage.setItem('ignoredUsers', JSON.stringify(data));
+      localStorage.setItem('ignored', JSON.stringify(data));
       return true;
     } catch (e) {
       console.error(`Error saving ignored users data:`, e);
