@@ -7,7 +7,6 @@ import {
   getRandomInterval,
   initChatLengthPopupEvents,
   createLengthPopup,
-  checkIsMobile,
   toggleChatVisibility,
   toggleChatMaximize,
   handleMobileLayout
@@ -211,17 +210,13 @@ export function createChatUI() {
 
   // Initial setup after DOM is ready
   requestAnimationFrame(() => {
-    if (messagesPanel && messageInput) {
-      // Secondary scroll if main scroll is not enough 
-      setTimeout(() => {
-        messagesPanel.scrollTop = messagesPanel.scrollHeight;
-        messageInput.value = ''; // Clear input field on load
-      }, 3000);
-
-      // Pass the input element and messages panel into the helper functions.
-      createLengthPopup(messagesPanel);
-      initChatLengthPopupEvents(messageInput);
-      handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea, inputContainer);
+    if (messageInput) {
+      messageInput.value = ''; // Clear input field on load
     }
+
+    // Pass the input element and messages panel into the helper functions.
+    createLengthPopup(messagesPanel);
+    initChatLengthPopupEvents(messageInput);
+    handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea, inputContainer);
   });
 }
