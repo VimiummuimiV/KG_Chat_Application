@@ -1255,9 +1255,7 @@ export function toggleChatMaximize() {
 export function handleMobileLayout(chatContainer) {
   const isMobile = checkIsMobile();
   if (isMobile) {
-    // Set margin for chat container
-    chatContainer.style.marginBottom = `${inputContainer.offsetHeight}px`;
-
+    
     // Add styles for mobile view
     const globalMobileStyles = document.createElement('style');
     globalMobileStyles.classList.add('global-mobile-styles');
@@ -1294,13 +1292,12 @@ export function handleMobileLayout(chatContainer) {
       }
     `;
     document.head.appendChild(globalMobileStyles);
-
+    
     // Use Visual Viewport API for keyboard detection and correct positioning
     if (window.visualViewport) {
       window.visualViewport.addEventListener('resize', () => {
         // Calculate the bottom offset taking into account the viewport offset when scrolling
         const bottomOffset = window.innerHeight - window.visualViewport.height - window.visualViewport.offsetTop;
-
         // Update the chat container height to fit the available space when keyboard is open
         chatContainer.style.setProperty('height', `calc(100% - ${bottomOffset}px)`, 'important');
       });
