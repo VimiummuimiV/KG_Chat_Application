@@ -1,6 +1,5 @@
 import {
   parseUsername,
-  scrollToBottom,
   highlightMentionWords,
   handlePrivateMessageInput,
   calibrateToMoscowTime,
@@ -93,6 +92,12 @@ export default class MessageManager {
       if (!bodyNode || !bodyNode.textContent) return;
       const text = bodyNode.textContent.trim();
       if (text === "This room is not anonymous") return;
+
+      // Skip messages addressed to ignored users, e.g. "Mark, how are you?"
+      const addressMatch = /^([^,\s]+),/.exec(text);
+      if (addressMatch && ignoredUsers.includes(addressMatch[1])) {
+        return;
+      }
 
       const fromAttr = msg.getAttribute("from");
       const from = fromAttr
