@@ -54,9 +54,8 @@ async function fetchYouTubeMetadata(videoId) {
 
 /** Renders a YouTube preview with metadata and thumbnail */
 async function renderYouTubePreview(infoContainer, placeholder, videoId, videoType) {
-  // Clear both containers
-  infoContainer.innerHTML = "";
-  placeholder.innerHTML = "";
+  infoContainer.hidden = true;
+  placeholder.hidden = true;
 
   const metadata = await fetchYouTubeMetadata(videoId);
 
@@ -68,17 +67,21 @@ async function renderYouTubePreview(infoContainer, placeholder, videoId, videoTy
   title.classList.add("video-title");
   title.textContent = `${emojis.title} ${metadata.title}`;
 
-  infoContainer.append(channel, title);
-
-  const thumb = document.createElement('img');
+  const thumb = new Image();
   thumb.src = `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`;
   thumb.alt = videoType;
   thumb.classList.add("youtube-thumb");
-  placeholder.appendChild(thumb);
 
-  // Wait for the thumbnail to load before scrolling
   thumb.addEventListener('load', () => {
+    infoContainer.replaceChildren(channel, title);
+    placeholder.replaceChildren(thumb);
+    infoContainer.hidden = false;
+    placeholder.hidden = false;
     scrollToBottom(600);
+  });
+
+  thumb.addEventListener('error', () => {
+    console.error('Error loading YouTube thumbnail for videoId:', videoId);
   });
 }
 
@@ -151,21 +154,17 @@ export function convertVideoLinksToPlayer() {
     link.style.display = 'inline-flex';
 
     if (youtubeMatch) {
-      // Create the info container first
       const infoContainer = document.createElement('div');
       infoContainer.classList.add("youtube-info");
 
-      // Create placeholder
       const placeholder = document.createElement('div');
       placeholder.classList.add("youtube-placeholder");
       placeholder.dataset.videoId = videoId;
       placeholder.dataset.videoType = videoType;
 
-      // Add elements to the DOM first
       link.parentNode.insertBefore(wrapper, link);
       wrapper.append(link, infoContainer, placeholder);
 
-      // Then render the YouTube preview
       await renderYouTubePreview(infoContainer, placeholder, videoId, videoType);
 
       placeholder.addEventListener("click", () => {
@@ -182,19 +181,32 @@ export function convertVideoLinksToPlayer() {
         activeYouTubePlaceholder = placeholder;
 
         const player = getSharedYouTubePlayer();
+        player.hidden = true;
         player.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
-        placeholder.innerHTML = "";
-        placeholder.appendChild(player);
+        placeholder.replaceChildren(player);
+        player.addEventListener('load', () => {
+          player.hidden = false;
+        });
       });
     } else {
       const embed = document.createElement('video');
       embed.classList.add("video-container");
       embed.src = url;
       embed.controls = true;
+      embed.hidden = true;
+
+      embed.addEventListener('loadeddata', () => {
+        embed.hidden = false;
+        scrollToBottom(600);
+      });
+
+      embed.addEventListener('error', () => {
+        console.error('Error loading video source:', url);
+        wrapper.replaceChildren(link);
+      });
 
       link.parentNode.insertBefore(wrapper, link);
       wrapper.append(link, embed);
     }
   }
-
 }
