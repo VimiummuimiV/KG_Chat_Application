@@ -21,9 +21,10 @@ export default class UserManager {
     this.isFirstLoad = true;
     this.avatarCache = this.loadAvatarCache();
     this.cacheDate = new Date().toDateString();
-    this.changes = false;
-    this.newUserJIDs = [];
-    this.updatedUserJIDs = [];
+    this.changes = false; // For tracking changes
+    this.pendingUserJIDs = new Set(); // For tracking new users
+    this.updatedUserJIDs = new Set(); // For tracking updated users
+    this.updateUITimeout = null; // For debouncing UI updates
 
     // Role-based icons
     this.roleIcons = {
@@ -148,8 +149,7 @@ export default class UserManager {
 
     // Reset change tracking variables for this update cycle
     this.changes = false;
-    this.newUserJIDs = [];
-    this.updatedUserJIDs = [];
+    this.updatedUserJIDs.clear();
 
     for (let i = 0; i < presences.length; i++) {
       const presence = presences[i];
@@ -269,16 +269,30 @@ export default class UserManager {
         }
         this.activeUsers.set(from, userData);
         this.changes = true;
-        this.newUserJIDs.push(from);
+        this.pendingUserJIDs.add(from);
       } else if (JSON.stringify(existingUser) !== JSON.stringify(userData)) {
         this.activeUsers.set(from, userData);
         this.changes = true;
-        this.updatedUserJIDs.push(from);
+        this.updatedUserJIDs.add(from);
       }
     }
 
     if (this.changes) {
-      this.updateUI();
+      if (!this.isFirstLoad) {
+        // Debounce UI updates to avoid excessive DOM manipulation
+        if (this.updateUITimeout) {
+          clearTimeout(this.updateUITimeout);
+        }
+        this.updateUITimeout = setTimeout(() => {
+          this.updateUI();
+          this.updateUITimeout = null; // Reset timeout reference
+          this.pendingUserJIDs.clear(); // Clear after UI update
+        }, 300); // Adjust the delay as needed
+      } else {
+        // Initial load, update UI immediately
+        this.updateUI();
+        this.pendingUserJIDs.clear(); // Clear after UI update
+      }
     }
   }
 
@@ -384,7 +398,7 @@ export default class UserManager {
 
     // Apply shake effect for new users
     if (!this.isFirstLoad) {
-      this.newUserJIDs.forEach(jid => {
+      this.pendingUserJIDs.forEach(jid => {
         const userElement = this.container.querySelector(`.user-item[data-jid="${jid}"]`);
         if (userElement && userElement.parentNode) {
           addShakeEffect(userElement);
