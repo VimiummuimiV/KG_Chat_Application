@@ -1,20 +1,22 @@
 import {
-  restoreChatState,
-  createFontSizeControl,
-  restoreFontSize,
   showChatAlert,
   setupRandomEmojiAttention,
   getRandomInterval,
   initChatLengthPopupEvents,
   createLengthPopup,
-  toggleChatVisibility,
-  toggleChatMaximize,
   handleMobileLayout
 } from "../helpers/helpers.js";
 
 import {
+  createFontSizeControl,
+  restoreChatState,
+  restoreFontSize,
+  toggleChatVisibility,
+  toggleChatMaximize
+} from "./chatState.js";
+
+import {
   sendSVG,
-  expandSVG,
   helpSVG
 } from "../data/icons.js";
 
@@ -132,8 +134,6 @@ export function createChatUI() {
   // Maximize button
   const maximizeButton = document.createElement('button');
   maximizeButton.className = 'button header-button chat-maximize-button';
-  maximizeButton.innerHTML = expandSVG;
-  maximizeButton.title = 'Expand chat';
   maximizeButton.addEventListener('click', toggleChatMaximize);
   chatContainer.appendChild(maximizeButton);
 
@@ -185,14 +185,6 @@ export function createChatUI() {
   // Toggle visibility button
   const toggleButton = document.createElement('button');
   toggleButton.className = 'button header-button chat-toggle-button';
-
-  // Get the current chat state to determine initial visibility
-  const chatState = JSON.parse(localStorage.getItem('chatState')) || {};
-  const isVisible = chatState.isVisible !== false; // Default to visible if not set
-
-  // Set the initial title based on the chat state
-  toggleButton.title = isVisible ? 'Hide chat' : 'Show chat';
-
   toggleButton.addEventListener('click', toggleChatVisibility);
   chatContainer.appendChild(toggleButton);
 

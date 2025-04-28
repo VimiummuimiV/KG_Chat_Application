@@ -27,10 +27,10 @@ import {
   setupPrivateMessageEvents,
   parseUsername,
   addViewportMeta,
-  addChatToggleFeature,
   decodeEncodedURL
 } from "./helpers/helpers.js";
 
+import { addChatToggleFeature } from "../src/chat/chatState.js"
 
 // Function to detect if running in an iframe
 function isInIframe() {

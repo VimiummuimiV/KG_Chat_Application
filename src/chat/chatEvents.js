@@ -1,10 +1,13 @@
 import {
   clamp,
-  getChatState,
   handleElementsBehavior,
+} from "../helpers/helpers.js";
+
+import {
+  getChatState,
   restoreChatState,
   saveChatState
-} from "../helpers/helpers.js";
+} from "./chatState.js";
 
 // ------------------------- Drag Handlers (Floating) -------------------------
 let isDragging = false,

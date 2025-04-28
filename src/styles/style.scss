@@ -60,10 +60,21 @@ $usual-color: #cdb398;
     flex-wrap: wrap !important;
   }
 
-  // Chat Container States
+  // Maximized Chat
   &.maximized {
-    position: fixed;
-    z-index: 1010;
+    position: fixed !important;
+    z-index: 1010 !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    border-radius: 0 !important;
+    overflow: hidden !important;
+    background-color: #1e1e1e !important;
+    display: flex !important;
+    flex-direction: column !important;
   }
 
   &:not(.visible-chat):not(.hidden-chat):not(.maximized):not(.floating-chat) {
