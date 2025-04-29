@@ -64,7 +64,7 @@ const purgeUserFromChat = (username) => {
   if (userList) {
     const userItems = userList.querySelectorAll(".user-item");
     userItems.forEach(item => {
-      const itemUsername = item.querySelector(".username-clickable")?.textContent;
+      const itemUsername = item.querySelector(".username")?.textContent;
       if (itemUsername === username) {
         item.remove();
       }

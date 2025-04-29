@@ -914,7 +914,25 @@ $usual-color: #cdb398;
       .scaled-thumbnail
     ):not(.delete-btn):not(.toggle-button):not(.update-overlay):not(
       .update-popup
-    ):not(.chat-username-color-picker):not(.help-panel):not(.ignored-users-panel) {
+    ):not(.chat-username-color-picker):not(.help-panel):not(
+      .ignored-users-panel
+    ) {
     display: none !important;
   }
+}
+
+.profile-iframe-container {
+  opacity: 0;
+  border: none;
+  display: flex;
+  position: fixed;
+  z-index: 1010 !important;
+  width: 75vw;
+  min-width: 1000px;
+  height: 80vh;
+  top: 48.5vh;
+  left: 50vw;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08) !important;
+  border-radius: 0.6em !important;
 }

@@ -10,6 +10,7 @@ import {
 import { addShakeEffect } from "../data/animations.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
 import { storageWrapper } from "../components/ignoredUsersPanel.js";
+import { loadProfileIntoIframe } from "../helpers/iframeProfileLoader.js";
 
 // Utility function to generate a dynamic timestamp for the rand parameter
 const generateRandomParam = () => `rand=${Date.now()}`;
@@ -105,7 +106,7 @@ export default class UserManager {
   setupEventListeners() {
     this.container.addEventListener('click', (event) => {
       // Handle username clicks
-      if (event.target.classList.contains('username-clickable')) {
+      if (event.target.classList.contains('username')) {
         const dataUserId = event.target.getAttribute('data-user-id');
         if (dataUserId) {
           if (event.ctrlKey) {
@@ -118,8 +119,8 @@ export default class UserManager {
           } else {
             // Normal click: Navigate to profile
             const userIdValue = dataUserId.split('/')[1].split('#')[0];
-            const navigateToProfileUrl = `https://klavogonki.ru/u/#/${userIdValue}/`;
-            window.location.href = navigateToProfileUrl;
+            const profileUrl = `https://klavogonki.ru/u/#/${userIdValue}/`;
+            loadProfileIntoIframe(profileUrl);
           }
         }
       }
@@ -340,10 +341,8 @@ export default class UserManager {
         const userInfo = document.createElement('div');
         userInfo.className = 'user-info';
         userInfo.innerHTML = `
-          <div class="username" style="color: ${user.usernameColor}">
-            <span class="username-clickable" data-user-id="${user.jid}">${cleanLogin}</span>
-            <span class="role ${user.role}">${roleIcon}</span>
-          </div>
+          <span class="username" style="color: ${user.usernameColor}" data-user-id="${user.jid}">${cleanLogin}</span>
+          <span class="role ${user.role}">${roleIcon}</span>
         `;
 
         // Append avatar and user info

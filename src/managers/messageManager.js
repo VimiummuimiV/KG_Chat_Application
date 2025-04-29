@@ -17,6 +17,7 @@ import { parseMessageText } from "../helpers/parser.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
 import { connectionMessages } from '../data/definitions.js';
 import { storageWrapper } from "../components/ignoredUsersPanel.js";
+import { loadProfileIntoIframe } from "../helpers/iframeProfileLoader.js";
 
 
 export default class MessageManager {
@@ -373,8 +374,8 @@ export default class MessageManager {
             }
 
             if (userId) {
-              const navigateToProfileUrl = `https://klavogonki.ru/u/#/${userId}/`;
-              window.location.href = navigateToProfileUrl;
+              const profileUrl = `https://klavogonki.ru/u/#/${userId}/`;
+              loadProfileIntoIframe(profileUrl);
             }
             return;
           }
