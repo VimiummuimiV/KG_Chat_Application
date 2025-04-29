@@ -248,11 +248,7 @@ export function toggleChatMaximize() {
 
     const container = document.getElementById('messages-panel');
     if (container) {
-      const distanceFromBottom = container.scrollHeight - container.scrollTop - container.clientHeight;
-      const shouldScrollToBottom = distanceFromBottom <= 300;
-      if (shouldScrollToBottom) {
-        container.scrollTop = container.scrollHeight;
-      }
+      container.scrollTop = container.scrollHeight;
     }
 
     focusTextInput();
