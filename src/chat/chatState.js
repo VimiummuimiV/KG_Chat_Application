@@ -29,8 +29,20 @@ export function restoreChatState() {
 
   const state = getChatState();
 
+  // Handle maximized state
   chat.classList.toggle('maximized', state.isMaximized);
   updateMaximizeButton(maximizeButton, state.isMaximized);
+
+  // Handle visibility state
+  if (state.floating) {
+    chat.style.display = state.isVisible ? 'flex' : 'none';
+    chat.style.opacity = state.isVisible ? '1' : '0';
+    // Remove visibility classes for floating chat
+    chat.classList.remove('visible-chat', 'hidden-chat');
+  } else {
+    chat.classList.toggle('visible-chat', state.isVisible);
+    chat.classList.toggle('hidden-chat', !state.isVisible);
+  }
 
   // Update toggle button
   updateToggleButton(toggleButton, state.isVisible);
@@ -49,14 +61,10 @@ export function restoreChatState() {
     chat.style.top = clamp(state.top, 0, viewportHeight - chat.offsetHeight) + 'px';
     chat.style.bottom = '';
     chat.classList.add("floating-chat");
-    chat.style.display = state.isVisible ? 'flex' : 'none';
-    chat.style.opacity = state.isVisible ? '1' : '0';
   } else {
     chat.style.bottom = '0';
     chat.style.top = '';
     chat.classList.remove("floating-chat");
-    chat.classList.remove('visible-chat', 'hidden-chat');
-    chat.classList.add(state.isVisible ? 'visible-chat' : 'hidden-chat');
   }
 
   handleElementsBehavior();
@@ -156,36 +164,22 @@ export function toggleChatVisibility() {
 
   const chatState = getChatState();
   const isFloating = chatState.floating || false;
+  const isVisible = !chatState.isVisible;
 
   if (isFloating) {
-    const isBecomingVisible = chatContainer.style.opacity === '0';
-    chatContainer.style.opacity = isBecomingVisible ? '1' : '0';
+    chatContainer.style.opacity = isVisible ? '1' : '0';
     setTimeout(() => {
-      chatContainer.style.display = isBecomingVisible ? 'flex' : 'none';
-      updateToggleButton(toggleButton, isBecomingVisible);
-
-      saveChatState({
-        ...chatState,
-        isVisible: isBecomingVisible
-      });
-      if (isBecomingVisible) {
-        focusTextInput(); // Focus input after chat becomes visible
-      }
+      chatContainer.style.display = isVisible ? 'flex' : 'none';
+      updateToggleButton(toggleButton, isVisible);
+      saveChatState({ ...chatState, isVisible });
+      if (isVisible) focusTextInput();
     }, 300);
   } else {
-    const isCurrentlyVisible = chatContainer.classList.contains('visible-chat');
-    const isBecomingVisible = !isCurrentlyVisible;
-    chatContainer.classList.remove('visible-chat', 'hidden-chat');
-    chatContainer.classList.add(isBecomingVisible ? 'visible-chat' : 'hidden-chat');
-    updateToggleButton(toggleButton, isBecomingVisible);
-
-    saveChatState({
-      ...chatState,
-      isVisible: isBecomingVisible
-    });
-    if (isBecomingVisible) {
-      focusTextInput(); // Focus input immediately when shown
-    }
+    chatContainer.classList.toggle('visible-chat', isVisible);
+    chatContainer.classList.toggle('hidden-chat', !isVisible);
+    updateToggleButton(toggleButton, isVisible);
+    saveChatState({ ...chatState, isVisible });
+    if (isVisible) focusTextInput();
   }
 }
 
