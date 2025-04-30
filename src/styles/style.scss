@@ -553,6 +553,10 @@ $usual-color: #cdb398;
       white-space: nowrap !important;
     }
 
+    .game-indicator {
+      cursor: pointer !important;
+    }
+
     .role,
     .traffic-icon {
       font-family: $emoji-font, sans-serif !important;

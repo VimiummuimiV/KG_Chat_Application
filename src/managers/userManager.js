@@ -511,8 +511,8 @@ export default class UserManager {
         if (gameIndicatorElement) {
           gameIndicatorElement.outerHTML = newIndicatorHTML;
         } else {
-          const usernameContainer = userElement.querySelector('.username');
-          usernameContainer.insertAdjacentHTML('beforeend', newIndicatorHTML);
+          const userInfoContainer = userElement.querySelector('.user-info');
+          userInfoContainer.insertAdjacentHTML('beforeend', newIndicatorHTML);
         }
       }
     } else if (gameIndicatorElement && gameIndicatorElement.parentNode) {
