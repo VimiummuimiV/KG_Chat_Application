@@ -906,6 +906,7 @@ $usual-color: #cdb398;
     border-radius: 0 !important;
     overflow: hidden !important;
 
+    // chat elements
     .resize-handle,
     .header-button,
     #send-button {
@@ -913,15 +914,20 @@ $usual-color: #cdb398;
     }
   }
 
-  body
-    > *:not(#app-chat-container):not(.dimming-element):not(
-      .scaled-thumbnail
-    ):not(.delete-btn):not(.toggle-button):not(.update-overlay):not(
-      .update-popup
-    ):not(.chat-username-color-picker):not(.help-panel):not(
-      .ignored-users-panel
-    ) {
+  // site elements
+  .ownbanner-back,
+  .feedback,
+  #reformal_tab,
+  #footer,
+  .threecol233 .col1 {
     display: none !important;
+  }
+
+  .profile-iframe-container {
+    width: calc(100vw - 1em) !important;
+    min-width: 360px !important;
+    top: 0 !important;
+    transform: translate(-50%, 1em) !important;
   }
 }
 
