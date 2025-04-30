@@ -348,6 +348,9 @@ export default class MessageManager {
 
           // Handle Shift+Click to navigate to user profile
           if (event.shiftKey) {
+            // Prevent text selection
+            window.getSelection().removeAllRanges();
+
             // Get the stored username IDs object from sessionStorage
             let usernameIds = {};
             const storedIds = sessionStorage.getItem('usernameIds');
