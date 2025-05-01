@@ -103,20 +103,67 @@ export default class UserManager {
     return false; // Indicate no update needed
   }
 
+  // Handles private message input for a specific user
+  handlePrivateMode(username) {
+    const messageInput = document.getElementById('message-input');
+    messageInput.value = `/pm ${username} `;
+    handlePrivateMessageInput(messageInput);
+    messageInput.focus();
+  }
+
+  // Sets up long press event for the user list container user elements
+  setupLongPressEvent(container, callback) {
+    let timer;
+    let longPressTriggered = false;
+
+    const handlePressStart = (event, eventType) => {
+      if (event.target.classList.contains('username')) {
+        longPressTriggered = false;
+
+        const startLongPress = () => {
+          longPressTriggered = true;
+          callback(event.target);
+        };
+
+        const clearLongPress = () => {
+          clearTimeout(timer);
+        };
+
+        timer = setTimeout(startLongPress, 300);
+
+        const endEvents = eventType === 'mouse' 
+          ? ['mouseup', 'mouseleave']
+          : ['touchend', 'touchmove'];
+
+        endEvents.forEach(eventName => {
+          event.target.addEventListener(eventName, clearLongPress, { once: true });
+        });
+      }
+    };
+
+    container.addEventListener('mousedown', e => handlePressStart(e, 'mouse'));
+    container.addEventListener('touchstart', e => handlePressStart(e, 'touch'));
+
+    return () => longPressTriggered; // Return a boolean indicating if long press was triggered
+  }
+
+  // Sets up event listeners for user interactions
   setupEventListeners() {
+    const wasLongPress = this.setupLongPressEvent(this.container, (target) => {
+      const username = target.textContent.trim();
+      this.handlePrivateMode(username);
+    });
+
     this.container.addEventListener('click', (event) => {
       // Handle username clicks
       if (event.target.classList.contains('username')) {
         const dataUserId = event.target.getAttribute('data-user-id');
         if (dataUserId) {
+          const username = event.target.textContent.trim();
+
           if (event.ctrlKey) {
-            // Ctrl+Click: Start private chat with user
-            const username = event.target.textContent.trim();
-            const messageInput = document.getElementById('message-input');
-            messageInput.value = `/pm ${username} `;
-            handlePrivateMessageInput(messageInput);
-            messageInput.focus();
-          } else {
+            this.handlePrivateMode(username);
+          } else if (!wasLongPress()) {
             // Normal click: Navigate to profile
             const userIdValue = dataUserId.split('/')[1].split('#')[0];
             const profileUrl = `https://klavogonki.ru/u/#/${userIdValue}/`;
