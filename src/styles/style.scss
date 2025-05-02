@@ -32,19 +32,37 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   --confirm-button-text-color: #90ee90;
 
   // Close and Open Button Colors
-  --yes-button-color: #5f821f; 
+  --yes-button-color: #5f821f;
   --no-button-color: #b34a2a;
-  --theme-button-color: #2a75b3; 
+  --theme-button-color: #2a75b3;
 
   // Hotkey Label
-  --hotkey-label-text-color: #40bfff; 
-  --hotkey-label-background-color: #7ed4ff60; 
-  --hotkey-label-border-color: #7ed4ff66; 
+  --hotkey-label-text-color: #40bfff;
+  --hotkey-label-background-color: #7ed4ff60;
+  --hotkey-label-border-color: #7ed4ff66;
 
   // Private Mode Input
   --private-mode-color: #9b2b2b !important;
   --private-mode-placeholder-color: #9b2b2b99 !important;
   --private-mode-background-color: #ff6b6b55 !important;
+
+  // Private Messages Sent
+  --private-message-sent-color: #228b22 !important;
+  --private-message-sent-background-color: #228b2220 !important;
+  --private-message-sent-border-color: #228b2230 !important;
+  --private-message-sent-time-color: #228b22 !important;
+
+  // Private Messages Received
+  --private-message-received-color: #b22222 !important;
+  --private-message-received-background-color: #b2222220 !important;
+  --private-message-received-border-color: #b2222230 !important;
+  --private-message-received-time-color: #b22222 !important;
+
+  // System Messages
+  --system-message-color: #d2691e !important;
+  --system-message-background-color: #d2691e20 !important;
+  --system-message-border-color: #d2691e30 !important;
+  --system-message-time-color: #d2691e !important;
 }
 
 // Update theme variable names for clarity
@@ -68,19 +86,37 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   --confirm-button-text-color: #90ee90;
 
   // Close and Open Button Colors
-  --yes-button-color: #5f821f; 
+  --yes-button-color: #5f821f;
   --no-button-color: #b34a2a;
-  --theme-button-color: #2a75b3; 
+  --theme-button-color: #2a75b3;
 
   // Hotkey Label
-  --hotkey-label-text-color: #3aa1d5; 
-  --hotkey-label-background-color: #7ed4ff60; 
-  --hotkey-label-border-color: #7ed4ff; 
+  --hotkey-label-text-color: #3aa1d5;
+  --hotkey-label-background-color: #7ed4ff60;
+  --hotkey-label-border-color: #7ed4ff;
 
   // Private Mode Input
   --private-mode-color: #9b2b2b !important;
   --private-mode-placeholder-color: #9b2b2bbb !important;
   --private-mode-background-color: #ff6b6b70 !important;
+
+  // Private Messages Sent
+  --private-message-sent-color: #228b22 !important;
+  --private-message-sent-background-color: #228b2220 !important;
+  --private-message-sent-border-color: #228b2230 !important;
+  --private-message-sent-time-color: #228b22 !important;
+
+  // Private Messages Received
+  --private-message-received-color: #b22222 !important;
+  --private-message-received-background-color: #b2222220 !important;
+  --private-message-received-border-color: #b2222230 !important;
+  --private-message-received-time-color: #b22222 !important;
+
+  // System Messages
+  --system-message-color: #d2691e !important;
+  --system-message-background-color: #d2691e20 !important;
+  --system-message-border-color: #d2691e30 !important;
+  --system-message-time-color: #d2691e !important;
 }
 
 // Define Dark Theme Variables
@@ -108,17 +144,35 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   // Close and Open Button Colors
   --yes-button-color: #82b32a;
   --no-button-color: #b34a2a;
-  --theme-button-color: #b3a52a; 
+  --theme-button-color: #b3a52a;
 
   // Hotkey Label
   --hotkey-label-text-color: #7ed4ff;
-  --hotkey-label-background-color: #7ed4ff1a; 
-  --hotkey-label-border-color: #7ed4ff66; 
+  --hotkey-label-background-color: #7ed4ff1a;
+  --hotkey-label-border-color: #7ed4ff66;
 
   // Private Mode Input
   --private-mode-color: #ff6b6b !important;
   --private-mode-placeholder-color: #ff6b6bbb !important;
   --private-mode-background-color: #ff6b6b38 !important;
+
+  // Private Messages Sent
+  --private-message-sent-color: #00d000;
+  --private-message-sent-background-color: #00ff0020 !important;
+  --private-message-sent-border-color: #00ff0030 !important;
+  --private-message-sent-time-color: #00ff0060 !important;
+
+  // Private Messages Received
+  --private-message-received-color: #ff4d4d !important;
+  --private-message-received-background-color: #ff4d4d20 !important;
+  --private-message-received-border-color: #ff4d4d30 !important;
+  --private-message-received-time-color: #ff4d4d60 !important;
+
+  // System Messages
+  --system-message-color: #ffa500 !important;
+  --system-message-background-color: #ffa50020 !important;
+  --system-message-border-color: #ffa60030 !important;
+  --system-message-time-color: #ffa50060 !important;
 }
 
 // Main Chat Container
@@ -548,20 +602,20 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     }
 
     &.system {
-      background-color: #ffa50020 !important;
-      border: 1px solid #ffa60030 !important;
-      border-left: 3px solid #ffa500 !important;
+      background-color: var(--system-message-background-color) !important;
+      border: 1px solid var(--system-message-border-color) !important;
+      border-left: 3px solid var(--system-message-color) !important;
       width: fit-content !important;
       align-items: center !important;
       .time {
         margin-right: unset !important;
-        color: #ffa50060 !important;
+        color: var(--system-message-time-color) !important;
       }
       .username {
         display: none !important;
       }
       .message-text {
-        color: #ffa500 !important;
+        color: var(--system-message-color) !important;
       }
     }
 
@@ -569,28 +623,28 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
       width: fit-content !important;
 
       &.sent {
-        background: #00ff0020 !important;
-        border: 1px solid #00ff0030 !important;
-        border-left: 3px solid #00ff00 !important;
+        background-color: var(--private-message-sent-background-color) !important;
+        border: 1px solid var(--private-message-sent-border-color) !important;
+        border-left: 3px solid var(--private-message-sent-color) !important;
         .time {
-          color: #00ff0060 !important;
+          color: var(--private-message-sent-time-color) !important;
         }
         .username,
         .message-text {
-          color: #00ff00 !important;
+          color: var(--private-message-sent-color) !important;
         }
       }
 
       &.received {
-        background-color: #ff4d4d20 !important;
-        border: 1px solid #ff4d4d30 !important;
-        border-left: 3px solid #ff4d4d !important;
+        background-color: var(--private-message-received-background-color) !important;
+        border: 1px solid var(--private-message-received-border-color) !important;
+        border-left: 3px solid var(--private-message-received-color) !important;
         .time {
-          color: #ff4d4d60 !important;
+          color: var(--private-message-received-time-color) !important;
         }
         .username,
         .message-text {
-          color: #ff4d4d !important;
+          color: var(--private-message-received-color) !important;
         }
       }
     }
