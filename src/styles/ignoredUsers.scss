@@ -10,8 +10,8 @@
   min-height: 50px;
   min-width: 220px;
   width: fit-content;
-  background: #1e1e1e;
-  border: 1px solid #333 !important;
+  background-color: var(--main-background-color);
+  border: 1px solid var(--border-color) !important;
   padding: 1em;
   border-radius: 0.4em !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
@@ -19,15 +19,6 @@
   overflow-y: auto;
   overflow-x: hidden;
   z-index: 1100;
-
-  h2 {
-    font-size: 1.2em;
-    margin: 0;
-    text-align: center;
-    color: #ffa500;
-    border-bottom: 1px dashed #444;
-    padding-bottom: 0.6em;
-  }
 
   .ignored-users-input-container {
     display: flex;
@@ -41,16 +32,16 @@
       padding: 0.6em;
       border: none !important;
       border-radius: 0.4em 0 0 0 !important;
-      background-color: #111111;
-      color: #cdb398;
-      caret-color: #cdb398;
+      background-color: var(--secondary-background-color);
+      color: var(--main-text-color);
+      caret-color: var(--main-text-color);
       outline: none !important;
     }
 
     .ignored-users-add-btn {
       padding: 0.6em;
-      background-color: #2e6c30 !important;
-      color: lightgreen !important;
+      background-color: var(--confirm-button-color) !important;
+      color: var(--confirm-button-text-color) !important;
       border: none !important;
       outline: none !important;
       border-radius: 0 0.4em 0 0 !important;
@@ -58,7 +49,7 @@
       transition: background-color 0.3s ease;
 
       &:hover {
-        background-color: #38833c !important;
+        background-color: var(--confirm-button-hover-color) !important;
       }
     }
   }
@@ -72,7 +63,7 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.3em;
-    border-bottom: 1px dashed #444 !important;
+    border-bottom: 1px dashed var(--border-color) !important;
 
     &:last-child {
       border-bottom: none;
@@ -80,7 +71,7 @@
 
     .user-label {
       flex: 1;
-      color: #cdb398 !important;
+      color: var(--main-text-color) !important;
     }
 
     .remove-btn {
@@ -104,8 +95,8 @@
 }
 
 .input-error {
-  background-color: #8d2c2c !important;
-  color: #ff7d7d !important; 
-  caret-color: #ff7d7d !important;
+  background-color: #b34a2a !important;
+  color: #eebc90 !important; 
+  caret-color: #eebc90 !important;
   transition: background-color 0.5s ease;
 }

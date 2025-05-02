@@ -5,6 +5,7 @@ import "../styles/updateCheck.scss"; // update panel styles
 import '../styles/chatUsernameColors.scss'; // chat username colors styles
 import "../styles/ignoredUsers.scss"; // ignored users styles
 import "../styles/animationKeyframes.scss"; // animation keyframes styles
+import "../styles/themesPanel.scss"; // themes panel styles
 
 // URL constants
 export const BASE_URL = 'https://klavogonki.ru';

@@ -15,7 +15,7 @@ $usual-color: #cdb398;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #1e1e1e;
+  background: var(--main-background-color) !important;
   padding: 1em;
   border: 1px solid #333 !important;
   border-radius: 0.4em !important;
@@ -30,7 +30,7 @@ $usual-color: #cdb398;
     margin-top: 0 !important;
     font-size: 1.5em !important;
     text-align: center !important;
-    color: #ffa500 !important;
+    color: var(--secondary-accent-color) !important;
   }
 
   .update-script {
@@ -46,7 +46,7 @@ $usual-color: #cdb398;
 
     .version {
       font-weight: bold;
-      color: #ffa500 !important;
+      color: var(--secondary-accent-color) !important;
     }
   }
 
@@ -67,7 +67,6 @@ $usual-color: #cdb398;
       &.update-later {
         margin-right: 10px;
         background: #f1f1f1;
-        border: 1px solid #ccc !important;
       }
 
       &.update-skip {

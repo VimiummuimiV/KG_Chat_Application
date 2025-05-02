@@ -1,5 +1,4 @@
 $emoji-font: "Noto Color Emoji";
-$usual-color: #cdb398;
 
 .emoji-panel {
   opacity: 0;
@@ -8,8 +7,8 @@ $usual-color: #cdb398;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #1e1e1e !important;
-  border: 1px solid #333 !important;
+  background: var(--main-background-color) !important;
+  border: 1px solid var(--border-color) !important;
   border-radius: 0.4em !important;
   width: 380px;
   height: 580px;
@@ -26,16 +25,15 @@ $usual-color: #cdb398;
       width: 100%;
       padding: 8px;
       border-radius: 4px;
-      background: #2a2a2a !important;
+      background: var(--secondary-background-color) !important;
       border: none !important;
       border-radius: 0.2em !important;
-      color: $usual-color !important;
-      caret-color: $usual-color !important;
+      color: var(--main-text-color) !important;
+      caret-color: var(--main-text-color) !important;
       font-size: 0.9em !important;
 
       &:focus {
         outline: none;
-        border-color: #666;
       }
     }
   }
@@ -46,7 +44,7 @@ $usual-color: #cdb398;
     display: grid !important;
     grid-template-columns: repeat(auto-fill, minmax(32px, 1fr)) !important;
     padding: 8px !important;
-    border-bottom: 1px solid #333 !important;
+    border-bottom: 1px solid var(--border-color) !important;
     gap: 8px !important;
     justify-content: center !important;
     align-items: center !important;
@@ -72,7 +70,7 @@ $usual-color: #cdb398;
 
       &.active {
         opacity: 1;
-        border-bottom: 3px solid goldenrod !important;
+        border-bottom: 3px solid var(--secondary-accent-color) !important;
       }
 
       &:hover {
@@ -114,13 +112,13 @@ $usual-color: #cdb398;
 
       .emoji-category-header {
         padding: 8px !important;
-        color: $usual-color !important;
+        color: var(--main-text-color) !important;
         font-size: 0.9em !important;
         position: sticky !important;
         top: 0px !important;
-        background: #1e1e1e !important;
+        background-color: var(--main-background-color) !important;
         z-index: 1 !important;
-        border-bottom: 1px solid #333 !important;
+        border-bottom: 1px solid var(--border-color) !important;
         width: 100% !important;
         box-sizing: border-box !important;
         margin: 0 !important;
@@ -137,6 +135,7 @@ $usual-color: #cdb398;
           font-family: $emoji-font !important;
           background: none;
           border: none;
+          border-radius: 0.2em !important;
           padding: 4px !important;
           cursor: pointer;
           font-size: 1.5em !important;
@@ -149,7 +148,7 @@ $usual-color: #cdb398;
           aspect-ratio: 1 !important;
 
           &:hover {
-            background-color: #333;
+            background-color: var(--secondary-background-color) !important;
           }
         }
       }
@@ -175,7 +174,7 @@ $usual-color: #cdb398;
   }
 
   .emoji-footer {
-    border-top: 1px solid #333 !important;
+    border-top: 1px solid var(--border-color) !important;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -188,9 +187,9 @@ $usual-color: #cdb398;
       display: flex !important;
       align-items: center !important;
       gap: 8px !important;
-      color: $usual-color !important;
+      color: var(--main-text-color) !important;
       font-size: 0.9em !important;
-      background: #1e1e1e !important;
+      background-color: var(--main-background-color) !important;
 
       .emoji-info-icon {
         font-family: $emoji-font !important;
@@ -207,26 +206,21 @@ $usual-color: #cdb398;
       border-radius: 0.4em !important;
       padding: 5px 10px;
       font-size: 14px;
-      background-color: #2a2a2a !important;
-      border: 1px solid #444 !important;
-      color: $usual-color !important;
+      background-color: var(--secondary-background-color) !important;
+      color: var(--main-text-color) !important;
       cursor: pointer;
       transition: border-color 0.3s ease;
 
-      &:focus {
-        outline: none;
-        border-color: goldenrod !important;
-      }
-
       &:hover {
-        border-color: #666 !important;
+        border-color: var(--border-color) !important;
       }
 
       option {
         font-size: 14px;
-        background-color: #2a2a2a !important;
-        color: $usual-color !important;
+        background-color: var(--secondary-background-color) !important;
+        color: var(--main-text-color) !important;
       }
     }
+
   }
 }

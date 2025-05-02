@@ -17,11 +17,23 @@ import {
 
 import {
   sendSVG,
-  helpSVG
+  helpSVG,
+  themesIcon
 } from "../data/icons.js";
 
 import { HelpPanel } from "../components/helpPanel.js";
 import { EmojiPanel } from "../components/emojiPanel.js";
+import { openThemesPanel } from "../components/themesPanel.js";
+
+// Apply the saved theme to the chat container and body
+export function applySavedTheme() {
+  let savedTheme = localStorage.getItem('selectedTheme');
+  if (!savedTheme) {
+    savedTheme = 'dark-theme'; // Default to dark theme if no theme is saved
+    localStorage.setItem('selectedTheme', savedTheme);
+  }
+  document.body.className = savedTheme; // Apply the theme to the body for global panels
+}
 
 export function createChatUI() {
   const chatContainer = document.createElement('div');
@@ -131,12 +143,6 @@ export function createChatUI() {
   chatWrapper.appendChild(userListContainer);
   chatContainer.appendChild(chatWrapper);
 
-  // Maximize button
-  const maximizeButton = document.createElement('button');
-  maximizeButton.className = 'button header-button chat-maximize-button';
-  maximizeButton.addEventListener('click', toggleChatMaximize);
-  chatContainer.appendChild(maximizeButton);
-
   // Help button next to maximize button
   const helpButton = document.createElement('button');
   helpButton.className = 'button header-button chat-help-button';
@@ -182,11 +188,27 @@ export function createChatUI() {
 
   chatContainer.appendChild(helpButton);
 
+  // Maximize button
+  const maximizeButton = document.createElement('button');
+  maximizeButton.className = 'button header-button chat-maximize-button';
+  maximizeButton.addEventListener('click', toggleChatMaximize);
+  chatContainer.appendChild(maximizeButton);
+
   // Toggle visibility button
   const toggleButton = document.createElement('button');
   toggleButton.className = 'button header-button chat-toggle-button';
   toggleButton.addEventListener('click', toggleChatVisibility);
   chatContainer.appendChild(toggleButton);
+
+  // Theme button
+  const themeButton = document.createElement('button');
+  themeButton.className = 'button header-button chat-theme-button';
+  themeButton.innerHTML = themesIcon;
+  themeButton.title = 'Change theme';
+  themeButton.addEventListener("click", () => {
+    openThemesPanel();
+  });
+  chatContainer.appendChild(themeButton);
 
   // Draggable top area
   const dragArea = document.createElement('div');
@@ -194,6 +216,9 @@ export function createChatUI() {
   dragArea.addEventListener('dblclick', toggleChatVisibility);
   chatContainer.appendChild(dragArea);
   document.body.appendChild(chatContainer);
+
+  // Apply the saved theme to the chat container
+  applySavedTheme();
 
   // Restore chat state and settings
   restoreChatState();

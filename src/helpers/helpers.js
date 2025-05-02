@@ -944,8 +944,8 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
         top: 1em !important;
         height: fit-content !important;
         max-height: 70vh !important;
-        border-top: 1px solid #333 !important;
-        border-bottom: 1px solid #333 !important;
+        border-top: 1px solid var(--border-color) !important;
+        border-bottom: 1px solid var(--border-color) !important;
         border-radius: 0.5em 0 0 0.5em !important;
       }
 

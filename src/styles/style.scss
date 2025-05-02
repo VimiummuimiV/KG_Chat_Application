@@ -9,7 +9,117 @@ $min-chat-width: 320px;
 $user-list-width: fit-content;
 $emoji-font: "Noto Color Emoji";
 $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
-$usual-color: #cdb398;
+
+.light-theme {
+  --main-background-color: #ffffff;
+  --secondary-background-color: #f0f0f0;
+  --main-text-color: #555555;
+  --main-accent-color: #555555;
+  --secondary-accent-color: #ff7f50;
+  --third-accent-color: #77b300;
+  --link-color: #007acc;
+  --link-hover-color: #005f99;
+  --drag-area-background-color: #e0e0e0;
+  --scrollbar-thumb-color: #eaeaea;
+  --scrollbar-track-color: #ffffff;
+  --border-color: #eaeaea;
+
+  // Button Colors
+
+  // Cancel Button
+  --confirm-button-color: #2e6c30;
+  --confirm-button-hover-color: #38833c;
+  --confirm-button-text-color: #90ee90;
+
+  // Close and Open Button Colors
+  --yes-button-color: #5f821f; 
+  --no-button-color: #b34a2a;
+  --theme-button-color: #2a75b3; 
+
+  // Hotkey Label
+  --hotkey-label-text-color: #40bfff; 
+  --hotkey-label-background-color: #7ed4ff60; 
+  --hotkey-label-border-color: #7ed4ff66; 
+
+  // Private Mode Input
+  --private-mode-color: #9b2b2b !important;
+  --private-mode-placeholder-color: #9b2b2b99 !important;
+  --private-mode-background-color: #ff6b6b55 !important;
+}
+
+// Update theme variable names for clarity
+.light-gray-theme {
+  --main-background-color: #d3d3d3;
+  --secondary-background-color: #e0e0e0;
+  --main-text-color: #3e3e3e;
+  --main-accent-color: #3e3e3e;
+  --secondary-accent-color: #ff7f50;
+  --third-accent-color: #77b300;
+  --link-color: #005f99;
+  --link-hover-color: #007acc;
+  --drag-area-background-color: #c0c0c0;
+  --scrollbar-thumb-color: #bdbdbd;
+  --scrollbar-track-color: #d3d3d3;
+  --border-color: #bdbdbd;
+
+  // Cancel Button
+  --confirm-button-color: #2e6c30;
+  --confirm-button-hover-color: #38833c;
+  --confirm-button-text-color: #90ee90;
+
+  // Close and Open Button Colors
+  --yes-button-color: #5f821f; 
+  --no-button-color: #b34a2a;
+  --theme-button-color: #2a75b3; 
+
+  // Hotkey Label
+  --hotkey-label-text-color: #3aa1d5; 
+  --hotkey-label-background-color: #7ed4ff60; 
+  --hotkey-label-border-color: #7ed4ff; 
+
+  // Private Mode Input
+  --private-mode-color: #9b2b2b !important;
+  --private-mode-placeholder-color: #9b2b2bbb !important;
+  --private-mode-background-color: #ff6b6b70 !important;
+}
+
+// Define Dark Theme Variables
+.dark-theme {
+  --main-background-color: #1e1e1e;
+  --secondary-background-color: #2a2a2a;
+  --main-text-color: #cdb398;
+  --main-accent-color: #cdb398;
+  --secondary-accent-color: #ffa500;
+  --third-accent-color: #00ff58;
+  --link-color: #82b32a;
+  --link-hover-color: #95cc30;
+  --drag-area-background-color: #161616cc;
+  --scrollbar-thumb-color: #333333;
+  --scrollbar-track-color: #1e1e1e;
+  --border-color: #333333;
+
+  // Button Colors
+
+  // Cancel Button
+  --confirm-button-color: #2e6c30;
+  --confirm-button-hover-color: #38833c;
+  --confirm-button-text-color: #90ee90;
+
+  // Close and Open Button Colors
+  --yes-button-color: #82b32a;
+  --no-button-color: #b34a2a;
+  --theme-button-color: #b3a52a; 
+
+  // Hotkey Label
+  --hotkey-label-text-color: #7ed4ff;
+  --hotkey-label-background-color: #7ed4ff1a; 
+  --hotkey-label-border-color: #7ed4ff66; 
+
+  // Private Mode Input
+  --private-mode-color: #ff6b6b !important;
+  --private-mode-placeholder-color: #ff6b6bbb !important;
+  --private-mode-background-color: #ff6b6b38 !important;
+}
 
 // Main Chat Container
 #app-chat-container {
@@ -18,11 +128,11 @@ $usual-color: #cdb398;
   bottom: 0;
   left: 0;
   height: 300px;
-  background: #1e1e1e !important;
-  border: 1px solid #333 !important;
+  background-color: var(--main-background-color) !important;
+  color: var(--main-text-color) !important;
+  border: 1px solid var(--border-color) !important;
   display: flex;
   font-family: sans-serif;
-  color: $usual-color !important;
   z-index: 999;
   min-width: $min-chat-width !important;
   box-sizing: border-box;
@@ -33,11 +143,11 @@ $usual-color: #cdb398;
 
   // Links
   a {
-    color: #82b32a !important;
+    color: var(--link-color) !important;
     transition: color 0.15s !important;
 
     &:hover {
-      color: #95cc30 !important;
+      color: var(--link-hover-color) !important;
     }
   }
 
@@ -72,7 +182,7 @@ $usual-color: #cdb398;
     height: 100vh !important;
     border-radius: 0 !important;
     overflow: hidden !important;
-    background-color: #1e1e1e !important;
+    background-color: var(--main-background-color) !important;
     display: flex !important;
     flex-direction: column !important;
   }
@@ -113,7 +223,7 @@ $usual-color: #cdb398;
       height: 4px !important;
       -webkit-appearance: none !important;
       appearance: none !important;
-      background: #333 !important;
+      background-color: var(--secondary-background-color) !important;
       outline: none !important;
       border-radius: 2px !important;
       transition: opacity 0.2s !important;
@@ -124,7 +234,7 @@ $usual-color: #cdb398;
         width: 10px !important;
         height: 10px !important;
         border-radius: 50% !important;
-        background: $usual-color !important;
+        background: var(--main-accent-color) !important;
         cursor: pointer !important;
       }
 
@@ -132,7 +242,7 @@ $usual-color: #cdb398;
         width: 10px !important;
         height: 10px !important;
         border-radius: 50% !important;
-        background: $usual-color !important;
+        background: var(--main-accent-color) !important;
         cursor: pointer !important;
         border: none !important;
       }
@@ -177,12 +287,13 @@ $usual-color: #cdb398;
     flex: 1 !important;
     min-width: $min-chat-width !important;
     overflow: hidden !important;
+    background-color: var(--main-background-color) !important;
   }
 
   // Chat Content
   .chat-content {
     margin-top: 25px;
-    background: #1e1e1e !important;
+    background-color: var(--main-background-color) !important;
     display: flex !important;
     flex-direction: column !important;
     flex: 1 !important;
@@ -199,29 +310,22 @@ $usual-color: #cdb398;
     flex-direction: column !important;
     gap: 0.2em !important;
     scrollbar-width: thin !important;
-    scrollbar-color: #333 #1e1e1e !important;
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color) !important;
 
     &.keyboard-active {
       transition: margin-bottom 0.3s ease !important;
     }
 
-    &::-webkit-scrollbar,
-    .user-list-container::-webkit-scrollbar {
+    &::-webkit-scrollbar {
       width: 8px !important;
     }
 
-    &::-webkit-scrollbar-thumb,
-    .user-list-container::-webkit-scrollbar-thumb {
-      background-color: #333 !important;
-
-      &:hover {
-        background-color: #444 !important;
-      }
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb-color) !important;
     }
 
-    &::-webkit-scrollbar-track,
-    .user-list-container::-webkit-scrollbar-track {
-      background-color: #1e1e1e !important;
+    &::-webkit-scrollbar-track {
+      background-color: var(--scrollbar-track-color) !important;
     }
   }
 
@@ -232,15 +336,16 @@ $usual-color: #cdb398;
     align-items: center !important;
     padding: 1em !important;
     gap: 0.5em !important;
-    border-top: 1px solid #333 !important;
-    background-color: #1e1e1e !important;
+    border-top: 1px solid var(--border-color) !important;
+    background-color: var(--main-background-color) !important;
   }
 
   #message-input {
     outline: none !important;
     flex: 1 !important;
     background: #2a2a2a !important;
-    color: $usual-color !important;
+    background-color: var(--secondary-background-color) !important;
+    color: var(--main-text-color) !important;
     padding: 0.5em !important;
     border-radius: $border-radius !important;
     min-width: 0 !important;
@@ -251,12 +356,12 @@ $usual-color: #cdb398;
     transition: font-size 0.2s ease !important;
 
     &.private-mode {
-      background-color: #ff6b6b38 !important;
-      color: #ff6b6b !important;
-      caret-color: #ff6b6b !important;
+      background-color: var(--private-mode-background-color) !important;
+      color: var(--private-mode-color) !important;
+      caret-color: var(--private-mode-color) !important;
 
       &::placeholder {
-        color: #ff6b6b99;
+        color: var(--private-mode-placeholder-color) !important;
       }
     }
   }
@@ -287,10 +392,19 @@ $usual-color: #cdb398;
     overflow-y: auto !important;
     overflow-x: hidden !important;
     padding: 1em !important;
-    background: #1e1e1e !important;
-    border-left: 1px solid #333 !important;
+    background-color: var(--main-background-color) !important;
+    color: var(--main-text-color) !important;
+    border-left: 1px solid var(--border-color) !important;
     scrollbar-width: thin !important;
-    scrollbar-color: #333 #1e1e1e !important;
+    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color) !important;
+
+    &::-webkit-scrollbar-thumb {
+      background-color: var(--scrollbar-thumb-color) !important;
+    }
+
+    &::-webkit-scrollbar-track {
+      background-color: var(--scrollbar-track-color) !important;
+    }
   }
 
   .reveal-userlist-btn {
@@ -303,17 +417,17 @@ $usual-color: #cdb398;
     align-items: center !important;
     justify-content: center !important;
     padding: 0.4em !important;
-    background: #222 !important;
+    background-color: var(--secondary-background-color) !important;
     font-size: 18px !important;
     font-family: $emoji-font, sans-serif !important;
     font-weight: bold !important;
-    border: 1px solid #333 !important;
+    border: 1px solid var(--border-color) !important;
     border-radius: 0.4em 0 0 0.4em !important;
     cursor: pointer !important;
     transition: background 0.2s ease, opacity 0.2s ease !important;
 
     &:hover {
-      background: #333 !important;
+      background-color: var(--main-background-color) !important;
     }
   }
 
@@ -334,6 +448,7 @@ $usual-color: #cdb398;
     width: 100%;
     max-width: 100% !important;
     word-break: break-word !important;
+    background-color: var(--main-background-color) !important;
 
     .pending-emoji {
       margin-left: 0.5em !important;
@@ -404,17 +519,17 @@ $usual-color: #cdb398;
 
       .md-bold {
         font-weight: bold !important;
-        color: $usual-color !important;
+        color: var(--main-text-color) !important;
       }
 
       .md-italic {
         font-style: italic !important;
-        color: $usual-color !important;
+        color: var(--main-text-color) !important;
       }
 
       .md-strikethrough {
         text-decoration: line-through !important;
-        color: $usual-color !important;
+        color: var(--main-text-color) !important;
       }
     }
 
@@ -602,13 +717,28 @@ $usual-color: #cdb398;
     right: 0 !important;
   }
 
+  .button .yes {
+    fill: var(--yes-button-color) !important;
+  }
+
+  .button .no {
+    fill: var(--no-button-color) !important;
+  }
+
   .chat-maximize-button {
     right: 25px !important;
   }
 
   .chat-help-button {
-    color: #82b32a !important;
     right: 50px !important;
+  }
+
+  .chat-theme-button {
+    right: 75px !important;
+  }
+
+  .chat-theme-button .theme {
+    fill: var(--theme-button-color) !important;
   }
 
   .chat-drag-area {
@@ -619,7 +749,8 @@ $usual-color: #cdb398;
     right: 0 !important;
     height: 25px !important;
     cursor: move !important;
-    background-color: #161616cc !important;
+    background-color: var(--drag-area-background-color) !important;
+    border-bottom: 1px solid var(--border-color) !important;
   }
 
   // Thumbnails and Media
@@ -683,6 +814,7 @@ $usual-color: #cdb398;
     border: none;
     height: 200px !important;
     width: 356px !important;
+    background-color: var(--main-background-color) !important;
   }
 
   .youtube-thumb {
@@ -908,9 +1040,16 @@ $usual-color: #cdb398;
 
     // chat elements
     .resize-handle,
-    .header-button,
+    .chat-toggle-button,
+    .chat-maximize-button,
+    .chat-help-button,
     #send-button {
       display: none !important;
+    }
+
+    // move theme button to the right
+    .chat-theme-button {
+      right: 0 !important;
     }
   }
 

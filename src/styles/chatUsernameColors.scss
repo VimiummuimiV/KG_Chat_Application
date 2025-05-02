@@ -9,8 +9,8 @@
   max-width: 360px !important;
   width: fit-content;
   scrollbar-width: none;
-  background: #1e1e1e;
-  border: 1px solid #333 !important;
+  background-color: var(--main-background-color);
+  border: 1px solid var(--border-color);
   padding: 1em;
   border-radius: 0.4em !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
@@ -23,8 +23,8 @@
     font-size: 1.2em !important;
     margin: 0 !important;
     text-align: center !important;
-    color: #ffa500 !important;
-    border-bottom: 1px dashed #444 !important;
+    color: var(--secondary-accent-color) !important;
+    border-bottom: 1px dashed var(--border-color) !important;
     padding-bottom: 0.6em !important;
   }
 
@@ -37,13 +37,13 @@
       font-size: 1em !important;
       margin: 0.5em 0 !important;
       text-align: center !important;
-      color: #00ff58 !important;
-      border-bottom: 1px dashed #444 !important;
+      color: var(--third-accent-color) !important;
+      border-bottom: 1px dashed var(--border-color) !important;
       padding-bottom: 0.3em !important;
 
       .counter {
         font-size: 0.8em !important;
-        color: #ffa500 !important;
+        color: var(--secondary-accent-color) !important;
         margin-left: 0.5em !important;
       }
     }
@@ -60,7 +60,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.3em;
-    border-bottom: 1px dashed #444 !important;
+    background-color: var(--input-background-color);
+    border-bottom: 1px dashed var(--border-color);
 
     &:last-child {
       border-bottom: none;
@@ -98,7 +99,7 @@
   .custom-color-input {
     display: flex;
     align-items: center;
-    background-color: #1e1e1e !important;
+    background-color: var(--main-background-color) !important;
     position: absolute;
     left: 0 !important;
     top: 0 !important;
@@ -107,9 +108,9 @@
     .hex-input {
       padding: 0.6em !important;
       border-radius: 0.4em 0 0 0 !important;
-      background-color: #111111 !important;
-      color: #cdb398 !important;
-      caret-color: #cdb398 !important;
+      background-color: var(--secondary-background-color) !important;
+      color: var(--main-text-color) !important;
+      caret-color: var(--main-text-color) !important;
       width: 100% !important;
       border: none !important;
       outline: none !important;
@@ -118,17 +119,16 @@
     .confirm-btn {
       transition: background-color 0.3s ease !important;
       padding: 0.6em !important;
-      background-color: #2E6C30 !important;
-      color: lightgreen !important;
-      border: none !important;
+      background-color: var(--confirm-button-color) !important;
+      color: var(--confirm-button-text-color) !important;
+      border: 1px solid var(--border-color);
       outline: none !important;
       border-radius: 0 0.4em 0 0 !important;
       cursor: pointer;
 
       &:hover {
-        background-color: #38833c !important;
+        background-color: var(--confirm-button-hover-color) !important;
       }
     }
   }
-
 }
