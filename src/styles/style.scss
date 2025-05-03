@@ -502,7 +502,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     width: 100%;
     max-width: 100% !important;
     word-break: break-word !important;
-    background-color: var(--main-background-color) !important;
+    background-color: var(--main-background-color);
 
     .pending-emoji {
       margin-left: 0.5em !important;
