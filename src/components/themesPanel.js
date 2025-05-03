@@ -1,4 +1,5 @@
 import { adjustVisibility } from "../helpers/helpers";
+import { themeVariables } from "../data/definitions";
 
 // DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {
@@ -13,6 +14,31 @@ const createElement = (tag, className, attributes = {}) => {
   });
   return element;
 };
+
+// Function to get merged theme variables
+function getThemeVariables(theme) {
+  const variables = {};
+  for (const [key, value] of Object.entries(themeVariables)) {
+    variables[key] = value[theme];
+  }
+  return variables;
+};
+
+// Function to apply theme styles dynamically
+function applyThemeStyles(themeClassName) {
+  const root = document.documentElement;
+  const variables = getThemeVariables(themeClassName);
+
+  if (variables) {
+    Object.entries(variables).forEach(([key, value]) => {
+      root.style.setProperty(key, value);
+    });
+  }
+}
+
+// Apply the saved theme on first load
+const savedTheme = localStorage.getItem('selectedTheme') || 'dark-theme';
+applyThemeStyles(savedTheme);
 
 // The main exported function.
 export const openThemesPanel = () => {
@@ -52,9 +78,11 @@ export const openThemesPanel = () => {
     const button = createElement('button', 'theme-button', { text: theme.name });
     button.dataset.theme = theme.className;
     button.addEventListener('click', () => {
-      document.body.className = theme.className;
       localStorage.setItem('selectedTheme', theme.className);
       highlightActiveTheme();
+
+      // Apply the theme styles dynamically
+      applyThemeStyles(theme.className);
     });
     themesList.appendChild(button);
   });
