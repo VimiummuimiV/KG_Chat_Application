@@ -29,11 +29,11 @@ export const openThemesPanel = () => {
   // Append themesList to the container before inserting inputContainer
   container.appendChild(themesList);
 
-  // Add buttons for each theme
+  // Add buttons for each theme with emoji icons
   const themes = [
-    { name: 'Dark', className: 'dark-theme' },
-    { name: 'Light Gray', className: 'light-gray-theme' },
-    { name: 'Light', className: 'light-theme' }
+    { name: '🙉 Dark', className: 'dark-theme' },
+    { name: '🙊 Light Gray', className: 'light-gray-theme' },
+    { name: '🙈 Light', className: 'light-theme' }
   ];
 
   // Highlight the active theme button
