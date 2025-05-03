@@ -1,5 +1,3 @@
-$usual-color: #cdb398;
-
 .update-overlay {
   position: fixed;
   top: 0;
@@ -17,12 +15,11 @@ $usual-color: #cdb398;
   transform: translate(-50%, -50%);
   background: var(--main-background-color) !important;
   padding: 1em;
-  border: 1px solid #333 !important;
   border-radius: 0.4em !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-  color: $usual-color !important;
+  color: var(--main-text-color) !important;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  z-index: 1250; // On top of the overlay
+  z-index: 1200;
   max-width: 400px;
   min-width: 300px;
 

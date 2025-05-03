@@ -279,17 +279,25 @@ export const optimizeColor = hex => {
   return newHex;
 };
 
+// Retrieve theme from localStorage using key 'selectedTheme'; if not 'dark-theme', assume 'light'
+const currentTheme = localStorage.getItem('selectedTheme') === 'dark-theme' ? 'dark' : 'light';
+
+// Determine theme-based lightness settings, respecting the new adjustments
+const themeLightnessConfig = currentTheme === 'dark'
+  ? { minLightness: 55, maxLightness: 80 }  // Dark theme: use higher lightness settings
+  : { minLightness: 35, maxLightness: 60 }; // Light theme: use lower lightness settings
+
 // Pre-configured color generators (exported)
 export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
   minSaturation: 40,
   maxSaturation: 90,
-  minLightness: 55,
-  maxLightness: 80
+  ...themeLightnessConfig
 });
 
+// For mention colors, apply the theme-based lightness settings along with fixed saturation
 export const mentionColors = colorGenerator({
   storageKey: 'mentionColors',
   saturation: '80',
-  lightness: '60'
+  ...themeLightnessConfig
 });
