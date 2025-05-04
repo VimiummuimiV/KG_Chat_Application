@@ -29,7 +29,7 @@ import { openThemesPanel } from "../components/themesPanel.js";
 export function applySavedTheme() {
   let savedTheme = localStorage.getItem('selectedTheme');
   if (!savedTheme) {
-    savedTheme = 'dark-theme'; // Default to dark theme if no theme is saved
+    savedTheme = 'dark-soul'; // Default to dark theme if no theme is saved
     localStorage.setItem('selectedTheme', savedTheme);
   }
   document.body.className = savedTheme; // Apply the theme to the body for global panels

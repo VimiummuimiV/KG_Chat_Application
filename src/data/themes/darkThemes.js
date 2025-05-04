@@ -9,7 +9,8 @@ export const darkThemes = {
     'nord': '#2e3440',
     'palenight': '#292d3e',
     'one-monokai': '#222222',
-    'polykai': '#141818'
+    'polykai': '#141818',
+    'material-dark': '#121212'
   },
   '--secondary-background-color': {
     'dark-soul': '#2a2a2a',
@@ -21,7 +22,8 @@ export const darkThemes = {
     'nord': '#3b4252',
     'palenight': '#32374d',
     'one-monokai': '#2a2a2a',
-    'polykai': '#1e2424'
+    'polykai': '#1e2424',
+    'material-dark': '#1e1e1e'
   },
   '--main-text-color': {
     'dark-soul': '#cdb398',
@@ -33,7 +35,8 @@ export const darkThemes = {
     'nord': '#d8dee9',
     'palenight': '#a6accd',
     'one-monokai': '#d4d4d4',
-    'polykai': '#aaaaaa'
+    'polykai': '#aaaaaa',
+    'material-dark': '#e0e0e0'
   },
   '--main-accent-color': {
     'dark-soul': '#cdb398',
@@ -45,7 +48,8 @@ export const darkThemes = {
     'nord': '#88c0d0',
     'palenight': '#c792ea',
     'one-monokai': '#f92672',
-    'polykai': '#40c4ff'
+    'polykai': '#40c4ff',
+    'material-dark': '#90caf9'
   },
   '--secondary-accent-color': {
     'dark-soul': '#ffa500',
@@ -57,7 +61,8 @@ export const darkThemes = {
     'nord': '#81a1c1',
     'palenight': '#82aaff',
     'one-monokai': '#a6e22e',
-    'polykai': '#ff0060'
+    'polykai': '#ff0060',
+    'material-dark': '#f48fb1'
   },
   '--third-accent-color': {
     'dark-soul': '#00ff58',
@@ -69,7 +74,8 @@ export const darkThemes = {
     'nord': '#5e81ac',
     'palenight': '#89ddff',
     'one-monokai': '#66d9ef',
-    'polykai': '#a0ff20'
+    'polykai': '#a0ff20',
+    'material-dark': '#80cbc4'
   },
   '--link-color': {
     'dark-soul': '#82b32a',
@@ -81,7 +87,8 @@ export const darkThemes = {
     'nord': '#88c0d0',
     'palenight': '#80cbc4',
     'one-monokai': '#66d9ef',
-    'polykai': '#40c4ff'
+    'polykai': '#40c4ff',
+    'material-dark': '#90caf9'
   },
   '--link-hover-color': {
     'dark-soul': '#95cc30',
@@ -93,7 +100,8 @@ export const darkThemes = {
     'nord': '#81a1c1',
     'palenight': '#80cbc4',
     'one-monokai': '#66d9ef',
-    'polykai': '#6080ff'
+    'polykai': '#6080ff',
+    'material-dark': '#42a5f5'
   },
   '--drag-area-background-color': {
     'dark-soul': '#171717',
@@ -105,7 +113,8 @@ export const darkThemes = {
     'nord': '#3b4252',
     'palenight': '#32374d',
     'one-monokai': '#2a2a2a',
-    'polykai': '#1e2424'
+    'polykai': '#1e2424',
+    'material-dark': '#232323'
   },
   '--scrollbar-thumb-color': {
     'dark-soul': '#333333',
@@ -117,7 +126,8 @@ export const darkThemes = {
     'nord': '#4c566a',
     'palenight': '#444267',
     'one-monokai': '#3e3e3e',
-    'polykai': '#3c4848'
+    'polykai': '#3c4848',
+    'material-dark': '#424242'
   },
   '--scrollbar-track-color': {
     'dark-soul': '#1e1e1e',
@@ -129,7 +139,8 @@ export const darkThemes = {
     'nord': '#2e3440',
     'palenight': '#292d3e',
     'one-monokai': '#222222',
-    'polykai': '#141818'
+    'polykai': '#141818',
+    'material-dark': '#121212'
   },
   '--border-color': {
     'dark-soul': '#333333',
@@ -141,7 +152,8 @@ export const darkThemes = {
     'nord': '#4c566a',
     'palenight': '#444267',
     'one-monokai': '#3e3e3e',
-    'polykai': '#242424'
+    'polykai': '#242424',
+    'material-dark': '#333333'
   },
   '--confirm-button-color': {
     'dark-soul': '#2e6c30',
@@ -153,7 +165,8 @@ export const darkThemes = {
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
     'one-monokai': '#a6e22e',
-    'polykai': '#a0ff20'
+    'polykai': '#a0ff20',
+    'material-dark': '#43a047'
   },
   '--confirm-button-hover-color': {
     'dark-soul': '#38833c',
@@ -165,7 +178,8 @@ export const darkThemes = {
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
     'one-monokai': '#a6e22e',
-    'polykai': '#a0ff20'
+    'polykai': '#a0ff20',
+    'material-dark': '#388e3c'
   },
   '--confirm-button-text-color': {
     'dark-soul': '#90ee90',
@@ -177,7 +191,8 @@ export const darkThemes = {
     'nord': '#d8dee9',
     'palenight': '#a6accd',
     'one-monokai': '#f8f8f2',
-    'polykai': '#141818'
+    'polykai': '#141818',
+    'material-dark': '#ffffff'
   },
   '--yes-button-color': {
     'dark-soul': '#82b32a',
@@ -189,7 +204,8 @@ export const darkThemes = {
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
     'one-monokai': '#a6e22e',
-    'polykai': '#a0ff20'
+    'polykai': '#a0ff20',
+    'material-dark': '#43a047'
   },
   '--no-button-color': {
     'dark-soul': '#b34a2a',
@@ -201,7 +217,8 @@ export const darkThemes = {
     'nord': '#bf616a',
     'palenight': '#f07178',
     'one-monokai': '#f92672',
-    'polykai': '#ff0060'
+    'polykai': '#ff0060',
+    'material-dark': '#e53935'
   },
   '--theme-button-color': {
     'dark-soul': '#b3a52a',
@@ -213,7 +230,8 @@ export const darkThemes = {
     'nord': '#ebcb8b',
     'palenight': '#ffcb6b',
     'one-monokai': '#e6db74',
-    'polykai': '#ffb000'
+    'polykai': '#ffb000',
+    'material-dark': '#90caf9'
   },
   '--hotkey-label-text-color': {
     'dark-soul': '#7ed4ff',
@@ -225,7 +243,8 @@ export const darkThemes = {
     'nord': '#88c0d0',
     'palenight': '#80cbc4',
     'one-monokai': '#66d9ef',
-    'polykai': '#40c4ff'
+    'polykai': '#40c4ff',
+    'material-dark': '#90caf9'
   },
   '--hotkey-label-background-color': {
     'dark-soul': '#7ed4ff1a',
@@ -237,7 +256,8 @@ export const darkThemes = {
     'nord': '#88c0d01a',
     'palenight': '#80cbc41a',
     'one-monokai': '#66d9ef1a',
-    'polykai': '#40c4ff1a'
+    'polykai': '#40c4ff1a',
+    'material-dark': '#90caf91a'
   },
   '--hotkey-label-border-color': {
     'dark-soul': '#7ed4ff66',
@@ -249,7 +269,8 @@ export const darkThemes = {
     'nord': '#88c0d066',
     'palenight': '#80cbc466',
     'one-monokai': '#66d9ef66',
-    'polykai': '#40c4ff66'
+    'polykai': '#40c4ff66',
+    'material-dark': '#90caf966'
   },
   '--private-mode-color': {
     'dark-soul': '#ff6b6b',
@@ -261,7 +282,8 @@ export const darkThemes = {
     'nord': '#bf616a',
     'palenight': '#f07178',
     'one-monokai': '#f92672',
-    'polykai': '#ff0060'
+    'polykai': '#ff0060',
+    'material-dark': '#e53935'
   },
   '--private-mode-placeholder-color': {
     'dark-soul': '#ff6b6bbb',
@@ -273,7 +295,8 @@ export const darkThemes = {
     'nord': '#bf616abb',
     'palenight': '#f07178bb',
     'one-monokai': '#f92672bb',
-    'polykai': '#ff0060bb'
+    'polykai': '#ff0060bb',
+    'material-dark': '#e53935bb'
   },
   '--private-mode-background-color': {
     'dark-soul': '#ff6b6b38',
@@ -285,7 +308,8 @@ export const darkThemes = {
     'nord': '#bf616a38',
     'palenight': '#f0717838',
     'one-monokai': '#f9267238',
-    'polykai': '#ff006038'
+    'polykai': '#ff006038',
+    'material-dark': '#e5393538'
   },
   '--private-message-sent-color': {
     'dark-soul': '#00d000',
@@ -297,7 +321,8 @@ export const darkThemes = {
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
     'one-monokai': '#a6e22e',
-    'polykai': '#a0ff20'
+    'polykai': '#a0ff20',
+    'material-dark': '#43a047'
   },
   '--private-message-sent-background-color': {
     'dark-soul': '#00ff0020',
@@ -309,7 +334,8 @@ export const darkThemes = {
     'nord': '#a3be8c20',
     'palenight': '#c3e88d20',
     'one-monokai': '#a6e22e20',
-    'polykai': '#a0ff2020'
+    'polykai': '#a0ff2020',
+    'material-dark': '#43a04720'
   },
   '--private-message-sent-border-color': {
     'dark-soul': '#00ff0030',
@@ -321,7 +347,8 @@ export const darkThemes = {
     'nord': '#a3be8c30',
     'palenight': '#c3e88d30',
     'one-monokai': '#a6e22e30',
-    'polykai': '#a0ff2030'
+    'polykai': '#a0ff2030',
+    'material-dark': '#43a04730'
   },
   '--private-message-sent-time-color': {
     'dark-soul': '#00ff0060',
@@ -333,7 +360,8 @@ export const darkThemes = {
     'nord': '#a3be8c60',
     'palenight': '#c3e88d60',
     'one-monokai': '#a6e22e60',
-    'polykai': '#a0ff2060'
+    'polykai': '#a0ff2060',
+    'material-dark': '#43a047'
   },
   '--private-message-received-color': {
     'dark-soul': '#ff4d4d',
@@ -345,7 +373,8 @@ export const darkThemes = {
     'nord': '#bf616a',
     'palenight': '#f07178',
     'one-monokai': '#f92672',
-    'polykai': '#ff0060'
+    'polykai': '#ff0060',
+    'material-dark': '#e53935'
   },
   '--private-message-received-background-color': {
     'dark-soul': '#ff4d4d20',
@@ -357,7 +386,8 @@ export const darkThemes = {
     'nord': '#bf616a20',
     'palenight': '#f0717820',
     'one-monokai': '#f9267220',
-    'polykai': '#ff006020'
+    'polykai': '#ff006020',
+    'material-dark': '#e5393520'
   },
   '--private-message-received-border-color': {
     'dark-soul': '#ff4d4d30',
@@ -369,7 +399,8 @@ export const darkThemes = {
     'nord': '#bf616a30',
     'palenight': '#f0717830',
     'one-monokai': '#f9267230',
-    'polykai': '#ff006030'
+    'polykai': '#ff006030',
+    'material-dark': '#e5393530'
   },
   '--private-message-received-time-color': {
     'dark-soul': '#ff4d4d60',
@@ -381,7 +412,8 @@ export const darkThemes = {
     'nord': '#bf616a60',
     'palenight': '#f0717860',
     'one-monokai': '#f9267260',
-    'polykai': '#ff006060'
+    'polykai': '#ff006060',
+    'material-dark': '#e53935'
   },
   '--system-message-color': {
     'dark-soul': '#ffa500',
@@ -393,7 +425,8 @@ export const darkThemes = {
     'nord': '#ebcb8b',
     'palenight': '#ffcb6b',
     'one-monokai': '#e6db74',
-    'polykai': '#ffe080'
+    'polykai': '#ffe080',
+    'material-dark': '#ffa000'
   },
   '--system-message-background-color': {
     'dark-soul': '#ffa50020',
@@ -405,7 +438,8 @@ export const darkThemes = {
     'nord': '#ebcb8b20',
     'palenight': '#ffcb6b20',
     'one-monokai': '#e6db7420',
-    'polykai': '#ffe08020'
+    'polykai': '#ffe08020',
+    'material-dark': '#ffa00020'
   },
   '--system-message-border-color': {
     'dark-soul': '#ffa60030',
@@ -417,7 +451,8 @@ export const darkThemes = {
     'nord': '#ebcb8b30',
     'palenight': '#ffcb6b30',
     'one-monokai': '#e6db7430',
-    'polykai': '#ffe08030'
+    'polykai': '#ffe08030',
+    'material-dark': '#ffa00030'
   },
   '--system-message-time-color': {
     'dark-soul': '#ffa50060',
@@ -429,6 +464,7 @@ export const darkThemes = {
     'nord': '#ebcb8b60',
     'palenight': '#ffcb6b60',
     'one-monokai': '#e6db7460',
-    'polykai': '#ffe08060'
+    'polykai': '#ffe08060',
+    'material-dark': '#ffa000'
   }
 };

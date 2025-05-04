@@ -47,7 +47,7 @@ function applyThemeStyles(themeClassName) {
 }
 
 // Apply the default theme on page load
-const defaultTheme = localStorage.getItem('selectedTheme') || 'dark-theme';
+const defaultTheme = localStorage.getItem('selectedTheme') || 'dark-soul';
 applyThemeStyles(defaultTheme);
 
 // The main exported function.
@@ -95,7 +95,7 @@ export const openThemesPanel = () => {
 
   // Highlight the active theme button
   const highlightActiveTheme = () => {
-    const currentTheme = localStorage.getItem('selectedTheme') || 'dark-theme';
+    const currentTheme = localStorage.getItem('selectedTheme') || 'dark-soul';
     container.querySelectorAll('.theme-button').forEach(button => {
       button.classList.toggle('active-theme', button.dataset.theme === currentTheme);
     });
