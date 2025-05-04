@@ -3,6 +3,7 @@ import {
   importUsernameColors,
   openUsernameColors
 } from "../components/chatUsernameColorsPanel.js";
+import { openThemesPanel } from "../components/themesPanel.js";
 
 import { removeChatTraces, showChatAlert } from "./helpers.js";
 import { removeChatParams } from "../auth.js";
@@ -43,6 +44,15 @@ const chatCommands = [
     pattern: /^\/import\s+colors\s*$/,
     handler: () => {
       importUsernameColors();
+      return true;
+    }
+  },
+  {
+    name: 'themes',
+    pattern: /^\/themes\s*$/,
+    handler: () => {
+      openThemesPanel();
+      showChatAlert('Themes panel has been opened', { type: 'info', duration: 2000 });
       return true;
     }
   },

@@ -50,7 +50,8 @@ export class HelpPanel {
               { key: "/colors", desc: "Show the username color panel" },
               { key: "/import colors", desc: "Import user colors from a json file" },
               { key: "/export colors", desc: "Export user colors to a json file" },
-              { key: "/ignored", desc: "Show the ignored users panel" }
+              { key: "/ignored", desc: "Show the ignored users panel" },
+              { key: "/themes", desc: "Show the themes panel" }
             ]
           },
           {
@@ -170,7 +171,8 @@ export class HelpPanel {
               { key: "/colors", desc: "Показать панель цветов имен пользователей" },
               { key: "/import colors", desc: "Импортировать цвета пользователей из json файла" },
               { key: "/export colors", desc: "Экспортировать цвета пользователей в json файл" },
-              { key: "/ignored", desc: "Показать панель игнорируемых пользователей" }
+              { key: "/ignored", desc: "Показать панель игнорируемых пользователей" },
+              { key: "/themes", desc: "Показать панель тем" }
             ]
           },
           {
