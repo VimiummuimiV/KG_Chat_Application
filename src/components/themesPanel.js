@@ -1,5 +1,5 @@
-import { adjustVisibility } from "../helpers/helpers";
-import { themeVariables } from "../data/definitions";
+import { adjustVisibility } from "../helpers/helpers.js";
+import { themes } from "../data/themes.js";
 
 // DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {
@@ -15,10 +15,10 @@ const createElement = (tag, className, attributes = {}) => {
   return element;
 };
 
-// Function to get merged theme variables
-function getThemeVariables(theme) {
+// Function to get themes variables
+function getThemes(theme) {
   const variables = {};
-  for (const [key, value] of Object.entries(themeVariables)) {
+  for (const [key, value] of Object.entries(themes)) {
     variables[key] = value[theme];
   }
   return variables;
@@ -27,7 +27,7 @@ function getThemeVariables(theme) {
 // Function to apply theme styles dynamically
 function applyThemeStyles(themeClassName) {
   const root = document.documentElement;
-  const variables = getThemeVariables(themeClassName);
+  const variables = getThemes(themeClassName);
 
   if (variables) {
     Object.entries(variables).forEach(([key, value]) => {
