@@ -1,5 +1,5 @@
 import { adjustVisibility } from "../helpers/helpers.js";
-import { themes } from "../data/themes.js";
+import { lightThemes, darkThemes } from "../data/themes.js";
 
 // DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {
@@ -8,6 +8,8 @@ const createElement = (tag, className, attributes = {}) => {
   Object.entries(attributes).forEach(([key, value]) => {
     if (key === 'text') {
       element.textContent = value;
+    } else if (key === 'html') {
+      element.innerHTML = value;
     } else {
       element.setAttribute(key, value);
     }
@@ -15,14 +17,21 @@ const createElement = (tag, className, attributes = {}) => {
   return element;
 };
 
-// Function to get themes variables
+// Function to get theme variables
 function getThemes(theme) {
   const variables = {};
-  for (const [key, value] of Object.entries(themes)) {
-    variables[key] = value[theme];
+  // Check if the theme exists in lightThemes or darkThemes
+  const themeSource = lightThemes['--main-background-color'][theme]
+    ? lightThemes
+    : darkThemes;
+
+  for (const [key, value] of Object.entries(themeSource)) {
+    if (value[theme]) {
+      variables[key] = value[theme];
+    }
   }
   return variables;
-};
+}
 
 // Function to apply theme styles dynamically
 function applyThemeStyles(themeClassName) {
@@ -36,9 +45,9 @@ function applyThemeStyles(themeClassName) {
   }
 }
 
-// Apply the saved theme on first load
-const savedTheme = localStorage.getItem('selectedTheme') || 'dark-theme';
-applyThemeStyles(savedTheme);
+// Apply the default theme on page load
+const defaultTheme = localStorage.getItem('selectedTheme') || 'dark-theme';
+applyThemeStyles(defaultTheme);
 
 // The main exported function.
 export const openThemesPanel = () => {
@@ -48,66 +57,72 @@ export const openThemesPanel = () => {
     return existingContainer;
   }
 
-  // Create container and blocks.
+  // Create container with main header
   const container = createElement('div', 'themes-panel', { html: '<h2>Themes</h2>' });
-  const themesList = createElement('div', 'themes-list');
 
-  // Append themesList to the container before inserting inputContainer
-  container.appendChild(themesList);
+  // Create blocks for both theme types
+  const darkThemesBlock = createElement('div', 'dark-themes');
+  const lightThemesBlock = createElement('div', 'light-themes');
 
-  // Add buttons for each theme with emoji icons
-  const themes = [
-    { name: '🙉 Dark', className: 'dark-theme' },
-    { name: '🙊 Light Gray', className: 'light-gray-theme' },
-    { name: '🙈 Light', className: 'light-theme' }
-  ];
+  // Add headers with counters
+  darkThemesBlock.innerHTML = `<h3>Dark Themes <span class="counter">${Object.keys(darkThemes['--main-background-color']).length}</span></h3>`;
+  lightThemesBlock.innerHTML = `<h3>Light Themes <span class="counter">${Object.keys(lightThemes['--main-background-color']).length}</span></h3>`;
+
+  // Function to create theme buttons
+  const createThemeButton = (themeName, themeKey) => {
+    const button = createElement('button', 'theme-button', {
+      text: themeName.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+    });
+    button.dataset.theme = themeKey;
+    button.addEventListener('click', () => {
+      localStorage.setItem('selectedTheme', themeKey);
+      highlightActiveTheme();
+      applyThemeStyles(themeKey);
+    });
+    return button;
+  };
+
+  // Add dark themes
+  Object.keys(darkThemes['--main-background-color']).forEach(themeKey => {
+    darkThemesBlock.appendChild(createThemeButton(themeKey, themeKey));
+  });
+
+  // Add light themes
+  Object.keys(lightThemes['--main-background-color']).forEach(themeKey => {
+    lightThemesBlock.appendChild(createThemeButton(themeKey, themeKey));
+  });
 
   // Highlight the active theme button
   const highlightActiveTheme = () => {
     const currentTheme = localStorage.getItem('selectedTheme') || 'dark-theme';
-    themesList.querySelectorAll('.theme-button').forEach(button => {
-      if (button.dataset.theme === currentTheme) {
-        button.classList.add('active-theme');
-      } else {
-        button.classList.remove('active-theme');
-      }
+    container.querySelectorAll('.theme-button').forEach(button => {
+      button.classList.toggle('active-theme', button.dataset.theme === currentTheme);
     });
   };
 
-  themes.forEach(theme => {
-    const button = createElement('button', 'theme-button', { text: theme.name });
-    button.dataset.theme = theme.className;
-    button.addEventListener('click', () => {
-      localStorage.setItem('selectedTheme', theme.className);
-      highlightActiveTheme();
-
-      // Apply the theme styles dynamically
-      applyThemeStyles(theme.className);
-    });
-    themesList.appendChild(button);
-  });
+  // Append blocks to container (dark themes first)
+  container.appendChild(darkThemesBlock);
+  container.appendChild(lightThemesBlock);
 
   highlightActiveTheme();
-
   document.body.appendChild(container);
-
   adjustVisibility(container, 'show', 1);
 
   const handleEscapeKey = (e) => {
     if (e.key === 'Escape') {
       adjustVisibility(container, 'hide', 0);
       document.removeEventListener('keydown', handleEscapeKey);
+      document.removeEventListener('click', handleOutsideClick, true);
     }
   };
-
   document.addEventListener('keydown', handleEscapeKey);
 
-  // Hide container on outside click.
+  // Hide container on outside click
   const handleOutsideClick = (e) => {
     if (!container.contains(e.target)) {
       adjustVisibility(container, 'hide', 0);
       document.removeEventListener('click', handleOutsideClick, true);
-      document.removeEventListener('keydown', handleEscapeKey); // Remove ESC key listener
+      document.removeEventListener('keydown', handleEscapeKey);
     }
   };
   document.addEventListener('click', handleOutsideClick, true);

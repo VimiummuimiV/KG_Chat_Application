@@ -6,11 +6,11 @@
   transform: translate(-50%, -50%);
   height: fit-content;
   max-height: 70vh !important;
-  max-width: 360px !important;
+  max-width: 400px !important;
   width: fit-content;
   scrollbar-width: none;
-  background: var(--main-background-color);
-  border: 1px solid var(--border-color) !important;
+  background-color: var(--main-background-color);
+  border: 1px solid var(--border-color);
   padding: 1em;
   border-radius: 0.4em !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
@@ -23,36 +23,52 @@
     font-size: 1.2em !important;
     margin: 0 !important;
     text-align: center !important;
-    color: var(--main-accent-color) !important;
+    color: var(--secondary-accent-color) !important;
     border-bottom: 1px dashed var(--border-color) !important;
     padding-bottom: 0.6em !important;
   }
 
-  .themes-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  h3 {
+    font-size: 1em !important;
+    margin: 0.5em 0 !important;
+    text-align: center !important;
+    color: var(--third-accent-color) !important;
+    border-bottom: 1px dashed var(--border-color) !important;
+    padding-bottom: 0.3em !important;
 
-    .theme-button {
-      border: none !important;
-      padding: 0.6em;
-      border-radius: 0.4em !important;
-      background-color: var(--secondary-background-color) !important;
-      color: var(--main-text-color) !important;
-      cursor: pointer;
-      transition: background-color 0.3s ease, color 0.3s ease;
-      text-align: left !important;
-
-      &:hover {
-        background-color: var(--main-accent-color) !important;
-        color: var(--secondary-background-color) !important;
-      }
-
-      &.active-theme {
-        background-color: var(--main-accent-color) !important;
-        color: var(--secondary-background-color) !important;
-      }
+    .counter {
+      font-size: 0.8em !important;
+      color: var(--secondary-accent-color) !important;
+      margin-left: 0.5em !important;
     }
   }
 
+  .dark-themes,
+  .light-themes {
+    margin-top: 1em;
+
+    .theme-button {
+      display: flex;
+      width: 100%;
+      padding: 0.5em;
+      margin: 0.5em 0;
+      background-color: var(--secondary-background-color);
+      color: var(--main-text-color);
+      border: none !important;
+      border-radius: 0.2em !important;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background-color: var(--main-accent-color);
+        color: var(--main-background-color);
+      }
+
+      &.active-theme {
+        background-color: var(--main-accent-color);
+        color: var(--main-background-color);
+      }
+    }
+  }
 }
