@@ -1,5 +1,6 @@
 import { adjustVisibility } from "../helpers/helpers.js";
-import { lightThemes, darkThemes } from "../data/themes.js";
+import { lightThemes } from "../data/themes/lightThemes.js";
+import { darkThemes } from "../data/themes/darkThemes.js";
 
 // DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {

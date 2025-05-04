@@ -1,154 +1,8 @@
-// Centralized light themes
-export const lightThemes = {
-  '--main-background-color': {
-    'light-theme': '#ffffff',
-    'light-gray-theme': '#d3d3d3'
-  },
-  '--secondary-background-color': {
-    'light-theme': '#f0f0f0',
-    'light-gray-theme': '#e0e0e0'
-  },
-  '--main-text-color': {
-    'light-theme': '#555555',
-    'light-gray-theme': '#3e3e3e'
-  },
-  '--main-accent-color': {
-    'light-theme': '#555555',
-    'light-gray-theme': '#3e3e3e'
-  },
-  '--secondary-accent-color': {
-    'light-theme': '#ff7f50',
-    'light-gray-theme': '#ff7f50'
-  },
-  '--third-accent-color': {
-    'light-theme': '#77b300',
-    'light-gray-theme': '#77b300'
-  },
-  '--link-color': {
-    'light-theme': '#007acc',
-    'light-gray-theme': '#005f99'
-  },
-  '--link-hover-color': {
-    'light-theme': '#005f99',
-    'light-gray-theme': '#007acc'
-  },
-  '--drag-area-background-color': {
-    'light-theme': '#e0e0e0',
-    'light-gray-theme': '#c0c0c0'
-  },
-  '--scrollbar-thumb-color': {
-    'light-theme': '#eaeaea',
-    'light-gray-theme': '#bdbdbd'
-  },
-  '--scrollbar-track-color': {
-    'light-theme': '#ffffff',
-    'light-gray-theme': '#d3d3d3'
-  },
-  '--border-color': {
-    'light-theme': '#eaeaea',
-    'light-gray-theme': '#bdbdbd'
-  },
-  '--confirm-button-color': {
-    'light-theme': '#2e6c30',
-    'light-gray-theme': '#2e6c30'
-  },
-  '--confirm-button-hover-color': {
-    'light-theme': '#38833c',
-    'light-gray-theme': '#38833c'
-  },
-  '--confirm-button-text-color': {
-    'light-theme': '#90ee90',
-    'light-gray-theme': '#90ee90'
-  },
-  '--yes-button-color': {
-    'light-theme': '#5f821f',
-    'light-gray-theme': '#5f821f'
-  },
-  '--no-button-color': {
-    'light-theme': '#b34a2a',
-    'light-gray-theme': '#b34a2a'
-  },
-  '--theme-button-color': {
-    'light-theme': '#2a75b3',
-    'light-gray-theme': '#2a75b3'
-  },
-  '--hotkey-label-text-color': {
-    'light-theme': '#40bfff',
-    'light-gray-theme': '#3aa1d5'
-  },
-  '--hotkey-label-background-color': {
-    'light-theme': '#7ed4ff60',
-    'light-gray-theme': '#7ed4ff60'
-  },
-  '--hotkey-label-border-color': {
-    'light-theme': '#7ed4ff66',
-    'light-gray-theme': '#7ed4ff'
-  },
-  '--private-mode-color': {
-    'light-theme': '#9b2b2b',
-    'light-gray-theme': '#9b2b2b'
-  },
-  '--private-mode-placeholder-color': {
-    'light-theme': '#9b2b2b99',
-    'light-gray-theme': '#9b2b2bbb'
-  },
-  '--private-mode-background-color': {
-    'light-theme': '#ff6b6b55',
-    'light-gray-theme': '#ff6b6b70'
-  },
-  '--private-message-sent-color': {
-    'light-theme': '#228b22',
-    'light-gray-theme': '#228b22'
-  },
-  '--private-message-sent-background-color': {
-    'light-theme': '#228b2220',
-    'light-gray-theme': '#228b2220'
-  },
-  '--private-message-sent-border-color': {
-    'light-theme': '#228b2230',
-    'light-gray-theme': '#228b2230'
-  },
-  '--private-message-sent-time-color': {
-    'light-theme': '#228b22',
-    'light-gray-theme': '#228b22'
-  },
-  '--private-message-received-color': {
-    'light-theme': '#b22222',
-    'light-gray-theme': '#b22222'
-  },
-  '--private-message-received-background-color': {
-    'light-theme': '#b2222220',
-    'light-gray-theme': '#b2222220'
-  },
-  '--private-message-received-border-color': {
-    'light-theme': '#b2222230',
-    'light-gray-theme': '#b2222230'
-  },
-  '--private-message-received-time-color': {
-    'light-theme': '#b22222',
-    'light-gray-theme': '#b22222'
-  },
-  '--system-message-color': {
-    'light-theme': '#d2691e',
-    'light-gray-theme': '#d2691e'
-  },
-  '--system-message-background-color': {
-    'light-theme': '#d2691e20',
-    'light-gray-theme': '#d2691e20'
-  },
-  '--system-message-border-color': {
-    'light-theme': '#d2691e30',
-    'light-gray-theme': '#d2691e30'
-  },
-  '--system-message-time-color': {
-    'light-theme': '#d2691e',
-    'light-gray-theme': '#d2691e'
-  }
-};
-
 export const darkThemes = {
   '--main-background-color': {
-    'dark-theme': '#1e1e1e',
+    'dark-soul': '#1e1e1e',
+    'photoshop-dark': '#2d2d2d',
+    'photoshop-black': '#181818',
     'gruvbox-dark': '#282828',
     'one-dark-pro': '#282c34',
     'dracula': '#282a36',
@@ -158,7 +12,9 @@ export const darkThemes = {
     'polykai': '#141818'
   },
   '--secondary-background-color': {
-    'dark-theme': '#2a2a2a',
+    'dark-soul': '#2a2a2a',
+    'photoshop-dark': '#383838',
+    'photoshop-black': '#222222',
     'gruvbox-dark': '#3c3836',
     'one-dark-pro': '#21252b',
     'dracula': '#44475a',
@@ -168,17 +24,21 @@ export const darkThemes = {
     'polykai': '#1e2424'
   },
   '--main-text-color': {
-    'dark-theme': '#cdb398',
+    'dark-soul': '#cdb398',
+    'photoshop-dark': '#e6e6e6',
+    'photoshop-black': '#e6e6e6',
     'gruvbox-dark': '#ebdbb2',
     'one-dark-pro': '#abb2bf',
-    'dracula': '#f8f8f2',
+    'dracula': '#dbdbdb',
     'nord': '#d8dee9',
     'palenight': '#a6accd',
-    'one-monokai': '#f8f8f2',
+    'one-monokai': '#d4d4d4',
     'polykai': '#aaaaaa'
   },
   '--main-accent-color': {
-    'dark-theme': '#cdb398',
+    'dark-soul': '#cdb398',
+    'photoshop-dark': '#0099ff',
+    'photoshop-black': '#0099ff',
     'gruvbox-dark': '#d79921',
     'one-dark-pro': '#e06c75',
     'dracula': '#ff79c6',
@@ -188,7 +48,9 @@ export const darkThemes = {
     'polykai': '#40c4ff'
   },
   '--secondary-accent-color': {
-    'dark-theme': '#ffa500',
+    'dark-soul': '#ffa500',
+    'photoshop-dark': '#ff5f52',
+    'photoshop-black': '#ff5f52',
     'gruvbox-dark': '#fabd2f',
     'one-dark-pro': '#98c379',
     'dracula': '#50fa7b',
@@ -198,7 +60,9 @@ export const darkThemes = {
     'polykai': '#ff0060'
   },
   '--third-accent-color': {
-    'dark-theme': '#00ff58',
+    'dark-soul': '#00ff58',
+    'photoshop-dark': '#2fb344',
+    'photoshop-black': '#2fb344',
     'gruvbox-dark': '#b8bb26',
     'one-dark-pro': '#56b6c2',
     'dracula': '#8be9fd',
@@ -208,7 +72,9 @@ export const darkThemes = {
     'polykai': '#a0ff20'
   },
   '--link-color': {
-    'dark-theme': '#82b32a',
+    'dark-soul': '#82b32a',
+    'photoshop-dark': '#0099ff',
+    'photoshop-black': '#0099ff',
     'gruvbox-dark': '#458588',
     'one-dark-pro': '#61afef',
     'dracula': '#8be9fd',
@@ -218,7 +84,9 @@ export const darkThemes = {
     'polykai': '#40c4ff'
   },
   '--link-hover-color': {
-    'dark-theme': '#95cc30',
+    'dark-soul': '#95cc30',
+    'photoshop-dark': '#33adff',
+    'photoshop-black': '#33adff',
     'gruvbox-dark': '#83a598',
     'one-dark-pro': '#61afef',
     'dracula': '#8be9fd',
@@ -228,7 +96,9 @@ export const darkThemes = {
     'polykai': '#6080ff'
   },
   '--drag-area-background-color': {
-    'dark-theme': '#171717',
+    'dark-soul': '#171717',
+    'photoshop-dark': '#1f1f1f',
+    'photoshop-black': '#0f0f0f',
     'gruvbox-dark': '#3c3836',
     'one-dark-pro': '#21252b',
     'dracula': '#44475a',
@@ -238,7 +108,9 @@ export const darkThemes = {
     'polykai': '#1e2424'
   },
   '--scrollbar-thumb-color': {
-    'dark-theme': '#333333',
+    'dark-soul': '#333333',
+    'photoshop-dark': '#4a4a4a',
+    'photoshop-black': '#2a2a2a',
     'gruvbox-dark': '#504945',
     'one-dark-pro': '#4b5263',
     'dracula': '#6272a4',
@@ -248,7 +120,9 @@ export const darkThemes = {
     'polykai': '#3c4848'
   },
   '--scrollbar-track-color': {
-    'dark-theme': '#1e1e1e',
+    'dark-soul': '#1e1e1e',
+    'photoshop-dark': '#2d2d2d',
+    'photoshop-black': '#181818',
     'gruvbox-dark': '#282828',
     'one-dark-pro': '#282c34',
     'dracula': '#282a36',
@@ -258,17 +132,21 @@ export const darkThemes = {
     'polykai': '#141818'
   },
   '--border-color': {
-    'dark-theme': '#333333',
+    'dark-soul': '#333333',
+    'photoshop-dark': '#4a4a4a',
+    'photoshop-black': '#2a2a2a',
     'gruvbox-dark': '#504945',
     'one-dark-pro': '#4b5263',
-    'dracula': '#6272a4',
+    'dracula': '#3a4564',
     'nord': '#4c566a',
     'palenight': '#444267',
     'one-monokai': '#3e3e3e',
     'polykai': '#242424'
   },
   '--confirm-button-color': {
-    'dark-theme': '#2e6c30',
+    'dark-soul': '#2e6c30',
+    'photoshop-dark': '#2fb344',
+    'photoshop-black': '#2fb344',
     'gruvbox-dark': '#689d6a',
     'one-dark-pro': '#98c379',
     'dracula': '#50fa7b',
@@ -278,7 +156,9 @@ export const darkThemes = {
     'polykai': '#a0ff20'
   },
   '--confirm-button-hover-color': {
-    'dark-theme': '#38833c',
+    'dark-soul': '#38833c',
+    'photoshop-dark': '#34c74c',
+    'photoshop-black': '#34c74c',
     'gruvbox-dark': '#8ec07c',
     'one-dark-pro': '#98c379',
     'dracula': '#50fa7b',
@@ -288,7 +168,9 @@ export const darkThemes = {
     'polykai': '#a0ff20'
   },
   '--confirm-button-text-color': {
-    'dark-theme': '#90ee90',
+    'dark-soul': '#90ee90',
+    'photoshop-dark': '#ffffff',
+    'photoshop-black': '#ffffff',
     'gruvbox-dark': '#ebdbb2',
     'one-dark-pro': '#abb2bf',
     'dracula': '#f8f8f2',
@@ -298,7 +180,9 @@ export const darkThemes = {
     'polykai': '#141818'
   },
   '--yes-button-color': {
-    'dark-theme': '#82b32a',
+    'dark-soul': '#82b32a',
+    'photoshop-dark': '#2fb344',
+    'photoshop-black': '#2fb344',
     'gruvbox-dark': '#b8bb26',
     'one-dark-pro': '#98c379',
     'dracula': '#50fa7b',
@@ -308,7 +192,9 @@ export const darkThemes = {
     'polykai': '#a0ff20'
   },
   '--no-button-color': {
-    'dark-theme': '#b34a2a',
+    'dark-soul': '#b34a2a',
+    'photoshop-dark': '#ff5f52',
+    'photoshop-black': '#ff5f52',
     'gruvbox-dark': '#cc241d',
     'one-dark-pro': '#e06c75',
     'dracula': '#ff5555',
@@ -318,7 +204,9 @@ export const darkThemes = {
     'polykai': '#ff0060'
   },
   '--theme-button-color': {
-    'dark-theme': '#b3a52a',
+    'dark-soul': '#b3a52a',
+    'photoshop-dark': '#0099ff',
+    'photoshop-black': '#0099ff',
     'gruvbox-dark': '#fabd2f',
     'one-dark-pro': '#e5c07b',
     'dracula': '#f1fa8c',
@@ -328,7 +216,9 @@ export const darkThemes = {
     'polykai': '#ffb000'
   },
   '--hotkey-label-text-color': {
-    'dark-theme': '#7ed4ff',
+    'dark-soul': '#7ed4ff',
+    'photoshop-dark': '#0099ff',
+    'photoshop-black': '#0099ff',
     'gruvbox-dark': '#83a598',
     'one-dark-pro': '#61afef',
     'dracula': '#8be9fd',
@@ -338,7 +228,9 @@ export const darkThemes = {
     'polykai': '#40c4ff'
   },
   '--hotkey-label-background-color': {
-    'dark-theme': '#7ed4ff1a',
+    'dark-soul': '#7ed4ff1a',
+    'photoshop-dark': '#0099ff1a',
+    'photoshop-black': '#0099ff1a',
     'gruvbox-dark': '#83a5981a',
     'one-dark-pro': '#61afef1a',
     'dracula': '#8be9fd1a',
@@ -348,7 +240,9 @@ export const darkThemes = {
     'polykai': '#40c4ff1a'
   },
   '--hotkey-label-border-color': {
-    'dark-theme': '#7ed4ff66',
+    'dark-soul': '#7ed4ff66',
+    'photoshop-dark': '#0099ff66',
+    'photoshop-black': '#0099ff66',
     'gruvbox-dark': '#83a59866',
     'one-dark-pro': '#61afef66',
     'dracula': '#8be9fd66',
@@ -358,7 +252,9 @@ export const darkThemes = {
     'polykai': '#40c4ff66'
   },
   '--private-mode-color': {
-    'dark-theme': '#ff6b6b',
+    'dark-soul': '#ff6b6b',
+    'photoshop-dark': '#ff5f52',
+    'photoshop-black': '#ff5f52',
     'gruvbox-dark': '#cc241d',
     'one-dark-pro': '#e06c75',
     'dracula': '#ff5555',
@@ -368,7 +264,9 @@ export const darkThemes = {
     'polykai': '#ff0060'
   },
   '--private-mode-placeholder-color': {
-    'dark-theme': '#ff6b6bbb',
+    'dark-soul': '#ff6b6bbb',
+    'photoshop-dark': '#ff5f52bb',
+    'photoshop-black': '#ff5f52bb',
     'gruvbox-dark': '#cc241dbb',
     'one-dark-pro': '#e06c75bb',
     'dracula': '#ff5555bb',
@@ -378,7 +276,9 @@ export const darkThemes = {
     'polykai': '#ff0060bb'
   },
   '--private-mode-background-color': {
-    'dark-theme': '#ff6b6b38',
+    'dark-soul': '#ff6b6b38',
+    'photoshop-dark': '#ff5f5238',
+    'photoshop-black': '#ff5f5238',
     'gruvbox-dark': '#cc241d38',
     'one-dark-pro': '#e06c7538',
     'dracula': '#ff555538',
@@ -388,7 +288,9 @@ export const darkThemes = {
     'polykai': '#ff006038'
   },
   '--private-message-sent-color': {
-    'dark-theme': '#00d000',
+    'dark-soul': '#00d000',
+    'photoshop-dark': '#2fb344',
+    'photoshop-black': '#2fb344',
     'gruvbox-dark': '#98971a',
     'one-dark-pro': '#98c379',
     'dracula': '#50fa7b',
@@ -398,7 +300,9 @@ export const darkThemes = {
     'polykai': '#a0ff20'
   },
   '--private-message-sent-background-color': {
-    'dark-theme': '#00ff0020',
+    'dark-soul': '#00ff0020',
+    'photoshop-dark': '#2fb34420',
+    'photoshop-black': '#2fb34420',
     'gruvbox-dark': '#98971a20',
     'one-dark-pro': '#98c37920',
     'dracula': '#50fa7b20',
@@ -408,7 +312,9 @@ export const darkThemes = {
     'polykai': '#a0ff2020'
   },
   '--private-message-sent-border-color': {
-    'dark-theme': '#00ff0030',
+    'dark-soul': '#00ff0030',
+    'photoshop-dark': '#2fb34430',
+    'photoshop-black': '#2fb34430',
     'gruvbox-dark': '#98971a30',
     'one-dark-pro': '#98c37930',
     'dracula': '#50fa7b30',
@@ -418,7 +324,9 @@ export const darkThemes = {
     'polykai': '#a0ff2030'
   },
   '--private-message-sent-time-color': {
-    'dark-theme': '#00ff0060',
+    'dark-soul': '#00ff0060',
+    'photoshop-dark': '#2fb344',
+    'photoshop-black': '#2fb344',
     'gruvbox-dark': '#98971a60',
     'one-dark-pro': '#98c37960',
     'dracula': '#50fa7b60',
@@ -428,7 +336,9 @@ export const darkThemes = {
     'polykai': '#a0ff2060'
   },
   '--private-message-received-color': {
-    'dark-theme': '#ff4d4d',
+    'dark-soul': '#ff4d4d',
+    'photoshop-dark': '#ff5f52',
+    'photoshop-black': '#ff5f52',
     'gruvbox-dark': '#cc241d',
     'one-dark-pro': '#e06c75',
     'dracula': '#ff5555',
@@ -438,7 +348,9 @@ export const darkThemes = {
     'polykai': '#ff0060'
   },
   '--private-message-received-background-color': {
-    'dark-theme': '#ff4d4d20',
+    'dark-soul': '#ff4d4d20',
+    'photoshop-dark': '#ff5f5220',
+    'photoshop-black': '#ff5f5220',
     'gruvbox-dark': '#cc241d20',
     'one-dark-pro': '#e06c7520',
     'dracula': '#ff555520',
@@ -448,7 +360,9 @@ export const darkThemes = {
     'polykai': '#ff006020'
   },
   '--private-message-received-border-color': {
-    'dark-theme': '#ff4d4d30',
+    'dark-soul': '#ff4d4d30',
+    'photoshop-dark': '#ff5f5230',
+    'photoshop-black': '#ff5f5230',
     'gruvbox-dark': '#cc241d30',
     'one-dark-pro': '#e06c7530',
     'dracula': '#ff555530',
@@ -458,7 +372,9 @@ export const darkThemes = {
     'polykai': '#ff006030'
   },
   '--private-message-received-time-color': {
-    'dark-theme': '#ff4d4d60',
+    'dark-soul': '#ff4d4d60',
+    'photoshop-dark': '#ff5f52',
+    'photoshop-black': '#ff5f52',
     'gruvbox-dark': '#cc241d60',
     'one-dark-pro': '#e06c7560',
     'dracula': '#ff555560',
@@ -468,7 +384,9 @@ export const darkThemes = {
     'polykai': '#ff006060'
   },
   '--system-message-color': {
-    'dark-theme': '#ffa500',
+    'dark-soul': '#ffa500',
+    'photoshop-dark': '#ff9f00',
+    'photoshop-black': '#ff9f00',
     'gruvbox-dark': '#d79921',
     'one-dark-pro': '#e5c07b',
     'dracula': '#f1fa8c',
@@ -478,7 +396,9 @@ export const darkThemes = {
     'polykai': '#ffe080'
   },
   '--system-message-background-color': {
-    'dark-theme': '#ffa50020',
+    'dark-soul': '#ffa50020',
+    'photoshop-dark': '#ff9f0020',
+    'photoshop-black': '#ff9f0020',
     'gruvbox-dark': '#d7992120',
     'one-dark-pro': '#e5c07b20',
     'dracula': '#f1fa8c20',
@@ -488,7 +408,9 @@ export const darkThemes = {
     'polykai': '#ffe08020'
   },
   '--system-message-border-color': {
-    'dark-theme': '#ffa60030',
+    'dark-soul': '#ffa60030',
+    'photoshop-dark': '#ff9f0030',
+    'photoshop-black': '#ff9f0030',
     'gruvbox-dark': '#d7992130',
     'one-dark-pro': '#e5c07b30',
     'dracula': '#f1fa8c30',
@@ -498,7 +420,9 @@ export const darkThemes = {
     'polykai': '#ffe08030'
   },
   '--system-message-time-color': {
-    'dark-theme': '#ffa50060',
+    'dark-soul': '#ffa50060',
+    'photoshop-dark': '#ff9f00',
+    'photoshop-black': '#ff9f00',
     'gruvbox-dark': '#d7992160',
     'one-dark-pro': '#e5c07b60',
     'dracula': '#f1fa8c60',
