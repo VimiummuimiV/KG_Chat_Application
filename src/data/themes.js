@@ -154,7 +154,8 @@ export const darkThemes = {
     'dracula': '#282a36',
     'nord': '#2e3440',
     'palenight': '#292d3e',
-    'one-monokai': '#222222'
+    'one-monokai': '#222222',
+    'polykai': '#141818'
   },
   '--secondary-background-color': {
     'dark-theme': '#2a2a2a',
@@ -163,7 +164,8 @@ export const darkThemes = {
     'dracula': '#44475a',
     'nord': '#3b4252',
     'palenight': '#32374d',
-    'one-monokai': '#2a2a2a'
+    'one-monokai': '#2a2a2a',
+    'polykai': '#1e2424'
   },
   '--main-text-color': {
     'dark-theme': '#cdb398',
@@ -172,7 +174,8 @@ export const darkThemes = {
     'dracula': '#f8f8f2',
     'nord': '#d8dee9',
     'palenight': '#a6accd',
-    'one-monokai': '#f8f8f2'
+    'one-monokai': '#f8f8f2',
+    'polykai': '#aaaaaa'
   },
   '--main-accent-color': {
     'dark-theme': '#cdb398',
@@ -181,7 +184,8 @@ export const darkThemes = {
     'dracula': '#ff79c6',
     'nord': '#88c0d0',
     'palenight': '#c792ea',
-    'one-monokai': '#f92672'
+    'one-monokai': '#f92672',
+    'polykai': '#40c4ff'
   },
   '--secondary-accent-color': {
     'dark-theme': '#ffa500',
@@ -190,7 +194,8 @@ export const darkThemes = {
     'dracula': '#50fa7b',
     'nord': '#81a1c1',
     'palenight': '#82aaff',
-    'one-monokai': '#a6e22e'
+    'one-monokai': '#a6e22e',
+    'polykai': '#ff0060'
   },
   '--third-accent-color': {
     'dark-theme': '#00ff58',
@@ -199,7 +204,8 @@ export const darkThemes = {
     'dracula': '#8be9fd',
     'nord': '#5e81ac',
     'palenight': '#89ddff',
-    'one-monokai': '#66d9ef'
+    'one-monokai': '#66d9ef',
+    'polykai': '#a0ff20'
   },
   '--link-color': {
     'dark-theme': '#82b32a',
@@ -208,7 +214,8 @@ export const darkThemes = {
     'dracula': '#8be9fd',
     'nord': '#88c0d0',
     'palenight': '#80cbc4',
-    'one-monokai': '#66d9ef'
+    'one-monokai': '#66d9ef',
+    'polykai': '#40c4ff'
   },
   '--link-hover-color': {
     'dark-theme': '#95cc30',
@@ -217,16 +224,18 @@ export const darkThemes = {
     'dracula': '#8be9fd',
     'nord': '#81a1c1',
     'palenight': '#80cbc4',
-    'one-monokai': '#66d9ef'
+    'one-monokai': '#66d9ef',
+    'polykai': '#6080ff'
   },
   '--drag-area-background-color': {
-    'dark-theme': '#161616cc',
+    'dark-theme': '#171717',
     'gruvbox-dark': '#3c3836',
     'one-dark-pro': '#21252b',
     'dracula': '#44475a',
     'nord': '#3b4252',
     'palenight': '#32374d',
-    'one-monokai': '#2a2a2a'
+    'one-monokai': '#2a2a2a',
+    'polykai': '#1e2424'
   },
   '--scrollbar-thumb-color': {
     'dark-theme': '#333333',
@@ -235,7 +244,8 @@ export const darkThemes = {
     'dracula': '#6272a4',
     'nord': '#4c566a',
     'palenight': '#444267',
-    'one-monokai': '#3e3e3e'
+    'one-monokai': '#3e3e3e',
+    'polykai': '#3c4848'
   },
   '--scrollbar-track-color': {
     'dark-theme': '#1e1e1e',
@@ -244,7 +254,8 @@ export const darkThemes = {
     'dracula': '#282a36',
     'nord': '#2e3440',
     'palenight': '#292d3e',
-    'one-monokai': '#222222'
+    'one-monokai': '#222222',
+    'polykai': '#141818'
   },
   '--border-color': {
     'dark-theme': '#333333',
@@ -253,7 +264,8 @@ export const darkThemes = {
     'dracula': '#6272a4',
     'nord': '#4c566a',
     'palenight': '#444267',
-    'one-monokai': '#3e3e3e'
+    'one-monokai': '#3e3e3e',
+    'polykai': '#242424'
   },
   '--confirm-button-color': {
     'dark-theme': '#2e6c30',
@@ -262,7 +274,8 @@ export const darkThemes = {
     'dracula': '#50fa7b',
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
-    'one-monokai': '#a6e22e'
+    'one-monokai': '#a6e22e',
+    'polykai': '#a0ff20'
   },
   '--confirm-button-hover-color': {
     'dark-theme': '#38833c',
@@ -271,7 +284,8 @@ export const darkThemes = {
     'dracula': '#50fa7b',
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
-    'one-monokai': '#a6e22e'
+    'one-monokai': '#a6e22e',
+    'polykai': '#a0ff20'
   },
   '--confirm-button-text-color': {
     'dark-theme': '#90ee90',
@@ -280,7 +294,8 @@ export const darkThemes = {
     'dracula': '#f8f8f2',
     'nord': '#d8dee9',
     'palenight': '#a6accd',
-    'one-monokai': '#f8f8f2'
+    'one-monokai': '#f8f8f2',
+    'polykai': '#141818'
   },
   '--yes-button-color': {
     'dark-theme': '#82b32a',
@@ -289,7 +304,8 @@ export const darkThemes = {
     'dracula': '#50fa7b',
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
-    'one-monokai': '#a6e22e'
+    'one-monokai': '#a6e22e',
+    'polykai': '#a0ff20'
   },
   '--no-button-color': {
     'dark-theme': '#b34a2a',
@@ -298,7 +314,8 @@ export const darkThemes = {
     'dracula': '#ff5555',
     'nord': '#bf616a',
     'palenight': '#f07178',
-    'one-monokai': '#f92672'
+    'one-monokai': '#f92672',
+    'polykai': '#ff0060'
   },
   '--theme-button-color': {
     'dark-theme': '#b3a52a',
@@ -307,7 +324,8 @@ export const darkThemes = {
     'dracula': '#f1fa8c',
     'nord': '#ebcb8b',
     'palenight': '#ffcb6b',
-    'one-monokai': '#e6db74'
+    'one-monokai': '#e6db74',
+    'polykai': '#ffb000'
   },
   '--hotkey-label-text-color': {
     'dark-theme': '#7ed4ff',
@@ -316,7 +334,8 @@ export const darkThemes = {
     'dracula': '#8be9fd',
     'nord': '#88c0d0',
     'palenight': '#80cbc4',
-    'one-monokai': '#66d9ef'
+    'one-monokai': '#66d9ef',
+    'polykai': '#40c4ff'
   },
   '--hotkey-label-background-color': {
     'dark-theme': '#7ed4ff1a',
@@ -325,7 +344,8 @@ export const darkThemes = {
     'dracula': '#8be9fd1a',
     'nord': '#88c0d01a',
     'palenight': '#80cbc41a',
-    'one-monokai': '#66d9ef1a'
+    'one-monokai': '#66d9ef1a',
+    'polykai': '#40c4ff1a'
   },
   '--hotkey-label-border-color': {
     'dark-theme': '#7ed4ff66',
@@ -334,7 +354,8 @@ export const darkThemes = {
     'dracula': '#8be9fd66',
     'nord': '#88c0d066',
     'palenight': '#80cbc466',
-    'one-monokai': '#66d9ef66'
+    'one-monokai': '#66d9ef66',
+    'polykai': '#40c4ff66'
   },
   '--private-mode-color': {
     'dark-theme': '#ff6b6b',
@@ -343,7 +364,8 @@ export const darkThemes = {
     'dracula': '#ff5555',
     'nord': '#bf616a',
     'palenight': '#f07178',
-    'one-monokai': '#f92672'
+    'one-monokai': '#f92672',
+    'polykai': '#ff0060'
   },
   '--private-mode-placeholder-color': {
     'dark-theme': '#ff6b6bbb',
@@ -352,7 +374,8 @@ export const darkThemes = {
     'dracula': '#ff5555bb',
     'nord': '#bf616abb',
     'palenight': '#f07178bb',
-    'one-monokai': '#f92672bb'
+    'one-monokai': '#f92672bb',
+    'polykai': '#ff0060bb'
   },
   '--private-mode-background-color': {
     'dark-theme': '#ff6b6b38',
@@ -361,7 +384,8 @@ export const darkThemes = {
     'dracula': '#ff555538',
     'nord': '#bf616a38',
     'palenight': '#f0717838',
-    'one-monokai': '#f9267238'
+    'one-monokai': '#f9267238',
+    'polykai': '#ff006038'
   },
   '--private-message-sent-color': {
     'dark-theme': '#00d000',
@@ -370,7 +394,8 @@ export const darkThemes = {
     'dracula': '#50fa7b',
     'nord': '#a3be8c',
     'palenight': '#c3e88d',
-    'one-monokai': '#a6e22e'
+    'one-monokai': '#a6e22e',
+    'polykai': '#a0ff20'
   },
   '--private-message-sent-background-color': {
     'dark-theme': '#00ff0020',
@@ -379,7 +404,8 @@ export const darkThemes = {
     'dracula': '#50fa7b20',
     'nord': '#a3be8c20',
     'palenight': '#c3e88d20',
-    'one-monokai': '#a6e22e20'
+    'one-monokai': '#a6e22e20',
+    'polykai': '#a0ff2020'
   },
   '--private-message-sent-border-color': {
     'dark-theme': '#00ff0030',
@@ -388,7 +414,8 @@ export const darkThemes = {
     'dracula': '#50fa7b30',
     'nord': '#a3be8c30',
     'palenight': '#c3e88d30',
-    'one-monokai': '#a6e22e30'
+    'one-monokai': '#a6e22e30',
+    'polykai': '#a0ff2030'
   },
   '--private-message-sent-time-color': {
     'dark-theme': '#00ff0060',
@@ -397,7 +424,8 @@ export const darkThemes = {
     'dracula': '#50fa7b60',
     'nord': '#a3be8c60',
     'palenight': '#c3e88d60',
-    'one-monokai': '#a6e22e60'
+    'one-monokai': '#a6e22e60',
+    'polykai': '#a0ff2060'
   },
   '--private-message-received-color': {
     'dark-theme': '#ff4d4d',
@@ -406,7 +434,8 @@ export const darkThemes = {
     'dracula': '#ff5555',
     'nord': '#bf616a',
     'palenight': '#f07178',
-    'one-monokai': '#f92672'
+    'one-monokai': '#f92672',
+    'polykai': '#ff0060'
   },
   '--private-message-received-background-color': {
     'dark-theme': '#ff4d4d20',
@@ -415,7 +444,8 @@ export const darkThemes = {
     'dracula': '#ff555520',
     'nord': '#bf616a20',
     'palenight': '#f0717820',
-    'one-monokai': '#f9267220'
+    'one-monokai': '#f9267220',
+    'polykai': '#ff006020'
   },
   '--private-message-received-border-color': {
     'dark-theme': '#ff4d4d30',
@@ -424,7 +454,8 @@ export const darkThemes = {
     'dracula': '#ff555530',
     'nord': '#bf616a30',
     'palenight': '#f0717830',
-    'one-monokai': '#f9267230'
+    'one-monokai': '#f9267230',
+    'polykai': '#ff006030'
   },
   '--private-message-received-time-color': {
     'dark-theme': '#ff4d4d60',
@@ -433,7 +464,8 @@ export const darkThemes = {
     'dracula': '#ff555560',
     'nord': '#bf616a60',
     'palenight': '#f0717860',
-    'one-monokai': '#f9267260'
+    'one-monokai': '#f9267260',
+    'polykai': '#ff006060'
   },
   '--system-message-color': {
     'dark-theme': '#ffa500',
@@ -442,7 +474,8 @@ export const darkThemes = {
     'dracula': '#f1fa8c',
     'nord': '#ebcb8b',
     'palenight': '#ffcb6b',
-    'one-monokai': '#e6db74'
+    'one-monokai': '#e6db74',
+    'polykai': '#ffe080'
   },
   '--system-message-background-color': {
     'dark-theme': '#ffa50020',
@@ -451,7 +484,8 @@ export const darkThemes = {
     'dracula': '#f1fa8c20',
     'nord': '#ebcb8b20',
     'palenight': '#ffcb6b20',
-    'one-monokai': '#e6db7420'
+    'one-monokai': '#e6db7420',
+    'polykai': '#ffe08020'
   },
   '--system-message-border-color': {
     'dark-theme': '#ffa60030',
@@ -460,7 +494,8 @@ export const darkThemes = {
     'dracula': '#f1fa8c30',
     'nord': '#ebcb8b30',
     'palenight': '#ffcb6b30',
-    'one-monokai': '#e6db7430'
+    'one-monokai': '#e6db7430',
+    'polykai': '#ffe08030'
   },
   '--system-message-time-color': {
     'dark-theme': '#ffa50060',
@@ -469,6 +504,7 @@ export const darkThemes = {
     'dracula': '#f1fa8c60',
     'nord': '#ebcb8b60',
     'palenight': '#ffcb6b60',
-    'one-monokai': '#e6db7460'
+    'one-monokai': '#e6db7460',
+    'polykai': '#ffe08060'
   }
 };
