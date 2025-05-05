@@ -3,216 +3,504 @@ export const lightThemes = {
     'photoshop-light': '#f6f6f6',
     'photoshop-gray': '#e3e3e3',
     'gruvbox-light': '#fbf1c7',
-    'material-light': '#fafafa'
+    'dracula-light': '#f8f8f2',
+    'material-light': '#fafafa',
+    'github-light': '#ffffff',
+    'solarized-light': '#fdf6e3',
+    'one-light': '#fafafa',
+    'nord-light': '#e5e9f0',
+    'monokai-pro-light': '#f8f8f2',
+    'vscode-light': '#ffffff',
+    'ayu-light': '#fcfcfc'
   },
   '--secondary-background-color': {
     'photoshop-light': '#e6e6e6',
     'photoshop-gray': '#d4d4d4',
     'gruvbox-light': '#ebdbb2',
-    'material-light': '#f5f5f5'
+    'dracula-light': '#e9e9f4',
+    'material-light': '#f5f5f5',
+    'github-light': '#f6f8fa',
+    'solarized-light': '#eee8d5',
+    'one-light': '#f0f0f0',
+    'nord-light': '#eceff4',
+    'monokai-pro-light': '#f5f4f1',
+    'vscode-light': '#f3f3f3',
+    'ayu-light': '#f6f6f6'
   },
   '--main-text-color': {
     'photoshop-light': '#222222',
     'photoshop-gray': '#2d2d2d',
     'gruvbox-light': '#3c3836',
-    'material-light': '#212121'
+    'dracula-light': '#383a59',
+    'material-light': '#212121',
+    'github-light': '#24292e',
+    'solarized-light': '#657b83',
+    'one-light': '#383a42',
+    'nord-light': '#2e3440',
+    'monokai-pro-light': '#272822',
+    'vscode-light': '#333333',
+    'ayu-light': '#5c6166'
   },
   '--main-accent-color': {
     'photoshop-light': '#0099ff',
     'photoshop-gray': '#0099ff',
     'gruvbox-light': '#9d0006',
-    'material-light': '#1e88e5'
+    'dracula-light': '#6272a4',
+    'material-light': '#1e88e5',
+    'github-light': '#0969da',
+    'solarized-light': '#268bd2',
+    'one-light': '#0184bc',
+    'nord-light': '#5e81ac',
+    'monokai-pro-light': '#66d9ef',
+    'vscode-light': '#0066b8',
+    'ayu-light': '#55b4d4'
   },
   '--secondary-accent-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
     'gruvbox-light': '#79740e',
-    'material-light': '#ff5252'
+    'dracula-light': '#ff79c6',
+    'material-light': '#ff5252',
+    'github-light': '#8250df',
+    'solarized-light': '#b58900',
+    'one-light': '#e45649',
+    'nord-light': '#a3be8c',
+    'monokai-pro-light': '#fd971f',
+    'vscode-light': '#b5200d',
+    'ayu-light': '#ffd580'
   },
   '--third-accent-color': {
     'photoshop-light': '#2fb344',
     'photoshop-gray': '#2fb344',
     'gruvbox-light': '#427b58',
-    'material-light': '#43a047'
+    'dracula-light': '#50fa7b',
+    'material-light': '#43a047',
+    'github-light': '#1a7f37',
+    'solarized-light': '#2aa198',
+    'one-light': '#50a14f',
+    'nord-light': '#bf616a',
+    'monokai-pro-light': '#a6e22e',
+    'vscode-light': '#007acc',
+    'ayu-light': '#36c692'
   },
   '--link-color': {
     'photoshop-light': '#0099ff',
     'photoshop-gray': '#0099ff',
     'gruvbox-light': '#076678',
-    'material-light': '#1976d2'
+    'dracula-light': '#6272a4',
+    'material-light': '#1976d2',
+    'github-light': '#0969da',
+    'solarized-light': '#268bd2',
+    'one-light': '#0184bc',
+    'nord-light': '#5e81ac',
+    'monokai-pro-light': '#66d9ef',
+    'vscode-light': '#0066b8',
+    'ayu-light': '#55b4d4'
   },
   '--link-hover-color': {
     'photoshop-light': '#007acc',
     'photoshop-gray': '#007acc',
     'gruvbox-light': '#458588',
-    'material-light': '#1565c0'
+    'dracula-light': '#44475a',
+    'material-light': '#1565c0',
+    'github-light': '#054289',
+    'solarized-light': '#005f87',
+    'one-light': '#005f87',
+    'nord-light': '#81a1c1',
+    'monokai-pro-light': '#a1efe4',
+    'vscode-light': '#005a9e',
+    'ayu-light': '#36c692'
   },
   '--drag-area-background-color': {
     'photoshop-light': '#e6e6e6',
     'photoshop-gray': '#d4d4d4',
     'gruvbox-light': '#ebdbb2',
-    'material-light': '#eeeeee'
+    'dracula-light': '#e9e9f4',
+    'material-light': '#eeeeee',
+    'github-light': '#f6f8fa',
+    'solarized-light': '#eee8d5',
+    'one-light': '#eaeaea',
+    'nord-light': '#eceff4',
+    'monokai-pro-light': '#f5f4f1',
+    'vscode-light': '#f3f3f3',
+    'ayu-light': '#f6f6f6'
   },
   '--scrollbar-thumb-color': {
     'photoshop-light': '#cccccc',
     'photoshop-gray': '#b8b8b8',
     'gruvbox-light': '#d5c4a1',
-    'material-light': '#bdbdbd'
+    'dracula-light': '#d6d6e7',
+    'material-light': '#bdbdbd',
+    'github-light': '#d0d7de',
+    'solarized-light': '#d3cfc4',
+    'one-light': '#cccccc',
+    'nord-light': '#d8dee9',
+    'monokai-pro-light': '#e0e0e0',
+    'vscode-light': '#cccccc',
+    'ayu-light': '#e6e6e6'
   },
   '--scrollbar-track-color': {
     'photoshop-light': '#f6f6f6',
     'photoshop-gray': '#e3e3e3',
     'gruvbox-light': '#fbf1c7',
-    'material-light': '#fafafa'
+    'dracula-light': '#f8f8f2',
+    'material-light': '#fafafa',
+    'github-light': '#f6f8fa',
+    'solarized-light': '#fdf6e3',
+    'one-light': '#fafafa',
+    'nord-light': '#e5e9f0',
+    'monokai-pro-light': '#f8f8f2',
+    'vscode-light': '#f3f3f3',
+    'ayu-light': '#fcfcfc'
   },
   '--border-color': {
     'photoshop-light': '#d9d9d9',
     'photoshop-gray': '#c4c4c4',
     'gruvbox-light': '#d5c4a1',
-    'material-light': '#e0e0e0'
+    'dracula-light': '#d6d6e7',
+    'material-light': '#e0e0e0',
+    'github-light': '#d0d7de',
+    'solarized-light': '#eee8d5',
+    'one-light': '#e5e5e6',
+    'nord-light': '#d8dee9',
+    'monokai-pro-light': '#e0e0e0',
+    'vscode-light': '#cccccc',
+    'ayu-light': '#e6e6e6'
   },
   '--confirm-button-color': {
     'photoshop-light': '#2fb344',
     'photoshop-gray': '#2fb344',
     'gruvbox-light': '#79740e',
-    'material-light': '#43a047'
+    'dracula-light': '#50fa7b',
+    'material-light': '#43a047',
+    'github-light': '#2ea44f',
+    'solarized-light': '#859900',
+    'one-light': '#50a14f',
+    'nord-light': '#a3be8c',
+    'monokai-pro-light': '#a6e22e',
+    'vscode-light': '#388e3c',
+    'ayu-light': '#36c692'
   },
   '--confirm-button-hover-color': {
     'photoshop-light': '#34c74c',
     'photoshop-gray': '#34c74c',
     'gruvbox-light': '#98971a',
-    'material-light': '#388e3c'
+    'dracula-light': '#3be37e',
+    'material-light': '#388e3c',
+    'github-light': '#22863a',
+    'solarized-light': '#6c8800',
+    'one-light': '#3d803d',
+    'nord-light': '#8fbcbb',
+    'monokai-pro-light': '#b6e880',
+    'vscode-light': '#2e7031',
+    'ayu-light': '#2fa36a'
   },
   '--confirm-button-text-color': {
     'photoshop-light': '#ffffff',
     'photoshop-gray': '#ffffff',
     'gruvbox-light': '#fbf1c7',
-    'material-light': '#ffffff'
+    'dracula-light': '#ffffff',
+    'material-light': '#ffffff',
+    'github-light': '#ffffff',
+    'solarized-light': '#fdf6e3',
+    'one-light': '#ffffff',
+    'nord-light': '#2e3440',
+    'monokai-pro-light': '#272822',
+    'vscode-light': '#ffffff',
+    'ayu-light': '#ffffff'
   },
   '--yes-button-color': {
     'photoshop-light': '#2fb344',
     'photoshop-gray': '#2fb344',
     'gruvbox-light': '#79740e',
-    'material-light': '#43a047'
+    'dracula-light': '#50fa7b',
+    'material-light': '#43a047',
+    'github-light': '#2ea44f',
+    'solarized-light': '#859900',
+    'one-light': '#50a14f',
+    'nord-light': '#a3be8c',
+    'monokai-pro-light': '#a6e22e',
+    'vscode-light': '#388e3c',
+    'ayu-light': '#36c692'
   },
   '--no-button-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
     'gruvbox-light': '#9d0006',
-    'material-light': '#e53935'
+    'dracula-light': '#ff5555',
+    'material-light': '#e53935',
+    'github-light': '#d73a49',
+    'solarized-light': '#dc322f',
+    'one-light': '#e45649',
+    'nord-light': '#bf616a',
+    'monokai-pro-light': '#f92672',
+    'vscode-light': '#e53935',
+    'ayu-light': '#ff3333'
   },
   '--theme-button-color': {
     'photoshop-light': '#0099ff',
     'photoshop-gray': '#0099ff',
     'gruvbox-light': '#b57614',
-    'material-light': '#1e88e5'
+    'dracula-light': '#6272a4',
+    'material-light': '#1e88e5',
+    'github-light': '#0969da',
+    'solarized-light': '#268bd2',
+    'one-light': '#0184bc',
+    'nord-light': '#5e81ac',
+    'monokai-pro-light': '#66d9ef',
+    'vscode-light': '#0066b8',
+    'ayu-light': '#55b4d4'
   },
   '--hotkey-label-text-color': {
     'photoshop-light': '#0099ff',
     'photoshop-gray': '#0099ff',
     'gruvbox-light': '#076678',
-    'material-light': '#1e88e5'
+    'dracula-light': '#383a59',
+    'material-light': '#1e88e5',
+    'github-light': '#24292e',
+    'solarized-light': '#657b83',
+    'one-light': '#383a42',
+    'nord-light': '#2e3440',
+    'monokai-pro-light': '#272822',
+    'vscode-light': '#333333',
+    'ayu-light': '#5c6166'
   },
   '--hotkey-label-background-color': {
     'photoshop-light': '#0099ff1a',
     'photoshop-gray': '#0099ff1a',
     'gruvbox-light': '#0766781a',
-    'material-light': '#1e88e51a'
+    'dracula-light': '#6272a41a',
+    'material-light': '#1e88e51a',
+    'github-light': '#0969da1a',
+    'solarized-light': '#268bd21a',
+    'one-light': '#0184bc1a',
+    'nord-light': '#5e81ac1a',
+    'monokai-pro-light': '#66d9ef1a',
+    'vscode-light': '#0066b81a',
+    'ayu-light': '#55b4d41a'
   },
   '--hotkey-label-border-color': {
     'photoshop-light': '#0099ff66',
     'photoshop-gray': '#0099ff66',
     'gruvbox-light': '#07667866',
-    'material-light': '#1e88e566'
+    'dracula-light': '#6272a466',
+    'material-light': '#1e88e566',
+    'github-light': '#0969da66',
+    'solarized-light': '#268bd266',
+    'one-light': '#0184bc66',
+    'nord-light': '#5e81ac66',
+    'monokai-pro-light': '#66d9ef66',
+    'vscode-light': '#0066b866',
+    'ayu-light': '#55b4d466'
   },
   '--private-mode-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
     'gruvbox-light': '#9d0006',
-    'material-light': '#e53935'
+    'dracula-light': '#ff5555',
+    'material-light': '#e53935',
+    'github-light': '#d73a49',
+    'solarized-light': '#dc322f',
+    'one-light': '#e45649',
+    'nord-light': '#bf616a',
+    'monokai-pro-light': '#f92672',
+    'vscode-light': '#e53935',
+    'ayu-light': '#ff3333'
   },
   '--private-mode-placeholder-color': {
     'photoshop-light': '#ff5f52bb',
     'photoshop-gray': '#ff5f52bb',
     'gruvbox-light': '#9d0006bb',
-    'material-light': '#e53935bb'
+    'dracula-light': '#ff5555bb',
+    'material-light': '#e53935bb',
+    'github-light': '#d73a49bb',
+    'solarized-light': '#dc322fbb',
+    'one-light': '#e45649bb',
+    'nord-light': '#bf616abb',
+    'monokai-pro-light': '#f92672bb',
+    'vscode-light': '#e53935bb',
+    'ayu-light': '#ff3333bb'
   },
   '--private-mode-background-color': {
     'photoshop-light': '#ff5f5238',
     'photoshop-gray': '#ff5f5238',
     'gruvbox-light': '#9d000638',
-    'material-light': '#e5393538'
+    'dracula-light': '#ff55551a',
+    'material-light': '#e5393538',
+    'github-light': '#d73a491a',
+    'solarized-light': '#dc322f1a',
+    'one-light': '#e456491a',
+    'nord-light': '#bf616a1a',
+    'monokai-pro-light': '#f926721a',
+    'vscode-light': '#e539351a',
+    'ayu-light': '#ff33331a'
   },
   '--private-message-sent-color': {
     'photoshop-light': '#2fb344',
     'photoshop-gray': '#2fb344',
     'gruvbox-light': '#79740e',
-    'material-light': '#43a047'
+    'dracula-light': '#50fa7b',
+    'material-light': '#43a047',
+    'github-light': '#2ea44f',
+    'solarized-light': '#859900',
+    'one-light': '#50a14f',
+    'nord-light': '#a3be8c',
+    'monokai-pro-light': '#a6e22e',
+    'vscode-light': '#388e3c',
+    'ayu-light': '#36c692'
   },
   '--private-message-sent-background-color': {
     'photoshop-light': '#2fb34420',
     'photoshop-gray': '#2fb34420',
     'gruvbox-light': '#79740e20',
-    'material-light': '#43a04720'
+    'dracula-light': '#50fa7b1a',
+    'material-light': '#43a04720',
+    'github-light': '#2ea44f1a',
+    'solarized-light': '#8599001a',
+    'one-light': '#50a14f1a',
+    'nord-light': '#a3be8c1a',
+    'monokai-pro-light': '#a6e22e1a',
+    'vscode-light': '#388e3c1a',
+    'ayu-light': '#36c6921a'
   },
   '--private-message-sent-border-color': {
     'photoshop-light': '#2fb34430',
     'photoshop-gray': '#2fb34430',
     'gruvbox-light': '#79740e30',
-    'material-light': '#43a04730'
+    'dracula-light': '#50fa7b30',
+    'material-light': '#43a04730',
+    'github-light': '#2ea44f30',
+    'solarized-light': '#85990030',
+    'one-light': '#50a14f30',
+    'nord-light': '#a3be8c30',
+    'monokai-pro-light': '#a6e22e30',
+    'vscode-light': '#388e3c30',
+    'ayu-light': '#36c69230'
   },
   '--private-message-sent-time-color': {
     'photoshop-light': '#2fb344',
     'photoshop-gray': '#2fb344',
     'gruvbox-light': '#79740e',
-    'material-light': '#43a047'
+    'dracula-light': '#50fa7b',
+    'material-light': '#43a047',
+    'github-light': '#2ea44f',
+    'solarized-light': '#859900',
+    'one-light': '#50a14f',
+    'nord-light': '#a3be8c',
+    'monokai-pro-light': '#a6e22e',
+    'vscode-light': '#388e3c',
+    'ayu-light': '#36c692'
   },
   '--private-message-received-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
     'gruvbox-light': '#9d0006',
-    'material-light': '#e53935'
+    'dracula-light': '#ff5555',
+    'material-light': '#e53935',
+    'github-light': '#d73a49',
+    'solarized-light': '#dc322f',
+    'one-light': '#e45649',
+    'nord-light': '#bf616a',
+    'monokai-pro-light': '#f92672',
+    'vscode-light': '#e53935',
+    'ayu-light': '#ff3333'
   },
   '--private-message-received-background-color': {
     'photoshop-light': '#ff5f5220',
     'photoshop-gray': '#ff5f5220',
     'gruvbox-light': '#9d000620',
-    'material-light': '#e5393520'
+    'dracula-light': '#ff55551a',
+    'material-light': '#e5393520',
+    'github-light': '#d73a491a',
+    'solarized-light': '#dc322f1a',
+    'one-light': '#e456491a',
+    'nord-light': '#bf616a1a',
+    'monokai-pro-light': '#f926721a',
+    'vscode-light': '#e539351a',
+    'ayu-light': '#ff33331a'
   },
   '--private-message-received-border-color': {
     'photoshop-light': '#ff5f5230',
     'photoshop-gray': '#ff5f5230',
     'gruvbox-light': '#9d000630',
-    'material-light': '#e5393530'
+    'dracula-light': '#ff555530',
+    'material-light': '#e5393530',
+    'github-light': '#d73a4930',
+    'solarized-light': '#dc322f30',
+    'one-light': '#e4564930',
+    'nord-light': '#bf616a30',
+    'monokai-pro-light': '#f9267230',
+    'vscode-light': '#e5393530',
+    'ayu-light': '#ff333330'
   },
   '--private-message-received-time-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
     'gruvbox-light': '#9d0006',
-    'material-light': '#e53935'
+    'dracula-light': '#ff5555',
+    'material-light': '#e53935',
+    'github-light': '#d73a49',
+    'solarized-light': '#dc322f',
+    'one-light': '#e45649',
+    'nord-light': '#bf616a',
+    'monokai-pro-light': '#f92672',
+    'vscode-light': '#e53935',
+    'ayu-light': '#ff3333'
   },
   '--system-message-color': {
     'photoshop-light': '#ff9f00',
     'photoshop-gray': '#ff9f00',
     'gruvbox-light': '#b57614',
-    'material-light': '#ffa000'
+    'dracula-light': '#ff79c6',
+    'material-light': '#ffa000',
+    'github-light': '#8250df',
+    'solarized-light': '#b58900',
+    'one-light': '#e45649',
+    'nord-light': '#a3be8c',
+    'monokai-pro-light': '#fd971f',
+    'vscode-light': '#b5200d',
+    'ayu-light': '#ffd580'
   },
   '--system-message-background-color': {
     'photoshop-light': '#ff9f0020',
     'photoshop-gray': '#ff9f0020',
     'gruvbox-light': '#b5761420',
-    'material-light': '#ffa00020'
+    'dracula-light': '#ff79c61a',
+    'material-light': '#ffa00020',
+    'github-light': '#8250df1a',
+    'solarized-light': '#b589001a',
+    'one-light': '#e456491a',
+    'nord-light': '#a3be8c1a',
+    'monokai-pro-light': '#fd971f1a',
+    'vscode-light': '#b5200d1a',
+    'ayu-light': '#ffd5801a'
   },
   '--system-message-border-color': {
     'photoshop-light': '#ff9f0030',
     'photoshop-gray': '#ff9f0030',
     'gruvbox-light': '#b5761430',
-    'material-light': '#ffa00030'
+    'dracula-light': '#ff79c630',
+    'material-light': '#ffa00030',
+    'github-light': '#8250df30',
+    'solarized-light': '#b5890030',
+    'one-light': '#e4564930',
+    'nord-light': '#a3be8c30',
+    'monokai-pro-light': '#fd971f30',
+    'vscode-light': '#b5200d30',
+    'ayu-light': '#ffd58030'
   },
   '--system-message-time-color': {
     'photoshop-light': '#ff9f00',
     'photoshop-gray': '#ff9f00',
     'gruvbox-light': '#b57614',
-    'material-light': '#ffa000'
+    'dracula-light': '#ff79c6',
+    'material-light': '#ffa000',
+    'github-light': '#8250df',
+    'solarized-light': '#b58900',
+    'one-light': '#e45649',
+    'nord-light': '#a3be8c',
+    'monokai-pro-light': '#fd971f',
+    'vscode-light': '#b5200d',
+    'ayu-light': '#ffd580'
   }
 };
