@@ -1,3 +1,49 @@
+// Shared button colors for light themes
+export const sharedColors = {
+  positive: {
+    'photoshop-light': '#2fb344',
+    'photoshop-gray': '#2aa23d',
+    'gruvbox-light': '#79740e',
+    'dracula-light': '#05ae30',
+    'material-light': '#43a047',
+    'github-light': '#2ea44f',
+    'solarized-light': '#859900',
+    'one-light': '#50a14f',
+    'nord-light': '#7da35c',
+    'monokai-pro-light': '#80b319',
+    'vscode-light': '#388e3c',
+    'ayu-light': '#36c692'
+  },
+  negative: {
+    'photoshop-light': '#ff5f52',
+    'photoshop-gray': '#ff1300',
+    'gruvbox-light': '#9d0006',
+    'dracula-light': '#f33f33',
+    'material-light': '#e53935',
+    'github-light': '#d73a49',
+    'solarized-light': '#dc322f',
+    'one-light': '#e45649',
+    'nord-light': '#bf616a',
+    'monokai-pro-light': '#f8075e',
+    'vscode-light': '#e53935',
+    'ayu-light': '#ff3333'
+  },
+  neutral: {
+    'photoshop-light': '#0099ff',
+    'photoshop-gray': '#0099ff',
+    'gruvbox-light': '#b57614',
+    'dracula-light': '#6272a4',
+    'material-light': '#1e88e5',
+    'github-light': '#0969da',
+    'solarized-light': '#268bd2',
+    'one-light': '#0184bc',
+    'nord-light': '#5e81ac',
+    'monokai-pro-light': '#139eb9',
+    'vscode-light': '#0066b8',
+    'ayu-light': '#55b4d4'
+  }
+};
+
 export const lightThemes = {
   // Base theme colors
   '--main-background-color': {
@@ -42,20 +88,9 @@ export const lightThemes = {
     'vscode-light': '#333333',
     'ayu-light': '#5c6166'
   },
-  '--main-accent-color': {
-    'photoshop-light': '#0099ff',
-    'photoshop-gray': '#0099ff',
-    'gruvbox-light': '#9d0006',
-    'dracula-light': '#6272a4',
-    'material-light': '#1e88e5',
-    'github-light': '#0969da',
-    'solarized-light': '#268bd2',
-    'one-light': '#0184bc',
-    'nord-light': '#5e81ac',
-    'monokai-pro-light': '#139eb9',
-    'vscode-light': '#0066b8',
-    'ayu-light': '#55b4d4'
-  },
+
+  // Accent colors
+  '--main-accent-color': sharedColors.neutral,
   '--secondary-accent-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
@@ -84,6 +119,8 @@ export const lightThemes = {
     'vscode-light': '#007acc',
     'ayu-light': '#36c692'
   },
+
+  // Anchor colors
   '--link-color': {
     'photoshop-light': '#0099ff',
     'photoshop-gray': '#0099ff',
@@ -112,6 +149,8 @@ export const lightThemes = {
     'vscode-light': '#005a9e',
     'ayu-light': '#36c692'
   },
+
+  // Drag area colors
   '--drag-area-background-color': {
     'photoshop-light': '#e6e6e6',
     'photoshop-gray': '#d4d4d4',
@@ -126,6 +165,8 @@ export const lightThemes = {
     'vscode-light': '#f3f3f3',
     'ayu-light': '#f6f6f6'
   },
+
+  // Scrollbar colors
   '--scrollbar-thumb-color': {
     'photoshop-light': '#cccccc',
     'photoshop-gray': '#b8b8b8',
@@ -154,6 +195,8 @@ export const lightThemes = {
     'vscode-light': '#f3f3f3',
     'ayu-light': '#fcfcfc'
   },
+
+  // Border colors
   '--border-color': {
     'photoshop-light': '#d9d9d9',
     'photoshop-gray': '#c4c4c4',
@@ -170,364 +213,61 @@ export const lightThemes = {
   },
 
   // Button colors
-  '--confirm-button-color': {
-    'photoshop-light': '#2fb344',
-    'photoshop-gray': '#2fb344',
-    'gruvbox-light': '#79740e',
-    'dracula-light': '#50fa7b',
-    'material-light': '#43a047',
-    'github-light': '#2ea44f',
-    'solarized-light': '#859900',
-    'one-light': '#50a14f',
-    'nord-light': '#a3be8c',
-    'monokai-pro-light': '#a6e22e',
-    'vscode-light': '#388e3c',
-    'ayu-light': '#36c692'
-  },
-  '--confirm-button-hover-color': {
-    'photoshop-light': '#34c74c',
-    'photoshop-gray': '#34c74c',
-    'gruvbox-light': '#98971a',
-    'dracula-light': '#3be37e',
-    'material-light': '#388e3c',
-    'github-light': '#22863a',
-    'solarized-light': '#6c8800',
-    'one-light': '#3d803d',
-    'nord-light': '#8fbcbb',
-    'monokai-pro-light': '#b6e880',
-    'vscode-light': '#2e7031',
-    'ayu-light': '#2fa36a'
-  },
-  '--confirm-button-text-color': {
-    'photoshop-light': '#ffffff',
-    'photoshop-gray': '#ffffff',
-    'gruvbox-light': '#fbf1c7',
-    'dracula-light': '#ffffff',
-    'material-light': '#ffffff',
-    'github-light': '#ffffff',
-    'solarized-light': '#fdf6e3',
-    'one-light': '#ffffff',
-    'nord-light': '#2e3440',
-    'monokai-pro-light': '#272822',
-    'vscode-light': '#ffffff',
-    'ayu-light': '#ffffff'
-  },
-  '--yes-button-color': {
-    'photoshop-light': '#2fb344',
-    'photoshop-gray': '#2aa23d',
-    'gruvbox-light': '#79740e',
-    'dracula-light': '#05ae30',
-    'material-light': '#43a047',
-    'github-light': '#2ea44f',
-    'solarized-light': '#859900',
-    'one-light': '#50a14f',
-    'nord-light': '#7da35c',
-    'monokai-pro-light': '#80b319',
-    'vscode-light': '#388e3c',
-    'ayu-light': '#36c692'
-  },
-  '--no-button-color': {
-    'photoshop-light': '#ff5f52',
-    'photoshop-gray': '#ff1300',
-    'gruvbox-light': '#9d0006',
-    'dracula-light': '#f33f33',
-    'material-light': '#e53935',
-    'github-light': '#d73a49',
-    'solarized-light': '#dc322f',
-    'one-light': '#e45649',
-    'nord-light': '#bf616a',
-    'monokai-pro-light': '#f8075e',
-    'vscode-light': '#e53935',
-    'ayu-light': '#ff3333'
-  },
-  '--theme-button-color': {
-    'photoshop-light': '#0099ff',
-    'photoshop-gray': '#0099ff',
-    'gruvbox-light': '#b57614',
-    'dracula-light': '#6272a4',
-    'material-light': '#1e88e5',
-    'github-light': '#0969da',
-    'solarized-light': '#268bd2',
-    'one-light': '#0184bc',
-    'nord-light': '#5e81ac',
-    'monokai-pro-light': '#139eb9',
-    'vscode-light': '#0066b8',
-    'ayu-light': '#55b4d4'
-  },
-  '--send-button-color': {
-    'photoshop-light': '#0099ff',
-    'photoshop-gray': '#0099ff',
-    'gruvbox-light': '#b57614',
-    'dracula-light': '#6272a4',
-    'material-light': '#1e88e5',
-    'github-light': '#0969da',
-    'solarized-light': '#268bd2',
-    'one-light': '#0184bc',
-    'nord-light': '#5e81ac',
-    'monokai-pro-light': '#139eb9',
-    'vscode-light': '#0066b8',
-    'ayu-light': '#55b4d4'
-  },
+  '--add-button-color': sharedColors.positive,
+  '--remove-button-color': sharedColors.negative,
+  '--input-error-color': sharedColors.negative,
+  '--yes-button-color': sharedColors.positive,
+  '--no-button-color': sharedColors.negative,
+  '--theme-button-color': sharedColors.neutral,
+  '--send-button-color': sharedColors.neutral,
 
   // Hotkey colors
-  '--hotkey-label-text-color': {
-    'photoshop-light': '#0099ff',
-    'photoshop-gray': '#0099ff',
-    'gruvbox-light': '#076678',
-    'dracula-light': '#383a59',
-    'material-light': '#1e88e5',
-    'github-light': '#24292e',
-    'solarized-light': '#657b83',
-    'one-light': '#383a42',
-    'nord-light': '#2e3440',
-    'monokai-pro-light': '#272822',
-    'vscode-light': '#333333',
-    'ayu-light': '#5c6166'
-  },
-  '--hotkey-label-background-color': {
-    'photoshop-light': '#0099ff1a',
-    'photoshop-gray': '#0099ff1a',
-    'gruvbox-light': '#0766781a',
-    'dracula-light': '#6272a41a',
-    'material-light': '#1e88e51a',
-    'github-light': '#0969da1a',
-    'solarized-light': '#268bd21a',
-    'one-light': '#0184bc1a',
-    'nord-light': '#5e81ac1a',
-    'monokai-pro-light': '#66d9ef1a',
-    'vscode-light': '#0066b81a',
-    'ayu-light': '#55b4d41a'
-  },
-  '--hotkey-label-border-color': {
-    'photoshop-light': '#0099ff66',
-    'photoshop-gray': '#0099ff66',
-    'gruvbox-light': '#07667866',
-    'dracula-light': '#6272a466',
-    'material-light': '#1e88e566',
-    'github-light': '#0969da66',
-    'solarized-light': '#268bd266',
-    'one-light': '#0184bc66',
-    'nord-light': '#5e81ac66',
-    'monokai-pro-light': '#66d9ef66',
-    'vscode-light': '#0066b866',
-    'ayu-light': '#55b4d466'
-  },
+  '--hotkey-label-text-color': Object.fromEntries(
+    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color])
+  ),
+  '--hotkey-label-background-color': Object.fromEntries(
+    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '1a'])
+  ),
+  '--hotkey-label-border-color': Object.fromEntries(
+    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '66'])
+  ),
 
   // Private mode input colors
-  '--private-mode-color': {
-    'photoshop-light': '#ff5f52',
-    'photoshop-gray': '#ff5f52',
-    'gruvbox-light': '#9d0006',
-    'dracula-light': '#ff5555',
-    'material-light': '#e53935',
-    'github-light': '#d73a49',
-    'solarized-light': '#dc322f',
-    'one-light': '#e45649',
-    'nord-light': '#bf616a',
-    'monokai-pro-light': '#f92672',
-    'vscode-light': '#e53935',
-    'ayu-light': '#ff3333'
-  },
-  '--private-mode-placeholder-color': {
-    'photoshop-light': '#ff5f52bb',
-    'photoshop-gray': '#ff5f52bb',
-    'gruvbox-light': '#9d0006bb',
-    'dracula-light': '#ff5555bb',
-    'material-light': '#e53935bb',
-    'github-light': '#d73a49bb',
-    'solarized-light': '#dc322fbb',
-    'one-light': '#e45649bb',
-    'nord-light': '#bf616abb',
-    'monokai-pro-light': '#f92672bb',
-    'vscode-light': '#e53935bb',
-    'ayu-light': '#ff3333bb'
-  },
-  '--private-mode-background-color': {
-    'photoshop-light': '#ff5f5238',
-    'photoshop-gray': '#ff5f5238',
-    'gruvbox-light': '#9d000638',
-    'dracula-light': '#ff55551a',
-    'material-light': '#e5393538',
-    'github-light': '#d73a491a',
-    'solarized-light': '#dc322f1a',
-    'one-light': '#e456491a',
-    'nord-light': '#bf616a1a',
-    'monokai-pro-light': '#f926721a',
-    'vscode-light': '#e539351a',
-    'ayu-light': '#ff33331a'
-  },
+  '--private-mode-color': sharedColors.negative,
+  '--private-mode-placeholder-color': Object.fromEntries(
+    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '80'])
+  ),
+  '--private-mode-background-color': Object.fromEntries(
+    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '20'])
+  ),
 
   // Private message sent colors
-  '--private-message-sent-color': {
-    'photoshop-light': '#2fb344',
-    'photoshop-gray': '#2fb344',
-    'gruvbox-light': '#79740e',
-    'dracula-light': '#50fa7b',
-    'material-light': '#43a047',
-    'github-light': '#2ea44f',
-    'solarized-light': '#859900',
-    'one-light': '#50a14f',
-    'nord-light': '#a3be8c',
-    'monokai-pro-light': '#a6e22e',
-    'vscode-light': '#388e3c',
-    'ayu-light': '#36c692'
-  },
-  '--private-message-sent-background-color': {
-    'photoshop-light': '#2fb34420',
-    'photoshop-gray': '#2fb34420',
-    'gruvbox-light': '#79740e20',
-    'dracula-light': '#50fa7b1a',
-    'material-light': '#43a04720',
-    'github-light': '#2ea44f1a',
-    'solarized-light': '#8599001a',
-    'one-light': '#50a14f1a',
-    'nord-light': '#a3be8c1a',
-    'monokai-pro-light': '#a6e22e1a',
-    'vscode-light': '#388e3c1a',
-    'ayu-light': '#36c6921a'
-  },
-  '--private-message-sent-border-color': {
-    'photoshop-light': '#2fb34430',
-    'photoshop-gray': '#2fb34430',
-    'gruvbox-light': '#79740e30',
-    'dracula-light': '#50fa7b30',
-    'material-light': '#43a04730',
-    'github-light': '#2ea44f30',
-    'solarized-light': '#85990030',
-    'one-light': '#50a14f30',
-    'nord-light': '#a3be8c30',
-    'monokai-pro-light': '#a6e22e30',
-    'vscode-light': '#388e3c30',
-    'ayu-light': '#36c69230'
-  },
-  '--private-message-sent-time-color': {
-    'photoshop-light': '#2fb344',
-    'photoshop-gray': '#2fb344',
-    'gruvbox-light': '#79740e',
-    'dracula-light': '#50fa7b',
-    'material-light': '#43a047',
-    'github-light': '#2ea44f',
-    'solarized-light': '#859900',
-    'one-light': '#50a14f',
-    'nord-light': '#a3be8c',
-    'monokai-pro-light': '#a6e22e',
-    'vscode-light': '#388e3c',
-    'ayu-light': '#36c692'
-  },
+  '--private-message-sent-color': sharedColors.positive,
+  '--private-message-sent-background-color': Object.fromEntries(
+    Object.entries(sharedColors.positive).map(([theme, color]) => [theme, color + '20'])
+  ),
+  '--private-message-sent-border-color': Object.fromEntries(
+    Object.entries(sharedColors.positive).map(([theme, color]) => [theme, color + '30'])
+  ),
+  '--private-message-sent-time-color': sharedColors.positive,
 
   // Private message received colors
-  '--private-message-received-color': {
-    'photoshop-light': '#ff5f52',
-    'photoshop-gray': '#ff5f52',
-    'gruvbox-light': '#9d0006',
-    'dracula-light': '#ff5555',
-    'material-light': '#e53935',
-    'github-light': '#d73a49',
-    'solarized-light': '#dc322f',
-    'one-light': '#e45649',
-    'nord-light': '#bf616a',
-    'monokai-pro-light': '#f92672',
-    'vscode-light': '#e53935',
-    'ayu-light': '#ff3333'
-  },
-  '--private-message-received-background-color': {
-    'photoshop-light': '#ff5f5220',
-    'photoshop-gray': '#ff5f5220',
-    'gruvbox-light': '#9d000620',
-    'dracula-light': '#ff55551a',
-    'material-light': '#e5393520',
-    'github-light': '#d73a491a',
-    'solarized-light': '#dc322f1a',
-    'one-light': '#e456491a',
-    'nord-light': '#bf616a1a',
-    'monokai-pro-light': '#f926721a',
-    'vscode-light': '#e539351a',
-    'ayu-light': '#ff33331a'
-  },
-  '--private-message-received-border-color': {
-    'photoshop-light': '#ff5f5230',
-    'photoshop-gray': '#ff5f5230',
-    'gruvbox-light': '#9d000630',
-    'dracula-light': '#ff555530',
-    'material-light': '#e5393530',
-    'github-light': '#d73a4930',
-    'solarized-light': '#dc322f30',
-    'one-light': '#e4564930',
-    'nord-light': '#bf616a30',
-    'monokai-pro-light': '#f9267230',
-    'vscode-light': '#e5393530',
-    'ayu-light': '#ff333330'
-  },
-  '--private-message-received-time-color': {
-    'photoshop-light': '#ff5f52',
-    'photoshop-gray': '#ff5f52',
-    'gruvbox-light': '#9d0006',
-    'dracula-light': '#ff5555',
-    'material-light': '#e53935',
-    'github-light': '#d73a49',
-    'solarized-light': '#dc322f',
-    'one-light': '#e45649',
-    'nord-light': '#bf616a',
-    'monokai-pro-light': '#f92672',
-    'vscode-light': '#e53935',
-    'ayu-light': '#ff3333'
-  },
+  '--private-message-received-color': sharedColors.negative,
+  '--private-message-received-background-color': Object.fromEntries(
+    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '20'])
+  ),
+  '--private-message-received-border-color': Object.fromEntries(
+    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '30'])
+  ),
+  '--private-message-received-time-color': sharedColors.negative,
 
   // System message colors
-  '--system-message-color': {
-    'photoshop-light': '#ff9f00',
-    'photoshop-gray': '#ff9f00',
-    'gruvbox-light': '#b57614',
-    'dracula-light': '#ff79c6',
-    'material-light': '#ffa000',
-    'github-light': '#8250df',
-    'solarized-light': '#b58900',
-    'one-light': '#e45649',
-    'nord-light': '#a3be8c',
-    'monokai-pro-light': '#fd971f',
-    'vscode-light': '#b5200d',
-    'ayu-light': '#ffd580'
-  },
-  '--system-message-background-color': {
-    'photoshop-light': '#ff9f0020',
-    'photoshop-gray': '#ff9f0020',
-    'gruvbox-light': '#b5761420',
-    'dracula-light': '#ff79c61a',
-    'material-light': '#ffa00020',
-    'github-light': '#8250df1a',
-    'solarized-light': '#b589001a',
-    'one-light': '#e456491a',
-    'nord-light': '#a3be8c1a',
-    'monokai-pro-light': '#fd971f1a',
-    'vscode-light': '#b5200d1a',
-    'ayu-light': '#ffd5801a'
-  },
-  '--system-message-border-color': {
-    'photoshop-light': '#ff9f0030',
-    'photoshop-gray': '#ff9f0030',
-    'gruvbox-light': '#b5761430',
-    'dracula-light': '#ff79c630',
-    'material-light': '#ffa00030',
-    'github-light': '#8250df30',
-    'solarized-light': '#b5890030',
-    'one-light': '#e4564930',
-    'nord-light': '#a3be8c30',
-    'monokai-pro-light': '#fd971f30',
-    'vscode-light': '#b5200d30',
-    'ayu-light': '#ffd58030'
-  },
-  '--system-message-time-color': {
-    'photoshop-light': '#ff9f00',
-    'photoshop-gray': '#ff9f00',
-    'gruvbox-light': '#b57614',
-    'dracula-light': '#ff79c6',
-    'material-light': '#ffa000',
-    'github-light': '#8250df',
-    'solarized-light': '#b58900',
-    'one-light': '#e45649',
-    'nord-light': '#a3be8c',
-    'monokai-pro-light': '#fd971f',
-    'vscode-light': '#b5200d',
-    'ayu-light': '#ffd580'
-  }
+  '--system-message-color': sharedColors.neutral,
+  '--system-message-background-color': Object.fromEntries(
+    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '20'])
+  ),
+  '--system-message-border-color': Object.fromEntries(
+    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '30'])
+  ),
+  '--system-message-time-color': sharedColors.neutral
 };

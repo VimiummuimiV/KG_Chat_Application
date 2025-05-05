@@ -40,16 +40,20 @@
 
     .ignored-users-add-btn {
       padding: 0.6em;
-      background-color: var(--confirm-button-color) !important;
-      color: var(--confirm-button-text-color) !important;
+      background-color: var(--add-button-color) !important;
+      color: color-mix(
+        in srgb,
+        var(--add-button-color) 20%,
+        var(--main-background-color) 80%
+      ) !important;
       border: none !important;
       outline: none !important;
       border-radius: 0 0.4em 0 0 !important;
       cursor: pointer;
-      transition: background-color 0.3s ease;
+      transition: filter 0.3s ease;
 
       &:hover {
-        background-color: var(--confirm-button-hover-color) !important;
+        filter: brightness(1.2);
       }
     }
   }
@@ -77,14 +81,18 @@
     .remove-btn {
       cursor: pointer;
       padding: 0.6em;
-      background-color: #b34a2a !important;
+      background-color: var(--remove-button-color) !important;
       border: none;
       border-radius: 0.2em !important;
       filter: brightness(1);
-      transition: filter 0.3s ease, background-color 0.3s ease;
+      transition: filter 0.3s ease;
 
       svg {
-        stroke: #eebc90 !important;
+        stroke: color-mix(
+          in srgb,
+          var(--remove-button-color) 20%,
+          var(--main-background-color) 80%
+        ) !important;
       }
 
       &:hover {
@@ -95,8 +103,16 @@
 }
 
 .input-error {
-  background-color: #b34a2a !important;
-  color: #eebc90 !important; 
-  caret-color: #eebc90 !important;
+  background-color: var(--input-error-color) !important;
+  color: color-mix(
+    in srgb,
+    var(--add-button-color) 20%,
+    var(--main-background-color) 80%
+  ) !important;
+  caret-color: color-mix(
+    in srgb,
+    var(--add-button-color) 20%,
+    var(--main-background-color) 80%
+  ) !important;
   transition: background-color 0.5s ease;
 }

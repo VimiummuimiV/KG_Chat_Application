@@ -117,17 +117,21 @@
     }
 
     .confirm-btn {
-      transition: background-color 0.3s ease !important;
-      padding: 0.6em !important;
-      background-color: var(--confirm-button-color) !important;
-      color: var(--confirm-button-text-color) !important;
-      border: 1px solid var(--border-color);
+      padding: 0.6em;
+      background-color: var(--add-button-color) !important;
+      color: color-mix(
+        in srgb,
+        var(--add-button-color) 20%,
+        var(--main-background-color) 80%
+      ) !important;
+      border: none !important;
       outline: none !important;
       border-radius: 0 0.4em 0 0 !important;
       cursor: pointer;
+      transition: filter 0.3s ease;
 
       &:hover {
-        background-color: var(--confirm-button-hover-color) !important;
+        filter: brightness(1.2);
       }
     }
   }
