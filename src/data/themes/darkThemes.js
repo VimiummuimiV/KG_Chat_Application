@@ -38,7 +38,7 @@ export const sharedColors = {
     'vscode-dark': '#e53935',
     'ayu-dark': '#ff3333',
     'ayu-mirage': '#ff3333',
-    'dark-soul': '#b34a2a'
+    'dark-soul': '#d8775a'
   },
   neutral: {
     'photoshop-dark': '#0099ff',
