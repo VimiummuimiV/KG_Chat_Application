@@ -1,4 +1,5 @@
 export const darkThemes = {
+  // Base theme colors
   '--main-background-color': {
     'photoshop-dark': '#2d2d2d',
     'photoshop-black': '#181818',
@@ -239,6 +240,8 @@ export const darkThemes = {
     'ayu-mirage': '#232834',
     'dark-soul': '#333333'
   },
+
+  // Button colors
   '--confirm-button-color': {
     'photoshop-dark': '#2fb344',
     'photoshop-black': '#2fb344',
@@ -359,6 +362,28 @@ export const darkThemes = {
     'ayu-mirage': '#ffcc66',
     'dark-soul': '#b3a52a'
   },
+  '--send-button-color': {
+    'photoshop-dark': '#0099ff',
+    'photoshop-black': '#0099ff',
+    'gruvbox-dark': '#fabd2f',
+    'one-dark-pro': '#e5c07b',
+    'dracula-dark': '#bd93f9',
+    'palenight-dark': '#ffcb6b',
+    'one-monokai-dark': '#e6db74',
+    'polykai-dark': '#ffb000',
+    'material-dark': '#90caf9',
+    'github-dark': '#58a6ff',
+    'solarized-dark': '#268bd2',
+    'one-dark': '#61afef',
+    'nord-dark': '#88c0d0',
+    'monokai-pro-dark': '#ab9df2',
+    'vscode-dark': '#569cd6',
+    'ayu-dark': '#ffcc66',
+    'ayu-mirage': '#ffcc66',
+    'dark-soul': '#096ad9'
+  },
+
+  // Hotkey colors
   '--hotkey-label-text-color': {
     'photoshop-dark': '#0099ff',
     'photoshop-black': '#0099ff',
@@ -419,6 +444,8 @@ export const darkThemes = {
     'ayu-mirage': '#5ccfe666',
     'dark-soul': '#7ed4ff66'
   },
+
+  // Private mode input colors
   '--private-mode-color': {
     'photoshop-dark': '#ff5f52',
     'photoshop-black': '#ff5f52',
@@ -479,6 +506,8 @@ export const darkThemes = {
     'ayu-mirage': '#ff33331a',
     'dark-soul': '#ff6b6b38'
   },
+
+  // Private message sent colors
   '--private-message-sent-color': {
     'photoshop-dark': '#2fb344',
     'photoshop-black': '#2fb344',
@@ -559,6 +588,8 @@ export const darkThemes = {
     'ayu-mirage': '#36c692',
     'dark-soul': '#00ff0060'
   },
+
+  // Private message received colors
   '--private-message-received-color': {
     'photoshop-dark': '#ff5f52',
     'photoshop-black': '#ff5f52',
@@ -639,6 +670,8 @@ export const darkThemes = {
     'ayu-mirage': '#ff3333',
     'dark-soul': '#ff4d4d60'
   },
+
+  // System message colors
   '--system-message-color': {
     'photoshop-dark': '#ff9f00',
     'photoshop-black': '#ff9f00',

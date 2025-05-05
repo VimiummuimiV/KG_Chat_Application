@@ -1,9 +1,10 @@
 export const lightThemes = {
+  // Base theme colors
   '--main-background-color': {
     'photoshop-light': '#f6f6f6',
     'photoshop-gray': '#e3e3e3',
     'gruvbox-light': '#fbf1c7',
-    'dracula-light': '#f8f8f2',
+    'dracula-light': '#ffffff',
     'material-light': '#fafafa',
     'github-light': '#ffffff',
     'solarized-light': '#fdf6e3',
@@ -51,7 +52,7 @@ export const lightThemes = {
     'solarized-light': '#268bd2',
     'one-light': '#0184bc',
     'nord-light': '#5e81ac',
-    'monokai-pro-light': '#66d9ef',
+    'monokai-pro-light': '#139eb9',
     'vscode-light': '#0066b8',
     'ayu-light': '#55b4d4'
   },
@@ -167,6 +168,8 @@ export const lightThemes = {
     'vscode-light': '#cccccc',
     'ayu-light': '#e6e6e6'
   },
+
+  // Button colors
   '--confirm-button-color': {
     'photoshop-light': '#2fb344',
     'photoshop-gray': '#2fb344',
@@ -211,29 +214,29 @@ export const lightThemes = {
   },
   '--yes-button-color': {
     'photoshop-light': '#2fb344',
-    'photoshop-gray': '#2fb344',
+    'photoshop-gray': '#2aa23d',
     'gruvbox-light': '#79740e',
-    'dracula-light': '#50fa7b',
+    'dracula-light': '#05ae30',
     'material-light': '#43a047',
     'github-light': '#2ea44f',
     'solarized-light': '#859900',
     'one-light': '#50a14f',
-    'nord-light': '#a3be8c',
-    'monokai-pro-light': '#a6e22e',
+    'nord-light': '#7da35c',
+    'monokai-pro-light': '#80b319',
     'vscode-light': '#388e3c',
     'ayu-light': '#36c692'
   },
   '--no-button-color': {
     'photoshop-light': '#ff5f52',
-    'photoshop-gray': '#ff5f52',
+    'photoshop-gray': '#ff1300',
     'gruvbox-light': '#9d0006',
-    'dracula-light': '#ff5555',
+    'dracula-light': '#f33f33',
     'material-light': '#e53935',
     'github-light': '#d73a49',
     'solarized-light': '#dc322f',
     'one-light': '#e45649',
     'nord-light': '#bf616a',
-    'monokai-pro-light': '#f92672',
+    'monokai-pro-light': '#f8075e',
     'vscode-light': '#e53935',
     'ayu-light': '#ff3333'
   },
@@ -247,10 +250,26 @@ export const lightThemes = {
     'solarized-light': '#268bd2',
     'one-light': '#0184bc',
     'nord-light': '#5e81ac',
-    'monokai-pro-light': '#66d9ef',
+    'monokai-pro-light': '#139eb9',
     'vscode-light': '#0066b8',
     'ayu-light': '#55b4d4'
   },
+  '--send-button-color': {
+    'photoshop-light': '#0099ff',
+    'photoshop-gray': '#0099ff',
+    'gruvbox-light': '#b57614',
+    'dracula-light': '#6272a4',
+    'material-light': '#1e88e5',
+    'github-light': '#0969da',
+    'solarized-light': '#268bd2',
+    'one-light': '#0184bc',
+    'nord-light': '#5e81ac',
+    'monokai-pro-light': '#139eb9',
+    'vscode-light': '#0066b8',
+    'ayu-light': '#55b4d4'
+  },
+
+  // Hotkey colors
   '--hotkey-label-text-color': {
     'photoshop-light': '#0099ff',
     'photoshop-gray': '#0099ff',
@@ -293,6 +312,8 @@ export const lightThemes = {
     'vscode-light': '#0066b866',
     'ayu-light': '#55b4d466'
   },
+
+  // Private mode input colors
   '--private-mode-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
@@ -335,6 +356,8 @@ export const lightThemes = {
     'vscode-light': '#e539351a',
     'ayu-light': '#ff33331a'
   },
+
+  // Private message sent colors
   '--private-message-sent-color': {
     'photoshop-light': '#2fb344',
     'photoshop-gray': '#2fb344',
@@ -391,6 +414,8 @@ export const lightThemes = {
     'vscode-light': '#388e3c',
     'ayu-light': '#36c692'
   },
+
+  // Private message received colors
   '--private-message-received-color': {
     'photoshop-light': '#ff5f52',
     'photoshop-gray': '#ff5f52',
@@ -447,6 +472,8 @@ export const lightThemes = {
     'vscode-light': '#e53935',
     'ayu-light': '#ff3333'
   },
+
+  // System message colors
   '--system-message-color': {
     'photoshop-light': '#ff9f00',
     'photoshop-gray': '#ff9f00',
