@@ -12,9 +12,13 @@ export const BASE_URL = 'https://klavogonki.ru';
 export const GAME_URL = `${BASE_URL}/g/?gmid=`;
 export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 
-// Sleep time (ms)
+// Sleep time
 export const connectionDelay = 100;
 export const reconnectionDelay = 3000;
+
+// Delay values for various UI interactions
+export const pendingUserDelay = 500;
+export const longPressDelay = 300;
 
 export const connectionMessages = {
   chat: {

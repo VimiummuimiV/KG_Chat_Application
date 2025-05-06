@@ -1,4 +1,9 @@
-import { BASE_URL, FALLBACK_COLOR } from "../data/definitions.js";
+import {
+  BASE_URL,
+  FALLBACK_COLOR,
+  pendingUserDelay,
+  longPressDelay
+} from "../data/definitions.js";
 
 import {
   getRandomEmojiAvatar,
@@ -129,7 +134,7 @@ export default class UserManager {
           clearTimeout(timer);
         };
 
-        timer = setTimeout(startLongPress, 300);
+        timer = setTimeout(startLongPress, longPressDelay);
 
         const endEvents = eventType === 'mouse' 
           ? ['mouseup', 'mouseleave']
@@ -335,7 +340,7 @@ export default class UserManager {
           this.updateUI();
           this.updateUITimeout = null; // Reset timeout reference
           this.pendingUserJIDs.clear(); // Clear after UI update
-        }, 300); // Adjust the delay as needed
+        }, pendingUserDelay); // Use pendingUserDelay for UI update debounce
       } else {
         // Initial load, update UI immediately
         this.updateUI();
