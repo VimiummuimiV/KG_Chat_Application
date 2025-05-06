@@ -3,16 +3,15 @@ import {
   initChatLengthPopupEvents 
 } from "../helpers/lengthPopup.js";
 
-import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { handleMobileLayout } from "../helpers/mobileLayout.js";
 
 import {
-  createFontSizeControl,
   restoreChatState,
-  restoreFontSize,
   toggleChatVisibility,
   toggleChatMaximize
 } from "./chatState.js";
+
+import { createFontSizeControl, restoreFontSize } from "./chatFontSize.js";
 
 import {
   sendSVG,
@@ -24,8 +23,8 @@ import { HelpPanel } from "../components/helpPanel.js";
 import { EmojiPanel } from "../components/emojiPanel.js";
 import { openThemesPanel } from "../components/themesPanel.js";
 
-// Apply the saved theme to the chat container and body
-export function applySavedTheme() {
+// Apply the UI theme to the chat
+export function applyUITheme() {
   let savedTheme = localStorage.getItem('selectedTheme');
   if (!savedTheme) {
     savedTheme = 'dark-soul'; // Default to dark theme if no theme is saved
@@ -48,6 +47,12 @@ export function createChatUI() {
   // Chat wrapper for content and user list
   const chatWrapper = document.createElement('div');
   chatWrapper.className = 'chat-wrapper';
+
+  // Draggable top area
+  const dragArea = document.createElement('div');
+  dragArea.className = 'chat-drag-area';
+  dragArea.addEventListener('dblclick', toggleChatVisibility);
+  chatWrapper.appendChild(dragArea);
 
   // Left side: messages panel and input
   const chatContent = document.createElement('div');
@@ -123,11 +128,8 @@ export function createChatUI() {
   sendButton.innerHTML = sendSVG;
 
   // Append elements in order
-  inputContainer.appendChild(emojiButton);
-  inputContainer.appendChild(messageInput);
-  inputContainer.appendChild(sendButton);
-  chatContent.appendChild(messagesPanel);
-  chatContent.appendChild(inputContainer);
+  inputContainer.append(emojiButton, messageInput, sendButton);
+  chatContent.append(messagesPanel, inputContainer);
 
   // Right side: user list
   const userListContainer = document.createElement('div');
@@ -135,9 +137,22 @@ export function createChatUI() {
   const userList = document.createElement('div');
   userList.id = 'user-list';
   userListContainer.appendChild(userList);
-  chatWrapper.appendChild(chatContent);
-  chatWrapper.appendChild(userListContainer);
+  chatWrapper.append(chatContent, userListContainer);
   chatContainer.appendChild(chatWrapper);
+
+  // Header buttons
+  const headerButtons = document.createElement('div');
+  headerButtons.className = 'header-buttons';
+  dragArea.appendChild(headerButtons);
+
+  // Theme button
+  const themeButton = document.createElement('button');
+  themeButton.className = 'button header-button chat-theme-button';
+  themeButton.innerHTML = themesIcon;
+  themeButton.title = 'Change theme';
+  themeButton.addEventListener("click", () => {
+    openThemesPanel();
+  });
 
   // Help button next to maximize button
   const helpButton = document.createElement('button');
@@ -157,10 +172,6 @@ export function createChatUI() {
       helpPanelInstance.remove();
       helpButton.title = 'Show chat help';
       helpPanelInstance = null;
-      showChatAlert('Help panel has been closed.', {
-        type: 'warning',
-        duration: 2000
-      });
       return;
     }
 
@@ -175,46 +186,25 @@ export function createChatUI() {
     });
     helpPanelInstance.init();
     helpPanelInstance.show();
-    showChatAlert('Help panel has been opened. Press "?" or "ESC" key, or click outside to close.', {
-      type: 'success',
-      duration: 2000
-    });
     helpButton.title = 'Hide chat help';
   });
 
-  chatContainer.appendChild(helpButton);
 
   // Maximize button
   const maximizeButton = document.createElement('button');
   maximizeButton.className = 'button header-button chat-maximize-button';
   maximizeButton.addEventListener('click', toggleChatMaximize);
-  chatContainer.appendChild(maximizeButton);
 
   // Toggle visibility button
   const toggleButton = document.createElement('button');
   toggleButton.className = 'button header-button chat-toggle-button';
   toggleButton.addEventListener('click', toggleChatVisibility);
-  chatContainer.appendChild(toggleButton);
 
-  // Theme button
-  const themeButton = document.createElement('button');
-  themeButton.className = 'button header-button chat-theme-button';
-  themeButton.innerHTML = themesIcon;
-  themeButton.title = 'Change theme';
-  themeButton.addEventListener("click", () => {
-    openThemesPanel();
-  });
-  chatContainer.appendChild(themeButton);
-
-  // Draggable top area
-  const dragArea = document.createElement('div');
-  dragArea.className = 'chat-drag-area';
-  dragArea.addEventListener('dblclick', toggleChatVisibility);
-  chatContainer.appendChild(dragArea);
+  headerButtons.append(themeButton, helpButton, maximizeButton, toggleButton);
   document.body.appendChild(chatContainer);
 
   // Apply the saved theme to the chat container
-  applySavedTheme();
+  applyUITheme();
 
   // Restore chat state and settings
   restoreChatState();

@@ -28,7 +28,6 @@ const chatCommands = [
     pattern: /^\/colors\s*$/,
     handler: () => {
       openUsernameColors();
-      showChatAlert('Username color picker has been opened', { type: 'info', duration: 2000 });
       return true;
     }
   },
@@ -53,7 +52,6 @@ const chatCommands = [
     pattern: /^\/themes\s*$/,
     handler: () => {
       openThemesPanel();
-      showChatAlert('Themes panel has been opened', { type: 'info', duration: 2000 });
       return true;
     }
   },
@@ -65,10 +63,8 @@ const chatCommands = [
         const hp = new HelpPanel({ onDestroy: () => { } });
         hp.init();
         hp.show();
-        showChatAlert('Help panel is now visible.', { type: 'info', duration: 2000 });
       } else {
         HelpPanel.instance.remove();
-        showChatAlert('Help panel has been closed.', { type: 'warning', duration: 2000 });
       }
       return true;
     }
@@ -78,7 +74,6 @@ const chatCommands = [
     pattern: /^\/ignored\s*$/,
     handler: () => {
       openIgnoredUsersPanel();
-      showChatAlert('Ignored users panel has been opened', { type: 'info', duration: 2000 });
       return true;
     }
   }

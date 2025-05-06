@@ -1,5 +1,4 @@
 import { adjustVisibility } from "../helpers/helpers.js";
-import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 
 export class HelpPanel {
   constructor(options = {}) {
@@ -313,10 +312,6 @@ export class HelpPanel {
       }
       if (this.container && !this.container.contains(e.target)) {
         this.remove();
-        showChatAlert('Help panel has been closed.', {
-          type: 'warning',
-          duration: 2000
-        });
       }
     };
     document.addEventListener('click', this._clickOutsideHandler, true);
@@ -324,10 +319,6 @@ export class HelpPanel {
     this._escHandler = (e) => {
       if (e.key === 'Escape') {
         this.remove();
-        showChatAlert('Help panel has been closed.', {
-          type: 'warning',
-          duration: 2000
-        });
       }
     };
     document.addEventListener('keydown', this._escHandler, true);
@@ -371,7 +362,6 @@ export class HelpPanel {
     if (!document.body.contains(this.container)) {
       document.body.appendChild(this.container);
       adjustVisibility(this.container, 'show', '1');
-      showChatAlert("Help panel is now visible.");
     }
   }
 

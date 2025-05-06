@@ -96,9 +96,6 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 
   // Font Size Control
   .font-size-control {
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
     display: flex !important;
     align-items: center !important;
     justify-content: center !important;
@@ -112,7 +109,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
       height: 4px !important;
       -webkit-appearance: none !important;
       appearance: none !important;
-      background-color: color-mix(in srgb, var(--main-accent-color) 50%, var(--secondary-background-color) 50%) !important;
+      background-color: color-mix(
+        in srgb,
+        var(--main-accent-color) 50%,
+        var(--secondary-background-color) 50%
+      ) !important;
       outline: none !important;
       border-radius: 2px !important;
       transition: opacity 0.2s !important;
@@ -171,9 +172,14 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 
   // Chat Wrapper
   .chat-wrapper {
-    display: flex !important;
-    flex-direction: row !important;
-    flex: 1 !important;
+    display: grid;
+    height: 100% !important;
+    width: 100% !important;
+    grid-template-areas:
+      "header    header"
+      "messages  userlist";
+    grid-template-rows: auto 1fr !important;
+    grid-template-columns: 1fr auto;
     min-width: $min-chat-width !important;
     overflow: hidden !important;
     background-color: var(--main-background-color) !important;
@@ -181,11 +187,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 
   // Chat Content
   .chat-content {
-    margin-top: 25px;
+    margin: 0 !important; // Reset margin conflict with KG styles
     background-color: var(--main-background-color) !important;
     display: flex !important;
+    grid-area: messages;
     flex-direction: column !important;
-    flex: 1 !important;
     overflow: hidden !important;
   }
 
@@ -274,7 +280,8 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 
   // User List Container
   .user-list-container {
-    margin-top: 25px;
+    display: flex;
+    grid-area: userlist;
     width: $user-list-width !important;
     min-width: 180px !important;
     max-width: $user-list-width !important;
@@ -320,11 +327,13 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     }
   }
 
-  .hidden-userlist {
+  .shown-reveal-button,
+  .shown-userlist {
     display: flex;
   }
 
-  .shown-userlist {
+  .hidden-reveal-button,
+  .hidden-userlist {
     display: none;
   }
 
@@ -457,7 +466,9 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
       width: fit-content !important;
 
       &.sent {
-        background-color: var(--private-message-sent-background-color) !important;
+        background-color: var(
+          --private-message-sent-background-color
+        ) !important;
         border: 1px solid var(--private-message-sent-border-color) !important;
         border-left: 3px solid var(--private-message-sent-color) !important;
         .time {
@@ -470,7 +481,9 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
       }
 
       &.received {
-        background-color: var(--private-message-received-background-color) !important;
+        background-color: var(
+          --private-message-received-background-color
+        ) !important;
         border: 1px solid var(--private-message-received-border-color) !important;
         border-left: 3px solid var(--private-message-received-color) !important;
         .time {
@@ -566,13 +579,17 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     }
   }
 
-  // Header Buttons
-  .header-button {
-    position: absolute !important;
-    top: 0 !important;
-    width: 25px !important;
-    height: 25px !important;
-    z-index: 5 !important;
+  .header-buttons {
+    display: flex;
+    flex-direction: row;
+    width: fit-content;
+    order: 1;
+
+    // Header Buttons
+    .header-button {
+      width: 25px !important;
+      height: 25px !important;
+    }
   }
 
   .button {
@@ -634,15 +651,14 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   }
 
   .chat-drag-area {
-    border-radius: 0.4em 0.4em 0 0 !important;
-    position: absolute !important;
-    top: 0 !important;
-    left: 0 !important;
-    right: 0 !important;
-    height: 25px !important;
-    cursor: move !important;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    grid-area: header;
     background-color: var(--drag-area-background-color) !important;
     border-bottom: 1px solid var(--border-color) !important;
+    border-radius: 0.4em 0.4em 0 0 !important;
+    cursor: move !important;
   }
 
   // Thumbnails and Media

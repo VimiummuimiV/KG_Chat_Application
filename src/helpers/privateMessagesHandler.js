@@ -63,7 +63,7 @@ export async function handlePrivateMessageInput(inputElement) {
       enterPrivateMode(username);
       inputElement.value = input.replace(privateModeRegex, ''); // Remove the /pm username part
     } else {
-      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: 3000 });
+      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: 50000 }); // 3000
       exitPrivateMode();
     }
   } else if (exitPrivateModeRegex.test(input)) {

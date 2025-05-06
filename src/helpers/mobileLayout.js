@@ -23,7 +23,7 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
       }
 
       #app-chat-container .user-list-container {
-        top: 1em !important;
+        top: 50px !important;
         height: fit-content !important;
         max-height: 70vh !important;
         border-top: 1px solid var(--border-color) !important;
