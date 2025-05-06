@@ -7,9 +7,10 @@ import {
 
 import {
   clamp,
-  handleElementsBehavior,
   focusTextInput
 } from "../helpers/helpers.js";
+
+import { handleLayoutBehavior } from "../helpers/layoutBehavior.js";
 
 function updateToggleButton(toggleButton, isVisible) {
   toggleButton.innerHTML = isVisible ? closeSVG : openSVG;
@@ -67,7 +68,7 @@ export function restoreChatState() {
     chat.classList.remove("floating-chat");
   }
 
-  handleElementsBehavior();
+  handleLayoutBehavior();
 }
 
 export function getChatState() {
@@ -238,7 +239,7 @@ export function toggleChatMaximize() {
   saveChatState({ ...state, isMaximized });
 
   requestAnimationFrame(() => {
-    handleElementsBehavior();
+    handleLayoutBehavior();
 
     const container = document.getElementById('messages-panel');
     if (container) {

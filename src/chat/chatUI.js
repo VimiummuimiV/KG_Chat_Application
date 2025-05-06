@@ -1,11 +1,10 @@
 import {
-  showChatAlert,
-  setupRandomEmojiAttention,
-  getRandomInterval,
-  initChatLengthPopupEvents,
   createLengthPopup,
-  handleMobileLayout
-} from "../helpers/helpers.js";
+  initChatLengthPopupEvents 
+} from "../helpers/lengthPopup.js";
+
+import { showChatAlert } from "../helpers/chatHeaderAlert.js";
+import { handleMobileLayout } from "../helpers/mobileLayout.js";
 
 import {
   createFontSizeControl,
@@ -76,9 +75,6 @@ export function createChatUI() {
   emojiButton.addEventListener('mouseout', () => {
     emojiButton.innerHTML = "🙂";
   });
-
-  // Setup random emoji appearance with range (5min - 10min)
-  setupRandomEmojiAttention(emojiButton, getRandomInterval(300000, 600000));
 
   // Setup emoji panel toggle functionality
   let emojiPanelInstance = null;

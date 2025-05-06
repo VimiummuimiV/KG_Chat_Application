@@ -3,14 +3,14 @@ import { BASE_URL, FALLBACK_COLOR } from "../data/definitions.js";
 import {
   getRandomEmojiAvatar,
   extractUsername,
-  extractUserId,
-  handlePrivateMessageInput
+  extractUserId
 } from "../helpers/helpers.js";
 
 import { addShakeEffect } from "../data/animations.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
 import { storageWrapper } from "../components/ignoredUsersPanel.js";
 import { loadProfileIntoIframe } from "../helpers/iframeProfileLoader.js";
+import { handlePrivateMessageInput } from "../helpers/privateMessagesHandler.js";
 
 // Utility function to generate a dynamic timestamp for the rand parameter
 const generateRandomParam = () => `rand=${Date.now()}`;

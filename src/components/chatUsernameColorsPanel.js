@@ -1,4 +1,5 @@
-import { adjustVisibility, debounce, showChatAlert } from "../helpers/helpers";
+import { adjustVisibility, debounce } from "../helpers/helpers.js";
+import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';

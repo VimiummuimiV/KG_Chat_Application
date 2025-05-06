@@ -1,16 +1,20 @@
 import {
   parseUsername,
-  highlightMentionWords,
-  handlePrivateMessageInput,
   calibrateToMoscowTime,
-  generateRandomString,
-  createNewMessagesSeparator,
-  removeNewMessagesSeparator,
-  getExactUserIdByName,
-  playAudio,
-  notification,
-  banned
+  getExactUserIdByName
 } from "../helpers/helpers.js";
+
+import {
+  createNewMessagesSeparator,
+  removeNewMessagesSeparator
+} from "../helpers/messagesSeparator.js";
+
+import {
+  banned,
+  notification,
+  playAudio,
+  highlightMentionWords
+} from "../helpers/mentionWatcher.js";
 
 import ChatMessagesRemover from "../chat/chatMessagesRemover.js";
 import { parseMessageText } from "../helpers/parser.js";
@@ -18,6 +22,7 @@ import { usernameColors } from "../helpers/chatUsernameColors.js";
 import { connectionMessages } from '../data/definitions.js';
 import { storageWrapper } from "../components/ignoredUsersPanel.js";
 import { loadProfileIntoIframe } from "../helpers/iframeProfileLoader.js";
+import { handlePrivateMessageInput } from "../helpers/privateMessagesHandler.js";
 
 
 export default class MessageManager {
@@ -53,6 +58,11 @@ export default class MessageManager {
       });
     }
 
+  }
+
+  // Helper function to generate a random string
+  generateRandomString() {
+    return Math.random().toString(36).slice(2);
   }
 
   // Updated unique ID generator to include the timestamp

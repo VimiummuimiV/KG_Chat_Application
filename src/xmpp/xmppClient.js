@@ -6,11 +6,11 @@ import { FALLBACK_COLOR } from "../data/definitions.js";
 
 import {
   compactXML,
-  extractUsername,
-  privateMessageState,
-  showChatAlert,
-  sleep
+  extractUsername
 } from "../helpers/helpers.js";
+
+import { showChatAlert } from "../helpers/chatHeaderAlert.js";
+import { privateMessageState } from "../helpers/privateMessagesHandler.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.

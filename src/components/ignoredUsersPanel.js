@@ -1,4 +1,5 @@
-import { adjustVisibility, showChatAlert } from "../helpers/helpers";
+import { adjustVisibility } from "../helpers/helpers.js";
+import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
 
 // Centralized storage wrapper for ignored users.

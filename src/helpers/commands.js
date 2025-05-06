@@ -5,7 +5,8 @@ import {
 } from "../components/chatUsernameColorsPanel.js";
 import { openThemesPanel } from "../components/themesPanel.js";
 
-import { removeChatTraces, showChatAlert } from "./helpers.js";
+import { removeChatTraces } from "./helpers.js";
+import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { removeChatParams } from "../auth.js";
 import { HelpPanel } from "../components/helpPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";

@@ -1,7 +1,5 @@
-import {
-  clamp,
-  handleElementsBehavior,
-} from "../helpers/helpers.js";
+import { clamp } from "../helpers/helpers.js";
+import { handleLayoutBehavior } from "../helpers/layoutBehavior.js";
 
 import {
   getChatState,
@@ -215,7 +213,7 @@ export function setupResizeHandlers() {
     }
     
     saveChatState(chatState);
-    handleElementsBehavior();
+    handleLayoutBehavior();
   });
 
   document.addEventListener('mouseup', () => {
@@ -227,6 +225,6 @@ export function setupResizeHandlers() {
 export function setupWindowResizeHandler() {
   window.addEventListener('resize', () => {
     restoreChatState();
-    handleElementsBehavior();
+    handleLayoutBehavior();
   });
 }

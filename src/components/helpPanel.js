@@ -1,7 +1,5 @@
-import {
-  showChatAlert,
-  adjustVisibility
-} from "../helpers/helpers.js";
+import { adjustVisibility } from "../helpers/helpers.js";
+import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 
 export class HelpPanel {
   constructor(options = {}) {
