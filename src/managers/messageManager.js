@@ -60,16 +60,12 @@ export default class MessageManager {
 
   }
 
-  // Helper function to generate a random string
-  generateRandomString() {
-    return Math.random().toString(36).slice(2);
-  }
-
   // Updated unique ID generator to include the timestamp
   generateUniqueId(type, timestamp, username, text) {
     const time = timestamp || new Date().toLocaleTimeString('en-GB', { hour12: false });
     if (type === 'private') {
-      return `private-${generateRandomString()}`;
+      const now = Date.now(); // milliseconds since epoch
+      return `private-${now}`;
     }
     return `${time}-${username}-${text}`;
   }
