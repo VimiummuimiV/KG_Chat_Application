@@ -287,12 +287,15 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     max-width: $user-list-width !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    padding: 1em !important;
     background-color: var(--main-background-color) !important;
     color: var(--main-text-color) !important;
     border-left: 1px solid var(--border-color) !important;
     scrollbar-width: thin !important;
     scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color) !important;
+
+    #user-list {
+      padding: 1em !important;
+    }
 
     &::-webkit-scrollbar-thumb {
       background-color: var(--scrollbar-thumb-color) !important;
