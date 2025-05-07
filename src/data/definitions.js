@@ -19,6 +19,7 @@ export const reconnectionDelay = 3000;
 // Delay values for various UI interactions
 export const pendingUserDelay = 500;
 export const longPressDelay = 300;
+export const revealUserListDelay = 150;
 
 export const connectionMessages = {
   chat: {
