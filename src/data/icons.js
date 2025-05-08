@@ -60,7 +60,7 @@ export const helpSVG = `
   </svg>
 `;
 
-export const themesIcon = `
+export const magicWandSVG = `
   <svg class="theme" xmlns="${svgUrl}" 
        width="${iconSize / 1.6}" 
        height="${iconSize / 1.6}" 

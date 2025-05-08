@@ -9,7 +9,7 @@
   max-width: 360px !important;
   width: fit-content;
   scrollbar-width: none;
-  background-color: var(--main-background-color);
+  background-color: var(--background-color);
   border: 1px solid var(--border-color);
   padding: 1em;
   border-radius: 0.4em !important;
@@ -23,7 +23,7 @@
     font-size: 1.2em !important;
     margin: 0 !important;
     text-align: center !important;
-    color: var(--secondary-accent-color) !important;
+    color: var(--third-accent-color) !important;
     border-bottom: 1px dashed var(--border-color) !important;
     padding-bottom: 0.6em !important;
   }
@@ -37,13 +37,13 @@
       font-size: 1em !important;
       margin: 0.5em 0 !important;
       text-align: center !important;
-      color: var(--third-accent-color) !important;
+      color: var(--first-accent-color) !important;
       border-bottom: 1px dashed var(--border-color) !important;
       padding-bottom: 0.3em !important;
 
       .counter {
         font-size: 0.8em !important;
-        color: var(--secondary-accent-color) !important;
+        color: var(--fourth-accent-color) !important;
         margin-left: 0.5em !important;
       }
     }
@@ -60,7 +60,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 0.3em;
-    background-color: var(--input-background-color);
     border-bottom: 1px dashed var(--border-color);
 
     &:last-child {
@@ -99,7 +98,7 @@
   .custom-color-input {
     display: flex;
     align-items: center;
-    background-color: var(--main-background-color) !important;
+    background-color: var(--background-color) !important;
     position: absolute;
     left: 0 !important;
     top: 0 !important;
@@ -108,7 +107,7 @@
     .hex-input {
       padding: 0.6em !important;
       border-radius: 0.4em 0 0 0 !important;
-      background-color: var(--secondary-background-color) !important;
+      background-color: var(--highlight-color) !important;
       color: var(--main-text-color) !important;
       caret-color: var(--main-text-color) !important;
       width: 100% !important;
@@ -118,11 +117,11 @@
 
     .confirm-btn {
       padding: 0.6em;
-      background-color: var(--add-button-color) !important;
+      background-color: var(--first-accent-color) !important;
       color: color-mix(
         in srgb,
-        var(--add-button-color) 20%,
-        var(--main-background-color) 80%
+        var(--first-accent-color) 20%,
+        var(--background-color) 80%
       ) !important;
       border: none !important;
       outline: none !important;

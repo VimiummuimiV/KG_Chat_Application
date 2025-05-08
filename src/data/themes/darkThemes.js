@@ -1,357 +1,292 @@
 // Shared button colors for dark themes
 export const sharedColors = {
-  positive: {
-    'photoshop-dark': '#2fb344',
-    'photoshop-black': '#2fb344',
-    'gruvbox-dark': '#b8bb26',
-    'one-dark-pro': '#98c379',
-    'dracula-dark': '#50fa7b',
-    'palenight-dark': '#c3e88d',
-    'one-monokai-dark': '#a6e22e',
-    'polykai-dark': '#a0ff20',
-    'material-dark': '#43a047',
-    'github-dark': '#238636',
-    'solarized-dark': '#859900',
+  background: {
+    'photoshop-black': '#323232',
+    'photoshop-dark': '#454545',
+    'gruvbox-dark': '#282828',
+    'one-dark': '#282C34',
+    'one-dark-pro': '#282c34',
+    'dracula-dark': '#292a35',
+    'palenight-dark': '#292d3f',
+    'one-monokai-dark': '#282c34',
+    'one-monokai-darker': '#1e1e1e',
+    'polykai-dark': '#141818',
+    'material-dark': '#121212',
+    'github-dark': '#222830',
+    'solarized-dark': '#052b35',
+    'nord-polar-night': '#2e3440',
+    'nord-snow-storm': '#202325',
+    'monokai-pro-dark': '#181b1c',
+    'ayu-dark': '#0a0e14',
+    'ayu-mirage': '#1f2430',
+    'dark-soul': '#1e1e1e'
+  },
+  foreground: {
+    'photoshop-black': '#323232',
+    'photoshop-dark': '#454545',
+    'gruvbox-dark': '#32302f',
+    'one-dark': '#21252b',
+    'one-dark-pro': '#21252b',
+    'dracula-dark': '#454759',
+    'palenight-dark': '#31364b',
+    'one-monokai-dark': '#21252b',
+    'one-monokai-darker': '#222222',
+    'polykai-dark': '#1e2424',
+    'material-dark': '#1e1e1e',
+    'github-dark': '#161b23',
+    'solarized-dark': '#0e3641',
+    'nord-polar-night': '#3b4252',
+    'nord-snow-storm': '#292d2e',
+    'monokai-pro-dark': '#232829',
+    'ayu-dark': '#191c25',
+    'ayu-mirage': '#292f3d',
+    'dark-soul': '#2a2a2a'
+  },
+  highlight: {
+    'photoshop-black': '#292929',
+    'photoshop-dark': '#383838',
+    'gruvbox-dark': '#32302f',
+    'one-dark': '#21252b',
+    'one-dark-pro': '#21252b',
+    'dracula-dark': '#44475a',
+    'palenight-dark': '#31364b',
+    'one-monokai-dark': '#21252b',
+    'one-monokai-darker': '#222222',
+    'polykai-dark': '#1e2424',
+    'material-dark': '#1e1e1e',
+    'github-dark': '#2c3644',
+    'solarized-dark': '#0e3641',
+    'nord-polar-night': '#3b4252',
+    'nord-snow-storm': '#292d2e',
+    'monokai-pro-dark': '#232829',
+    'ayu-dark': '#191c25',
+    'ayu-mirage': '#292f3d',
+    'dark-soul': '#2a2a2a'
+  },
+
+  // Accent colors
+  firstAccent: {
+    'photoshop-black': '#32c649',
+    'photoshop-dark': '#4be83e',
+    'gruvbox-dark': '#b6ba37',
     'one-dark': '#98c379',
-    'nord-dark': '#a3be8c',
-    'monokai-pro-dark': '#a9dc76',
-    'vscode-dark': '#388e3c',
-    'ayu-dark': '#36c692',
-    'ayu-mirage': '#36c692',
+    'one-dark-pro': '#97c27e',
+    'dracula-dark': '#59f880',
+    'palenight-dark': '#c2e791',
+    'one-monokai-dark': '#a6e22e',
+    'one-monokai-darker': '#34c848',
+    'polykai-dark': '#a0ff20',
+    'material-dark': '#30d9c5',
+    'github-dark': '#56c882',
+    'solarized-dark': '#84981c',
+    'nord-polar-night': '#a3be8c',
+    'nord-snow-storm': '#a3be8c',
+    'monokai-pro-dark': '#a9db7b',
+    'ayu-dark': '#32C647',
+    'ayu-mirage': '#32C647',
     'dark-soul': '#82b32a'
   },
-  negative: {
-    'photoshop-dark': '#ff5f52',
+  secondAccent: {
     'photoshop-black': '#ff5f52',
-    'gruvbox-dark': '#cc241d',
-    'one-dark-pro': '#e06c75',
-    'dracula-dark': '#ff5555',
-    'palenight-dark': '#f07178',
-    'one-monokai-dark': '#f92672',
-    'polykai-dark': '#ff0060',
-    'material-dark': '#e53935',
-    'github-dark': '#da3633',
-    'solarized-dark': '#dc322f',
+    'photoshop-dark': '#ff5d73',
+    'gruvbox-dark': '#f64f3f',
     'one-dark': '#e06c75',
-    'nord-dark': '#bf616a',
-    'monokai-pro-dark': '#fc618d',
-    'vscode-dark': '#e53935',
-    'ayu-dark': '#ff3333',
-    'ayu-mirage': '#ff3333',
+    'one-dark-pro': '#de6d79',
+    'dracula-dark': '#e65e60',
+    'palenight-dark': '#fa5d77',
+    'one-monokai-dark': '#f9397e',
+    'one-monokai-darker': '#fa655e',
+    'polykai-dark': '#ff0060',
+    'material-dark': '#d9306f',
+    'github-dark': '#c85666',
+    'solarized-dark': '#d83938',
+    'nord-polar-night': '#cc8087',
+    'nord-snow-storm': '#cc8087',
+    'monokai-pro-dark': '#fb6287',
+    'ayu-dark': '#fa625d',
+    'ayu-mirage': '#fa625d',
     'dark-soul': '#d8775a'
   },
-  neutral: {
-    'photoshop-dark': '#0099ff',
-    'photoshop-black': '#0099ff',
-    'gruvbox-dark': '#d79921',
-    'one-dark-pro': '#e06c75',
-    'dracula-dark': '#bd93f9',
+  thirdAccent: {
+    'photoshop-black': '#72acf3',
+    'photoshop-dark': '#8abaf5',
+    'gruvbox-dark': '#f6bd42',
+    'one-dark': '#c67bdb',
+    'one-dark-pro': '#c67bdb',
+    'dracula-dark': '#92e8fb',
     'palenight-dark': '#c792ea',
-    'one-monokai-dark': '#f92672',
+    'one-monokai-dark': '#66d9ef',
+    'one-monokai-darker': '#8cbeec',
     'polykai-dark': '#40c4ff',
-    'material-dark': '#90caf9',
-    'github-dark': '#58a6ff',
-    'solarized-dark': '#268bd2',
-    'one-dark': '#61afef',
-    'nord-dark': '#88c0d0',
-    'monokai-pro-dark': '#a9dc76',
-    'vscode-dark': '#569cd6',
-    'ayu-dark': '#ffcc66',
+    'material-dark': '#bd89f9',
+    'github-dark': '#d2d7e0',
+    'solarized-dark': '#3a8bcf',
+    'nord-polar-night': '#b6d8e2',
+    'nord-snow-storm': '#88c0d0',
+    'monokai-pro-dark': '#f89769',
+    'ayu-dark': '#ddae51',
     'ayu-mirage': '#ffcc66',
-    'dark-soul': '#cdb398'
+    'dark-soul': '#d07e36'
+  },
+  fourthAccent: {
+    'photoshop-black': '#2797ff',
+    'photoshop-dark': '#45a6ff',
+    'gruvbox-dark': '#84a498',
+    'one-dark': '#98c379',
+    'one-dark-pro': '#6dafed',
+    'dracula-dark': '#92e8fb',
+    'palenight-dark': '#89ddff',
+    'one-monokai-dark': '#66d9ef',
+    'one-monokai-darker': '#8cbeec',
+    'polykai-dark': '#ff9020',
+    'material-dark': '#4b9ff1',
+    'github-dark': '#4b8cd8',
+    'solarized-dark': '#2aa198',
+    'nord-polar-night': '#c4a47c',
+    'nord-snow-storm': '#c4a47c',
+    'monokai-pro-dark': '#7ddae5',
+    'ayu-dark': '#36c692',
+    'ayu-mirage': '#36c692',
+    'dark-soul': '#58c195'
   }
 };
 
 export const darkThemes = {
-  // Base theme colors
-  '--main-background-color': {
-    'photoshop-dark': '#2d2d2d',
-    'photoshop-black': '#181818',
-    'gruvbox-dark': '#282828',
-    'one-dark-pro': '#282c34',
-    'dracula-dark': '#282a36',
-    'palenight-dark': '#292d3e',
-    'one-monokai-dark': '#222222',
-    'polykai-dark': '#141818',
-    'material-dark': '#121212',
-    'github-dark': '#0d1117',
-    'solarized-dark': '#002b36',
-    'one-dark': '#282c34',
-    'nord-dark': '#2e3440',
-    'monokai-pro-dark': '#2d2a2e',
-    'vscode-dark': '#1e1e1e',
-    'ayu-dark': '#0a0e14',
-    'ayu-mirage': '#1f2430',
-    'dark-soul': '#1e1e1e'
-  },
-  '--secondary-background-color': {
-    'photoshop-dark': '#383838',
-    'photoshop-black': '#222222',
-    'gruvbox-dark': '#3c3836',
-    'one-dark-pro': '#21252b',
-    'dracula-dark': '#44475a',
-    'palenight-dark': '#32374d',
-    'one-monokai-dark': '#2a2a2a',
-    'polykai-dark': '#1e2424',
-    'material-dark': '#1e1e1e',
-    'github-dark': '#161b22',
-    'solarized-dark': '#073642',
-    'one-dark': '#21252b',
-    'nord-dark': '#3b4252',
-    'monokai-pro-dark': '#363537',
-    'vscode-dark': '#252526',
-    'ayu-dark': '#151a1e',
-    'ayu-mirage': '#232834',
-    'dark-soul': '#2a2a2a'
-  },
+  // Background colors
+  '--background-color': sharedColors.background,
+  '--foreground-color': sharedColors.foreground,
+  '--highlight-color': sharedColors.highlight,
+
+  // Main text colors
   '--main-text-color': {
-    'photoshop-dark': '#e6e6e6',
-    'photoshop-black': '#e6e6e6',
-    'gruvbox-dark': '#ebdbb2',
+    'photoshop-black': '#cccccc',
+    'photoshop-dark': '#d4d4d4',
+    'gruvbox-dark': '#d3c4a3',
+    'one-dark': '#abb2bf',
     'one-dark-pro': '#abb2bf',
     'dracula-dark': '#f8f8f2',
-    'palenight-dark': '#a6accd',
-    'one-monokai-dark': '#d4d4d4',
-    'polykai-dark': '#aaaaaa',
-    'material-dark': '#e0e0e0',
-    'github-dark': '#c9d1d9',
-    'solarized-dark': '#839496',
-    'one-dark': '#abb2bf',
-    'nord-dark': '#d8dee9',
-    'monokai-pro-dark': '#fcfcfa',
-    'vscode-dark': '#d4d4d4',
-    'ayu-dark': '#b3b1ad',
-    'ayu-mirage': '#cbccc6',
+    'palenight-dark': '#bdc6d5',
+    'one-monokai-dark': '#b2bbbb',
+    'one-monokai-darker': '#aaaaaa',
+    'polykai-dark': '#cecece',
+    'material-dark': '#c6c6c6',
+    'github-dark': '#d1d7e0',
+    'solarized-dark': '#849496',
+    'nord-polar-night': '#b5bcca',
+    'nord-snow-storm': '#adb4b8',
+    'monokai-pro-dark': '#9c988d',
+    'ayu-dark': '#a3afc2',
+    'ayu-mirage': '#b1b9cd',
     'dark-soul': '#cdb398'
-  },
-
-  // Accent colors
-  '--main-accent-color': sharedColors.neutral,
-  '--secondary-accent-color': {
-    'photoshop-dark': '#ff5f52',
-    'photoshop-black': '#ff5f52',
-    'gruvbox-dark': '#fabd2f',
-    'one-dark-pro': '#98c379',
-    'dracula-dark': '#ff79c6',
-    'palenight-dark': '#82aaff',
-    'one-monokai-dark': '#a6e22e',
-    'polykai-dark': '#ff0060',
-    'material-dark': '#f48fb1',
-    'github-dark': '#d2a8ff',
-    'solarized-dark': '#b58900',
-    'one-dark': '#e06c75',
-    'nord-dark': '#bf616a',
-    'monokai-pro-dark': '#fc9867',
-    'vscode-dark': '#d7ba7d',
-    'ayu-dark': '#ff3333',
-    'ayu-mirage': '#ff3333',
-    'dark-soul': '#ffa500'
-  },
-  '--third-accent-color': {
-    'photoshop-dark': '#2fb344',
-    'photoshop-black': '#2fb344',
-    'gruvbox-dark': '#b8bb26',
-    'one-dark-pro': '#56b6c2',
-    'dracula-dark': '#50fa7b',
-    'palenight-dark': '#89ddff',
-    'one-monokai-dark': '#66d9ef',
-    'polykai-dark': '#a0ff20',
-    'material-dark': '#80cbc4',
-    'github-dark': '#3fb950',
-    'solarized-dark': '#2aa198',
-    'one-dark': '#98c379',
-    'nord-dark': '#a3be8c',
-    'monokai-pro-dark': '#78dce8',
-    'vscode-dark': '#4ec9b0',
-    'ayu-dark': '#36c692',
-    'ayu-mirage': '#36c692',
-    'dark-soul': '#00ff58'
-  },
-
-  // Anchor colors
-  '--link-color': {
-    'photoshop-dark': '#0099ff',
-    'photoshop-black': '#0099ff',
-    'gruvbox-dark': '#458588',
-    'one-dark-pro': '#61afef',
-    'dracula-dark': '#8be9fd',
-    'palenight-dark': '#80cbc4',
-    'one-monokai-dark': '#66d9ef',
-    'polykai-dark': '#40c4ff',
-    'material-dark': '#90caf9',
-    'github-dark': '#58a6ff',
-    'solarized-dark': '#268bd2',
-    'one-dark': '#61afef',
-    'nord-dark': '#88c0d0',
-    'monokai-pro-dark': '#78dce8',
-    'vscode-dark': '#3794ff',
-    'ayu-dark': '#5ccfe6',
-    'ayu-mirage': '#5ccfe6',
-    'dark-soul': '#82b32a'
-  },
-  '--link-hover-color': {
-    'photoshop-dark': '#33adff',
-    'photoshop-black': '#33adff',
-    'gruvbox-dark': '#83a598',
-    'one-dark-pro': '#61afef',
-    'dracula-dark': '#8be9fd',
-    'palenight-dark': '#80cbc4',
-    'one-monokai-dark': '#66d9ef',
-    'polykai-dark': '#6080ff',
-    'material-dark': '#42a5f5',
-    'github-dark': '#1f6feb',
-    'solarized-dark': '#005f87',
-    'one-dark': '#528bff',
-    'nord-dark': '#81a1c1',
-    'monokai-pro-dark': '#ab9df2',
-    'vscode-dark': '#40a6ff',
-    'ayu-dark': '#73d0ff',
-    'ayu-mirage': '#73d0ff',
-    'dark-soul': '#95cc30'
   },
 
   // Drag area colors
   '--drag-area-background-color': {
-    'photoshop-dark': '#1f1f1f',
-    'photoshop-black': '#0f0f0f',
-    'gruvbox-dark': '#3c3836',
+    'photoshop-black': '#323232',
+    'photoshop-dark': '#454545',
+    'gruvbox-dark': '#1d2021',
+    'one-dark': '#21252b',
     'one-dark-pro': '#21252b',
     'dracula-dark': '#44475a',
-    'palenight-dark': '#32374d',
-    'one-monokai-dark': '#2a2a2a',
+    'palenight-dark': '#31364b',
+    'one-monokai-dark': '#21252b',
+    'one-monokai-darker': '#1e1e1e',
     'polykai-dark': '#1e2424',
-    'material-dark': '#232323',
-    'github-dark': '#161b22',
-    'solarized-dark': '#073642',
-    'one-dark': '#21252b',
-    'nord-dark': '#3b4252',
-    'monokai-pro-dark': '#363537',
-    'vscode-dark': '#252526',
-    'ayu-dark': '#151a1e',
-    'ayu-mirage': '#232834',
-    'dark-soul': '#171717'
-  },
-
-  // Scrollbar colors
-  '--scrollbar-thumb-color': {
-    'photoshop-dark': '#4a4a4a',
-    'photoshop-black': '#2a2a2a',
-    'gruvbox-dark': '#504945',
-    'one-dark-pro': '#4b5263',
-    'dracula-dark': '#44475a',
-    'palenight-dark': '#444267',
-    'one-monokai-dark': '#3e3e3e',
-    'polykai-dark': '#3c4848',
-    'material-dark': '#424242',
-    'github-dark': '#30363d',
-    'solarized-dark': '#586e75',
-    'one-dark': '#3e4451',
-    'nord-dark': '#4c566a',
-    'monokai-pro-dark': '#403e41',
-    'vscode-dark': '#424242',
-    'ayu-dark': '#202734',
-    'ayu-mirage': '#232834',
-    'dark-soul': '#333333'
-  },
-  '--scrollbar-track-color': {
-    'photoshop-dark': '#2d2d2d',
-    'photoshop-black': '#181818',
-    'gruvbox-dark': '#282828',
-    'one-dark-pro': '#282c34',
-    'dracula-dark': '#282a36',
-    'palenight-dark': '#292d3e',
-    'one-monokai-dark': '#222222',
-    'polykai-dark': '#141818',
-    'material-dark': '#121212',
-    'github-dark': '#161b22',
-    'solarized-dark': '#002b36',
-    'one-dark': '#282c34',
-    'nord-dark': '#2e3440',
-    'monokai-pro-dark': '#2d2a2e',
-    'vscode-dark': '#1e1e1e',
+    'material-dark': '#000000',
+    'github-dark': '#161b23',
+    'solarized-dark': '#0e3641',
+    'nord-polar-night': '#3b4252',
+    'nord-snow-storm': '#292d2e',
+    'monokai-pro-dark': '#232829',
     'ayu-dark': '#0a0e14',
-    'ayu-mirage': '#1f2430',
-    'dark-soul': '#1e1e1e'
+    'ayu-mirage': '#292f3d',
+    'dark-soul': '#171717'
   },
 
   // Border colors
   '--border-color': {
-    'photoshop-dark': '#4a4a4a',
-    'photoshop-black': '#2a2a2a',
-    'gruvbox-dark': '#504945',
-    'one-dark-pro': '#4b5263',
-    'dracula-dark': '#44475a',
-    'palenight-dark': '#444267',
-    'one-monokai-dark': '#3e3e3e',
-    'polykai-dark': '#242424',
-    'material-dark': '#333333',
-    'github-dark': '#30363d',
-    'solarized-dark': '#073642',
+    'photoshop-black': '#262626',
+    'photoshop-dark': '#383838',
+    'gruvbox-dark': '#3c3836',
     'one-dark': '#181a1f',
-    'nord-dark': '#434c5e',
-    'monokai-pro-dark': '#403e41',
-    'vscode-dark': '#333333',
+    'one-dark-pro': '#404349',
+    'dracula-dark': '#434456',
+    'palenight-dark': '#444267',
+    'one-monokai-dark': '#35383f',
+    'one-monokai-darker': '#2d2d2d',
+    'polykai-dark': '#242424',
+    'material-dark': '#222222',
+    'github-dark': '#3d444d',
+    'solarized-dark': '#0e3641',
+    'nord-polar-night': '#3b4252',
+    'nord-snow-storm': '#292d2e',
+    'monokai-pro-dark': '#262a2c',
     'ayu-dark': '#202734',
-    'ayu-mirage': '#232834',
+    'ayu-mirage': '#2e3547',
     'dark-soul': '#333333'
   },
 
-  // Button colors
-  '--add-button-color': sharedColors.positive,
-  '--remove-button-color': sharedColors.negative,
-  '--input-error-color': sharedColors.negative,
-  '--yes-button-color': sharedColors.positive,
-  '--no-button-color': sharedColors.negative,
-  '--theme-button-color': sharedColors.neutral,
-  '--send-button-color': sharedColors.neutral,
+  // Accent colors
+  '--first-accent-color': sharedColors.firstAccent,
+  '--second-accent-color': sharedColors.secondAccent,
+  '--third-accent-color': sharedColors.thirdAccent,
+  '--fourth-accent-color': sharedColors.fourthAccent,
 
   // Hotkey colors
-  '--hotkey-label-text-color': Object.fromEntries(
-    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color])
-  ),
+  '--hotkey-label-text-color': sharedColors.fourthAccent,
   '--hotkey-label-background-color': Object.fromEntries(
-    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '1a'])
+    Object.entries(sharedColors.fourthAccent).map(([theme, color]) => [theme, color + '1a'])
   ),
   '--hotkey-label-border-color': Object.fromEntries(
-    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '66'])
+    Object.entries(sharedColors.fourthAccent).map(([theme, color]) => [theme, color + '66'])
   ),
 
   // Private mode input colors
-  '--private-mode-color': sharedColors.negative,
+  '--private-mode-color': sharedColors.secondAccent,
   '--private-mode-placeholder-color': Object.fromEntries(
-    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '80'])
+    Object.entries(sharedColors.secondAccent).map(([theme, color]) => [theme, color + 'cc'])
   ),
   '--private-mode-background-color': Object.fromEntries(
-    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '20'])
+    Object.entries(sharedColors.secondAccent).map(([theme, color]) => [theme, color + '40'])
   ),
 
   // Private message sent colors
-  '--private-message-sent-color': sharedColors.positive,
+  '--private-message-sent-color': sharedColors.firstAccent,
   '--private-message-sent-background-color': Object.fromEntries(
-    Object.entries(sharedColors.positive).map(([theme, color]) => [theme, color + '20'])
+    Object.entries(sharedColors.firstAccent).map(([theme, color]) => [theme, color + '20'])
   ),
   '--private-message-sent-border-color': Object.fromEntries(
-    Object.entries(sharedColors.positive).map(([theme, color]) => [theme, color + '30'])
+    Object.entries(sharedColors.firstAccent).map(([theme, color]) => [theme, color + '30'])
   ),
-  '--private-message-sent-time-color': sharedColors.positive,
+  '--private-message-sent-time-color': sharedColors.firstAccent,
 
   // Private message received colors
-  '--private-message-received-color': sharedColors.negative,
+  '--private-message-received-color': sharedColors.secondAccent,
   '--private-message-received-background-color': Object.fromEntries(
-    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '20'])
+    Object.entries(sharedColors.secondAccent).map(([theme, color]) => [theme, color + '20'])
   ),
   '--private-message-received-border-color': Object.fromEntries(
-    Object.entries(sharedColors.negative).map(([theme, color]) => [theme, color + '30'])
+    Object.entries(sharedColors.secondAccent).map(([theme, color]) => [theme, color + '30'])
   ),
-  '--private-message-received-time-color': sharedColors.negative,
+  '--private-message-received-time-color': sharedColors.secondAccent,
 
   // System message colors
-  '--system-message-color': sharedColors.neutral,
+  '--system-message-color': sharedColors.thirdAccent,
   '--system-message-background-color': Object.fromEntries(
-    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '20'])
+    Object.entries(sharedColors.thirdAccent).map(([theme, color]) => [theme, color + '20'])
   ),
   '--system-message-border-color': Object.fromEntries(
-    Object.entries(sharedColors.neutral).map(([theme, color]) => [theme, color + '30'])
+    Object.entries(sharedColors.thirdAccent).map(([theme, color]) => [theme, color + '30'])
   ),
-  '--system-message-time-color': sharedColors.neutral
+  '--system-message-time-color': sharedColors.thirdAccent,
+
+  // Ban message colors
+  '--ban-message-color': sharedColors.fourthAccent,
+  '--ban-message-background-color': Object.fromEntries(
+    Object.entries(sharedColors.fourthAccent).map(([theme, color]) => [theme, color + '20'])
+  ),
+  '--ban-message-border-color': Object.fromEntries(
+    Object.entries(sharedColors.fourthAccent).map(([theme, color]) => [theme, color + '30'])
+  ),
+  '--ban-message-time-color': sharedColors.fourthAccent
 };

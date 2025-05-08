@@ -273,8 +273,8 @@ function colorGenerator(config) {
 
 // Helper to determine if a theme is dark or light
 function getThemeType(themeKey) {
-  if (darkThemes['--main-background-color'][themeKey]) return 'dark';
-  if (lightThemes['--main-background-color'][themeKey]) return 'light';
+  if (darkThemes['--background-color'][themeKey]) return 'dark';
+  if (lightThemes['--background-color'][themeKey]) return 'light';
   return 'light'; // fallback
 }
 

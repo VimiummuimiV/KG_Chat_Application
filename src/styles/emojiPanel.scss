@@ -7,7 +7,7 @@ $emoji-font: "Noto Color Emoji";
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--main-background-color) !important;
+  background: var(--background-color) !important;
   border: 1px solid var(--border-color) !important;
   border-radius: 0.4em !important;
   width: 380px;
@@ -25,7 +25,7 @@ $emoji-font: "Noto Color Emoji";
       width: 100%;
       padding: 8px;
       border-radius: 4px;
-      background: var(--secondary-background-color) !important;
+      background: var(--highlight-color) !important;
       border: none !important;
       border-radius: 0.2em !important;
       color: var(--main-text-color) !important;
@@ -70,7 +70,7 @@ $emoji-font: "Noto Color Emoji";
 
       &.active {
         opacity: 1;
-        border-bottom: 3px solid var(--secondary-accent-color) !important;
+        border-bottom: 3px solid var(--third-accent-color) !important;
       }
 
       &:hover {
@@ -116,7 +116,7 @@ $emoji-font: "Noto Color Emoji";
         font-size: 0.9em !important;
         position: sticky !important;
         top: 0px !important;
-        background-color: var(--main-background-color) !important;
+        background-color: var(--background-color) !important;
         z-index: 1 !important;
         border-bottom: 1px solid var(--border-color) !important;
         width: 100% !important;
@@ -148,7 +148,7 @@ $emoji-font: "Noto Color Emoji";
           aspect-ratio: 1 !important;
 
           &:hover {
-            background-color: var(--secondary-background-color) !important;
+            background-color: var(--highlight-color) !important;
           }
         }
       }
@@ -189,7 +189,7 @@ $emoji-font: "Noto Color Emoji";
       gap: 8px !important;
       color: var(--main-text-color) !important;
       font-size: 0.9em !important;
-      background-color: var(--main-background-color) !important;
+      background-color: var(--background-color) !important;
 
       .emoji-info-icon {
         font-family: $emoji-font !important;
@@ -207,7 +207,7 @@ $emoji-font: "Noto Color Emoji";
       border: none !important;
       padding: 5px 10px;
       font-size: 14px;
-      background-color: var(--secondary-background-color) !important;
+      background-color: var(--foreground-color) !important;
       color: var(--main-text-color) !important;
       cursor: pointer;
       transition: border-color 0.3s ease;
@@ -218,10 +218,9 @@ $emoji-font: "Noto Color Emoji";
 
       option {
         font-size: 14px;
-        background-color: var(--secondary-background-color) !important;
+        background-color: var(--foreground-color) !important;
         color: var(--main-text-color) !important;
       }
     }
-
   }
 }

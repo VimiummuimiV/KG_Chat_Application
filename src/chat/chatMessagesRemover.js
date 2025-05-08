@@ -184,6 +184,14 @@ export default class ChatMessagesRemover {
     const btn = document.createElement("button");
     btn.className = "delete-btn";
 
+    let modeClass = "message-mode";
+    if (msg.classList.contains("time-mode")) {
+      modeClass = "time-mode";
+    } else if (msg.classList.contains("username-mode")) {
+      modeClass = "username-mode";
+    }
+    btn.classList.add(modeClass);
+
     if (this.isMobile) {
       btn.classList.add("mobile-delete-btn");
     }

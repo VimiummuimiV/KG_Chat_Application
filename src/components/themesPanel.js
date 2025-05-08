@@ -22,7 +22,7 @@ const createElement = (tag, className, attributes = {}) => {
 function getThemes(theme) {
   const variables = {};
   // Check if the theme exists in lightThemes or darkThemes
-  const themeSource = lightThemes['--main-background-color'][theme]
+  const themeSource = lightThemes['--background-color'][theme]
     ? lightThemes
     : darkThemes;
 
@@ -66,8 +66,8 @@ export const openThemesPanel = () => {
   const lightThemesBlock = createElement('div', 'light-themes');
 
   // Add headers with counters
-  darkThemesBlock.innerHTML = `<h3>Dark Themes <span class="counter">${Object.keys(darkThemes['--main-background-color']).length}</span></h3>`;
-  lightThemesBlock.innerHTML = `<h3>Light Themes <span class="counter">${Object.keys(lightThemes['--main-background-color']).length}</span></h3>`;
+  darkThemesBlock.innerHTML = `<h3>Dark Themes <span class="counter">${Object.keys(darkThemes['--background-color']).length}</span></h3>`;
+  lightThemesBlock.innerHTML = `<h3>Light Themes <span class="counter">${Object.keys(lightThemes['--background-color']).length}</span></h3>`;
 
   // Function to create theme buttons
   const createThemeButton = (themeName, themeKey) => {
@@ -84,12 +84,12 @@ export const openThemesPanel = () => {
   };
 
   // Add dark themes
-  Object.keys(darkThemes['--main-background-color']).forEach(themeKey => {
+  Object.keys(darkThemes['--background-color']).forEach(themeKey => {
     darkThemesBlock.appendChild(createThemeButton(themeKey, themeKey));
   });
 
   // Add light themes
-  Object.keys(lightThemes['--main-background-color']).forEach(themeKey => {
+  Object.keys(lightThemes['--background-color']).forEach(themeKey => {
     lightThemesBlock.appendChild(createThemeButton(themeKey, themeKey));
   });
 

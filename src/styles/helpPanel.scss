@@ -10,7 +10,7 @@
   width: fit-content;
   overflow-y: auto;
   scrollbar-width: none;
-  background-color: var(--main-background-color) !important;
+  background-color: var(--background-color) !important;
   border: 1px solid var(--border-color) !important;
   padding: 1em;
   border-radius: 0.4em !important;
@@ -23,7 +23,7 @@
     margin-top: 0;
     font-size: 1.5em;
     text-align: center;
-    color: var(--secondary-accent-color) !important;
+    color: var(--first-accent-color) !important;
   }
 
   .help-section-header {
@@ -31,13 +31,13 @@
     margin-bottom: 1.5em !important;
     font-size: 1.5em !important;
     text-align: center;
-    color: var(--secondary-accent-color) !important;
+    color: var(--third-accent-color) !important;
   }
 
   .help-section-subheader {
     margin: 0.8em 0 1.2em 1em;
     font-size: 0.9em;
-    color: var(--third-accent-color) !important;
+    color: var(--first-accent-color) !important;
     font-weight: normal;
     text-align: left;
   }

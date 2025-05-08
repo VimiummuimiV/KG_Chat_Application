@@ -16,7 +16,7 @@ import { createFontSizeControl, restoreFontSize } from "./chatFontSize.js";
 import {
   sendSVG,
   helpSVG,
-  themesIcon
+  magicWandSVG
 } from "../data/icons.js";
 
 import { HelpPanel } from "../components/helpPanel.js";
@@ -148,7 +148,7 @@ export function createChatUI() {
   // Theme button
   const themeButton = document.createElement('button');
   themeButton.className = 'button header-button chat-theme-button';
-  themeButton.innerHTML = themesIcon;
+  themeButton.innerHTML = magicWandSVG;
   themeButton.title = 'Change theme';
   themeButton.addEventListener("click", () => {
     openThemesPanel();

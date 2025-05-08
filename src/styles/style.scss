@@ -9,6 +9,7 @@ $min-chat-width: 320px;
 $user-list-width: fit-content;
 $emoji-font: "Noto Color Emoji";
 $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+$mix-for-brightness: #d2d2d2;
 
 // Main Chat Container
 #app-chat-container {
@@ -17,7 +18,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   bottom: 0;
   left: 0;
   height: 300px;
-  background-color: var(--main-background-color) !important;
+  background-color: var(--background-color) !important;
   color: var(--main-text-color) !important;
   border: 1px solid var(--border-color) !important;
   display: flex;
@@ -32,11 +33,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 
   // Links
   a {
-    color: var(--link-color) !important;
-    transition: color 0.15s !important;
+    color: var(--fourth-accent-color) !important;
+    transition: filter 0.15s !important;
 
     &:hover {
-      color: var(--link-hover-color) !important;
+      filter: brightness(0.8) !important;
     }
   }
 
@@ -71,7 +72,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     height: 100vh !important;
     border-radius: 0 !important;
     overflow: hidden !important;
-    background-color: var(--main-background-color) !important;
+    background-color: var(--background-color) !important;
     display: flex !important;
     flex-direction: column !important;
   }
@@ -111,8 +112,8 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
       appearance: none !important;
       background-color: color-mix(
         in srgb,
-        var(--main-accent-color) 50%,
-        var(--secondary-background-color) 50%
+        var(--third-accent-color) 50%,
+        var(--foreground-color) 50%
       ) !important;
       outline: none !important;
       border-radius: 2px !important;
@@ -124,7 +125,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         width: 10px !important;
         height: 10px !important;
         border-radius: 50% !important;
-        background: var(--main-accent-color) !important;
+        background: var(--third-accent-color) !important;
         cursor: pointer !important;
       }
 
@@ -132,7 +133,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         width: 10px !important;
         height: 10px !important;
         border-radius: 50% !important;
-        background: var(--main-accent-color) !important;
+        background: var(--third-accent-color) !important;
         cursor: pointer !important;
         border: none !important;
       }
@@ -182,13 +183,13 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     grid-template-columns: 1fr auto;
     min-width: $min-chat-width !important;
     overflow: hidden !important;
-    background-color: var(--main-background-color) !important;
+    background-color: var(--background-color) !important;
   }
 
   // Chat Content
   .chat-content {
     margin: 0 !important; // Reset margin conflict with KG styles
-    background-color: var(--main-background-color) !important;
+    background-color: var(--background-color) !important;
     display: flex !important;
     grid-area: messages;
     flex-direction: column !important;
@@ -205,7 +206,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     flex-direction: column !important;
     gap: 0.2em !important;
     scrollbar-width: thin !important;
-    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color) !important;
+    scrollbar-color: var(--foreground-color) var(--background-color) !important;
 
     &.keyboard-active {
       transition: margin-bottom 0.3s ease !important;
@@ -216,11 +217,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb-color) !important;
+      background-color: var(--foreground-color) !important;
     }
 
     &::-webkit-scrollbar-track {
-      background-color: var(--scrollbar-track-color) !important;
+      background-color: var(--background-color) !important;
     }
   }
 
@@ -232,14 +233,13 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     padding: 1em !important;
     gap: 0.5em !important;
     border-top: 1px solid var(--border-color) !important;
-    background-color: var(--main-background-color) !important;
+    background-color: var(--background-color) !important;
   }
 
   #message-input {
     outline: none !important;
     flex: 1 !important;
-    background: #2a2a2a !important;
-    background-color: var(--secondary-background-color) !important;
+    background-color: var(--highlight-color) !important;
     color: var(--main-text-color) !important;
     padding: 0.5em !important;
     border-radius: $border-radius !important;
@@ -252,7 +252,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 
     &.private-mode {
       background-color: var(--private-mode-background-color) !important;
-      color: var(--private-mode-color) !important;
+      color: color-mix(
+        in srgb,
+        var(--private-mode-color) 50%,
+        $mix-for-brightness 50%
+      ) !important;
       caret-color: var(--private-mode-color) !important;
 
       &::placeholder {
@@ -287,22 +291,22 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     max-width: $user-list-width !important;
     overflow-y: auto !important;
     overflow-x: hidden !important;
-    background-color: var(--main-background-color) !important;
+    background-color: var(--background-color) !important;
     color: var(--main-text-color) !important;
     border-left: 1px solid var(--border-color) !important;
     scrollbar-width: thin !important;
-    scrollbar-color: var(--scrollbar-thumb-color) var(--scrollbar-track-color) !important;
+    scrollbar-color: var(--foreground-color) var(--background-color) !important;
 
     #user-list {
       padding: 1em !important;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: var(--scrollbar-thumb-color) !important;
+      background-color: var(--foreground-color) !important;
     }
 
     &::-webkit-scrollbar-track {
-      background-color: var(--scrollbar-track-color) !important;
+      background-color: var(--background-color) !important;
     }
   }
 
@@ -316,7 +320,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     align-items: center !important;
     justify-content: center !important;
     padding: 0.4em !important;
-    background-color: var(--secondary-background-color) !important;
+    background-color: var(--foreground-color) !important;
     font-size: 18px !important;
     font-family: $emoji-font, sans-serif !important;
     font-weight: bold !important;
@@ -326,7 +330,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     transition: background 0.2s ease, opacity 0.2s ease !important;
 
     &:hover {
-      background-color: var(--main-background-color) !important;
+      background-color: var(--background-color) !important;
     }
   }
 
@@ -424,16 +428,20 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     }
 
     &.banned {
-      background-color: #8a2be220 !important;
-      border: 1px solid #8a2be230 !important;
-      border-left: 3px solid #8a2be2 !important;
+      background-color: var(--ban-message-background-color) !important;
+      border: 1px solid var(--ban-message-border-color) !important;
+      border-left: 3px solid var(--ban-message-color) !important;
       width: fit-content !important;
       .time {
-        color: #8a2be2 !important;
+        color: color-mix(
+          in srgb,
+          var(--ban-message-time-color) 70%,
+          var(--foreground-color) 30%
+        ) !important;
       }
       .username,
       .message-text {
-        color: #b875f7 !important;
+        color: var(--ban-message-color) !important;
       }
     }
 
@@ -445,7 +453,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
       align-items: center !important;
       .time {
         margin-right: unset !important;
-        color: var(--system-message-time-color) !important;
+        color: color-mix(
+          in srgb,
+          var(--system-message-time-color) 70%,
+          var(--foreground-color) 30%
+        ) !important;
       }
       .username {
         display: none !important;
@@ -465,7 +477,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         border: 1px solid var(--private-message-sent-border-color) !important;
         border-left: 3px solid var(--private-message-sent-color) !important;
         .time {
-          color: var(--private-message-sent-time-color) !important;
+          color: color-mix(
+            in srgb,
+            var(--private-message-sent-time-color) 70%,
+            var(--foreground-color) 30%
+          ) !important;
         }
         .username,
         .message-text {
@@ -480,7 +496,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
         border: 1px solid var(--private-message-received-border-color) !important;
         border-left: 3px solid var(--private-message-received-color) !important;
         .time {
-          color: var(--private-message-received-time-color) !important;
+          color: color-mix(
+            in srgb,
+            var(--private-message-received-time-color) 70%,
+            var(--foreground-color) 30%
+          ) !important;
         }
         .username,
         .message-text {
@@ -498,7 +518,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     .time {
       font-size: 0.9em !important;
       margin-right: 1em !important;
-      color: #666 !important;
+      color: color-mix(
+        in srgb,
+        var(--main-text-color) 50%,
+        var(--foreground-color) 50%
+      ) !important;
     }
 
     .username {
@@ -509,10 +533,10 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   .username,
   .time {
     cursor: pointer !important;
-    transition: opacity 0.2s ease !important;
+    transition: opacity 0.15s ease !important;
 
     &:hover {
-      opacity: 0.7 !important;
+      opacity: 0.8 !important;
     }
   }
 
@@ -612,7 +636,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   }
 
   .send-button .send {
-    fill: var(--send-button-color) !important;
+    fill: var(--third-accent-color) !important;
   }
 
   .chat-toggle-button {
@@ -620,11 +644,11 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   }
 
   .button .yes {
-    fill: var(--yes-button-color) !important;
+    fill: var(--first-accent-color) !important;
   }
 
   .button .no {
-    fill: var(--no-button-color) !important;
+    fill: var(--second-accent-color) !important;
   }
 
   .chat-maximize-button {
@@ -640,7 +664,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   }
 
   .chat-theme-button .theme {
-    fill: var(--theme-button-color) !important;
+    fill: var(--third-accent-color) !important;
   }
 
   .chat-drag-area {
@@ -702,7 +726,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
       margin-bottom: 0.2em !important;
       font-family: "Montserrat", sans-serif !important;
       font-size: 0.9em !important;
-      color: var(--link-color) !important;
+      color: var(--fourth-accent-color) !important;
       font-weight: 500 !important;
       white-space: break-spaces !important;
     }
@@ -715,7 +739,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
     border: none;
     height: 200px !important;
     width: 356px !important;
-    background-color: var(--main-background-color) !important;
+    background-color: var(--background-color) !important;
   }
 
   .youtube-thumb {
@@ -760,9 +784,6 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 .delete-btn {
   z-index: 1020 !important;
   padding: 8px 16px;
-  background-color: hsl(0, 50%, 20%);
-  color: hsl(0, 60%, 70%);
-  border: 1px solid hsl(0, 50%, 35%);
   transition: all 0.3s;
   cursor: pointer;
   filter: brightness(1);
@@ -771,6 +792,24 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
   &:hover {
     filter: brightness(1.5);
   }
+}
+
+.delete-btn.message-mode {
+  background-color: hsl(0, 50%, 20%);
+  color: hsl(0, 60%, 70%);
+  border: 1px solid hsl(0, 50%, 35%);
+}
+
+.delete-btn.username-mode {
+  background-color: hsl(145, 50%, 20%);
+  color: hsl(145, 60%, 70%);
+  border: 1px solid hsl(145, 50%, 35%);
+}
+
+.delete-btn.time-mode {
+  background-color: hsl(200, 50%, 20%);
+  color: hsl(200, 60%, 70%);
+  border: 1px solid hsl(200, 50%, 35%);
 }
 
 .toggle-button {
