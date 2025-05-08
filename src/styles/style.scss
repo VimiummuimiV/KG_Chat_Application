@@ -530,6 +530,10 @@ $mix-for-brightness: #d2d2d2;
     }
   }
 
+  .username {
+    filter: var(--username-filter) !important;
+  }
+
   .username,
   .time {
     cursor: pointer !important;

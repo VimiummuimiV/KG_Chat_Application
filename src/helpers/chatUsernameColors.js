@@ -1,6 +1,3 @@
-import { darkThemes } from '../data/themes/darkThemes.js';
-import { lightThemes } from '../data/themes/lightThemes.js';
-
 const colorUtils = {
   // Convert HSL (with h in [0,360] and s,l in percentage numbers) to hex
   hslToHex(h, s, l) {
@@ -271,22 +268,6 @@ function colorGenerator(config) {
   };
 }
 
-// Helper to determine if a theme is dark or light
-function getThemeType(themeKey) {
-  if (darkThemes['--background-color'][themeKey]) return 'dark';
-  if (lightThemes['--background-color'][themeKey]) return 'light';
-  return 'light'; // fallback
-}
-
-// Retrieve theme from localStorage using key 'selectedTheme'; fallback to 'dark-soul' if not set
-const selectedTheme = localStorage.getItem('selectedTheme') || 'dark-soul';
-const currentThemeType = getThemeType(selectedTheme);
-
-// Determine theme-based lightness settings, respecting the new adjustments
-const themeLightnessConfig = currentThemeType === 'dark'
-  ? { minLightness: 55, maxLightness: 80 }  // Dark theme: use higher lightness settings
-  : { minLightness: 35, maxLightness: 60 }; // Light theme: use lower lightness settings
-
 // Darken the color until it meets 4.5:1 contrast on white (exported)
 export const optimizeColor = hex => {
   console.log("Optimizing color for contrast:", hex);
@@ -303,11 +284,12 @@ export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
   minSaturation: 40,
   maxSaturation: 90,
-  ...themeLightnessConfig
+  minLightness: 55,
+  maxLightness: 80
 });
 
 export const mentionColors = colorGenerator({
   storageKey: 'mentionColors',
   saturation: '80',
-  ...themeLightnessConfig
+  lightness: '60'
 });

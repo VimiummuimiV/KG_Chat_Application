@@ -108,7 +108,7 @@ export const openIgnoredUsersPanel = () => {
       ignoredUsers.push(username);
       storageWrapper.set(ignoredUsers);
       showChatAlert(`Added "${username}" to the ignore list`, { type: 'success', duration: 2000 });
-      if (!userList.querySelector(`.user-label[text="${username}"]`)) {
+      if (!userList.querySelector(`.username[text="${username}"]`)) {
         const entry = createEntry(username);
         userList.appendChild(entry);
       }
@@ -132,7 +132,7 @@ export const openIgnoredUsersPanel = () => {
   // Create an entry element.
   const createEntry = (username) => {
     const entry = createElement('div', 'ignored-user-entry');
-    const label = createElement('div', 'user-label', { text: username });
+    const label = createElement('div', 'username', { text: username });
     const removeBtn = createElement('button', 'remove-btn');
 
     // Add SVG cross icon to the remove button

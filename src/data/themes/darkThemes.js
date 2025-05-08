@@ -236,6 +236,30 @@ export const darkThemes = {
     'dark-soul': '#333333'
   },
 
+  // Username filter (brightness) per dark theme
+  '--username-filter': {
+    'photoshop-black': 'brightness(1)',
+    'photoshop-dark': 'brightness(1.1)',
+    'gruvbox-dark': 'brightness(1)',
+    'one-dark': 'brightness(1)',
+    'one-dark-pro': 'brightness(1)',
+    'dracula-dark': 'brightness(1)',
+    'palenight-dark': 'brightness(1)',
+    'one-monokai-dark': 'brightness(1)',
+    'one-monokai-darker': 'brightness(1)',
+    'polykai-dark': 'brightness(0.9)',
+    'material-dark': 'brightness(0.8)',
+    'github-dark': 'brightness(1)',
+    'solarized-dark': 'brightness(0.9)',
+    'nord-polar-night': 'brightness(1)',
+    'nord-snow-storm': 'brightness(1)',
+    'monokai-pro-dark': 'brightness(1)',
+    'ayu-dark': 'brightness(0.8)',
+    'ayu-mirage': 'brightness(1)',
+    'telegram-dark': 'brightness(1)',
+    'dark-soul': 'brightness(1)'
+  }, 
+
   // Accent colors
   '--first-accent-color': sharedColors.firstAccent,
   '--second-accent-color': sharedColors.secondAccent,

@@ -17,8 +17,7 @@ export const sharedColors = {
   },
   foreground: {
     'photoshop-light': '#f0f0f0',
-    'photoshop-gray': '#b8b8b8',
-    'photoshop-gray': '#d4d4d4',
+    'photoshop-gray': '#a3a3a3',
     'gruvbox-light': '#ebdbb2',
     'dracula-light': '#e9e9f4',
     'material-light': '#d9d9d9',
@@ -165,6 +164,23 @@ export const lightThemes = {
     'ayu-light': '#eaecef',
     'paper-light': '#d9d9d9',
     'dollar-light': '#d0d1bd'
+  },
+
+  // Username filter (brightness) per light theme
+  '--username-filter': {
+    'photoshop-light': 'brightness(0.7)',
+    'photoshop-gray': 'brightness(0.55)',
+    'gruvbox-light': 'brightness(0.6)',
+    'dracula-light': 'brightness(0.8)',
+    'material-light': 'brightness(0.8)',
+    'github-light': 'brightness(0.8)',
+    'solarized-light': 'brightness(0.7)',
+    'one-light': 'brightness(0.8)',
+    'nord-light': 'brightness(0.7)',
+    'monokai-pro-light': 'brightness(0.8)',
+    'ayu-light': 'brightness(0.8)',
+    'paper-light': 'brightness(0.7)',
+    'dollar-light': 'brightness(0.6)'
   },
 
   // Accent colors

@@ -158,7 +158,7 @@ export const openUsernameColors = () => {
 
   const updateGeneratedBlockStatus = () => {
     generatedBlock.querySelectorAll('.username-entry').forEach(entry => {
-      const username = entry.querySelector('.user-label').textContent;
+      const username = entry.querySelector('.username').textContent;
       entry.classList.toggle('disabled-entry', storageOps.isColorSaved(username));
     });
     updateCounters();
@@ -167,7 +167,7 @@ export const openUsernameColors = () => {
   // Create an entry element.
   const createEntry = (username, color, isSaved = false) => {
     const entry = createElement('div', 'username-entry');
-    const label = createElement('div', 'user-label', { text: username });
+    const label = createElement('div', 'username', { text: username });
     const colorBox = createElement('div', 'color-box');
     updateStyles(label, colorBox, color);
     const colorInput = createElement('input', null, { type: 'color', value: color });
@@ -283,7 +283,7 @@ export const openUsernameColors = () => {
     if (removeBtn) {
       const entry = removeBtn.closest('.username-entry');
       if (!entry) return;
-      const username = entry.querySelector('.user-label').textContent;
+      const username = entry.querySelector('.username').textContent;
       storageOps.removeColor(username);
       entry.remove();
       updateGeneratedBlockStatus();

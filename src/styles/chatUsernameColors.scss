@@ -66,8 +66,9 @@
       border-bottom: none;
     }
 
-    .user-label {
+    .username {
       flex: 1;
+      filter: var(--username-filter) !important;
     }
 
     .color-box {
@@ -77,6 +78,7 @@
       padding: 0.6em;
       font-size: 0.8em;
       font-family: monospace;
+      filter: var(--username-filter) !important;
     }
 
     input[type="color"] {
@@ -93,6 +95,7 @@
     height: 25px;
     border-radius: 0.2em !important;
     margin-left: 8px;
+    filter: var(--username-filter) !important;
   }
 
   .custom-color-input {
