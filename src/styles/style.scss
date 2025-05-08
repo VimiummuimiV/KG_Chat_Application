@@ -639,6 +639,10 @@ $mix-for-brightness: #d2d2d2;
     font-size: 1.5em !important;
   }
 
+  .emoji-trigger #smile_color {
+    fill: var(--third-accent-color) !important;
+  }
+
   .send-button .send {
     fill: var(--third-accent-color) !important;
   }

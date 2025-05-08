@@ -1,6 +1,6 @@
 import {
   createLengthPopup,
-  initChatLengthPopupEvents 
+  initChatLengthPopupEvents
 } from "../helpers/lengthPopup.js";
 
 import { handleMobileLayout } from "../helpers/mobileLayout.js";
@@ -16,7 +16,8 @@ import { createFontSizeControl, restoreFontSize } from "./chatFontSize.js";
 import {
   sendSVG,
   helpSVG,
-  magicWandSVG
+  magicWandSVG,
+  smileSVG
 } from "../data/icons.js";
 
 import { HelpPanel } from "../components/helpPanel.js";
@@ -68,18 +69,10 @@ export function createChatUI() {
   // Create emoji button
   const emojiButton = document.createElement('button');
   emojiButton.className = 'emoji-trigger button';
-  emojiButton.innerHTML = "🙂";
+  // emojiButton.innerHTML = "🙂";
+  emojiButton.innerHTML = smileSVG;
   emojiButton.classList.add('emoji-button');
   emojiButton.title = 'Open emoji picker';
-
-  // Add these event listeners to change the emoji on hover
-  emojiButton.addEventListener('mouseover', () => {
-    emojiButton.innerHTML = "🙃";
-  });
-
-  emojiButton.addEventListener('mouseout', () => {
-    emojiButton.innerHTML = "🙂";
-  });
 
   // Setup emoji panel toggle functionality
   let emojiPanelInstance = null;
