@@ -292,14 +292,22 @@ export function checkIsMobile() {
 
 // ==================================================================================================
 
-// Debounce helper
-export const debounce = (func, wait) => {
-  let timeout;
-  return function (...args) {
+// Debounce helper with cancel support
+export function debounce(func, wait) {
+  let timeout = null;
+
+  function debounced(...args) {
     clearTimeout(timeout);
     timeout = setTimeout(() => func.apply(this, args), wait);
+  }
+
+  debounced.cancel = () => {
+    clearTimeout(timeout);
+    timeout = null;
   };
-};
+
+  return debounced;
+}
 
 // ===================================================================================================
 

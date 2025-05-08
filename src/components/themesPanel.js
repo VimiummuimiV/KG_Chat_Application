@@ -1,6 +1,7 @@
-import { adjustVisibility } from "../helpers/helpers.js";
+import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { lightThemes } from "../data/themes/lightThemes.js";
 import { darkThemes } from "../data/themes/darkThemes.js";
+import { themePreviewDelay } from "../data/definitions.js";
 
 // DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {
@@ -69,17 +70,32 @@ export const openThemesPanel = () => {
   darkThemesBlock.innerHTML = `<h3>Dark Themes <span class="counter">${Object.keys(darkThemes['--background-color']).length}</span></h3>`;
   lightThemesBlock.innerHTML = `<h3>Light Themes <span class="counter">${Object.keys(lightThemes['--background-color']).length}</span></h3>`;
 
+  // Store original theme for preview restoration
+  let originalTheme = localStorage.getItem('selectedTheme') || 'dark-soul';
+
+  // Function to preview theme with debounce
+  const previewTheme = debounce(theme => applyThemeStyles(theme), themePreviewDelay);
+
   // Function to create theme buttons
   const createThemeButton = (themeName, themeKey) => {
     const button = createElement('button', 'theme-button', {
       text: themeName.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
     });
     button.dataset.theme = themeKey;
+
+    // Mouse enter for preview
+    button.addEventListener('mouseenter', () => {
+      previewTheme(themeKey);
+    });
+
+    // Apply theme permanently on click
     button.addEventListener('click', () => {
+      originalTheme = themeKey;
       localStorage.setItem('selectedTheme', themeKey);
       highlightActiveTheme();
       applyThemeStyles(themeKey);
     });
+
     return button;
   };
 
@@ -93,21 +109,48 @@ export const openThemesPanel = () => {
     lightThemesBlock.appendChild(createThemeButton(themeKey, themeKey));
   });
 
-  // Highlight the active theme button
+  // Highlight the active theme button and scroll it into view
   const highlightActiveTheme = () => {
     const currentTheme = localStorage.getItem('selectedTheme') || 'dark-soul';
+    originalTheme = currentTheme; // Update the original theme reference
+    let activeButton = null;
+
     container.querySelectorAll('.theme-button').forEach(button => {
-      button.classList.toggle('active-theme', button.dataset.theme === currentTheme);
+      const isActive = button.dataset.theme === currentTheme;
+      button.classList.toggle('active-theme', isActive);
+      if (isActive) {
+        activeButton = button;
+      }
     });
+
+    // Scroll the active button into view with smooth behavior
+    if (activeButton) {
+      setTimeout(() => {
+        activeButton.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
+        });
+      }, 100); // Small delay to ensure panel is visible first
+    }
   };
+
+  // Add event to revert theme when mouse leaves the panel
+  container.addEventListener('mouseleave', () => {
+    // Cancel any pending preview
+    previewTheme.cancel();
+    // Restore original theme if not activated
+    applyThemeStyles(originalTheme);
+  });
 
   // Append blocks to container (dark themes first)
   container.appendChild(darkThemesBlock);
   container.appendChild(lightThemesBlock);
 
-  highlightActiveTheme();
   document.body.appendChild(container);
   adjustVisibility(container, 'show', 1);
+
+  // Call highlightActiveTheme after the panel is visible
+  highlightActiveTheme();
 
   const handleEscapeKey = (e) => {
     if (e.key === 'Escape') {

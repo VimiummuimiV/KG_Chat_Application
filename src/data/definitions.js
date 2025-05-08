@@ -20,6 +20,7 @@ export const reconnectionDelay = 3000;
 export const pendingUserDelay = 500;
 export const longPressDelay = 300;
 export const revealUserListDelay = 150;
+export const themePreviewDelay = 150;
 
 export const connectionMessages = {
   chat: {
