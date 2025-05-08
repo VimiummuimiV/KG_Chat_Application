@@ -19,6 +19,7 @@ export const sharedColors = {
     'monokai-pro-dark': '#181b1c',
     'ayu-dark': '#0a0e14',
     'ayu-mirage': '#1f2430',
+    'telegram-dark': '#17212b',
     'dark-soul': '#1e1e1e'
   },
   foreground: {
@@ -40,6 +41,7 @@ export const sharedColors = {
     'monokai-pro-dark': '#232829',
     'ayu-dark': '#191c25',
     'ayu-mirage': '#292f3d',
+    'telegram-dark': '#1f2936',
     'dark-soul': '#2a2a2a'
   },
   highlight: {
@@ -61,6 +63,7 @@ export const sharedColors = {
     'monokai-pro-dark': '#232829',
     'ayu-dark': '#191c25',
     'ayu-mirage': '#292f3d',
+    'telegram-dark': '#1f2936',
     'dark-soul': '#2a2a2a'
   },
 
@@ -84,6 +87,7 @@ export const sharedColors = {
     'monokai-pro-dark': '#a9db7b',
     'ayu-dark': '#32C647',
     'ayu-mirage': '#32C647',
+    'telegram-dark': '#85d610',
     'dark-soul': '#82b32a'
   },
   secondAccent: {
@@ -105,6 +109,7 @@ export const sharedColors = {
     'monokai-pro-dark': '#fb6287',
     'ayu-dark': '#fa625d',
     'ayu-mirage': '#fa625d',
+    'telegram-dark': '#f1417b',
     'dark-soul': '#d8775a'
   },
   thirdAccent: {
@@ -126,6 +131,7 @@ export const sharedColors = {
     'monokai-pro-dark': '#f89769',
     'ayu-dark': '#ddae51',
     'ayu-mirage': '#ffcc66',
+    'telegram-dark': '#4082bc',
     'dark-soul': '#d07e36'
   },
   fourthAccent: {
@@ -147,6 +153,7 @@ export const sharedColors = {
     'monokai-pro-dark': '#7ddae5',
     'ayu-dark': '#36c692',
     'ayu-mirage': '#36c692',
+    'telegram-dark': '#5eb3f3',
     'dark-soul': '#58c195'
   }
 };
@@ -177,6 +184,7 @@ export const darkThemes = {
     'monokai-pro-dark': '#9c988d',
     'ayu-dark': '#a3afc2',
     'ayu-mirage': '#b1b9cd',
+    'telegram-dark': '#c8c8c8',
     'dark-soul': '#cdb398'
   },
 
@@ -200,6 +208,7 @@ export const darkThemes = {
     'monokai-pro-dark': '#232829',
     'ayu-dark': '#0a0e14',
     'ayu-mirage': '#292f3d',
+    'telegram-dark': '#1f2936',
     'dark-soul': '#171717'
   },
 
@@ -223,6 +232,7 @@ export const darkThemes = {
     'monokai-pro-dark': '#262a2c',
     'ayu-dark': '#202734',
     'ayu-mirage': '#2e3547',
+    'telegram-dark': '#101921',
     'dark-soul': '#333333'
   },
 
