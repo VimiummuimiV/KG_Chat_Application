@@ -249,7 +249,7 @@ export const darkThemes = {
   // Username filter (brightness) per dark theme
   '--username-filter': {
     'photoshop-black': 'brightness(1)',
-    'photoshop-dark': 'brightness(1.1)',
+    'photoshop-dark': 'brightness(1.3)',
     'gruvbox-dark': 'brightness(1)',
     'one-dark': 'brightness(1)',
     'one-dark-pro': 'brightness(1)',

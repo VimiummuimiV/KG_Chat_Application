@@ -282,9 +282,9 @@ export const optimizeColor = hex => {
 // Pre-configured color generators (exported)
 export const usernameColors = colorGenerator({
   storageKey: 'usernameColors',
-  minSaturation: 40,
-  maxSaturation: 90,
-  minLightness: 55,
+  minSaturation: 35,
+  maxSaturation: 75,
+  minLightness: 65,
   maxLightness: 80
 });
 
