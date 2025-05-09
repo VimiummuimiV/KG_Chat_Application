@@ -106,7 +106,7 @@ export const sharedColors = {
     'one-monokai-darker': '#fa655e',
     'polykai-dark': '#ff0060',
     'material-dark': '#d9306f',
-    'turbo-dark': '#c22424',
+    'turbo-dark': '#db3d3d',
     'github-dark': '#c85666',
     'solarized-dark': '#d83938',
     'nord-polar-night': '#cc8087',
