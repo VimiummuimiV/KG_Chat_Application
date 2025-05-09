@@ -37,27 +37,24 @@ export default class MessageManager {
     this.initialLoadComplete = false;
     this.chatRemover = new ChatMessagesRemover();
     this.messageInput = document.getElementById('message-input');
-    this.newSeparatorAdded = false; // flag for separator insertion
+    this.shouldCreateSeparator = true;
     this._delegatedClickAttached = false;
 
     // Listen for tab visibility changes
     document.addEventListener("visibilitychange", () => {
       if (document.hidden) {
         removeNewMessagesSeparator(this.panel);
-        this.newSeparatorAdded = false;
+        this.shouldCreateSeparator = true;
       }
     });
 
     // Remove separator when user focuses on message input
     if (this.messageInput) {
       this.messageInput.addEventListener('focus', () => {
-        if (this.newSeparatorAdded) {
-          removeNewMessagesSeparator(this.panel);
-          this.newSeparatorAdded = false;
-        }
+        removeNewMessagesSeparator(this.panel);
+        this.shouldCreateSeparator = true;
       });
     }
-
   }
 
   // Updated unique ID generator to include the timestamp
@@ -136,6 +133,7 @@ export default class MessageManager {
           console.error("Error parsing timestamp:", e);
         }
       }
+
       if (!timestamp) {
         // Only fall back to local time if there's no server timestamp at all.
         timestamp = new Date().toLocaleTimeString('en-GB', { hour12: false });
@@ -156,6 +154,7 @@ export default class MessageManager {
           cleanFrom,
           text
         );
+
         const messageObj = {
           id: uniqueId,
           from: cleanFrom,
@@ -186,6 +185,7 @@ export default class MessageManager {
       this.currentUsername,
       text
     );
+
     const messageObj = {
       id: uniqueId,
       from: this.currentUsername,
@@ -195,9 +195,11 @@ export default class MessageManager {
       pending: options.pending || false,
       timestamp: currentTime
     };
+
     if (this.addMessage(messageObj)) {
       this.updatePanel();
     }
+
     return uniqueId;
   }
 
@@ -240,13 +242,13 @@ export default class MessageManager {
           }
         }
 
-        // Play audio for private messages that are received (not sent) when document is hidden
+        // Play notification sound for new private messages when the tab is inactive
         if (msg.isPrivate && msg.from !== this.currentUsername && document.hidden) {
           playAudio(notification);
         }
 
         if (msg.isPrivate) {
-          messageEl.classList.add('private-message');
+          messageEl.classList.add('private');
           messageEl.classList.add(msg.from === this.currentUsername ? 'sent' : 'received');
           if (msg.recipient) {
             messageEl.setAttribute('data-recipient', msg.recipient);
@@ -257,6 +259,7 @@ export default class MessageManager {
           messageEl.classList.add('system');
           msg.text = `${msg.from} ${msg.text.substring(msg.text.indexOf(' ') + 1)}`;
         }
+
         if (msg.isSystem) {
           messageEl.classList.add('system');
         }
@@ -302,10 +305,10 @@ export default class MessageManager {
     });
 
     // If the tab is inactive and new messages have arrived, insert the separator.
-    if (document.hidden && this.initialLoadComplete && fragment.childNodes.length > 0 && !this.newSeparatorAdded) {
+    if (document.hidden && this.initialLoadComplete && fragment.childNodes.length > 0 && this.shouldCreateSeparator) {
       const separator = createNewMessagesSeparator();
       fragment.insertBefore(separator, fragment.firstChild); // Insert at the beginning of the fragment
-      this.newSeparatorAdded = true;
+      this.shouldCreateSeparator = false;
     }
 
     // Append all new messages in one DOM operation.

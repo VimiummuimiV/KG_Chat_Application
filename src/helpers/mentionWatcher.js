@@ -35,7 +35,10 @@ export function highlightMentionWords() {
   const highlightTerms = [username];
   const globalProcessed = new WeakSet();
 
-  const messages = container.querySelectorAll('.message-text:not(.processed-for-mention)');
+  const messages = container.querySelectorAll(
+    '.message:not(.system):not(.private) ' + // Exclude system and private messages
+    '.message-text:not(.processed-for-mention)' // Exclude already processed messages
+  );
   messages.forEach((message) => {
     const walker = document.createTreeWalker(
       message,
