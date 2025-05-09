@@ -2,7 +2,7 @@ import {
   BASE_URL,
   FALLBACK_COLOR,
   pendingUserDelay,
-  longPressDelay
+  longPressDuration
 } from "../data/definitions.js";
 
 import {
@@ -134,7 +134,7 @@ export default class UserManager {
           clearTimeout(timer);
         };
 
-        timer = setTimeout(startLongPress, longPressDelay);
+        timer = setTimeout(startLongPress, longPressDuration);
 
         const endEvents = eventType === 'mouse' 
           ? ['mouseup', 'mouseleave']

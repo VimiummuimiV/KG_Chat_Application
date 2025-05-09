@@ -1,5 +1,6 @@
 import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
+import { longPressDuration } from "../data/definitions.js";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';
@@ -119,7 +120,6 @@ export const openUsernameColors = () => {
   let savedBlock = null;
   let longPressTimer = null;
   let currentEntry = null;
-  const longPressDuration = 500;
 
   // Create container and blocks.
   const container = createElement('div', 'chat-username-color-picker', { html: '<h2>Username Colors</h2>' });
