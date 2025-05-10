@@ -102,8 +102,8 @@ export const openIgnoredUsersPanel = () => {
       const userId = await getExactUserIdByName(username);
       if (!userId) {
         showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: showAlertDuration });
-        inputField.classList.add('input-error');
-        setTimeout(() => inputField.classList.remove('input-error'), 500);
+        inputField.classList.add('field-error');
+        setTimeout(() => inputField.classList.remove('field-error'), 500);
         return;
       }
       ignoredUsers.push(username);

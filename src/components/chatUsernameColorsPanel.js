@@ -1,6 +1,7 @@
 import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { longPressDuration, showAlertDuration } from "../data/definitions.js";
+import { getExactUserIdByName } from "../helpers/helpers.js";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';
@@ -9,7 +10,8 @@ const storageWrapper = {
     try {
       const stored = storage.getItem(storageKey);
       return stored ? JSON.parse(stored) : {};
-    } catch (e) {console.error(`Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data:`, e);
+    } catch (e) {
+      console.error(`Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data:`, e);
       return {};
     }
   },
@@ -42,6 +44,15 @@ const storageOps = {
   isColorSaved: (username) => {
     const localColors = storageWrapper.get(localStorage);
     return username in localColors;
+  },
+  updateUsername: (oldUsername, newUsername, color) => {
+    const localColors = storageWrapper.get(localStorage);
+    if (oldUsername in localColors) {
+      delete localColors[oldUsername];
+      localColors[newUsername] = color;
+      return storageWrapper.set(localStorage, localColors);
+    }
+    return false;
   }
 };
 
@@ -85,6 +96,30 @@ const createRemoveSVG = () => {
     path.setAttribute("d", d);
     svg.appendChild(path);
   });
+  return svg;
+};
+
+// Create edit (pencil) SVG icon.
+const createEditSVG = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("width", "12");
+  svg.setAttribute("height", "12");
+  svg.setAttribute("fill", "none");
+  svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "2");
+  svg.setAttribute("stroke-linecap", "round");
+  svg.setAttribute("stroke-linejoin", "round");
+  svg.classList.add("edit-icon");
+
+  const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path1.setAttribute("d", "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7");
+  svg.appendChild(path1);
+
+  const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path2.setAttribute("d", "M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z");
+  svg.appendChild(path2);
+
   return svg;
 };
 
@@ -161,12 +196,14 @@ export const openUsernameColors = () => {
   const createEntry = (username, color, isSaved = false) => {
     const entry = createElement('div', 'username-entry');
     const label = createElement('div', 'username', { text: username });
-    const colorBox = createElement('div', 'color-box');
+    const colorBox = createElement('div', 'color-box', { title: 'Change hex' });
     updateStyles(label, colorBox, color);
     const colorInput = createElement('input', null, { type: 'color', value: color });
 
     // We keep a reference to the input element on the entry.
     entry._colorInput = colorInput;
+    entry._username = username;
+    entry._color = color;
 
     entry.append(label, colorBox, colorInput);
 
@@ -180,8 +217,14 @@ export const openUsernameColors = () => {
           savedBlock = null;
         }
       });
+
+      // Create edit button for usernames in saved entries
+      const editBtn = createEditButton(entry, username, color);
+      entry.appendChild(editBtn);
+
       // Save a reference for later update.
       entry._removeBtn = removeBtn;
+      entry._editBtn = editBtn;
     }
 
     const debouncedUpdate = debounce(() => {
@@ -196,7 +239,9 @@ export const openUsernameColors = () => {
         updateGeneratedBlockStatus();
       } else {
         storageOps.saveColor(username, newColor);
-        // Update or recreate the remove button.
+        entry._color = newColor;
+
+        // Update or recreate the buttons
         if (!entry._removeBtn || !entry.contains(entry._removeBtn)) {
           entry._removeBtn = createOrUpdateRemoveButton(entry, username, newColor, () => {
             entry.remove();
@@ -212,11 +257,39 @@ export const openUsernameColors = () => {
             color: newColor
           });
         }
+
+        if (!entry._editBtn || !entry.contains(entry._editBtn)) {
+          entry._editBtn = createEditButton(entry, username, newColor);
+        } else {
+          Object.assign(entry._editBtn.style, {
+            backgroundColor: hexWithAlpha(newColor, 0.4),
+            color: newColor
+          });
+        }
       }
     }, 1000);
 
     colorInput.addEventListener('input', debouncedUpdate);
     return entry;
+  };
+
+  // Create edit button for username entries
+  const createEditButton = (entry, _username, color) => {
+    const editBtn = createElement('div', 'entry-btn edit-btn');
+    editBtn.appendChild(createEditSVG());
+    editBtn.title = "Edit username";
+    Object.assign(editBtn.style, {
+      backgroundColor: hexWithAlpha(color, 0.4),
+      color
+    });
+
+    editBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      showCustomInput(entry, 'username');
+    });
+
+    entry.appendChild(editBtn);
+    return editBtn;
   };
 
   // Render saved colors block.
@@ -292,7 +365,8 @@ export const openUsernameColors = () => {
     if (colorBox) {
       const entry = colorBox.closest('.username-entry');
       if (!entry || entry.classList.contains('disabled-entry') || entry._customInputActive) return;
-      // Trigger the color input.
+
+      // Always open native color picker on click
       if (entry._colorInput) {
         entry._colorInput.click();
       }
@@ -308,7 +382,7 @@ export const openUsernameColors = () => {
     // Start long press timer.
     longPressTimer = setTimeout(() => {
       entry._isLongPress = true;
-      showCustomInput(entry);
+      showCustomInput(entry, 'color');
     }, longPressDuration);
     // Save the current entry for pointerup/leave events.
     currentEntry = entry;
@@ -326,41 +400,96 @@ export const openUsernameColors = () => {
     }
   }
 
-  // Delegated function to show custom input.
-  function showCustomInput(entry) {
-    if (entry.querySelector('.custom-color-input')) return;
+  // Delegated function to show custom input for either username or color.
+  function showCustomInput(entry, mode = 'color') {
+    // Remove any existing custom input
+    const previousInputContainer = document.querySelector('.custom-input-container');
+    if (previousInputContainer) previousInputContainer.remove();
+
     entry._customInputActive = true;
-    const customInputContainer = createElement('div', 'custom-color-input');
-    const hexInput = createElement('input', 'hex-input', { type: 'text', placeholder: 'Enter hex color' });
-    const confirmBtn = createElement('button', 'confirm-btn', { text: 'Confirm' });
-    customInputContainer.append(hexInput, confirmBtn);
+    const customInputContainer = createElement('div', 'custom-input-container');
+
+    const cancelBtn = createElement('button', 'field-btn cancel-btn', { text: 'Cancel' });
+    const inputField = createElement('input', 'input-field', {
+      type: 'search',
+      placeholder: mode === 'color' ? `H: ${entry._username}` : `U: ${entry._username}`
+    });
+    const confirmBtn = createElement('button', 'field-btn confirm-btn', { text: 'Confirm' });
+
+    customInputContainer.append(cancelBtn, inputField, confirmBtn);
     entry.appendChild(customInputContainer);
-    hexInput.focus();
-    const handleConfirm = () => {
-      const hexValue = hexInput.value.trim();
-      if (isValidHex(hexValue)) {
-        if (entry._colorInput) {
-          entry._colorInput.value = hexValue;
+    inputField.focus();
+
+    const handleConfirm = async () => {
+      const rawValue = inputField.value.trim();
+      const saveValue = rawValue.toLowerCase();
+
+      if (mode === 'color') {
+        if (isValidHex(rawValue)) {
+          // Apply the hex (use rawValue or saveValue interchangeably since hex is case-insensitive)
+          entry._colorInput.value = saveValue;
           entry._colorInput.dispatchEvent(new Event('input', { bubbles: true }));
+          entry.removeChild(customInputContainer);
+          entry._customInputActive = false;
+        } else {
+          showChatAlert(`Invalid hex color "${rawValue}"`, { type: 'error', duration: showAlertDuration });
         }
+
+      } else if (mode === 'username') {
+        // Use rawValue for the API lookup
+        const userId = await getExactUserIdByName(rawValue);
+        if (!userId) {
+          showChatAlert(`Could not find user "${rawValue}"`, { type: 'error', duration: showAlertDuration });
+          inputField.classList.add('field-error');
+          setTimeout(() => inputField.classList.remove('field-error'), 500);
+          return;
+        }
+
+        if (rawValue && saveValue !== entry._username) {
+          const oldUsername = entry._username;
+          const color = entry._color;
+
+          // Save and display the lowercase username
+          storageOps.updateUsername(oldUsername, saveValue, color);
+          const usernameLabel = entry.querySelector('.username');
+          if (usernameLabel) {
+            usernameLabel.textContent = saveValue;
+          }
+          entry._username = saveValue;
+
+          updateGeneratedBlockStatus();
+        }
+
         entry.removeChild(customInputContainer);
         entry._customInputActive = false;
-      } else {
-        alert('Invalid hex color');
       }
     };
+
     confirmBtn.addEventListener('click', (e) => {
       e.stopPropagation();
       handleConfirm();
     });
-    hexInput.addEventListener('keypress', (e) => {
+
+    cancelBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      entry.removeChild(customInputContainer);
+      entry._customInputActive = false;
+    });
+
+    inputField.addEventListener('keypress', (e) => {
       if (e.key === 'Enter') {
         e.stopPropagation();
         handleConfirm();
+      } else if (e.key === 'Escape') {
+        e.stopPropagation();
+        entry.removeChild(customInputContainer);
+        entry._customInputActive = false;
       }
     });
+
     customInputContainer.addEventListener('click', (e) => e.stopPropagation());
   }
+
 
   return container;
 };
@@ -369,9 +498,9 @@ export const openUsernameColors = () => {
 const createOrUpdateRemoveButton = (entry, username, color, updateCb) => {
   let removeBtn = entry.querySelector('.remove-btn');
   if (removeBtn) entry.removeChild(removeBtn);
-  removeBtn = createElement('div', 'remove-btn');
+  removeBtn = createElement('div', 'entry-btn remove-btn');
   removeBtn.appendChild(createRemoveSVG());
-  removeBtn.title = "Remove saved color";
+  removeBtn.title = "Remove entry";
   Object.assign(removeBtn.style, {
     backgroundColor: hexWithAlpha(color, 0.4),
     color

@@ -86,7 +86,7 @@
     }
   }
 
-  .remove-btn {
+  .entry-btn {
     cursor: pointer;
     display: flex;
     align-items: center;
@@ -95,10 +95,13 @@
     height: 25px;
     border-radius: 0.2em !important;
     margin-left: 8px;
+  }
+
+  .remove-btn {
     filter: var(--username-filter) !important;
   }
 
-  .custom-color-input {
+  .custom-input-container {
     display: flex;
     align-items: center;
     background-color: var(--background-color) !important;
@@ -107,34 +110,46 @@
     top: 0 !important;
     right: 0 !important;
 
-    .hex-input {
+    .input-field {
       padding: 0.6em !important;
-      border-radius: 0.4em 0 0 0 !important;
-      background-color: var(--highlight-color) !important;
-      color: var(--main-text-color) !important;
-      caret-color: var(--main-text-color) !important;
+      background-color: var(--highlight-color);
+      color: var(--main-text-color);
+      caret-color: var(--main-text-color);
       width: 100% !important;
       border: none !important;
       outline: none !important;
     }
 
-    .confirm-btn {
+    .field-btn {
       padding: 0.6em;
+      border: none !important;
+      outline: none !important;
+      cursor: pointer;
+      transition: filter 0.3s ease;
+
+      &:hover {
+        filter: blur(1.2);
+      }
+    }
+
+    .confirm-btn {
+      border-radius: 0 0.4em 0 0 !important;
       background-color: var(--first-accent-color) !important;
       color: color-mix(
         in srgb,
         var(--first-accent-color) 20%,
         var(--background-color) 80%
       ) !important;
-      border: none !important;
-      outline: none !important;
-      border-radius: 0 0.4em 0 0 !important;
-      cursor: pointer;
-      transition: filter 0.3s ease;
+    }
 
-      &:hover {
-        filter: brightness(1.2);
-      }
+    .cancel-btn {
+      border-radius: 0.4em 0 0 0 !important;
+      background-color: var(--second-accent-color) !important;
+      color: color-mix(
+        in srgb,
+        var(--second-accent-color) 20%,
+        var(--background-color) 80%
+      ) !important;
     }
   }
 }
