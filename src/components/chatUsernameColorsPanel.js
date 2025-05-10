@@ -400,6 +400,12 @@ export const openUsernameColors = () => {
     }
   }
 
+  // Highlight field on error or no value
+  function highlightFieldOnError(field) {
+    field.classList.add('field-error');
+    setTimeout(() => field.classList.remove('field-error'), 500);
+  }
+
   // Delegated function to show custom input for either username or color.
   function showCustomInput(entry, mode = 'color') {
     // Remove any existing custom input
@@ -421,6 +427,13 @@ export const openUsernameColors = () => {
     inputField.focus();
 
     const handleConfirm = async () => {
+      // Do not allow to pass the empty field
+      if (!inputField.value.trim()) {
+        showChatAlert('The field cannot be empty', { type: 'warning', duration: showAlertDuration });
+        highlightFieldOnError(inputField);
+        return;
+      }
+
       const rawValue = inputField.value.trim();
       const saveValue = rawValue.toLowerCase();
 
@@ -433,6 +446,8 @@ export const openUsernameColors = () => {
           entry._customInputActive = false;
         } else {
           showChatAlert(`Invalid hex color "${rawValue}"`, { type: 'error', duration: showAlertDuration });
+          highlightFieldOnError(inputField);
+          return;
         }
 
       } else if (mode === 'username') {
@@ -440,8 +455,7 @@ export const openUsernameColors = () => {
         const userId = await getExactUserIdByName(rawValue);
         if (!userId) {
           showChatAlert(`Could not find user "${rawValue}"`, { type: 'error', duration: showAlertDuration });
-          inputField.classList.add('field-error');
-          setTimeout(() => inputField.classList.remove('field-error'), 500);
+          highlightFieldOnError(inputField);
           return;
         }
 
