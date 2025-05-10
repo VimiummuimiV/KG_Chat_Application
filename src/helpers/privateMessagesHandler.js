@@ -1,5 +1,6 @@
 import { getExactUserIdByName } from "./helpers.js";
 import { showChatAlert } from "./chatHeaderAlert.js";
+import { showAlertDuration } from "../data/definitions.js";
 
 // State management for private messaging
 export const privateMessageState = {
@@ -63,7 +64,7 @@ export async function handlePrivateMessageInput(inputElement) {
       enterPrivateMode(username);
       inputElement.value = input.replace(privateModeRegex, ''); // Remove the /pm username part
     } else {
-      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: 3000 });
+      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: showAlertDuration });
       exitPrivateMode();
     }
   } else if (exitPrivateModeRegex.test(input)) {
@@ -112,7 +113,7 @@ function enterPrivateMode(username) {
       exitButton.innerHTML = "🔒";
     });
 
-    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
+    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: showAlertDuration });
     privateMessageState.isPrivateMode = true;
     privateMessageState.targetUsername = username;
 
@@ -123,7 +124,7 @@ function enterPrivateMode(username) {
     }
   } else if (privateMessageState.targetUsername === username) {
     messageInput.placeholder = `️PM to ➡ ${username}`;
-    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: 3000 });
+    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: showAlertDuration });
   }
 }
 
@@ -138,7 +139,7 @@ function exitPrivateMode() {
     if (exitButton) exitButton.remove();
 
     privateMessageState.exitPrivateMode();
-    showChatAlert('Exited private chat mode', { type: 'success', duration: 3000 });
+    showChatAlert('Exited private chat mode', { type: 'success', duration: showAlertDuration });
 
     // Remove ESC key event listener when exiting private mode
     if (escKeyHandler) {

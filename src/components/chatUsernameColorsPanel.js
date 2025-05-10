@@ -1,6 +1,6 @@
 import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
-import { longPressDuration } from "../data/definitions.js";
+import { longPressDuration, showAlertDuration } from "../data/definitions.js";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';
@@ -9,11 +9,7 @@ const storageWrapper = {
     try {
       const stored = storage.getItem(storageKey);
       return stored ? JSON.parse(stored) : {};
-    } catch (e) {
-      console.error(
-        `Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data:`,
-        e
-      );
+    } catch (e) {console.error(`Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data:`, e);
       return {};
     }
   },
@@ -22,10 +18,7 @@ const storageWrapper = {
       storage.setItem(storageKey, JSON.stringify(data));
       return true;
     } catch (e) {
-      console.error(
-        `Error saving data to ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'}:`,
-        e
-      );
+      console.error(`Error saving data to ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'}:`, e);
       return false;
     }
   }
@@ -397,7 +390,7 @@ const createOrUpdateRemoveButton = (entry, username, color, updateCb) => {
 export function exportUsernameColors() {
   const usernameColors = localStorage.getItem('usernameColors');
   if (!usernameColors) {
-    showChatAlert('No username colors found to export', { type: 'error', duration: 2000 });
+    showChatAlert('No username colors found to export', { type: 'error', duration: showAlertDuration });
     return;
   }
   // Parse and stringify with indentation
@@ -409,7 +402,7 @@ export function exportUsernameColors() {
   a.download = 'usernameColors.json';
   a.click();
   URL.revokeObjectURL(url);
-  showChatAlert('Username colors exported as JSON file', { type: 'info', duration: 2000 });
+  showChatAlert('Username colors exported as JSON file', { type: 'info', duration: showAlertDuration });
 }
 
 // Helper to import username colors from a JSON file.
@@ -422,7 +415,7 @@ export function importUsernameColors() {
   input.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (!file) {
-      showChatAlert('No file selected', { type: 'error', duration: 2000 });
+      showChatAlert('No file selected', { type: 'error', duration: showAlertDuration });
       return;
     }
     const reader = new FileReader();
@@ -430,9 +423,9 @@ export function importUsernameColors() {
       try {
         const jsonData = JSON.parse(e.target.result);
         localStorage.setItem('usernameColors', JSON.stringify(jsonData));
-        showChatAlert('Username colors imported successfully', { type: 'info', duration: 2000 });
+        showChatAlert('Username colors imported successfully', { type: 'info', duration: showAlertDuration });
       } catch (err) {
-        showChatAlert('Invalid JSON file', { type: 'error', duration: 2000 });
+        showChatAlert('Invalid JSON file', { type: 'error', duration: showAlertDuration });
       }
     };
     reader.readAsText(file);

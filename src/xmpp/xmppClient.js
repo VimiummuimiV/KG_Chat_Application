@@ -11,6 +11,7 @@ import {
 
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { privateMessageState } from "../helpers/privateMessagesHandler.js";
+import { showAlertDuration } from "../data/definitions.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.
@@ -206,7 +207,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
             this.isConnected = true;
             if (this.isReconnecting) {
-              showChatAlert("Chat connected successfully!", { type: 'success' });
+              showChatAlert("Chat connected successfully!", { type: 'success', duration: showAlertDuration });
               messageManager.refreshMessages(true);
               this.isReconnecting = false;
             }
@@ -271,7 +272,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           console.error('HTTP binding error:', error.message);
           if (error.message.includes('404') && !this.isReconnecting) {
             console.log(`🛑 Chat connection lost. Reconnecting...`);
-            showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning' });
+            showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning', duration: showAlertDuration });
             messageManager.refreshMessages(false);
             this.isReconnecting = true;
             this.isConnected = false;
@@ -359,7 +360,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     console.log("Network offline. Stopping HTTP binding.");
     xmppClient.stopHttpBinding();
     xmppClient.isConnected = false;
-    showChatAlert("Network connection lost.", { type: 'warning' });
+    showChatAlert("Network connection lost.", { type: 'warning', duration: showAlertDuration });
     messageManager.refreshMessages(false, 'network');
   });
 
@@ -369,7 +370,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
       xmppClient.connect();
     }
-    showChatAlert("Network connection restored.", { type: 'success' });
+    showChatAlert("Network connection restored.", { type: 'success', duration: showAlertDuration });
     messageManager.refreshMessages(true, 'network');
   });
 

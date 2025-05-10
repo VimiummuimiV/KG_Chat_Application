@@ -31,6 +31,7 @@ export const clearSelectionDelay = 500;
 
 export const revealUserListDelay = 150;
 export const themePreviewDelay = 150;
+export const showAlertDuration = 2000;
 
 export const connectionMessages = {
   chat: {

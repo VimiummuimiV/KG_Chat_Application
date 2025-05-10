@@ -1,3 +1,5 @@
+import { showAlertDuration } from "../data/definitions.js";
+
 export function showChatAlert(message, options = {}) {
   const dragArea = document.querySelector('.chat-drag-area');
   if (!dragArea) return;
@@ -7,7 +9,7 @@ export function showChatAlert(message, options = {}) {
     dragArea.removeChild(existingAlert);
   }
   
-  const defaultOptions = { type: 'info', duration: 3000 };
+  const defaultOptions = { type: 'info', duration: showAlertDuration };
   const settings = { ...defaultOptions, ...options };
   
   const colorMap = {
