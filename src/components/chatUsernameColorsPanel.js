@@ -123,6 +123,28 @@ const createEditSVG = () => {
   return svg;
 };
 
+// Create an add SVG icon.
+const createAddSVG = () => {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("width", "12");
+  svg.setAttribute("height", "12");
+  svg.setAttribute("fill", "none");
+  svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "2");
+  svg.setAttribute("stroke-linecap", "round");
+  svg.setAttribute("stroke-linejoin", "round");
+  svg.classList.add("add-icon");
+
+  // plus sign
+  ['M12 5v14', 'M5 12h14'].forEach(d => {
+    const path = document.createElementNS(svg.namespaceURI, "path");
+    path.setAttribute("d", d);
+    svg.appendChild(path);
+  });
+  return svg;
+};
+
 // Update styling for label and color box.
 function updateStyles(label, colorBox, color) {
   label.style.color = color;
@@ -305,6 +327,8 @@ export function openUsernameColors() {
     if (!savedBlock) return;
     const localColors = storageWrapper.get(localStorage);
     savedBlock.innerHTML = '<h3>Saved Colors <span class="counter">0</span></h3>';
+    // prepend add button as first entry
+    savedBlock.appendChild(createAddUsernameButton());
     Object.entries(localColors).forEach(([username, color]) => {
       const entry = createEntry(username, color, true);
       savedBlock.appendChild(entry);
@@ -314,7 +338,7 @@ export function openUsernameColors() {
       savedBlock = null;
     }
     updateCounters();
-  };
+  }
 
   // Render generated colors.
   Object.entries(sessionColors).forEach(([username, color]) => {
@@ -414,6 +438,23 @@ export function openUsernameColors() {
     setTimeout(() => field.classList.remove('field-error'), 500);
   }
 
+  // Create username button to add new user
+  function createAddUsernameButton() {
+    const entry = createElement('div', 'username-entry');
+    const description = createElement('span', 'add-description', {text: "Add username"});
+    const add = createElement('div', 'entry-btn add-btn');
+    add.appendChild(createAddSVG());
+    add.title = "Add username";
+    add.addEventListener('click', e => {
+      e.stopPropagation();
+      // mark this as an “add” flow
+      const dummy = { _confirmation: false, _add: true };
+      showConfirmation(dummy, 'username');
+    });
+    entry.append(description, add);
+    return entry;
+  }
+
   // Unified confirm dialog for color-edit, username-edit, or remove-only flows.
   function showConfirmation(entry, mode = 'color') {
     const parent = document.querySelector('.chat-username-color-picker');
@@ -439,7 +480,7 @@ export function openUsernameColors() {
         type: 'search',
         placeholder: mode === 'color'
           ? `H: ${entry._username}`
-          : `U: ${entry._username}`
+          : `U: ${entry._username || 'username'}`
       });
       container.append(cancelBtn, inputField, confirmBtn);
     } else {
@@ -491,12 +532,28 @@ export function openUsernameColors() {
           highlightFieldOnError(inputField);
           return;
         }
+
+        // First verify user exists
         const userId = await getExactUserIdByName(val);
         if (!userId) {
           showChatAlert(`Could not find user "${val}"`, { type: 'error', duration: showAlertDuration });
           highlightFieldOnError(inputField);
           return;
         }
+
+        // If this was the “add” button dummy
+        if (entry._add) {
+          const username = val.toLowerCase();
+          const defaultColor = '#cdcdcd';
+          storageOps.saveColor(username, defaultColor);
+          createSavedBlock();
+          renderSavedBlock();
+          updateGeneratedBlockStatus();
+          closeDialog();
+          return;
+        }
+
+        // Otherwise it's the edit-existing flow
         if (val.toLowerCase() !== entry._username) {
           storageOps.updateUsername(entry._username, val.toLowerCase(), entry._color);
           entry.querySelector('.username').textContent = val.toLowerCase();

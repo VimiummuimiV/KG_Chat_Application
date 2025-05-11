@@ -64,7 +64,7 @@
   .username-entry {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: right;
     padding: 0.3em;
     border-bottom: 1px dashed var(--border-color);
 
@@ -103,8 +103,25 @@
     margin-left: 8px;
   }
 
-  .remove-btn {
+  .remove-btn,
+  .edit-btn {
     filter: var(--username-filter) !important;
+  }
+
+  .add-btn {
+    background-color: color-mix(
+      in srgb,
+      var(--first-accent-color) 40%,
+      var(--background-color) 60%
+    ) !important;
+  }
+
+  .add-btn path {
+    stroke: var(--first-accent-color) !important;
+  }
+
+  .add-description {
+    color: var(--first-accent-color) !important;
   }
 
   .confirmation {
