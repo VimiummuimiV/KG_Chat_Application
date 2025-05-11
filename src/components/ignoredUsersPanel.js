@@ -84,17 +84,19 @@ export const openIgnoredUsersPanel = () => {
 
   const ignoredUsers = storageWrapper.get();
 
-  // Create container and blocks.
-  const container = createElement('div', 'ignored-users-panel', { html: '<h2>Ignored Users</h2>' });
+  // Create container and ignored-users container.
+  const container = createElement('div', 'ignored-users-panel');
   const userList = createElement('div', 'ignored-users-list');
-
-  // Append userList to the container before inserting inputContainer
   container.appendChild(userList);
+
+  // Create h2 (main header) and append to usernameColors.
+  const header = createElement('h2', null, { text: 'Ignored users' });
+  userList.appendChild(header);
 
   // Add input field and button for adding new ignored users
   const inputContainer = createElement('div', 'ignored-users-input-container');
   const inputField = createElement('input', 'ignored-users-input', { type: 'search', placeholder: 'Enter username to ignore' });
-  const addButton = createElement('button', 'ignored-users-add-btn', { text: 'Add' });
+  const addButton = createElement('button', 'ignored-users-add-btn', { text: 'Block' });
 
   const handleAddIgnoredUser = async () => {
     const username = inputField.value.trim();
@@ -183,8 +185,6 @@ export const openIgnoredUsersPanel = () => {
       document.removeEventListener('keydown', handleEscapeKey);
     }
   };
-
-  inputField.focus(); // Focus the input field on panel creation
 
   document.addEventListener('keydown', handleEscapeKey);
 

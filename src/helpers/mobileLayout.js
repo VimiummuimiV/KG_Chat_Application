@@ -22,6 +22,12 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
         right: unset !important;
       }
 
+      .ignored-users-panel,
+      .chat-username-color-picker {
+        top: 80px !important;
+        transform: translate(-50%, 0%) !important;
+      }
+
       #app-chat-container .user-list-container {
         top: 50px !important;
         height: fit-content !important;
