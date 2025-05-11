@@ -3,46 +3,36 @@ import { showAlertDuration } from "../data/definitions.js";
 export function showChatAlert(message, options = {}) {
   const dragArea = document.querySelector('.chat-drag-area');
   if (!dragArea) return;
-  
+
   const existingAlert = dragArea.querySelector('.chat-dynamic-alert');
   if (existingAlert && existingAlert.parentNode === dragArea) {
     dragArea.removeChild(existingAlert);
   }
-  
+
   const defaultOptions = { type: 'info', duration: showAlertDuration };
   const settings = { ...defaultOptions, ...options };
-  
+
   const colorMap = {
     info: '#2196F3',
     warning: '#FF9800',
     error: '#F44336',
     success: '#4CAF50'
   };
-  
+
   const alertElement = document.createElement('div');
   alertElement.className = 'chat-dynamic-alert';
   alertElement.innerHTML = message;
   alertElement.style.cssText = `
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 25px;
-    color: ${colorMap[settings.type] || colorMap.info};
-    font: 500 10px "Montserrat",sans-serif;
-    opacity: 0;
-    transform: translateX(0);
+    background-color: ${colorMap[settings.type] || colorMap.info};
   `;
-  
+
   dragArea.appendChild(alertElement);
-  
+
   function animateAlert() {
     requestAnimationFrame(() => {
       alertElement.style.transition = 'opacity 0.3s ease-in-out';
       alertElement.style.opacity = '1';
-      
+
       setTimeout(() => {
         alertElement.style.transition = 'transform 0.05s ease-in-out';
         const shakeSequence = [
@@ -54,18 +44,18 @@ export function showChatAlert(message, options = {}) {
           { x: -3, delay: 250 },
           { x: 0, delay: 300 }
         ];
-        
+
         shakeSequence.forEach((move) => {
           setTimeout(() => {
-            alertElement.style.transform = `translateX(${move.x}px)`;
+            alertElement.style.transform = `translate(calc(-50% + ${move.x}px), 0)`;
           }, move.delay);
         });
       }, 300);
-      
+
       setTimeout(() => {
         alertElement.style.transition = 'opacity 0.3s ease-in-out';
         alertElement.style.opacity = '0';
-        
+
         setTimeout(() => {
           if (alertElement && alertElement.parentNode === dragArea) {
             dragArea.removeChild(alertElement);
@@ -74,6 +64,6 @@ export function showChatAlert(message, options = {}) {
       }, settings.duration);
     });
   }
-  
+
   animateAlert();
 }
