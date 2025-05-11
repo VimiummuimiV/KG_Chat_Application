@@ -149,8 +149,16 @@ export function openUsernameColors() {
   let longPressTimer = null;
   let currentEntry = null;
 
+  // Create container and username-colors container.
+  const container = createElement('div', 'chat-username-color-picker');
+  const usernameColors = createElement('div', 'username-colors');
+  container.appendChild(usernameColors);
+
+  // Create h2 (main header) and append to usernameColors.
+  const header = createElement('h2', null, { text: 'Username Colors' });
+  usernameColors.appendChild(header);
+
   // Create container and blocks.
-  const container = createElement('div', 'chat-username-color-picker', { html: '<h2>Username Colors</h2>' });
   const generatedBlock = createElement(
     'div',
     'generated-username-colors',
@@ -166,7 +174,7 @@ export function openUsernameColors() {
         { html: '<h3>Saved Colors <span class="counter">0</span></h3>' }
       );
       const header = container.querySelector('h2');
-      header.nextSibling ? container.insertBefore(savedBlock, header.nextSibling) : container.appendChild(savedBlock);
+      header.nextSibling ? container.insertBefore(savedBlock, header.nextSibling) : usernameColors.appendChild(savedBlock);
     }
   };
 
@@ -318,7 +326,7 @@ export function openUsernameColors() {
   renderSavedBlock();
   updateGeneratedBlockStatus();
 
-  container.appendChild(generatedBlock);
+  usernameColors.appendChild(generatedBlock);
   document.body.appendChild(container);
 
   adjustVisibility(container, 'show', 1);
@@ -408,17 +416,23 @@ export function openUsernameColors() {
 
   // Unified confirm dialog for color-edit, username-edit, or remove-only flows.
   function showConfirmation(entry, mode = 'color') {
-    // remove any existing dialog
-    const prev = entry.querySelector('.confirmation');
-    if (prev) prev.remove();
+    const parent = document.querySelector('.chat-username-color-picker');
 
+    // First, check if there's any existing confirmation dialog anywhere
+    const existingConfirmation = parent.querySelector('.confirmation');
+    if (existingConfirmation) {
+      existingConfirmation.remove();
+    }
+
+    // Mark the entry as having a confirmation dialog
     entry._confirmation = true;
-    const container = createElement('div', 'confirmation');
 
+    // Create the new confirmation dialog
+    const container = createElement('div', 'confirmation');
     const cancelBtn = createElement('button', 'field-btn cancel-btn', { text: 'Cancel' });
     const confirmBtn = createElement('button', 'field-btn confirm-btn', { text: 'Confirm' });
 
-    // only create an input field for color or username modes
+    // Only create an input field for color or username modes
     let inputField = null;
     if (mode === 'color' || mode === 'username') {
       inputField = createElement('input', 'input-field', {
@@ -429,11 +443,13 @@ export function openUsernameColors() {
       });
       container.append(cancelBtn, inputField, confirmBtn);
     } else {
-      // remove-only flow
+      // Remove-only flow
       container.append(cancelBtn, confirmBtn);
     }
 
-    entry.appendChild(container);
+    // Append the container to the parent
+    parent.appendChild(container);
+
     if (inputField) {
       inputField.focus();
       inputField.addEventListener('keydown', e => {
@@ -444,7 +460,7 @@ export function openUsernameColors() {
       });
     }
 
-    // cleanup helper
+    // Cleanup helper function
     function closeDialog() {
       container.remove();
       entry._confirmation = false;
@@ -489,7 +505,7 @@ export function openUsernameColors() {
         }
 
       } else {
-        // remove-only
+        // Remove-only flow
         storageOps.removeColor(entry._username);
         entry.remove();
         updateGeneratedBlockStatus();
@@ -503,6 +519,7 @@ export function openUsernameColors() {
       closeDialog();
     });
 
+    // Stop propagation of click events to prevent bubbling
     container.addEventListener('click', e => e.stopPropagation());
   }
 

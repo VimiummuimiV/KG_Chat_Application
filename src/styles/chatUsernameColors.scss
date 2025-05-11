@@ -5,19 +5,23 @@
   top: 50%;
   transform: translate(-50%, -50%);
   height: fit-content;
-  max-height: 70vh !important;
   max-width: 360px !important;
   width: fit-content;
-  scrollbar-width: none;
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
   padding: 1em;
   border-radius: 0.4em !important;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
-  overflow-y: auto;
-  overflow-x: hidden;
+  overflow: hidden;
   z-index: 1100;
+
+  .username-colors {
+    height: 70vh !important;
+    overflow-x: hidden;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
 
   h2 {
     font-size: 1.2em !important;
