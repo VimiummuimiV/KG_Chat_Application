@@ -5,7 +5,6 @@
   top: 50%;
   transform: translate(-50%, -50%);
   height: fit-content;
-  max-width: 360px !important;
   width: fit-content;
   background-color: var(--background-color);
   border: 1px solid var(--border-color);
@@ -17,7 +16,10 @@
   z-index: 1100;
 
   .username-colors {
-    height: 70vh !important;
+    max-width: 360px;
+    min-width: 220px;
+    min-height: 50px;
+    max-height: 70vh;
     overflow-x: hidden;
     overflow-y: auto;
     scrollbar-width: none;
