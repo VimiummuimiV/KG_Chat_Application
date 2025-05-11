@@ -25,6 +25,9 @@ export function handleLayoutBehavior() {
         zIndex: '1001'
       });
 
+      // Add floating-userlist class when collapsed
+      userList.classList.add('floating-userlist');
+
       systemMessages.forEach(msg => msg.style.setProperty('align-items', 'start', 'important'));
 
       // Create or update toggle button
@@ -68,6 +71,9 @@ export function handleLayoutBehavior() {
         opacity: '', display: '', transition: '', zIndex: ''
       });
       userList.classList.remove('shown-userlist');
+
+      // Remove floating-userlist class when not collapsed
+      userList.classList.remove('floating-userlist');
 
       systemMessages.forEach(msg => msg.style.removeProperty('align-items'));
 
