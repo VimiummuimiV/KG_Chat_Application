@@ -13,7 +13,8 @@ export const sharedColors = {
     'monokai-pro-light': '#f8f8f2',
     'ayu-light': '#fcfcfc',
     'paper-light': '#eeeeee',
-    'dollar-light': '#e4e4d5'
+    'dollar-light': '#e4e4d5',
+    'ysgrifennwr': '#f9f8f4'
   },
   foreground: {
     'photoshop-light': '#f0f0f0',
@@ -28,7 +29,8 @@ export const sharedColors = {
     'monokai-pro-light': '#e8e5de',
     'ayu-light': '#e6eaed',
     'paper-light': '#cccccc',
-    'dollar-light': '#d0d1bd'
+    'dollar-light': '#d0d1bd',
+    'ysgrifennwr': '#edece8'
   },
   highlight: {
     'photoshop-light': '#dbdbdb',
@@ -43,7 +45,8 @@ export const sharedColors = {
     'monokai-pro-light': '#e8e5de',
     'ayu-light': '#e6eaed',
     'paper-light': '#d9d9d9',
-    'dollar-light': '#d0d1bd'
+    'dollar-light': '#d0d1bd',
+    'ysgrifennwr': '#edece8'
   },
 
   // Accent colors
@@ -60,7 +63,8 @@ export const sharedColors = {
     'monokai-pro-light': '#80b319',
     'ayu-light': '#25c097',
     'paper-light': '#12a036',
-    'dollar-light': '#12a036'
+    'dollar-light': '#12a036',
+    'ysgrifennwr': '#8f9550'
   },
   secondAccent: {
     'photoshop-light': '#d23e32',
@@ -75,7 +79,8 @@ export const sharedColors = {
     'monokai-pro-light': '#f8075e',
     'ayu-light': '#cf4b4d',
     'paper-light': '#d2181a',
-    'dollar-light': '#d2181a'
+    'dollar-light': '#d2181a',
+    'ysgrifennwr': '#e05281'
   },
   thirdAccent: {
     'photoshop-light': '#1473e6',
@@ -90,7 +95,8 @@ export const sharedColors = {
     'monokai-pro-light': '#139eb9',
     'ayu-light': '#32a7e9',
     'paper-light': '#1285a0',
-    'dollar-light': '#8a9a6b'
+    'dollar-light': '#8a9a6b',
+    'ysgrifennwr': '#c38647'
   },
   fourthAccent: {
     'photoshop-light': '#1a66e1',
@@ -105,7 +111,8 @@ export const sharedColors = {
     'monokai-pro-light': '#709d16',
     'ayu-light': '#fa8834',
     'paper-light': '#2e5d9a',
-    'dollar-light': '#5f6a48'
+    'dollar-light': '#5f6a48',
+    'ysgrifennwr': '#67c6d0'
   }
 };
 
@@ -129,7 +136,8 @@ export const lightThemes = {
     'monokai-pro-light': '#272822',
     'ayu-light': '#5c6167',
     'paper-light': '#444444',
-    'dollar-light': '#555a56'
+    'dollar-light': '#555a56',
+    'ysgrifennwr': '#424348'
   },
 
   // Drag area colors
@@ -146,7 +154,8 @@ export const lightThemes = {
     'monokai-pro-light': '#f5f4f1',
     'ayu-light': '#f8f9fa',
     'paper-light': '#eeeeee',
-    'dollar-light': '#e4e4d5'
+    'dollar-light': '#e4e4d5',
+    'ysgrifennwr': '#edece8'
   },
 
   // Border colors
@@ -163,7 +172,8 @@ export const lightThemes = {
     'monokai-pro-light': '#e0e0e0',
     'ayu-light': '#eaecef',
     'paper-light': '#d9d9d9',
-    'dollar-light': '#d0d1bd'
+    'dollar-light': '#d0d1bd',
+    'ysgrifennwr': '#edece8'
   },
 
   // Username filter (brightness) per light theme
@@ -180,7 +190,8 @@ export const lightThemes = {
     'monokai-pro-light': 'brightness(0.8)',
     'ayu-light': 'brightness(0.8)',
     'paper-light': 'brightness(0.7)',
-    'dollar-light': 'brightness(0.6)'
+    'dollar-light': 'brightness(0.6)',
+    'ysgrifennwr': 'brightness(0.8)'
   },
 
   // Accent colors
