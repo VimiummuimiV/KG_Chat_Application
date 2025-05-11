@@ -101,7 +101,7 @@
     filter: var(--username-filter) !important;
   }
 
-  .custom-input-container {
+  .confirmation {
     display: flex;
     align-items: center;
     background-color: var(--background-color) !important;
@@ -115,12 +115,13 @@
       background-color: var(--highlight-color);
       color: var(--main-text-color);
       caret-color: var(--main-text-color);
-      width: 100% !important;
+      width: 150% !important;
       border: none !important;
       outline: none !important;
     }
 
     .field-btn {
+      width: 50%;
       padding: 0.6em;
       border: none !important;
       outline: none !important;

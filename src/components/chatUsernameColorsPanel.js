@@ -57,7 +57,7 @@ const storageOps = {
 };
 
 // DOM element creation helper.
-const createElement = (tag, className, attributes = {}) => {
+function createElement(tag, className, attributes = {}) {
   const element = document.createElement(tag);
   if (className) element.className = className;
   Object.entries(attributes).forEach(([key, value]) => {
@@ -124,7 +124,7 @@ const createEditSVG = () => {
 };
 
 // Update styling for label and color box.
-const updateStyles = (label, colorBox, color) => {
+function updateStyles(label, colorBox, color) {
   label.style.color = color;
   Object.assign(colorBox.style, {
     backgroundColor: hexWithAlpha(color, 0.4),
@@ -137,7 +137,7 @@ const updateStyles = (label, colorBox, color) => {
 const isValidHex = (hex) => /^#[0-9A-Fa-f]{6}$/.test(hex);
 
 // The main exported function.
-export const openUsernameColors = () => {
+export function openUsernameColors() {
   // Prevent duplicate container creation.
   const existingContainer = document.querySelector('.chat-username-color-picker');
   if (existingContainer) {
@@ -158,7 +158,7 @@ export const openUsernameColors = () => {
   );
 
   // Create saved colors block if needed.
-  const createSavedBlock = () => {
+  function createSavedBlock() {
     if (!savedBlock) {
       savedBlock = createElement(
         'div',
@@ -184,7 +184,7 @@ export const openUsernameColors = () => {
     }
   }
 
-  const updateGeneratedBlockStatus = () => {
+  function updateGeneratedBlockStatus() {
     generatedBlock.querySelectorAll('.username-entry').forEach(entry => {
       const username = entry.querySelector('.username').textContent;
       entry.classList.toggle('disabled-entry', storageOps.isColorSaved(username));
@@ -193,7 +193,7 @@ export const openUsernameColors = () => {
   };
 
   // Create an entry element.
-  const createEntry = (username, color, isSaved = false) => {
+  function createEntry(username, color, isSaved = false) {
     const entry = createElement('div', 'username-entry');
     const label = createElement('div', 'username', { text: username });
     const colorBox = createElement('div', 'color-box', { title: 'Change hex' });
@@ -274,7 +274,7 @@ export const openUsernameColors = () => {
   };
 
   // Create edit button for username entries
-  const createEditButton = (entry, _username, color) => {
+  function createEditButton(entry, _username, color) {
     const editBtn = createElement('div', 'entry-btn edit-btn');
     editBtn.appendChild(createEditSVG());
     editBtn.title = "Edit username";
@@ -285,7 +285,7 @@ export const openUsernameColors = () => {
 
     editBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      showCustomInput(entry, 'username');
+      showConfirmation(entry, 'username');
     });
 
     entry.appendChild(editBtn);
@@ -293,7 +293,7 @@ export const openUsernameColors = () => {
   };
 
   // Render saved colors block.
-  const renderSavedBlock = () => {
+  function renderSavedBlock() {
     if (!savedBlock) return;
     const localColors = storageWrapper.get(localStorage);
     savedBlock.innerHTML = '<h3>Saved Colors <span class="counter">0</span></h3>';
@@ -364,7 +364,7 @@ export const openUsernameColors = () => {
     const colorBox = e.target.closest('.color-box');
     if (colorBox) {
       const entry = colorBox.closest('.username-entry');
-      if (!entry || entry.classList.contains('disabled-entry') || entry._customInputActive) return;
+      if (!entry || entry.classList.contains('disabled-entry') || entry._confirmation) return;
 
       // Always open native color picker on click
       if (entry._colorInput) {
@@ -382,7 +382,7 @@ export const openUsernameColors = () => {
     // Start long press timer.
     longPressTimer = setTimeout(() => {
       entry._isLongPress = true;
-      showCustomInput(entry, 'color');
+      showConfirmation(entry, 'color');
     }, longPressDuration);
     // Save the current entry for pointerup/leave events.
     currentEntry = entry;
@@ -406,127 +406,138 @@ export const openUsernameColors = () => {
     setTimeout(() => field.classList.remove('field-error'), 500);
   }
 
-  // Delegated function to show custom input for either username or color.
-  function showCustomInput(entry, mode = 'color') {
-    // Remove any existing custom input
-    const previousInputContainer = document.querySelector('.custom-input-container');
-    if (previousInputContainer) previousInputContainer.remove();
+  // Unified confirm dialog for color-edit, username-edit, or remove-only flows.
+  function showConfirmation(entry, mode = 'color') {
+    // remove any existing dialog
+    const prev = entry.querySelector('.confirmation');
+    if (prev) prev.remove();
 
-    entry._customInputActive = true;
-    const customInputContainer = createElement('div', 'custom-input-container');
+    entry._confirmation = true;
+    const container = createElement('div', 'confirmation');
 
     const cancelBtn = createElement('button', 'field-btn cancel-btn', { text: 'Cancel' });
-    const inputField = createElement('input', 'input-field', {
-      type: 'search',
-      placeholder: mode === 'color' ? `H: ${entry._username}` : `U: ${entry._username}`
-    });
     const confirmBtn = createElement('button', 'field-btn confirm-btn', { text: 'Confirm' });
 
-    customInputContainer.append(cancelBtn, inputField, confirmBtn);
-    entry.appendChild(customInputContainer);
-    inputField.focus();
+    // only create an input field for color or username modes
+    let inputField = null;
+    if (mode === 'color' || mode === 'username') {
+      inputField = createElement('input', 'input-field', {
+        type: 'search',
+        placeholder: mode === 'color'
+          ? `H: ${entry._username}`
+          : `U: ${entry._username}`
+      });
+      container.append(cancelBtn, inputField, confirmBtn);
+    } else {
+      // remove-only flow
+      container.append(cancelBtn, confirmBtn);
+    }
 
-    const handleConfirm = async () => {
-      // Do not allow to pass the empty field
-      if (!inputField.value.trim()) {
-        showChatAlert('The field cannot be empty', { type: 'warning', duration: showAlertDuration });
-        highlightFieldOnError(inputField);
-        return;
-      }
+    entry.appendChild(container);
+    if (inputField) {
+      inputField.focus();
+      inputField.addEventListener('keydown', e => {
+        if (e.key === 'Enter') {
+          e.stopPropagation();
+          confirmBtn.click();
+        }
+      });
+    }
 
-      const rawValue = inputField.value.trim();
-      const saveValue = rawValue.toLowerCase();
+    // cleanup helper
+    function closeDialog() {
+      container.remove();
+      entry._confirmation = false;
+    }
+
+    confirmBtn.addEventListener('click', async e => {
+      e.stopPropagation();
 
       if (mode === 'color') {
-        if (isValidHex(rawValue)) {
-          // Apply the hex (use rawValue or saveValue interchangeably since hex is case-insensitive)
-          entry._colorInput.value = saveValue;
-          entry._colorInput.dispatchEvent(new Event('input', { bubbles: true }));
-          entry.removeChild(customInputContainer);
-          entry._customInputActive = false;
-        } else {
-          showChatAlert(`Invalid hex color "${rawValue}"`, { type: 'error', duration: showAlertDuration });
+        const val = inputField.value.trim();
+        if (!val) {
+          showChatAlert('The field cannot be empty', { type: 'warning', duration: showAlertDuration });
           highlightFieldOnError(inputField);
           return;
         }
+        if (!isValidHex(val)) {
+          showChatAlert(`Invalid hex "${val}"`, { type: 'error', duration: showAlertDuration });
+          highlightFieldOnError(inputField);
+          return;
+        }
+        entry._colorInput.value = val.toLowerCase();
+        entry._colorInput.dispatchEvent(new Event('input', { bubbles: true }));
 
       } else if (mode === 'username') {
-        // Use rawValue for the API lookup
-        const userId = await getExactUserIdByName(rawValue);
-        if (!userId) {
-          showChatAlert(`Could not find user "${rawValue}"`, { type: 'error', duration: showAlertDuration });
+        const val = inputField.value.trim();
+        if (!val) {
+          showChatAlert('The field cannot be empty', { type: 'warning', duration: showAlertDuration });
           highlightFieldOnError(inputField);
           return;
         }
-
-        if (rawValue && saveValue !== entry._username) {
-          const oldUsername = entry._username;
-          const color = entry._color;
-
-          // Save and display the lowercase username
-          storageOps.updateUsername(oldUsername, saveValue, color);
-          const usernameLabel = entry.querySelector('.username');
-          if (usernameLabel) {
-            usernameLabel.textContent = saveValue;
-          }
-          entry._username = saveValue;
-
+        const userId = await getExactUserIdByName(val);
+        if (!userId) {
+          showChatAlert(`Could not find user "${val}"`, { type: 'error', duration: showAlertDuration });
+          highlightFieldOnError(inputField);
+          return;
+        }
+        if (val.toLowerCase() !== entry._username) {
+          storageOps.updateUsername(entry._username, val.toLowerCase(), entry._color);
+          entry.querySelector('.username').textContent = val.toLowerCase();
+          entry._username = val.toLowerCase();
           updateGeneratedBlockStatus();
         }
 
-        entry.removeChild(customInputContainer);
-        entry._customInputActive = false;
+      } else {
+        // remove-only
+        storageOps.removeColor(entry._username);
+        entry.remove();
+        updateGeneratedBlockStatus();
       }
-    };
 
-    confirmBtn.addEventListener('click', (e) => {
+      closeDialog();
+    });
+
+    cancelBtn.addEventListener('click', e => {
       e.stopPropagation();
-      handleConfirm();
+      closeDialog();
     });
 
-    cancelBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      entry.removeChild(customInputContainer);
-      entry._customInputActive = false;
-    });
-
-    inputField.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        e.stopPropagation();
-        handleConfirm();
-      } else if (e.key === 'Escape') {
-        e.stopPropagation();
-        entry.removeChild(customInputContainer);
-        entry._customInputActive = false;
-      }
-    });
-
-    customInputContainer.addEventListener('click', (e) => e.stopPropagation());
+    container.addEventListener('click', e => e.stopPropagation());
   }
 
+  // Helper to create or update the remove button for an entry.
+  function createOrUpdateRemoveButton(entry, username, color, updateCb) {
+    // remove any old button
+    let removeBtn = entry.querySelector('.remove-btn');
+    if (removeBtn) entry.removeChild(removeBtn);
+
+    // build new one
+    removeBtn = createElement('div', 'entry-btn remove-btn');
+    removeBtn.appendChild(createRemoveSVG());
+    removeBtn.title = "Remove entry";
+    Object.assign(removeBtn.style, {
+      backgroundColor: hexWithAlpha(color, 0.4),
+      color
+    });
+
+    removeBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      // guard re-entry
+      if (entry._confirmation) return;
+      // launch confirm-only dialog; on confirm → actually remove
+      showConfirmation(entry, 'remove', () => {
+        storageOps.removeColor(username);
+        entry.remove();
+        if (typeof updateCb === 'function') updateCb();
+      });
+    });
+
+    entry.appendChild(removeBtn);
+    return removeBtn;
+  };
 
   return container;
-};
-
-// Helper to create or update the remove button for an entry.
-const createOrUpdateRemoveButton = (entry, username, color, updateCb) => {
-  let removeBtn = entry.querySelector('.remove-btn');
-  if (removeBtn) entry.removeChild(removeBtn);
-  removeBtn = createElement('div', 'entry-btn remove-btn');
-  removeBtn.appendChild(createRemoveSVG());
-  removeBtn.title = "Remove entry";
-  Object.assign(removeBtn.style, {
-    backgroundColor: hexWithAlpha(color, 0.4),
-    color
-  });
-  removeBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    storageOps.removeColor(username);
-    entry.removeChild(removeBtn);
-    if (typeof updateCb === 'function') updateCb();
-  });
-  entry.appendChild(removeBtn);
-  return removeBtn;
 };
 
 // Helper to export username colors to a JSON file.
