@@ -447,7 +447,7 @@ export function openUsernameColors() {
     add.title = "Add username";
     add.addEventListener('click', e => {
       e.stopPropagation();
-      // mark this as an “add” flow
+      // mark this as an "add" flow
       const dummy = { _confirmation: false, _add: true };
       showConfirmation(dummy, 'username');
     });
@@ -541,9 +541,9 @@ export function openUsernameColors() {
           return;
         }
 
-        // If this was the “add” button dummy
+        // If this was the "add" button dummy
         if (entry._add) {
-          const username = val.toLowerCase();
+          const username = val;
           const defaultColor = '#cdcdcd';
           storageOps.saveColor(username, defaultColor);
           createSavedBlock();
@@ -554,10 +554,10 @@ export function openUsernameColors() {
         }
 
         // Otherwise it's the edit-existing flow
-        if (val.toLowerCase() !== entry._username) {
-          storageOps.updateUsername(entry._username, val.toLowerCase(), entry._color);
-          entry.querySelector('.username').textContent = val.toLowerCase();
-          entry._username = val.toLowerCase();
+        if (val !== entry._username) {
+          storageOps.updateUsername(entry._username, val, entry._color);
+          entry.querySelector('.username').textContent = val;
+          entry._username = val;
           updateGeneratedBlockStatus();
         }
 

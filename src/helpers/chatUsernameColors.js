@@ -152,8 +152,8 @@ function colorGenerator(config) {
         return colorUtils.hslToHex(0, satVal, lightVal);
       }
 
-      // Normalize the username to ensure consistency
-      const key = username.trim().toLowerCase();
+      // Get the username from localStorage if exist to prevent color generation
+      const key = username.trim();
 
       // First, check localStorage
       let localColors = {};
