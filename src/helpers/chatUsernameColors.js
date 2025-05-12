@@ -287,9 +287,3 @@ export const usernameColors = colorGenerator({
   minLightness: 65,
   maxLightness: 80
 });
-
-export const mentionColors = colorGenerator({
-  storageKey: 'mentionColors',
-  saturation: '80',
-  lightness: '60'
-});

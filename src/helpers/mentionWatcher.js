@@ -1,5 +1,4 @@
 import { extractUsername } from "./helpers.js";
-import { mentionColors } from "./chatUsernameColors.js";
 
 export const notification = 'https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/notification-pluck-on.mp3';
 export const banned = 'https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/mario-game-over.mp3';
@@ -31,13 +30,12 @@ export function highlightMentionWords() {
   // Don't proceed if no username to check
   if (!username) return;
 
-  // Use username as the only term to highlight
   const highlightTerms = [username];
   const globalProcessed = new WeakSet();
 
   const messages = container.querySelectorAll(
-    '.message:not(.system):not(.private) ' + // Exclude system and private messages
-    '.message-text:not(.processed-for-mention)' // Exclude already processed messages
+    '.message:not(.system):not(.private) ' +
+    '.message-text:not(.processed-for-mention)'
   );
   messages.forEach((message) => {
     const walker = document.createTreeWalker(
@@ -67,7 +65,6 @@ export function highlightMentionWords() {
         }
       });
 
-      // Mark this message as processed
       message.classList.add('processed-for-mention');
     }
   });
@@ -85,14 +82,7 @@ export function highlightMentionWords() {
       if (isMatch) {
         const mentionSpan = document.createElement('span');
         mentionSpan.className = 'mention';
-
-        token.split('').forEach(char => {
-          const charSpan = document.createElement('span');
-          charSpan.style.color = mentionColors.getColor(char);
-          charSpan.textContent = char;
-          mentionSpan.appendChild(charSpan);
-        });
-
+        mentionSpan.textContent = token;
         fragment.appendChild(mentionSpan);
       } else {
         fragment.appendChild(document.createTextNode(token));

@@ -363,10 +363,36 @@ $mix-for-brightness: #d2d2d2;
       }
 
       .mention {
+        position: relative;
+        color: var(--mention-color) !important;
         display: inline-flex !important;
         font-family: Montserrat !important;
         font-weight: 500 !important;
         letter-spacing: 0.05em !important;
+        z-index: 1 !important;
+
+        &::before {
+          content: "";
+          position: absolute !important;
+          top: -2px !important;
+          left: -6px !important;
+          right: -6px !important;
+          bottom: -2px !important;
+          background-color: color-mix(
+            in srgb,
+            var(--mention-color) 30%,
+            var(--foreground-color) 70%
+          ) !important;
+          border: 1px solid
+            color-mix(
+              in srgb,
+              var(--mention-color) 90%,
+              var(--foreground-color) 10%
+            ) !important;
+          opacity: 0.4;
+          border-radius: 0.2em !important;
+          z-index: -1;
+        }
       }
 
       .md-heading {

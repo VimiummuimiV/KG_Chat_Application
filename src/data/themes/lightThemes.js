@@ -3,7 +3,9 @@ export const sharedColors = {
   background: {
     'photoshop-light': '#f0f0f0',
     'photoshop-gray': '#b8b8b8',
-    'gruvbox-light': '#fbf1c7',
+    'gruvbox-hard-light': '#f9f5d7',
+    'gruvbox-medium-light': '#fbf1c7',
+    'gruvbox-soft-light': '#eddbb2',
     'dracula-light': '#ffffff',
     'material-light': '#fafafa',
     'github-light': '#ffffff',
@@ -19,7 +21,9 @@ export const sharedColors = {
   foreground: {
     'photoshop-light': '#f0f0f0',
     'photoshop-gray': '#a3a3a3',
-    'gruvbox-light': '#ebdbb2',
+    'gruvbox-hard-light': '#ebdbb2',
+    'gruvbox-medium-light': '#d5c4a1',
+    'gruvbox-soft-light': '#d5c4a1',
     'dracula-light': '#e9e9f4',
     'material-light': '#d9d9d9',
     'github-light': '#f6f8fa',
@@ -35,7 +39,9 @@ export const sharedColors = {
   highlight: {
     'photoshop-light': '#dbdbdb',
     'photoshop-gray': '#a3a3a3',
-    'gruvbox-light': '#ebdbb2',
+    'gruvbox-hard-light': '#ebdbb2',
+    'gruvbox-medium-light': '#e0d2ac',
+    'gruvbox-soft-light': '#d5c4a1',
     'dracula-light': '#e9e9f4',
     'material-light': '#e6e6e6',
     'github-light': '#ebf0f4',
@@ -53,7 +59,9 @@ export const sharedColors = {
   firstAccent: {
     'photoshop-light': '#30ac44',
     'photoshop-gray': '#1b6427',
-    'gruvbox-light': '#79740e',
+    'gruvbox-hard-light': '#838216',
+    'gruvbox-medium-light': '#838216',
+    'gruvbox-soft-light': '#6d6c12',
     'dracula-light': '#05ae30',
     'material-light': '#43a047',
     'github-light': '#2ea44f',
@@ -69,7 +77,9 @@ export const sharedColors = {
   secondAccent: {
     'photoshop-light': '#d23e32',
     'photoshop-gray': '#922920',
-    'gruvbox-light': '#9d0006',
+    'gruvbox-hard-light': '#cc241d',
+    'gruvbox-medium-light': '#cc241d',
+    'gruvbox-soft-light': '#b32019',
     'dracula-light': '#f33f33',
     'material-light': '#e53935',
     'github-light': '#d73a49',
@@ -85,7 +95,9 @@ export const sharedColors = {
   thirdAccent: {
     'photoshop-light': '#1473e6',
     'photoshop-gray': '#0c468d',
-    'gruvbox-light': '#b57614',
+    'gruvbox-hard-light': '#b57614',
+    'gruvbox-medium-light': '#b57614',
+    'gruvbox-soft-light': '#a16912',
     'dracula-light': '#6272a4',
     'material-light': '#3c96ef',
     'github-light': '#0969da',
@@ -101,7 +113,9 @@ export const sharedColors = {
   fourthAccent: {
     'photoshop-light': '#1a66e1',
     'photoshop-gray': '#0075ff',
-    'gruvbox-light': '#427b58',
+    'gruvbox-hard-light': '#076678',
+    'gruvbox-medium-light': '#076678',
+    'gruvbox-soft-light': '#076678',
     'dracula-light': '#8d602d',
     'material-light': '#234f5d',
     'github-light': '#2f4c77',
@@ -126,7 +140,9 @@ export const lightThemes = {
   '--main-text-color': {
     'photoshop-light': '#6c6c6c',
     'photoshop-gray': '#535353',
-    'gruvbox-light': '#3c3836',
+    'gruvbox-hard-light': '#282828',
+    'gruvbox-medium-light': '#282828',
+    'gruvbox-soft-light': '#282828',
     'dracula-light': '#665e92',
     'material-light': '#212121',
     'github-light': '#2c3136',
@@ -144,7 +160,9 @@ export const lightThemes = {
   '--drag-area-background-color': {
     'photoshop-light': '#f0f0f0',
     'photoshop-gray': '#b8b8b8',
-    'gruvbox-light': '#ebdbb2',
+    'gruvbox-hard-light': '#f9f5d7',
+    'gruvbox-medium-light': '#fbf1c7',
+    'gruvbox-soft-light': '#eddbb2',
     'dracula-light': '#e9e9f4',
     'material-light': '#eeeeee',
     'github-light': '#f6f8fa',
@@ -162,7 +180,9 @@ export const lightThemes = {
   '--border-color': {
     'photoshop-light': '#d1d1d1',
     'photoshop-gray': '#9c9c9c',
-    'gruvbox-light': '#d5c4a1',
+    'gruvbox-hard-light': '#ebdbb2',
+    'gruvbox-medium-light': '#ebdbb2',
+    'gruvbox-soft-light': '#d5c4a1',
     'dracula-light': '#d6d6e7',
     'material-light': '#e0e0e0',
     'github-light': '#e1e4e8',
@@ -180,7 +200,9 @@ export const lightThemes = {
   '--username-filter': {
     'photoshop-light': 'brightness(0.7)',
     'photoshop-gray': 'brightness(0.55)',
-    'gruvbox-light': 'brightness(0.6)',
+    'gruvbox-hard-light': 'brightness(0.7)',
+    'gruvbox-medium-light': 'brightness(0.6)',
+    'gruvbox-soft-light': 'brightness(0.65)',
     'dracula-light': 'brightness(0.8)',
     'material-light': 'brightness(0.8)',
     'github-light': 'brightness(0.8)',
@@ -192,6 +214,25 @@ export const lightThemes = {
     'paper-light': 'brightness(0.7)',
     'dollar-light': 'brightness(0.6)',
     'ysgrifennwr': 'brightness(0.8)'
+  },
+
+  '--mention-color': {
+    'photoshop-light': '#1473e6',
+    'photoshop-gray': '#0c468d',
+    'gruvbox-hard-light': '#b57614',
+    'gruvbox-medium-light': '#a16912',
+    'gruvbox-soft-light': '#734b0d',
+    'dracula-light': '#6272a4',
+    'material-light': '#1380ec',
+    'github-light': '#0969da',
+    'solarized-light': '#2466a8',
+    'one-light': '#0184bc',
+    'nord-light': '#3e5974',
+    'monokai-pro-light': '#0f758a',
+    'ayu-light': '#1481b8',
+    'paper-light': '#1285a0',
+    'dollar-light': '#5f6b47',
+    'ysgrifennwr': '#c38647'
   },
 
   // Accent colors
