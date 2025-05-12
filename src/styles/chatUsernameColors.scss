@@ -108,7 +108,9 @@
     filter: var(--username-filter) !important;
   }
 
-  .add-btn {
+  .add-btn,
+  .import-btn,
+  .export-btn {
     background-color: color-mix(
       in srgb,
       var(--first-accent-color) 40%,
@@ -116,12 +118,10 @@
     ) !important;
   }
 
-  .add-btn path {
+  .add-btn svg,
+  .import-btn svg,
+  .export-btn svg {
     stroke: var(--first-accent-color) !important;
-  }
-
-  .add-description {
-    color: var(--first-accent-color) !important;
   }
 
   .confirmation {

@@ -2,6 +2,7 @@ import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { longPressDuration, showAlertDuration } from "../data/definitions.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
+import { addSVG, editSVG, removeSVG, importSVG, exportSVG } from "../data/icons.js";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';
@@ -77,73 +78,6 @@ function hexWithAlpha(hex, alpha) {
   const alphaHex = Math.round(alpha * 255).toString(16).padStart(2, '0');
   return hex.length === 7 ? hex + alphaHex : hex.slice(0, 7) + alphaHex;
 }
-
-// Create remove (X) SVG icon.
-const createRemoveSVG = () => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("width", "12");
-  svg.setAttribute("height", "12");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "2");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-  svg.classList.add("remove-icon");
-
-  ['M18 6L6 18', 'M6 6L18 18'].forEach(d => {
-    const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-    path.setAttribute("d", d);
-    svg.appendChild(path);
-  });
-  return svg;
-};
-
-// Create edit (pencil) SVG icon.
-const createEditSVG = () => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("width", "12");
-  svg.setAttribute("height", "12");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "2");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-  svg.classList.add("edit-icon");
-
-  const path1 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  path1.setAttribute("d", "M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7");
-  svg.appendChild(path1);
-
-  const path2 = document.createElementNS("http://www.w3.org/2000/svg", "path");
-  path2.setAttribute("d", "M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z");
-  svg.appendChild(path2);
-
-  return svg;
-};
-
-// Create an add SVG icon.
-const createAddSVG = () => {
-  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-  svg.setAttribute("viewBox", "0 0 24 24");
-  svg.setAttribute("width", "12");
-  svg.setAttribute("height", "12");
-  svg.setAttribute("fill", "none");
-  svg.setAttribute("stroke", "currentColor");
-  svg.setAttribute("stroke-width", "2");
-  svg.setAttribute("stroke-linecap", "round");
-  svg.setAttribute("stroke-linejoin", "round");
-  svg.classList.add("add-icon");
-
-  // plus sign
-  ['M12 5v14', 'M5 12h14'].forEach(d => {
-    const path = document.createElementNS(svg.namespaceURI, "path");
-    path.setAttribute("d", d);
-    svg.appendChild(path);
-  });
-  return svg;
-};
 
 // Update styling for label and color box.
 function updateStyles(label, colorBox, color) {
@@ -306,7 +240,7 @@ export function openUsernameColors() {
   // Create edit button for username entries
   function createEditButton(entry, _username, color) {
     const editBtn = createElement('div', 'entry-btn edit-btn');
-    editBtn.appendChild(createEditSVG());
+    editBtn.innerHTML = editSVG;
     editBtn.title = "Edit username";
     Object.assign(editBtn.style, {
       backgroundColor: hexWithAlpha(color, 0.4),
@@ -328,7 +262,7 @@ export function openUsernameColors() {
     const localColors = storageWrapper.get(localStorage);
     savedBlock.innerHTML = '<h3>Saved Colors <span class="counter">0</span></h3>';
     // prepend add button as first entry
-    savedBlock.appendChild(createAddUsernameButton());
+    savedBlock.appendChild(createFirstEntryButtons());
     Object.entries(localColors).forEach(([username, color]) => {
       const entry = createEntry(username, color, true);
       savedBlock.appendChild(entry);
@@ -438,20 +372,38 @@ export function openUsernameColors() {
     setTimeout(() => field.classList.remove('field-error'), 500);
   }
 
-  // Create username button to add new user
-  function createAddUsernameButton() {
+  // Builds the first-entry control row with Add / Import / Export buttons.
+  function createFirstEntryButtons() {
     const entry = createElement('div', 'username-entry');
-    const description = createElement('span', 'add-description', {text: "Add username"});
-    const add = createElement('div', 'entry-btn add-btn');
-    add.appendChild(createAddSVG());
-    add.title = "Add username";
-    add.addEventListener('click', e => {
+
+    // IMPORT button
+    const importBtn = createElement('div', 'entry-btn import-btn');
+    importBtn.innerHTML = importSVG;
+    importBtn.title = "Import colors";
+    importBtn.addEventListener('click', e => {
       e.stopPropagation();
-      // mark this as an "add" flow
-      const dummy = { _confirmation: false, _add: true };
-      showConfirmation(dummy, 'username');
+      importUsernameColors();
     });
-    entry.append(description, add);
+
+    // EXPORT button
+    const exportBtn = createElement('div', 'entry-btn export-btn');
+    exportBtn.innerHTML = exportSVG;
+    exportBtn.title = "Export colors";
+    exportBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      exportUsernameColors();
+    });
+
+    // ADD button
+    const addBtn = createElement('div', 'entry-btn add-btn');
+    addBtn.innerHTML = addSVG;
+    addBtn.title = "Add username";
+    addBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      showConfirmation({ _confirmation: false, _add: true }, 'username');
+    });
+
+    entry.append(importBtn, exportBtn, addBtn);
     return entry;
   }
 
@@ -588,7 +540,7 @@ export function openUsernameColors() {
 
     // build new one
     removeBtn = createElement('div', 'entry-btn remove-btn');
-    removeBtn.appendChild(createRemoveSVG());
+    removeBtn.innerHTML = removeSVG;
     removeBtn.title = "Remove entry";
     Object.assign(removeBtn.style, {
       backgroundColor: hexWithAlpha(color, 0.4),
