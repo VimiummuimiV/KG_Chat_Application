@@ -1,7 +1,6 @@
 import {
   reconnectionDelay
 } from "../data/definitions.js";
-import { optimizeColor } from "../helpers/chatUsernameColors.js";
 import { FALLBACK_COLOR } from "../data/definitions.js";
 
 import {
@@ -21,48 +20,21 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
   const safeProcessMessages = (xmlResponse) =>
     xmlResponse && messageManager.processMessages(xmlResponse);
 
-  // Initialize userInfo as null
-  let userInfo = null;
-
-  // Function to calculate or retrieve user info
   function getUserInfo() {
-    // If userInfo already exists, return it immediately
-    if (userInfo) {
-      return userInfo;
-    }
-
-    // Only proceed if the sessionStorage key exists
-    if (!sessionStorage.getItem('usernameColors')) {
-      console.log('usernameColors key does not exist in sessionStorage, skipping userInfo calculation');
-      return null; // Or any appropriate value to indicate we didn't calculate
-    }
-
-    // If we reach here, sessionStorage key exists
-    try {
-      const usernameColors = JSON.parse(sessionStorage.getItem('usernameColors'));
-
-      const cleanedUsername = extractUsername(username);
-      const usernameKey = cleanedUsername.toLowerCase();
-      const storedColor = usernameColors[usernameKey] || '#ff00c6';
-      const optimizedColor = optimizeColor(storedColor);
-      const baseAvatarPath = `/storage/avatars/${username.split('#')[0]}.png`;
-      const timestamp = Math.floor(Date.now() / 1000);
-
-      // Store the calculated info
-      userInfo = {
-        cleanedUsername,
-        usernameKey,
-        storedColor,
-        optimizedColor,
-        baseAvatarPath,
-        timestamp
-      };
-
-      return userInfo;
-    } catch (error) {
-      console.error('Error parsing usernameColors from sessionStorage:', error);
-      return null; // Or any appropriate value to indicate failure
-    }
+    const cleanedUsername = extractUsername(username);
+    const baseAvatarPath = `/storage/avatars/${username.split('#')[0]}.png`;
+    const timestamp = Math.floor(Date.now() / 1000);
+    
+    // Get color from localStorage or use fallback
+    const storedColor = localStorage.getItem('chatUsernameColor');
+    const chatUsernameColor = storedColor || FALLBACK_COLOR;
+    
+    return {
+      cleanedUsername,
+      chatUsernameColor,
+      baseAvatarPath,
+      timestamp
+    };
   }
 
   const xmppClient = {
@@ -78,20 +50,16 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
-      // Get user info, calculating it if necessary
+
       const info = getUserInfo();
 
-      // Retrieve chatUsernameColor from localStorage or fallback to precalculated optimizedColor if available
-      const storedColor = localStorage.getItem('chatUsernameColor');
-      const chatUsernameColor = storedColor ? storedColor : (info ? info.optimizedColor : FALLBACK_COLOR);
-
-      // Create the user data block using pre-calculated properties and the determined background color
+      // Create the user data block
       const userDataBlock = `
       <x xmlns='klavogonki:userdata'>
         <user>
           <login>${info.cleanedUsername}</login>
           <avatar>${info.baseAvatarPath}?updated=${info.timestamp}</avatar>
-          <background>${chatUsernameColor}</background>
+          <background>${info.chatUsernameColor}</background>
         </user>
       </x>
       `;
@@ -153,17 +121,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             const session = await xmppConnection.connect();
             console.log('💬 Step 8: Joining chat room...');
 
-            // Get user info, calculating it if necessary
             const info = getUserInfo();
-
-            // Create user data block, using either info or fallbacks
-            const cleanedUsername = info ? info.cleanedUsername : extractUsername(username);
-            const baseAvatarPath = info ? info.baseAvatarPath : `/storage/avatars/${username.split('#')[0]}.png`;
-            const timestamp = info ? info.timestamp : Math.floor(Date.now() / 1000);
-
-            // Retrieve chatUsernameColor from localStorage or fallback to precalculated optimizedColor if available
-            const storedColor = localStorage.getItem('chatUsernameColor');
-            const backgroundColor = storedColor ? storedColor : (info ? info.optimizedColor : FALLBACK_COLOR);
 
             const joinPayload = compactXML(`
             <body rid='${xmppConnection.nextRid()}' xmlns='http://jabber.org/protocol/httpbind' sid='${session.sid}'>
@@ -171,9 +129,9 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
                 <x xmlns='http://jabber.org/protocol/muc'/>
                 <x xmlns='klavogonki:userdata'>
                   <user>
-                    <login>${cleanedUsername}</login>
-                    <avatar>${baseAvatarPath}?updated=${timestamp}</avatar>
-                    <background>${backgroundColor}</background>
+                    <login>${info.cleanedUsername}</login>
+                    <avatar>${info.baseAvatarPath}?updated=${info.timestamp}</avatar>
+                    <background>${info.chatUsernameColor}</background>
                   </user>
                 </x>
               </presence>
