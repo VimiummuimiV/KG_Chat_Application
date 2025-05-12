@@ -21,7 +21,8 @@ export const sharedColors = {
     'ayu-dark': '#0a0e14',
     'ayu-mirage': '#1f2430',
     'telegram-dark': '#17212b',
-    'dark-soul': '#1e1e1e'
+    'dark-soul': '#1e1e1e',
+    'matrix-dark': '#191a19'
   },
   foreground: {
     'photoshop-black': '#323232',
@@ -44,7 +45,8 @@ export const sharedColors = {
     'ayu-dark': '#191c25',
     'ayu-mirage': '#292f3d',
     'telegram-dark': '#1f2936',
-    'dark-soul': '#2a2a2a'
+    'dark-soul': '#2a2a2a',
+    'matrix-dark': '#13221b'
   },
   highlight: {
     'photoshop-black': '#292929',
@@ -67,7 +69,8 @@ export const sharedColors = {
     'ayu-dark': '#191c25',
     'ayu-mirage': '#292f3d',
     'telegram-dark': '#1f2936',
-    'dark-soul': '#2a2a2a'
+    'dark-soul': '#2a2a2a',
+    'matrix-dark': '#1c221c'
   },
 
   // Accent colors
@@ -92,7 +95,8 @@ export const sharedColors = {
     'ayu-dark': '#32C647',
     'ayu-mirage': '#32C647',
     'telegram-dark': '#85d610',
-    'dark-soul': '#82b32a'
+    'dark-soul': '#82b32a',
+    'matrix-dark': '#659a4b'
   },
   secondAccent: {
     'photoshop-black': '#ff5f52',
@@ -115,7 +119,8 @@ export const sharedColors = {
     'ayu-dark': '#fa625d',
     'ayu-mirage': '#fa625d',
     'telegram-dark': '#f1417b',
-    'dark-soul': '#d8775a'
+    'dark-soul': '#d8775a',
+    'matrix-dark': '#bc7676'
   },
   thirdAccent: {
     'photoshop-black': '#72acf3',
@@ -138,7 +143,8 @@ export const sharedColors = {
     'ayu-dark': '#ddae51',
     'ayu-mirage': '#ffcc66',
     'telegram-dark': '#4082bc',
-    'dark-soul': '#d07e36'
+    'dark-soul': '#d07e36',
+    'matrix-dark': '#b5b344'
   },
   fourthAccent: {
     'photoshop-black': '#2797ff',
@@ -161,7 +167,8 @@ export const sharedColors = {
     'ayu-dark': '#36c692',
     'ayu-mirage': '#36c692',
     'telegram-dark': '#5eb3f3',
-    'dark-soul': '#58c195'
+    'dark-soul': '#58c195',
+    'matrix-dark': '#48c89e'
   }
 };
 
@@ -193,7 +200,8 @@ export const darkThemes = {
     'ayu-dark': '#a3afc2',
     'ayu-mirage': '#b1b9cd',
     'telegram-dark': '#c8c8c8',
-    'dark-soul': '#cdb398'
+    'dark-soul': '#cdb398',
+    'matrix-dark': '#7bc66b'
   },
 
   // Drag area colors
@@ -218,7 +226,8 @@ export const darkThemes = {
     'ayu-dark': '#0a0e14',
     'ayu-mirage': '#292f3d',
     'telegram-dark': '#1f2936',
-    'dark-soul': '#171717'
+    'dark-soul': '#171717',
+    'matrix-dark': '#191a19'
   },
 
   // Border colors
@@ -243,7 +252,8 @@ export const darkThemes = {
     'ayu-dark': '#202734',
     'ayu-mirage': '#2e3547',
     'telegram-dark': '#101921',
-    'dark-soul': '#333333'
+    'dark-soul': '#333333',
+    'matrix-dark': '#122c16'
   },
 
   // Username filter (brightness) per dark theme
@@ -268,7 +278,8 @@ export const darkThemes = {
     'ayu-dark': 'brightness(0.8)',
     'ayu-mirage': 'brightness(1)',
     'telegram-dark': 'brightness(1)',
-    'dark-soul': 'brightness(1)'
+    'dark-soul': 'brightness(1)',
+    'matrix-dark': 'brightness(1)'
   }, 
 
   // Accent colors
