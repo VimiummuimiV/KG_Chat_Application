@@ -11,6 +11,7 @@ import {
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { privateMessageState } from "../helpers/privateMessagesHandler.js";
 import { showAlertDuration } from "../data/definitions.js";
+import { optimizeColor } from "../helpers/chatUsernameColors.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
   // Compact wrapper functions.
@@ -27,7 +28,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     
     // Get color from localStorage or use fallback
     const storedColor = localStorage.getItem('chatUsernameColor');
-    const chatUsernameColor = storedColor || FALLBACK_COLOR;
+    const chatUsernameColor = optimizeColor(storedColor) || FALLBACK_COLOR;
     
     return {
       cleanedUsername,
