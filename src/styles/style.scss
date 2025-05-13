@@ -49,6 +49,8 @@ $mix-for-brightness: #d2d2d2;
     margin: unset;
     display: unset;
     max-width: unset;
+    height: fit-content;
+    width: fit-content;
   }
 
   // Separate TEXT_NODE from other nodes with a new line
