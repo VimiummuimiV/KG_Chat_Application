@@ -118,10 +118,22 @@
     ) !important;
   }
 
+  .load-btn {
+    background-color: color-mix(
+      in srgb,
+      var(--fourth-accent-color) 40%,
+      var(--background-color) 60%
+    ) !important;
+  }
+
   .add-btn svg,
   .import-btn svg,
   .export-btn svg {
     stroke: var(--first-accent-color) !important;
+  }
+
+  .load-btn svg {
+    stroke: var(--fourth-accent-color) !important;
   }
 
   .confirmation {

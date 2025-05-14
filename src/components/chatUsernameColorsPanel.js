@@ -1,8 +1,8 @@
 import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
-import { longPressDuration, showAlertDuration } from "../data/definitions.js";
+import { loadUsernameColorsUrl, longPressDuration, showAlertDuration } from "../data/definitions.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
-import { addSVG, editSVG, removeSVG, importSVG, exportSVG } from "../data/icons.js";
+import { addSVG, editSVG, removeSVG, importSVG, exportSVG, loadSVG } from "../data/icons.js";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';
@@ -376,6 +376,18 @@ export function openUsernameColors() {
   function createFirstEntryButtons() {
     const entry = createElement('div', 'username-entry');
 
+    // LOAD button (new)
+    const loadBtn = createElement('div', 'entry-btn load-btn');
+    loadBtn.innerHTML = loadSVG;
+    loadBtn.title = "Load colors from URL";
+    loadBtn.addEventListener('click', e => {
+      e.stopPropagation();
+      const url = prompt("Enter URL to load username colors from:");
+      if (url) {
+        loadUsernameColors(loadUsernameColorsUrl);
+      }
+    });
+
     // IMPORT button
     const importBtn = createElement('div', 'entry-btn import-btn');
     importBtn.innerHTML = importSVG;
@@ -403,7 +415,7 @@ export function openUsernameColors() {
       showConfirmation({ _confirmation: false, _add: true }, 'username');
     });
 
-    entry.append(importBtn, exportBtn, addBtn);
+    entry.append(loadBtn, importBtn, exportBtn, addBtn);
     return entry;
   }
 
@@ -612,4 +624,30 @@ export function importUsernameColors() {
   });
   input.click();
   document.body.removeChild(input);
+}
+
+// Helper to load username colors from a URL
+function loadUsernameColors(url) {
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Failed to load: ${response.statusText}`);
+      }
+      return response.json();
+    })
+    .then(jsonData => {
+      localStorage.setItem('usernameColors', JSON.stringify(jsonData));
+      showChatAlert('Username colors loaded successfully', { type: 'info', duration: showAlertDuration });
+
+      // Refresh the UI if color picker is currently open
+      const picker = document.querySelector('.chat-username-color-picker');
+      if (picker) {
+        // Remove existing picker and create a new one to reflect the changes
+        picker.remove();
+        openUsernameColors();
+      }
+    })
+    .catch(error => {
+      showChatAlert(`Error loading colors: ${error.message}`, { type: 'error', duration: showAlertDuration });
+    });
 }
