@@ -103,6 +103,18 @@
     margin-left: 8px;
   }
 
+  .remove-all-btn {
+    background-color: color-mix(
+      in srgb,
+      var(--second-accent-color) 40%,
+      var(--background-color) 60%
+    ) !important;
+  }
+
+  .remove-all-btn svg {
+    stroke: var(--second-accent-color) !important;
+  }
+
   .remove-btn,
   .edit-btn {
     filter: var(--username-filter) !important;

@@ -372,9 +372,26 @@ export function openUsernameColors() {
     setTimeout(() => field.classList.remove('field-error'), 500);
   }
 
-  // Builds the first-entry control row with Add / Import / Export buttons.
+  // Builds the first-entry control buttons.
   function createFirstEntryButtons() {
     const entry = createElement('div', 'username-entry');
+
+    const removeAllBtn = createElement('div', 'entry-btn remove-all-btn');
+    removeAllBtn.innerHTML = removeSVG; // or your preferred “trash” icon
+    removeAllBtn.title = "Remove all saved colors";
+    removeAllBtn.addEventListener('click', e => {
+      e.stopPropagation();
+
+      showConfirmation({ _confirmation: false }, 'removeAll', () => {
+        localStorage.removeItem(storageKey);
+        const picker = document.querySelector('.chat-username-color-picker');
+        if (picker) {
+          picker.remove();
+          openUsernameColors();
+        }
+        showChatAlert('All saved username colors have been removed', { type: 'info', duration: showAlertDuration });
+      });
+    });
 
     // LOAD button (new)
     const loadBtn = createElement('div', 'entry-btn load-btn');
@@ -412,12 +429,12 @@ export function openUsernameColors() {
       showConfirmation({ _confirmation: false, _add: true }, 'username');
     });
 
-    entry.append(loadBtn, importBtn, exportBtn, addBtn);
+    entry.append(removeAllBtn, loadBtn, importBtn, exportBtn, addBtn);
     return entry;
   }
 
   // Unified confirm dialog for color-edit, username-edit, or remove-only flows.
-  function showConfirmation(entry, mode = 'color') {
+  function showConfirmation(entry, mode = 'color', callback = null) {
     const parent = document.querySelector('.chat-username-color-picker');
 
     // First, check if there's any existing confirmation dialog anywhere
@@ -522,11 +539,14 @@ export function openUsernameColors() {
           updateGeneratedBlockStatus();
         }
 
-      } else {
-        // Remove-only flow
+      } else if (mode === 'remove') {
         storageOps.removeColor(entry._username);
-        entry.remove();
+        if (entry instanceof Element) entry.remove();
         updateGeneratedBlockStatus();
+      } else if (mode === 'removeAll') {
+        if (typeof callback === 'function') {
+          callback();
+        }
       }
 
       closeDialog();
