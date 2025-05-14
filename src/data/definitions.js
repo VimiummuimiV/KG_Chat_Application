@@ -82,4 +82,4 @@ export const trustedDomains = [
 // Define a single fallback username color for consistency
 export const FALLBACK_COLOR = "#1e1e1e";
 
-export const loadUsernameColorsUrl = "https://github.com/VimiummuimiV/KG_Chat_Application/blob/main/src/data/usernameColors.json"
+export const loadUsernameColorsUrl = "https://raw.githubusercontent.com/VimiummuimiV/KG_Chat_Application/refs/heads/main/src/data/usernameColors.json";
