@@ -382,10 +382,7 @@ export function openUsernameColors() {
     loadBtn.title = "Load colors from URL";
     loadBtn.addEventListener('click', e => {
       e.stopPropagation();
-      const url = prompt("Enter URL to load username colors from:");
-      if (url) {
-        loadUsernameColors(loadUsernameColorsUrl);
-      }
+      loadUsernameColors(loadUsernameColorsUrl);
     });
 
     // IMPORT button
