@@ -366,6 +366,7 @@ $mix-for-brightness: #d2d2d2;
 
       .mention {
         position: relative;
+        height: fit-content !important;
         color: var(--mention-color) !important;
         display: inline-flex !important;
         font-family: Montserrat !important;
