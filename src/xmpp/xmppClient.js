@@ -105,6 +105,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           safeProcessMessages(null);
         } catch (error) {
           console.error(`Failed to send queued message (${msg.id}): ${error.message}`);
+          alert(`Failed to send queued message (${msg.id}): ${error.message}`);
           // Stop processing; the message remains in the queue for later retry.
           break;
         }
