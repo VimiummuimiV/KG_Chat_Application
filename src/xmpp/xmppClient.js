@@ -38,6 +38,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     };
   }
 
+  let userInfo = getUserInfo();
+
   const xmppClient = {
     userManager,
     messageManager,
@@ -52,7 +54,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
 
-      const info = getUserInfo();
+      const info = userInfo;
 
       // Create the user data block
       const userDataBlock = `
@@ -123,7 +125,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             const session = await xmppConnection.connect();
             console.log('💬 Step 8: Joining chat room...');
 
-            const info = getUserInfo();
+            const info = userInfo;
 
             const joinPayload = compactXML(`
             <body rid='${xmppConnection.nextRid()}' xmlns='http://jabber.org/protocol/httpbind' sid='${session.sid}'>
