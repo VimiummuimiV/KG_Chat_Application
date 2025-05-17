@@ -1,4 +1,5 @@
-import { showAlertDuration } from "../data/definitions.js";
+import { showAlertDuration, eventsColorMap } from "../data/definitions.js";
+import { saveEvent } from "../components/eventsPanel.js";
 
 export function showChatAlert(message, options = {}) {
   const dragArea = document.querySelector('.chat-drag-area');
@@ -12,21 +13,19 @@ export function showChatAlert(message, options = {}) {
   const defaultOptions = { type: 'info', duration: showAlertDuration };
   const settings = { ...defaultOptions, ...options };
 
-  const colorMap = {
-    info: '#2196F3',
-    warning: '#FF9800',
-    error: '#F44336',
-    success: '#4CAF50'
-  };
-
   const alertElement = document.createElement('div');
   alertElement.className = 'chat-dynamic-alert';
   alertElement.innerHTML = message;
   alertElement.style.cssText = `
-    background-color: ${colorMap[settings.type] || colorMap.info};
+    background-color: ${eventsColorMap[settings.type] || eventsColorMap.info};
   `;
 
   dragArea.appendChild(alertElement);
+
+  // Save the alert message to events storage
+  if (message) {
+    saveEvent({ message, type: settings.type });
+  }
 
   function animateAlert() {
     requestAnimationFrame(() => {

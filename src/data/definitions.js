@@ -6,6 +6,7 @@ import '../styles/chatUsernameColors.scss'; // chat username colors styles
 import "../styles/ignoredUsers.scss"; // ignored users styles
 import "../styles/animationKeyframes.scss"; // animation keyframes styles
 import "../styles/themesPanel.scss"; // themes panel styles
+import "../styles/eventsPanel.scss"; // events panel styles
 
 // URL constants
 export const BASE_URL = 'https://klavogonki.ru';
@@ -83,3 +84,11 @@ export const trustedDomains = [
 export const FALLBACK_COLOR = "#1e1e1e";
 
 export const loadUsernameColorsUrl = "https://raw.githubusercontent.com/VimiummuimiV/KG_Chat_Application/refs/heads/main/src/data/usernameColors.json";
+
+// Define a color map for the chat alerts
+export const eventsColorMap = {
+  info: '#2196F3',
+  warning: '#FF9800',
+  error: '#F44336',
+  success: '#4CAF50'
+};

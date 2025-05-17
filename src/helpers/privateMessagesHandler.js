@@ -113,7 +113,7 @@ function enterPrivateMode(username) {
       exitButton.innerHTML = "🔒";
     });
 
-    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: showAlertDuration });
+    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: showAlertDuration });
     privateMessageState.isPrivateMode = true;
     privateMessageState.targetUsername = username;
 
@@ -124,7 +124,7 @@ function enterPrivateMode(username) {
     }
   } else if (privateMessageState.targetUsername === username) {
     messageInput.placeholder = `️PM to ➡ ${username}`;
-    showChatAlert(`Private chat with ${username} activated`, { type: 'warning', duration: showAlertDuration });
+    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: showAlertDuration });
   }
 }
 
@@ -138,8 +138,9 @@ function exitPrivateMode() {
     const exitButton = document.querySelector('.private-mode-exit');
     if (exitButton) exitButton.remove();
 
-    privateMessageState.exitPrivateMode();
-    showChatAlert('Exited private chat mode', { type: 'success', duration: showAlertDuration });
+    const username = privateMessageState.targetUsername; // Get username before clearing state
+    privateMessageState.exitPrivateMode(); // Only call once
+    showChatAlert(`Exited private chat with ${username}`, { type: 'success', duration: showAlertDuration });
 
     // Remove ESC key event listener when exiting private mode
     if (escKeyHandler) {

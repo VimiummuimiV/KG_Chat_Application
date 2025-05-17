@@ -4,7 +4,7 @@ import {
   openUsernameColors
 } from "../components/chatUsernameColorsPanel.js";
 import { openThemesPanel } from "../components/themesPanel.js";
-
+import { createEventsPanel } from "../components/eventsPanel.js";
 import { removeChatTraces } from "./helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { removeChatParams } from "../auth.js";
@@ -75,6 +75,14 @@ const chatCommands = [
     pattern: /^\/ignored\s*$/,
     handler: () => {
       openIgnoredUsersPanel();
+      return true;
+    }
+  },
+  {
+    name: 'events',
+    pattern: /^\/events\s*$/,
+    handler: () => {
+      createEventsPanel();
       return true;
     }
   }

@@ -19,7 +19,8 @@ import {
   magicWandSVG,
   smileSVG,
   userColorsSVG,
-  blockedUsersSVG
+  blockedUsersSVG,
+  eventsSVG
 } from "../data/icons.js";
 
 import { HelpPanel } from "../components/helpPanel.js";
@@ -27,6 +28,7 @@ import { EmojiPanel } from "../components/emojiPanel.js";
 import { openThemesPanel } from "../components/themesPanel.js";
 import { openUsernameColors } from "../components/chatUsernameColorsPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
+import { createEventsPanel } from "../components/eventsPanel.js";
 
 // Apply the UI theme to the chat
 export function applyUITheme() {
@@ -142,14 +144,23 @@ export function createChatUI() {
   headerButtons.className = 'header-buttons';
   dragArea.appendChild(headerButtons);
 
+  // Events panel button
+  const eventsButton = document.createElement('button');
+  eventsButton.className = 'button header-button chat-events-button';
+  eventsButton.innerHTML = eventsSVG;
+  eventsButton.title = 'Show events';
+  eventsButton.addEventListener("click", () => {
+    createEventsPanel();
+  });
+
   // Blocked users button
   const blockedUsersButton = document.createElement('button');
-  blockedUsersButton .className = 'button header-button chat-blocked-button';
+  blockedUsersButton.className = 'button header-button chat-blocked-button';
   blockedUsersButton.innerHTML = blockedUsersSVG;
-  blockedUsersButton .title = 'Block user';
-  blockedUsersButton .addEventListener("click", () => {
+  blockedUsersButton.title = 'Block user';
+  blockedUsersButton.addEventListener("click", () => {
     openIgnoredUsersPanel();
-  }); 
+  });
 
   // User colors button
   const userColorsButton = document.createElement('button');
@@ -158,7 +169,7 @@ export function createChatUI() {
   userColorsButton.title = 'Set username color';
   userColorsButton.addEventListener("click", () => {
     openUsernameColors();
-  }); 
+  });
 
   // Theme button
   const themeButton = document.createElement('button');
@@ -215,7 +226,15 @@ export function createChatUI() {
   toggleButton.className = 'button header-button chat-toggle-button';
   toggleButton.addEventListener('click', toggleChatVisibility);
 
-  headerButtons.append(blockedUsersButton, userColorsButton, themeButton, helpButton, maximizeButton, toggleButton);
+  headerButtons.append(
+    eventsButton,
+    blockedUsersButton,
+    userColorsButton,
+    themeButton,
+    helpButton,
+    maximizeButton,
+    toggleButton
+  );
   document.body.appendChild(chatContainer);
 
   // Apply the saved theme to the chat container

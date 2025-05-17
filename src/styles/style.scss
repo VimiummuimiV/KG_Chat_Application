@@ -690,12 +690,18 @@ $mix-for-brightness: #d2d2d2;
     fill: var(--second-accent-color) !important;
   }
 
+  .chat-events-button,
   .chat-blocked-button,
   .chat-colors-button,
   .chat-theme-button,
   .chat-help-button,
   .chat-maximize-button {
-    fill: var(--third-accent-color) !important;
+    fill: var(--third-accent-color);
+  }
+
+  // New events notification styling
+  .chat-events-button.new-events {
+    fill: var(--first-accent-color) !important;
   }
 
   .chat-drag-area {
