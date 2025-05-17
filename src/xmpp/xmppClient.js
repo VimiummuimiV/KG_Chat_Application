@@ -25,11 +25,11 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     const cleanedUsername = extractUsername(username);
     const baseAvatarPath = `/storage/avatars/${username.split('#')[0]}.png`;
     const timestamp = Math.floor(Date.now() / 1000);
-    
+
     // Get color from localStorage or use fallback
     const storedColor = localStorage.getItem('chatUsernameColor');
     const chatUsernameColor = optimizeColor(storedColor) || FALLBACK_COLOR;
-    
+
     return {
       cleanedUsername,
       chatUsernameColor,
@@ -217,10 +217,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         }
 
         try {
-          // Send a request that the server can respond to when it has updates
-          const xmlResponse = await xmppConnection.sendRequestWithRetry(
-            `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
-          );
+          // Use the helper function to send the HTTP binding request
+          const xmlResponse = await sendHttpBindingRequest(xmppConnection);
 
           // Process any updates in the response
           safeUpdatePresence(xmlResponse);
@@ -341,6 +339,28 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     xmppClient.stopHttpBinding();
   });
   // --- End network handling ---
+
+  // Helper constant to send an HTTP binding request and return the response
+  const sendHttpBindingRequest = async (xmppConnection) => {
+    return await xmppConnection.sendRequestWithRetry(
+      `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
+    );
+  };
+
+  // Visibilitychange event listener to use safeUpdatePresence to avoid Javascript throttling
+  document.addEventListener('visibilitychange', async () => {
+    if (!document.hidden) {
+      const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+      console.info(`[Presence Update] Page visible at ${currentTime}. Sending presence update request...`);
+      // Try single safeUpdatePresence call
+      try {
+        const xmlResponse = await sendHttpBindingRequest(xmppConnection);
+        safeUpdatePresence(xmlResponse);
+      } catch (error) {
+        console.error('Error updating presence:', error.message);
+      }
+    }
+  });
 
   return xmppClient;
 }
