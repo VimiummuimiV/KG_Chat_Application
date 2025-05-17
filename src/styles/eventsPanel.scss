@@ -27,8 +27,7 @@
   .events-list {
     max-width: 90vw;
     max-height: 70vh;
-    min-width: 220px;
-    min-height: 50px;
+    min-width: 300px;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
@@ -37,15 +36,11 @@
     gap: 0.5em;
 
     .list-item {
-      white-space: wrap;
       display: flex;
-      align-items: center;
-      overflow: hidden;
-      text-overflow: ellipsis;
       font: 500 10px "Montserrat", sans-serif;
       color: black;
       border-radius: 0.2em !important;
-      padding: 1.1em;
+      padding: 0.5em;
       gap: 0.5em;
 
       &.new-event:not(.old-event) {

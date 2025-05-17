@@ -27,6 +27,13 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
         top: 80px !important;
         transform: translate(-50%, 0%) !important;
       }
+      
+      .events-panel {
+        left: 5% !important;
+        transform: none !important;
+        top: 80px !important;
+        width: 90% !important;
+      }
 
       #app-chat-container .user-list-container {
         top: 50px !important;
