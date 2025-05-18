@@ -213,10 +213,11 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         }
 
         try {
+          // Define the bind payload
+          const bindPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
+
           // Send a request that the server can respond to when it has updates
-          const xmlResponse = await xmppConnection.sendRequestWithRetry(
-            `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`
-          );
+          const xmlResponse = await xmppConnection.sendRequestWithRetry(bindPayload);
 
           // Process any updates in the response
           safeUpdatePresence(xmlResponse);
@@ -332,6 +333,23 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     xmppClient.stopHttpBinding();
   });
   // --- End network handling ---
+
+  // Listen for visibility change events to check connection status
+  document.addEventListener('visibilitychange', async () => {
+    if (document.visibilityState === 'visible') {
+      try {
+        // Send a minimal ping payload to check if the connection is alive
+        const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
+
+        await xmppConnection.sendRequestWithRetry(pingPayload);
+      } catch (error) {
+        logMessage("Ping failed. Reconnecting...", 'warning');
+        xmppClient.isConnected = false;
+        xmppClient.isReconnecting = true;
+        xmppClient.connect();
+      }
+    }
+  });
 
   return xmppClient;
 }
