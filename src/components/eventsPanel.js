@@ -20,12 +20,12 @@ export function getSavedEvents() {
       return eventsData.events || [];
     } else {
       // If events are from a different day, clear them and start fresh
-      logMessage(" Events cache expired, creating fresh cache.", 'info');
+      logMessage("Events cache expired, creating fresh cache.", 'info');
       localStorage.removeItem(EVENTS_STORAGE_KEY);
       return [];
     }
   } catch (error) {
-    logMessage("Error loading events.", 'error');
+    logMessage(`Error loading events: ${error.message}`, 'error');
     return [];
   }
 }
@@ -40,17 +40,17 @@ function toggleEventsNotification(highlight = true) {
 
 // Save an event to localStorage
 export function saveEvent(event) {
-  const events = getSavedEvents();
-  events.push({ ...event, date: new Date().toISOString() });
-
   try {
+    const events = getSavedEvents();
+    events.push({ ...event, date: new Date().toISOString() });
+
     localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify({
       date: new Date().toDateString(),
       events: events
     }));
     toggleEventsNotification(true); // Highlight the button if new events are added
   } catch (error) {
-    logMessage("Error saving events.", 'error');
+    logMessage(`Error saving events: ${error.message}`, 'error');
   }
 }
 
@@ -244,8 +244,9 @@ export class EventsPanel {
   }
 
   addEvent(message, type = 'info') {
-    this.renderEvent({ message, type, date: new Date().toISOString() }, true);
-    saveEvent({ message, type });
+    const newEvent = { message, type, date: new Date().toISOString() };
+    this.renderEvent(newEvent, true);
+    saveEvent(newEvent);
     this.scrollToBottom();
   }
 }
