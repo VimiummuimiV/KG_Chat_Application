@@ -32,34 +32,36 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
   let userInfo = getUserInfo(); // Initialize user info
 
-  let isReloading = false; // Flag to prevent worker from sending pings on reload
-
-  window.addEventListener('beforeunload', () => {
-    isReloading = true;
-    xmppClient.stopHttpBinding();
-  });
-
   // ─── Inline Web Worker for steady pings ───
   const workerBlob = new Blob([`
     const PING_INTERVAL = ${settings.pingInterval};
-    let pingTimerId = null;
+    let isRunning = false;
+
+    function schedulePing() {
+      if (!isRunning) return;
+      // send a tick back to the main thread
+      self.postMessage('tick');
+      // schedule the next ping
+      setTimeout(schedulePing, PING_INTERVAL);
+    }
 
     self.onmessage = messageEvent => {
-      if (messageEvent.data === 'start' && pingTimerId === null) {
-        pingTimerId = setInterval(() => self.postMessage('tick'), PING_INTERVAL);
-      } else if (messageEvent.data === 'stop' && pingTimerId !== null) {
-        clearInterval(pingTimerId);
-        pingTimerId = null;
+      if (messageEvent.data === 'start' && !isRunning) {
+        isRunning = true;
+        schedulePing();
+      } else if (messageEvent.data === 'stop' && isRunning) {
+        isRunning = false;
       }
     };
   `], { type: 'text/javascript' });
   const pingWorker = new Worker(URL.createObjectURL(workerBlob));
 
   pingWorker.onmessage = async ({ data }) => {
-    if (data === 'tick' && xmppClient.isConnected && !xmppClient.isReconnecting && !isReloading) {
+    if (data === 'tick' && xmppClient.isConnected && !xmppClient.isReconnecting && !xmppClient.isReloading) {
       try {
         const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
         await xmppConnection.sendRequestWithRetry(pingPayload);
+        logMessage("Ping successful.", 'info');
       } catch (error) {
         logMessage("Ping failed.", 'warning');
         xmppClient.isConnected = false;
@@ -77,6 +79,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     isConnected: false,
     messageQueue: new Map(),
     lastSentMessage: null,
+    isReloading: false,
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
@@ -338,6 +341,11 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       }
     }
   };
+
+  window.addEventListener('beforeunload', () => {
+    xmppClient.isReloading = true;
+    xmppClient.stopHttpBinding();
+  });
 
   // --- Network connectivity handling ---
   // Listen for offline events to stop HTTP binding.
