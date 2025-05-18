@@ -4,7 +4,8 @@ import {
   isEncodedURL,
   isTrustedDomain,
   checkIsMobile,
-  scrollToBottom
+  scrollToBottom,
+  logMessage
 } from "../helpers/helpers"; // helpers
 
 let bigImageEvents = {}; // Object to store event handlers
@@ -39,7 +40,7 @@ const getExtension = (url) => {
   try {
     return (url.match(/\.([^?#.]+)(?:[?#]|$)/i)?.[1]?.toLowerCase() || '');
   } catch (error) {
-    console.error("Error extracting extension:", error.message);
+    logMessage(`Error extracting image extension: ${error.message}`, 'error');
     return '';
   }
 };
@@ -309,7 +310,7 @@ export function convertImageLinksToImage() {
     };
 
     img.onerror = () => {
-      console.error("Failed to load image:", link.href);
+      logMessage(`Failed to load image: ${link.href}`, 'error');
       link.classList.add("skipped");
     };
 

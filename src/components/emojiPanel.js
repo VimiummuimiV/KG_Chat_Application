@@ -5,7 +5,8 @@ import {
 
 import {
   adjustVisibility,
-  checkIsMobile
+  checkIsMobile,
+  logMessage
 } from "../helpers/helpers.js";
 
 // Create a single global shortcut handler
@@ -551,7 +552,7 @@ export class EmojiPanel {
     try {
       localStorage.setItem('recentEmojis', JSON.stringify(this.recentEmojis));
     } catch (e) {
-      console.error('Failed to save recent emojis:', e);
+      logMessage('Failed to save recent emojis:', e.message);
     }
   }
 

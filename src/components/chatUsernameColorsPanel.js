@@ -1,4 +1,4 @@
-import { adjustVisibility, debounce } from "../helpers/helpers.js";
+import { adjustVisibility, debounce, logMessage } from "../helpers/helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { loadUsernameColorsUrl, longPressDuration, showAlertDuration } from "../data/definitions.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
@@ -12,7 +12,7 @@ const storageWrapper = {
       const stored = storage.getItem(storageKey);
       return stored ? JSON.parse(stored) : {};
     } catch (e) {
-      console.error(`Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data:`, e);
+      logMessage(`Error parsing ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'} data: ${e.message}`, 'error');
       return {};
     }
   },
@@ -21,7 +21,7 @@ const storageWrapper = {
       storage.setItem(storageKey, JSON.stringify(data));
       return true;
     } catch (e) {
-      console.error(`Error saving data to ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'}:`, e);
+      logMessage(`Error saving data to ${storage === sessionStorage ? 'sessionStorage' : 'localStorage'}: ${e.message}`, 'error');
       return false;
     }
   }
@@ -389,7 +389,7 @@ export function openUsernameColors() {
           picker.remove();
           openUsernameColors();
         }
-        showChatAlert('All saved username colors have been removed', { type: 'info', duration: showAlertDuration });
+        logMessage('All saved username colors have been removed', 'info');
       });
     });
 
@@ -491,12 +491,12 @@ export function openUsernameColors() {
       if (mode === 'color') {
         const val = inputField.value.trim();
         if (!val) {
-          showChatAlert('The field cannot be empty', { type: 'warning', duration: showAlertDuration });
+          logMessage('The field cannot be empty', 'warning');
           highlightFieldOnError(inputField);
           return;
         }
         if (!isValidHex(val)) {
-          showChatAlert(`Invalid hex "${val}"`, { type: 'error', duration: showAlertDuration });
+          logMessage(`Invalid hex "${val}"`, 'error');
           highlightFieldOnError(inputField);
           return;
         }
@@ -506,7 +506,7 @@ export function openUsernameColors() {
       } else if (mode === 'username') {
         const val = inputField.value.trim();
         if (!val) {
-          showChatAlert('The field cannot be empty', { type: 'warning', duration: showAlertDuration });
+          logMessage('The field cannot be empty', 'warning');
           highlightFieldOnError(inputField);
           return;
         }
@@ -514,7 +514,7 @@ export function openUsernameColors() {
         // First verify user exists
         const userId = await getExactUserIdByName(val);
         if (!userId) {
-          showChatAlert(`Could not find user "${val}"`, { type: 'error', duration: showAlertDuration });
+          logMessage(`Could not find user "${val}"`, 'error');
           highlightFieldOnError(inputField);
           return;
         }
@@ -599,7 +599,7 @@ export function openUsernameColors() {
 export function exportUsernameColors() {
   const usernameColors = localStorage.getItem('usernameColors');
   if (!usernameColors) {
-    showChatAlert('No username colors found to export', { type: 'error', duration: showAlertDuration });
+    logMessage('No username colors found to export', 'warning');
     return;
   }
   // Parse and stringify with indentation
@@ -611,7 +611,7 @@ export function exportUsernameColors() {
   a.download = 'usernameColors.json';
   a.click();
   URL.revokeObjectURL(url);
-  showChatAlert('Username colors exported as JSON file', { type: 'info', duration: showAlertDuration });
+  logMessage('Username colors exported as JSON file', 'success');
 }
 
 // Helper to import username colors from a JSON file.
@@ -624,7 +624,7 @@ export function importUsernameColors() {
   input.addEventListener('change', (event) => {
     const file = event.target.files[0];
     if (!file) {
-      showChatAlert('No file selected', { type: 'error', duration: showAlertDuration });
+      logMessage('No file selected', 'warning');
       return;
     }
     const reader = new FileReader();
@@ -632,9 +632,9 @@ export function importUsernameColors() {
       try {
         const jsonData = JSON.parse(e.target.result);
         localStorage.setItem('usernameColors', JSON.stringify(jsonData));
-        showChatAlert('Username colors imported successfully', { type: 'info', duration: showAlertDuration });
+        logMessage('Username colors imported successfully', 'info');
       } catch (err) {
-        showChatAlert('Invalid JSON file', { type: 'error', duration: showAlertDuration });
+        logMessage('Invalid JSON file', 'error');
       }
     };
     reader.readAsText(file);
@@ -654,7 +654,7 @@ function loadUsernameColors(url) {
     })
     .then(jsonData => {
       localStorage.setItem('usernameColors', JSON.stringify(jsonData));
-      showChatAlert('Username colors loaded successfully', { type: 'info', duration: showAlertDuration });
+      logMessage('Username colors loaded successfully', 'success');
 
       // Refresh the UI if color picker is currently open
       const picker = document.querySelector('.chat-username-color-picker');
@@ -665,6 +665,6 @@ function loadUsernameColors(url) {
       }
     })
     .catch(error => {
-      showChatAlert(`Error loading colors: ${error.message}`, { type: 'error', duration: showAlertDuration });
+      logMessage(`Error loading colors: ${error.message}`, 'error');
     });
 }

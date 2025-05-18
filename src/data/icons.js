@@ -249,3 +249,62 @@ export const eventsSVG = `
   style="shape-rendering:geometricPrecision; text-rendering:geometricPrecision; image-rendering:optimizeQuality; fill-rule:evenodd; clip-rule:evenodd">
     <path d="M46.59 0l156.82 0c25.65,0 46.59,20.94 46.59,46.59l0 156.82c0,25.65 -20.94,46.59 -46.59,46.59l-156.82 0c-25.65,0 -46.59,-20.94 -46.59,-46.59l0 -156.82c0,-25.65 20.94,-46.59 46.59,-46.59zm152.82 112.66c6.82,0 12.34,5.53 12.34,12.34 0,6.82 -5.52,12.34 -12.34,12.34l-20.92 0 -19.5 58.49c-2.13,6.44 -9.08,9.94 -15.52,7.81 -3.84,-1.27 -6.63,-4.25 -7.81,-7.81l-32.98 -98.95 -10.66 31.98c-1.71,5.16 -6.51,8.48 -11.67,8.48l-29.76 0c-6.82,0 -12.34,-5.52 -12.34,-12.34 0,-6.81 5.52,-12.34 12.34,-12.34l20.92 0 19.5 -58.49c1.18,-3.56 3.97,-6.54 7.81,-7.81 6.44,-2.13 13.39,1.37 15.52,7.81l32.98 98.95 10.3 -30.88c1.25,-5.48 6.16,-9.58 12.03,-9.58l29.76 0z"/>
   </svg>`;
+
+// Log messages icons
+export const infoSVG = `
+  <svg class="event-info" xmlns="${svgUrl}" 
+  viewBox="0 0 24 24" 
+  width="14"
+  height="14"
+  fill="none" 
+  stroke="currentColor" 
+  stroke-width="2" 
+  stroke-linecap="round" 
+  stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="12" y1="16" x2="12" y2="12"></line>
+    <line x1="12" y1="8" x2="12.01" y2="8"></line>
+  </svg>`;
+
+export const warningSVG = `
+  <svg class="event-warning" xmlns="${svgUrl}" 
+  viewBox="0 0 24 24" 
+  width="14"
+  height="14"
+  fill="none" 
+  stroke="currentColor" 
+  stroke-width="2" 
+  stroke-linecap="round" 
+  stroke-linejoin="round">
+    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+    <line x1="12" y1="9" x2="12" y2="13"></line>
+    <line x1="12" y1="17" x2="12.01" y2="17"></line>
+  </svg>`;
+
+export const errorSVG = `
+  <svg class="event-error" xmlns="${svgUrl}" 
+  viewBox="0 0 24 24" 
+  width="14"
+  height="14"
+  fill="none" 
+  stroke="currentColor" 
+  stroke-width="2" 
+  stroke-linecap="round" 
+  stroke-linejoin="round">
+    <circle cx="12" cy="12" r="10"></circle>
+    <line x1="15" y1="9" x2="9" y2="15"></line>
+    <line x1="9" y1="9" x2="15" y2="15"></line>
+  </svg>`;
+
+export const successSVG = `
+  <svg class="event-success" xmlns="${svgUrl}" 
+  viewBox="0 0 24 24" 
+  width="14"
+  height="14"
+  fill="none" 
+  stroke="currentColor" 
+  stroke-width="2" 
+  stroke-linecap="round" 
+  stroke-linejoin="round">
+    <polyline points="20 6 9 17 4 12"></polyline>
+  </svg>`;

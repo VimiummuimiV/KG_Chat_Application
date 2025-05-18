@@ -1,3 +1,5 @@
+import { logMessage } from "./helpers.js";
+
 // Instead of getting the elements immediately, we declare module-level variables.
 let chatField = null;
 let messagesContainer = null;
@@ -24,7 +26,7 @@ let hidePopupTimeout;
 
 function updateLengthPopupColor(length) {
   if (!lengthPopup) {
-    console.error('lengthPopup is not defined');
+    logMessage("Length popup: Popup element is not defined.", 'error');
     return;
   }
 
@@ -60,7 +62,7 @@ function updateLengthPopupColor(length) {
 
 function updatePopupMetrics(text) {
   if (!chatField) {
-    console.error('chatField is not set.');
+    logMessage("Length popup: Chat field is not defined for updating metrics.", 'error');
     return;
   }
   // Get current font from input field.
@@ -123,11 +125,14 @@ function handleKeydownEvent(e) {
 export function initChatLengthPopupEvents(field) {
   chatField = field;
   if (!chatField) {
-    console.error('chatField is null');
+    logMessage("Length popup: Chat field is null during initialization.", 'error');
+    return;
+  }
+  if (!lengthPopup) {
+    logMessage("Length popup: Popup element is not created, skipping event listeners.", 'warning');
     return;
   }
   // Only attach event listeners if the popup was created.
-  if (!lengthPopup) return;
   chatField.addEventListener('input', handleInputEvent);
   chatField.addEventListener('keydown', handleKeydownEvent);
 }

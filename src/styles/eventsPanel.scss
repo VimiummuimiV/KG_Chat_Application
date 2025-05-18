@@ -37,22 +37,24 @@
 
     .list-item {
       display: flex;
-      font: 500 10px "Montserrat", sans-serif;
+      font: 500 0.9em "Montserrat", sans-serif;
       color: black;
       border-radius: 0.2em !important;
       padding: 0.5em;
       gap: 0.5em;
+      cursor: pointer;
+
+      .event-icon svg,
+      .timestamp {
+        filter: brightness(0.4);
+      }
 
       &.new-event:not(.old-event) {
-        margin-top: 1em;
+        margin-top: 2em;
 
         & + .list-item.new-event:not(.old-event) {
           margin-top: 0;
         }
-      }
-
-      &.old-event {
-        filter: grayscale(0.6);
       }
     }
   }

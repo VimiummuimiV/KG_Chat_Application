@@ -26,7 +26,7 @@ export const privateMessageState = {
 
       return true;
     } catch (error) {
-      console.error('Error setting private target:', error);
+      logMessage(`Error setting private target: ${error.message}`, 'error');
       return false;
     }
   },

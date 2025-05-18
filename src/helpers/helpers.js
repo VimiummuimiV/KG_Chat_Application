@@ -6,7 +6,8 @@ import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import {
   emojiFaces,
   showAlertDuration,
-  trustedDomains
+  trustedDomains,
+  eventsColorMap
 } from "../data/definitions.js";
 
 // ==================================================================================================
@@ -97,7 +98,7 @@ export const isTrustedDomain = url => {
     const domain = hostname.toLowerCase().split('.').slice(-2).join('.');
     return { isTrusted: trustedDomains.includes(domain), domain };
   } catch (err) {
-    console.error("Error in isTrustedDomain:", err.message);
+    logMessage(`Error in isTrustedDomain: ${err.message}`, 'error');
     return { isTrusted: false, domain: url };
   }
 };
@@ -323,4 +324,39 @@ export function removeChatTraces() {
 
 export function isTextSelected() {
   return window.getSelection().toString().length > 0;
+}
+
+// ==================================================================================================
+
+// Console logging and chat alert helper with consistent styling
+export function logMessage(message, type = 'info', showAlert = true) {
+  const styles = {
+    info: `color: ${eventsColorMap.info}`,
+    warning: `color: ${eventsColorMap.warning}`,
+    error: `color: ${eventsColorMap.error}`,
+    success: `color: ${eventsColorMap.success}`
+  };
+
+  const style = styles[type] || styles.info;
+
+  // Console logging with appropriate method and color
+  switch (type) {
+    case 'error':
+      console.error(`%c${message}`, style);
+      break;
+    case 'warning':
+      console.warn(`%c${message}`, style);
+      break;
+    case 'success':
+      console.log(`%c${message}`, style);
+      break;
+    case 'info':
+    default:
+      console.info(`%c${message}`, style);
+      break;
+  }
+
+  if (showAlert) {
+    showChatAlert(message, { type, duration: showAlertDuration });
+  }
 }

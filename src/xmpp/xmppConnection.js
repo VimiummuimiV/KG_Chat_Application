@@ -1,5 +1,5 @@
 import { connectionDelay } from "../data/definitions.js";
-import { sleep, base64Encode } from "../helpers/helpers.js";
+import { sleep, base64Encode, logMessage } from "../helpers/helpers.js";
 
 export default class XMPPConnection {
   constructor({ username, password, bindUrl, delay = connectionDelay }) {
@@ -25,7 +25,8 @@ export default class XMPPConnection {
       body: payload
     });
     if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+      logMessage(`Request failed: Received status code ${response.status}.`, 'error');
+      return null;
     }
     return await response.text();
   }
@@ -40,14 +41,15 @@ export default class XMPPConnection {
         lastError = error;
         if (error.message.includes('429')) {
           const waitTime = baseWaitTime * Math.pow(2, attempt);
-          console.log(`⏱️ Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`);
+          logMessage(`Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`);
           await sleep(waitTime);
         } else {
-          throw error;
+          throw new Error(`Error occurred: ${error.message}`);
         }
       }
     }
-    throw new Error(`Max retries reached. Last error: ${lastError.message}`);
+    logMessage(`Max retries reached. Last error: ${lastError.message}`, 'error');
+    return null;
   }
 
   async connect() {

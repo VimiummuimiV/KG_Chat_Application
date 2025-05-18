@@ -1,3 +1,5 @@
+import { logMessage } from "./helpers/helpers";
+
 export function removeChatParams() {
   localStorage.removeItem('klavoauth');
   localStorage.removeItem('chatUsernameColor');
@@ -48,9 +50,7 @@ export function getAuthData() {
       }, 500);
     }
   } catch (e) {
-    console.error('Auth error:', e);
+    logMessage(`Authentication error: ${e.message}`, 'error');
     removeChatParams();
-
-    alert(`Auth failed: ${e.message}\nPlease refresh the page.`);
   }
 }

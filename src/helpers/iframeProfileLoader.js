@@ -1,4 +1,4 @@
-import { adjustVisibility } from "../helpers/helpers.js";
+import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 
 // Define a variable to track the last focused textarea in the iframe
 let lastFocusedIframeTextarea = null;
@@ -76,7 +76,7 @@ export const loadProfileIntoIframe = (url) => {
       }).observe(document.body, { childList: true, subtree: true });
 
     } catch (error) {
-      console.warn("Unable to access iframe contents:", error);
+      logMessage("Unable to access iframe contents. This may be due to cross-origin restrictions.", 'error');
     }
   };
 };

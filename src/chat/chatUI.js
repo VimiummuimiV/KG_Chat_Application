@@ -190,7 +190,6 @@ export function createChatUI() {
   let helpPanelInstance = null;
 
   helpButton.addEventListener('click', (e) => {
-    console.log("Help button clicked.");
     e.stopPropagation();
 
     // If a help panel exists, remove it and exit.
@@ -202,7 +201,6 @@ export function createChatUI() {
     }
 
     // Otherwise, create a new help panel.
-    console.log("Help panel does not exist. Creating help panel...");
     helpPanelInstance = new HelpPanel({
       helpButton: helpButton,
       onDestroy: () => {

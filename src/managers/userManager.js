@@ -8,7 +8,8 @@ import {
 import {
   getRandomEmojiAvatar,
   extractUsername,
-  extractUserId
+  extractUserId,
+  logMessage
 } from "../helpers/helpers.js";
 
 import { addShakeEffect } from "../data/animations.js";
@@ -59,12 +60,12 @@ export default class UserManager {
           console.log("🗃️ Loaded avatar cache from localStorage");
           return cache.avatars || {};
         } else {
-          console.log("🗃️ Avatar cache expired (new day), creating fresh cache");
+          logMessage("Avatar cache expired, creating fresh cache.", 'info');
           return {};
         }
       }
     } catch (error) {
-      console.error("Error loading avatar cache:", error);
+      logMessage(`Error loading avatar cache: ${error.message}`, 'error');
     }
     return {};
   }
@@ -76,7 +77,7 @@ export default class UserManager {
         avatars: this.avatarCache
       }));
     } catch (error) {
-      console.error("Error saving avatar cache:", error);
+      logMessage(`Error saving avatar cache: ${error.message}`, 'error');
     }
   }
 

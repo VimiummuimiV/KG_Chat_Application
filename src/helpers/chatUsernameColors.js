@@ -270,7 +270,7 @@ function colorGenerator(config) {
 
 // Darken the color until it meets 4.5:1 contrast on white (exported)
 export const optimizeColor = hex => {
-  console.log("Optimizing color for contrast:", hex);
+  console.info("Optimizing color for contrast:", hex);
   let { h, s, l } = colorUtils.hexToHSL(hex);
   let newHex = hex;
   while (colorUtils.contrastRatio(newHex, "#FFFFFF") < 4.5 && l > 0) {

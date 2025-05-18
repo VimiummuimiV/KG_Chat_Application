@@ -1,7 +1,8 @@
 import {
   parseUsername,
   calibrateToMoscowTime,
-  getExactUserIdByName
+  getExactUserIdByName,
+  logMessage
 } from "../helpers/helpers.js";
 
 import {
@@ -130,7 +131,7 @@ export default class MessageManager {
           // Always use the server timestamp here.
           timestamp = stampDate.toLocaleTimeString('en-GB', { hour12: false });
         } catch (e) {
-          console.error("Error parsing timestamp:", e);
+          logMessage(`Message manager: Error parsing timestamp: ${e.message}`, 'error');
         }
       }
 
@@ -367,7 +368,7 @@ export default class MessageManager {
               try {
                 usernameIds = JSON.parse(storedIds);
               } catch (e) {
-                console.error('Error parsing stored username IDs:', e);
+                logMessage(`Message manager: Error parsing stored username IDs: ${e.message}`, 'error');
                 usernameIds = {};
               }
             }

@@ -26,7 +26,8 @@ import {
   observeMessagesPanel,
   parseUsername,
   addViewportMeta,
-  decodeEncodedURL
+  decodeEncodedURL,
+  logMessage
 } from "./helpers/helpers.js";
 
 import { addChatToggleFeature } from "../src/chat/chatState.js"
@@ -47,7 +48,7 @@ function isInIframe() {
 function checkAuth() {
   // First check if running in iframe
   if (isInIframe()) {
-    console.error('Application cannot run in an iframe');
+    logMessage("Application cannot run in an iframe", 'error');
     return false;
   }
 
@@ -128,7 +129,7 @@ async function initializeApp() {
     window.xmppClient = xmppClient; // For debugging
 
   } catch (error) {
-    console.error('App init error:', error);
+    logMessage(`App initialization error: ${error.message}`, 'error');
     removeChatParams();
   }
 }

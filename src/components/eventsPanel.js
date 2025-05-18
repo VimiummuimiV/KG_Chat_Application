@@ -1,5 +1,7 @@
 import { eventsColorMap } from "../data/definitions.js";
-import { adjustVisibility } from "../helpers/helpers.js";
+import { adjustVisibility, logMessage } from "../helpers/helpers.js";
+import { addShakeEffect } from "../data/animations.js";
+import { infoSVG, warningSVG, errorSVG, successSVG } from "../data/icons.js";
 
 const EVENTS_STORAGE_KEY = 'chatEvents';
 const LAST_VIEWED_KEY = 'lastViewedEventTime';
@@ -18,12 +20,12 @@ export function getSavedEvents() {
       return eventsData.events || [];
     } else {
       // If events are from a different day, clear them and start fresh
-      console.log("🗃️ Events cache expired (new day), creating fresh cache");
+      logMessage(" Events cache expired, creating fresh cache.", 'info');
       localStorage.removeItem(EVENTS_STORAGE_KEY);
       return [];
     }
   } catch (error) {
-    console.error("Error loading events:", error);
+    logMessage("Error loading events.", 'error');
     return [];
   }
 }
@@ -48,7 +50,7 @@ export function saveEvent(event) {
     }));
     toggleEventsNotification(true); // Highlight the button if new events are added
   } catch (error) {
-    console.error("Error saving events:", error);
+    logMessage("Error saving events.", 'error');
   }
 }
 
@@ -90,7 +92,7 @@ export class EventsPanel {
 
   init() {
     const header = document.createElement('h2');
-    header.textContent = 'Events Panel';
+    header.textContent = 'Events';
     this.panel.appendChild(header);
     this.panel.appendChild(this.eventsList);
 
@@ -116,16 +118,40 @@ export class EventsPanel {
     const listItem = document.createElement('div');
     listItem.className = `list-item ${isNew ? 'new-event' : 'old-event'}`;
 
+    const iconWrapper = document.createElement('span');
+    iconWrapper.className = "event-icon icon-wrapper";
+    let iconSVG;
+    switch (event.type) {
+      case 'warning':
+        iconSVG = warningSVG;
+        break;
+      case 'error':
+        iconSVG = errorSVG;
+        break;
+      case 'success':
+        iconSVG = successSVG;
+        break;
+      case 'info':
+      default:
+        iconSVG = infoSVG;
+        break;
+    }
+
+    // Apply stroke color from eventsColorMap
+    const typeColor = eventsColorMap[event.type] || eventsColorMap.info;
+    iconWrapper.innerHTML = iconSVG.replace('stroke="currentColor"', `stroke="${typeColor}"`);
+
     const timestamp = document.createElement('span');
     timestamp.className = 'timestamp';
     timestamp.textContent = formatTimestamp(event.date);
+    timestamp.style.color = typeColor;
 
     const message = document.createElement('span');
     message.className = 'message';
     message.textContent = event.message;
 
     listItem.style.backgroundColor = eventsColorMap[event.type] || eventsColorMap.info;
-    listItem.append(timestamp, message);
+    listItem.append(iconWrapper, timestamp, message);
     this.eventsList.appendChild(listItem);
   }
 
@@ -143,6 +169,21 @@ export class EventsPanel {
         this.hide();
       }
     };
+
+    // Delegate click events on list-item elements
+    this.eventsList.addEventListener('click', (event) => {
+      const listItem = event.target.closest('.list-item');
+      if (listItem) {
+        const messageElement = listItem.querySelector('.message');
+        if (messageElement) {
+          navigator.clipboard.writeText(messageElement.textContent).then(() => {
+            addShakeEffect(listItem);
+          }).catch((error) => {
+            logMessage(`Failed to copy event message: ${error.message}`, 'error');
+          });
+        }
+      }
+    });
 
     document.addEventListener('keydown', this.handleEscape);
     document.addEventListener('click', this.handleClickOutside, true);

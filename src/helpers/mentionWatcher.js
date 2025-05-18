@@ -1,4 +1,4 @@
-import { extractUsername } from "./helpers.js";
+import { extractUsername, logMessage } from "./helpers.js";
 
 export const notification = 'https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/notification-pluck-on.mp3';
 export const banned = 'https://github.com/VimiummuimiV/KG_Chat_Application/raw/refs/heads/main/src/sounds/mario-game-over.mp3';
@@ -24,7 +24,7 @@ export function highlightMentionWords() {
       }
     }
   } catch (e) {
-    console.error('Error parsing auth data:', e);
+    logMessage(`Mention watcher: Error parsing auth data: ${e.message}`, 'error');
   }
 
   // Don't proceed if no username to check

@@ -5,12 +5,11 @@ import { FALLBACK_COLOR } from "../data/definitions.js";
 
 import {
   compactXML,
-  extractUsername
+  extractUsername,
+  logMessage
 } from "../helpers/helpers.js";
 
-import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { privateMessageState } from "../helpers/privateMessagesHandler.js";
-import { showAlertDuration } from "../data/definitions.js";
 import { optimizeColor } from "../helpers/chatUsernameColors.js";
 
 export function createXMPPClient(xmppConnection, userManager, messageManager, username) {
@@ -46,10 +45,24 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     isHttpBindingActive: false,
     isReconnecting: false,
     isConnected: false,
-    // Queue of messages waiting to be sent.
     messageQueue: new Map(),
-    // Store last sent message to prevent duplicates
     lastSentMessage: null,
+
+    async trySinglePresenceUpdate() {
+      if (this.isConnected && !this.isReconnecting) {
+        const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
+        console.info(`One presence update sent at ${currentTime}`);
+        try {
+          const xmlResponse = await sendHttpBindingRequest(xmppConnection);
+          safeUpdatePresence(xmlResponse);
+          return true;
+        } catch (error) {
+          logMessage(`One presence update: ${error.message}`, 'error');
+          return false;
+        }
+      }
+      return false;
+    },
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
@@ -106,8 +119,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           messageManager.updatePendingStatus(msg.id, false);
           safeProcessMessages(null);
         } catch (error) {
-          console.error(`Failed to send queued message (${msg.id}): ${error.message}`);
-          alert(`Failed to send queued message (${msg.id}): ${error.message}`);
+          logMessage(`Failed to send queued message (${msg.id}): ${error.message}`, 'error');
           // Stop processing; the message remains in the queue for later retry.
           break;
         }
@@ -169,7 +181,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
             this.isConnected = true;
             if (this.isReconnecting) {
-              showChatAlert("Chat connected successfully!", { type: 'success', duration: showAlertDuration });
+              logMessage("Chat connected successfully.", 'success');
               messageManager.refreshMessages(true);
               this.isReconnecting = false;
             }
@@ -181,23 +193,23 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             this.processQueue();
             break;
           } catch (error) {
-            console.error(`💥 Connection error: ${error.message}`);
+            logMessage(`XMPP Client: Connection error: ${error.message}`, 'error');
             retries--;
             if (retries === 0) {
-              console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`);
+              logMessage(`Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`, 'warning');
               this.isReconnecting = true;
               setTimeout(() => this.connect(), reconnectionDelay);
             } else {
-              console.log(`🔄 Retrying connection... (${retries} attempts left)`);
+              logMessage(`Retrying connection... (${retries} attempts left)`, 'warning');
               await new Promise(resolve => setTimeout(resolve, reconnectionDelay));
             }
           }
         }
       } catch (error) {
-        console.error(`💥 Final connection error: ${error.message}`);
+        logMessage(`XMPP Client: Final connection error: ${error.message}`, 'error');
         this.isConnected = false;
         if (!this.isReconnecting) {
-          console.log(`⏳ Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`);
+          logMessage(`Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`, 'warning');
           this.isReconnecting = true;
           setTimeout(() => this.connect(), reconnectionDelay);
         }
@@ -229,10 +241,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             pollRequest();
           }
         } catch (error) {
-          console.error('HTTP binding error:', error.message);
           if (error.message.includes('404') && !this.isReconnecting) {
-            console.log(`🛑 Chat connection lost. Reconnecting...`);
-            showChatAlert("Chat connection lost. Reconnecting...", { type: 'warning', duration: showAlertDuration });
+            logMessage("Chat connection lost.", 'warning');
             messageManager.refreshMessages(false);
             this.isReconnecting = true;
             this.isConnected = false;
@@ -249,7 +259,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     stopHttpBinding() {
       if (this.isHttpBindingActive) {
         this.isHttpBindingActive = false;
-        console.log('💬 HTTP binding stopped.');
       }
     },
 
@@ -280,13 +289,13 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
       // Check against the last sent message.
       if (this.lastSentMessage && this.lastSentMessage.text === text && (now - this.lastSentMessage.timestamp) < debounceTime) {
-        console.log('Duplicate message prevented:', text);
+        logMessage(`Duplicate message prevented: ${text}`, 'warning');
         return;
       }
 
       // Prevent duplicate messages in the queue
       if (this.messageQueue.has(messageId)) {
-        console.log('Message already in queue:', messageId);
+        logMessage(`Message already in queue: ${messageId}`, 'warning');
         return;
       }
 
@@ -317,25 +326,27 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
   // --- Network connectivity handling ---
   // Listen for offline events to stop HTTP binding.
   window.addEventListener('offline', () => {
-    console.log("Network offline. Stopping HTTP binding.");
+    logMessage("Network connection lost.", 'warning');
     xmppClient.stopHttpBinding();
     xmppClient.isConnected = false;
-    showChatAlert("Network connection lost.", { type: 'warning', duration: showAlertDuration });
     messageManager.refreshMessages(false, 'network');
   });
 
   // Listen for online events to attempt reconnection immediately.
   window.addEventListener('online', () => {
-    console.log("Network online. Reconnecting immediately...");
+    logMessage("Network connection restored.", 'success');
     if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
       xmppClient.connect();
     }
-    showChatAlert("Network connection restored.", { type: 'success', duration: showAlertDuration });
     messageManager.refreshMessages(true, 'network');
   });
 
-  // Clean up on page unload
+  // Use a global variable to track reload state
+  let isReloading = false;
+
+  // Set the global variable on page unload
   window.addEventListener('beforeunload', () => {
+    isReloading = true;
     xmppClient.stopHttpBinding();
   });
   // --- End network handling ---
@@ -349,16 +360,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
   // Visibilitychange event listener to use safeUpdatePresence to avoid Javascript throttling
   document.addEventListener('visibilitychange', async () => {
-    if (!document.hidden) {
-      const currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
-      console.info(`[Presence Update] Page visible at ${currentTime}. Sending presence update request...`);
-      // Try single safeUpdatePresence call
-      try {
-        const xmlResponse = await sendHttpBindingRequest(xmppConnection);
-        safeUpdatePresence(xmlResponse);
-      } catch (error) {
-        console.error('Error updating presence:', error.message);
-      }
+    if (!document.hidden && !isReloading) {
+      await xmppClient.trySinglePresenceUpdate();
     }
   });
 

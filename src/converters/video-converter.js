@@ -2,7 +2,8 @@ import {
   decodeURL,
   isEncodedURL,
   isTrustedDomain,
-  scrollToBottom
+  scrollToBottom,
+  logMessage
 } from "../helpers/helpers.js";
 
 // Constants
@@ -47,7 +48,7 @@ async function fetchYouTubeMetadata(videoId) {
     const channel = data.author_name || 'Channel not found';
     return { title, channel };
   } catch (error) {
-    console.error('Error fetching YouTube metadata:', error);
+    logMessage("Error fetching YouTube metadata.", 'error');
     return { title: 'Error', channel: 'Error' };
   }
 }
@@ -81,7 +82,7 @@ async function renderYouTubePreview(infoContainer, placeholder, videoId, videoTy
   });
 
   thumb.addEventListener('error', () => {
-    console.error('Error loading YouTube thumbnail for videoId:', videoId);
+    logMessage(`Error loading Youtube thumbnail image for ${videoId}.`, 'error');
   });
 }
 
@@ -201,7 +202,7 @@ export function convertVideoLinksToPlayer() {
       });
 
       embed.addEventListener('error', () => {
-        console.error('Error loading video source:', url);
+        logMessage(`Error loading video source: ${url}`, 'error');
         wrapper.replaceChildren(link);
       });
 

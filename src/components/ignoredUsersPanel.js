@@ -1,4 +1,4 @@
-import { adjustVisibility } from "../helpers/helpers.js";
+import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
 import { showAlertDuration } from "../data/definitions.js";
@@ -10,7 +10,7 @@ export const storageWrapper = {
       const stored = localStorage.getItem('ignored');
       return stored ? JSON.parse(stored) : [];
     } catch (e) {
-      console.error(`Error parsing ignored users data:`, e);
+      logMessage(`Error parsing ignored users data: ${e.message}`, 'error');
       return [];
     }
   },
@@ -19,7 +19,7 @@ export const storageWrapper = {
       localStorage.setItem('ignored', JSON.stringify(data));
       return true;
     } catch (e) {
-      console.error(`Error saving ignored users data:`, e);
+      logMessage(`Error saving ignored users data: ${e.message}`, 'error');
       return false;
     }
   }
