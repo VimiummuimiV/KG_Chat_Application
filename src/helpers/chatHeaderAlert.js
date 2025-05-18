@@ -1,4 +1,4 @@
-import { showAlertDuration, eventsColorMap } from "../data/definitions.js";
+import { settings, eventsColorMap } from "../data/definitions.js";
 import { saveEvent } from "../components/eventsPanel.js";
 
 export function showChatAlert(message, options = {}) {
@@ -10,21 +10,21 @@ export function showChatAlert(message, options = {}) {
     dragArea.removeChild(existingAlert);
   }
 
-  const defaultOptions = { type: 'info', duration: showAlertDuration };
-  const settings = { ...defaultOptions, ...options };
+  const defaultOptions = { type: 'info', duration: settings.showAlertDuration };
+  const alertSettings = { ...defaultOptions, ...options };
 
   const alertElement = document.createElement('div');
   alertElement.className = 'chat-dynamic-alert';
   alertElement.innerHTML = message;
   alertElement.style.cssText = `
-    background-color: ${eventsColorMap[settings.type] || eventsColorMap.info};
+    background-color: ${eventsColorMap[alertSettings.type] || eventsColorMap.info};
   `;
 
   dragArea.appendChild(alertElement);
 
   // Save the alert message to events storage
   if (message) {
-    saveEvent({ message, type: settings.type });
+    saveEvent({ message, type: alertSettings.type });
   }
 
   function animateAlert() {
@@ -60,7 +60,7 @@ export function showChatAlert(message, options = {}) {
             dragArea.removeChild(alertElement);
           }
         }, 300);
-      }, settings.duration);
+      }, alertSettings.duration);
     });
   }
 

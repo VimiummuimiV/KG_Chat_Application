@@ -10,7 +10,7 @@ import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { removeChatParams } from "../auth.js";
 import { HelpPanel } from "../components/helpPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
-import { showAlertDuration } from "../data/definitions.js";
+import { settings } from "../data/definitions.js";
 
 // Define available commands with their handlers
 const chatCommands = [
@@ -20,7 +20,7 @@ const chatCommands = [
     handler: () => {
       removeChatParams();
       removeChatTraces();
-      showChatAlert('Chat settings have been reset. Reloading...', { type: 'info', duration: showAlertDuration });
+      showChatAlert('Chat settings have been reset. Reloading...', { type: 'info', duration: settings.showAlertDuration });
       return true;
     }
   },

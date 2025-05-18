@@ -5,7 +5,7 @@ import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 
 import {
   emojiFaces,
-  showAlertDuration,
+  settings,
   trustedDomains,
   eventsColorMap
 } from "../data/definitions.js";
@@ -178,7 +178,7 @@ export async function getExactUserIdByName(userName) {
     return user.id;
   } catch (error) {
     // console.error('Error getting user ID:', error);
-    showChatAlert(`Could not find user "${userName}"`, { type: 'error', duration: showAlertDuration });
+    showChatAlert(`Could not find user "${userName}"`, { type: 'error', duration: settings.showAlertDuration });
     return null;
   }
 }
@@ -357,6 +357,6 @@ export function logMessage(message, type = 'info', showAlert = true) {
   }
 
   if (showAlert) {
-    showChatAlert(message, { type, duration: showAlertDuration });
+    showChatAlert(message, { type, duration: settings.showAlertDuration });
   }
 }

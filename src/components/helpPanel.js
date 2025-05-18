@@ -1,3 +1,4 @@
+import { removeSVG } from "../data/icons.js";
 import { adjustVisibility } from "../helpers/helpers.js";
 
 export class HelpPanel {
@@ -25,6 +26,17 @@ export class HelpPanel {
     this.content.className = 'help-content';
     this.updatePanelContent();
     this.container.appendChild(this.content);
+
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-btn';
+    closeButton.innerHTML = removeSVG;
+    closeButton.title = 'Close panel';
+    closeButton.addEventListener('click', () => {
+      this.remove();
+    });
+    this.container.appendChild(closeButton);
+
     document.body.appendChild(this.container);
     // Fade in the panel
     adjustVisibility(this.container, 'show', '1');

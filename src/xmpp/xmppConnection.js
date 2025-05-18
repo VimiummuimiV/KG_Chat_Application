@@ -1,8 +1,8 @@
-import { connectionDelay } from "../data/definitions.js";
+import { settings } from "../data/definitions.js";
 import { sleep, base64Encode, logMessage } from "../helpers/helpers.js";
 
 export default class XMPPConnection {
-  constructor({ username, password, bindUrl, delay = connectionDelay }) {
+  constructor({ username, password, bindUrl, delay = settings.connectionDelay }) {
     this.username = username;
     this.password = password;
     this.bindUrl = bindUrl;

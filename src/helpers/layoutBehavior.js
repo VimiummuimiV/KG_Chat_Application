@@ -1,4 +1,4 @@
-import { revealUserListDelay } from "../data/definitions.js";
+import { settings } from "../data/definitions.js";
 import { checkIsMobile } from "./helpers.js";
 
 export function handleLayoutBehavior() {
@@ -21,7 +21,7 @@ export function handleLayoutBehavior() {
         height: '100%',
         top: '0',
         right: '0',
-        transition: `transform ${revealUserListDelay}ms ease-in-out, opacity ${revealUserListDelay}ms ease-in-out`,
+        transition: `transform ${settings.revealUserListDelay}ms ease-in-out, opacity ${settings.revealUserListDelay}ms ease-in-out`,
         zIndex: '1001'
       });
 
@@ -44,7 +44,7 @@ export function handleLayoutBehavior() {
         const outsideClick = evt => {
           if (!userList.contains(evt.target) && evt.target !== revealButton) {
             toggleUserList(userList, false);
-            setTimeout(() => document.removeEventListener('click', outsideClick, true), revealUserListDelay);
+            setTimeout(() => document.removeEventListener('click', outsideClick, true), settings.revealUserListDelay);
           }
         };
 
@@ -115,7 +115,7 @@ function toggleUserList(list, makeVisible) {
         if (!list.classList.contains('shown-userlist')) {
           list.style.display = 'none';
         }
-      }, revealUserListDelay);
+      }, settings.revealUserListDelay);
     }
   }
   return makeVisible;

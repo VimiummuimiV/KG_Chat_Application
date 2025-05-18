@@ -1,7 +1,7 @@
 import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { lightThemes } from "../data/themes/lightThemes.js";
 import { darkThemes } from "../data/themes/darkThemes.js";
-import { themePreviewDelay } from "../data/definitions.js";
+import { settings } from "../data/definitions.js";
 
 // DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {
@@ -74,7 +74,7 @@ export const openThemesPanel = () => {
   let originalTheme = localStorage.getItem('selectedTheme') || 'dark-soul';
 
   // Function to preview theme with debounce
-  const previewTheme = debounce(theme => applyThemeStyles(theme), themePreviewDelay);
+  const previewTheme = debounce(theme => applyThemeStyles(theme), settings.themePreviewDelay);
 
   // Function to create theme buttons
   const createThemeButton = (themeName, themeKey) => {

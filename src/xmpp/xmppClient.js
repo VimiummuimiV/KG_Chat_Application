@@ -1,14 +1,10 @@
 import {
-  reconnectionDelay
-} from "../data/definitions.js";
-import { FALLBACK_COLOR } from "../data/definitions.js";
-
-import {
   compactXML,
   extractUsername,
   logMessage
 } from "../helpers/helpers.js";
 
+import { settings, FALLBACK_COLOR } from "../data/definitions.js";
 import { privateMessageState } from "../helpers/privateMessagesHandler.js";
 import { optimizeColor } from "../helpers/chatUsernameColors.js";
 
@@ -30,14 +26,49 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     const chatUsernameColor = optimizeColor(storedColor) || FALLBACK_COLOR;
 
     return {
-      cleanedUsername,
-      chatUsernameColor,
-      baseAvatarPath,
-      timestamp
+      cleanedUsername, chatUsernameColor, baseAvatarPath, timestamp
     };
   }
 
-  let userInfo = getUserInfo();
+  let userInfo = getUserInfo(); // Initialize user info
+
+  let isReloading = false; // Flag to prevent worker from sending pings on reload
+
+  window.addEventListener('beforeunload', () => {
+    isReloading = true;
+    xmppClient.stopHttpBinding();
+  });
+
+  // ─── Inline Web Worker for steady pings ───
+  const workerBlob = new Blob([`
+    const PING_INTERVAL = ${settings.pingInterval};
+    let pingTimerId = null;
+
+    self.onmessage = messageEvent => {
+      if (messageEvent.data === 'start' && pingTimerId === null) {
+        pingTimerId = setInterval(() => self.postMessage('tick'), PING_INTERVAL);
+      } else if (messageEvent.data === 'stop' && pingTimerId !== null) {
+        clearInterval(pingTimerId);
+        pingTimerId = null;
+      }
+    };
+  `], { type: 'text/javascript' });
+  const pingWorker = new Worker(URL.createObjectURL(workerBlob));
+
+  pingWorker.onmessage = async ({ data }) => {
+    if (data === 'tick' && xmppClient.isConnected && !xmppClient.isReconnecting && !isReloading) {
+      try {
+        const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
+        await xmppConnection.sendRequestWithRetry(pingPayload);
+        logMessage("Ping successful.", 'success');
+      } catch (error) {
+        logMessage("Ping failed.", 'warning');
+        xmppClient.isConnected = false;
+        xmppClient.isReconnecting = true;
+        xmppClient.connect();
+      }
+    }
+  };
 
   const xmppClient = {
     userManager,
@@ -170,22 +201,20 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
               this.isReconnecting = false;
             }
 
-            // Start HTTP binding for server updates
-            this.startHttpBinding();
-
-            // Process any queued messages
-            this.processQueue();
-            break;
+            pingWorker.postMessage('start'); // Start the ping worker
+            this.startHttpBinding(); // Start HTTP binding
+            this.processQueue(); // Process the message queue
+            break; // Exit the retry loop on success
           } catch (error) {
             logMessage(`XMPP Client: Connection error: ${error.message}`, 'error');
             retries--;
             if (retries === 0) {
-              logMessage(`Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`, 'warning');
+              logMessage(`Scheduling reconnection attempt in ${settings.reconnectionDelay / 1000} seconds...`, 'warning');
               this.isReconnecting = true;
-              setTimeout(() => this.connect(), reconnectionDelay);
+              setTimeout(() => this.connect(), settings.reconnectionDelay);
             } else {
               logMessage(`Retrying connection... (${retries} attempts left)`, 'warning');
-              await new Promise(resolve => setTimeout(resolve, reconnectionDelay));
+              await new Promise(resolve => setTimeout(resolve, settings.reconnectionDelay));
             }
           }
         }
@@ -193,9 +222,9 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         logMessage(`XMPP Client: Final connection error: ${error.message}`, 'error');
         this.isConnected = false;
         if (!this.isReconnecting) {
-          logMessage(`Scheduling reconnection attempt in ${reconnectionDelay / 1000} seconds...`, 'warning');
+          logMessage(`Scheduling reconnection attempt in ${settings.reconnectionDelay / 1000} seconds...`, 'warning');
           this.isReconnecting = true;
-          setTimeout(() => this.connect(), reconnectionDelay);
+          setTimeout(() => this.connect(), settings.reconnectionDelay);
         }
       }
     },
@@ -234,7 +263,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             this.isReconnecting = true;
             this.isConnected = false;
             this.isHttpBindingActive = false;
-            this.connect(); // Immediately attempt to reconnect
+            this.connect();
           }
         }
       };
@@ -247,6 +276,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       if (this.isHttpBindingActive) {
         this.isHttpBindingActive = false;
       }
+      // Stop inline worker pinger
+      pingWorker.postMessage('stop');
     },
 
     sendMessage(text) {
@@ -272,10 +303,9 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       }
 
       const now = Date.now();
-      const debounceTime = 2000; // 2 seconds to prevent duplicates
 
       // Check against the last sent message.
-      if (this.lastSentMessage && this.lastSentMessage.text === text && (now - this.lastSentMessage.timestamp) < debounceTime) {
+      if (this.lastSentMessage && this.lastSentMessage.text === text && (now - this.lastSentMessage.timestamp) < settings.deduplicationDelay) {
         logMessage(`Duplicate message prevented: ${text}`, 'warning');
         return;
       }
@@ -326,34 +356,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       xmppClient.connect();
     }
     messageManager.refreshMessages(true, 'network');
-  });
-
-  // Add a flag to track page reload
-  let isPageReloading = false;
-
-  // Set the flag on page unload
-  window.addEventListener('beforeunload', () => {
-    isPageReloading = true;
-    xmppClient.stopHttpBinding();
-  });
-
-  // --- End network handling ---
-
-  // Modify visibility change event to avoid reconnecting on page reload
-  document.addEventListener('visibilitychange', async () => {
-    if (document.visibilityState === 'visible' && !isPageReloading) {
-      try {
-        // Send a minimal ping payload to check if the connection is alive
-        const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
-
-        await xmppConnection.sendRequestWithRetry(pingPayload);
-      } catch (error) {
-        logMessage("Ping failed.", 'warning');
-        xmppClient.isConnected = false;
-        xmppClient.isReconnecting = true;
-        xmppClient.connect();
-      }
-    }
   });
 
   return xmppClient;

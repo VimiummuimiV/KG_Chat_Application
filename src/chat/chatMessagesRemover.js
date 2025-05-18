@@ -1,4 +1,4 @@
-import { longPressDuration, clearSelectionDelay } from "../data/definitions.js";
+import { settings } from "../data/definitions.js";
 import { checkIsMobile, isTextSelected } from "../helpers/helpers.js";
 
 export default class ChatMessagesRemover {
@@ -68,7 +68,7 @@ export default class ChatMessagesRemover {
           if (navigator.vibrate) {
             navigator.vibrate(50);
           }
-        }, longPressDuration);
+        }, settings.longPressDuration);
       });
 
       document.addEventListener("touchmove", (e) => {
@@ -236,7 +236,7 @@ export default class ChatMessagesRemover {
       timeoutId = setTimeout(() => {
         btn.remove();
         this.clearSelection();
-      }, clearSelectionDelay);
+      }, settings.clearSelectionDelay);
     });
 
     document.body.append(btn);
@@ -364,7 +364,7 @@ export default class ChatMessagesRemover {
             if (navigator.vibrate) {
               navigator.vibrate(50);
             }
-          }, longPressDuration);
+          }, settings.longPressDuration);
         });
 
         this.toggleBtn.addEventListener('touchmove', (e) => {

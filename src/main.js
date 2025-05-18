@@ -1,5 +1,5 @@
 import {
-  connectionDelay,
+  settings,
   XMPP_BIND_URL
 } from "./data/definitions.js";
 
@@ -94,7 +94,7 @@ async function initializeApp() {
       username: klavoauth.username,
       password: klavoauth.password,
       bindUrl: XMPP_BIND_URL,
-      connectionDelay
+      connectionDelay: settings.connectionDelay
     });
 
     const xmppClient = createXMPPClient(

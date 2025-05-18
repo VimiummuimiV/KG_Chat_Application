@@ -1,8 +1,7 @@
 import {
   BASE_URL,
   FALLBACK_COLOR,
-  pendingUserDelay,
-  longPressDuration
+  settings
 } from "../data/definitions.js";
 
 import {
@@ -135,7 +134,7 @@ export default class UserManager {
           clearTimeout(timer);
         };
 
-        timer = setTimeout(startLongPress, longPressDuration);
+        timer = setTimeout(startLongPress, settings.longPressDuration);
 
         const endEvents = eventType === 'mouse' 
           ? ['mouseup', 'mouseleave']
@@ -341,7 +340,7 @@ export default class UserManager {
           this.updateUI();
           this.updateUITimeout = null; // Reset timeout reference
           this.pendingUserJIDs.clear(); // Clear after UI update
-        }, pendingUserDelay); // Use pendingUserDelay for UI update debounce
+        }, settings.pendingUserDelay); // Use pendingUserDelay for UI update debounce
       } else {
         // Initial load, update UI immediately
         this.updateUI();

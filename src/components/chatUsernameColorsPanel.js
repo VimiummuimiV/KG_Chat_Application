@@ -1,6 +1,5 @@
 import { adjustVisibility, debounce, logMessage } from "../helpers/helpers.js";
-import { showChatAlert } from "../helpers/chatHeaderAlert.js";
-import { loadUsernameColorsUrl, longPressDuration, showAlertDuration } from "../data/definitions.js";
+import { loadUsernameColorsUrl, settings } from "../data/definitions.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
 import { addSVG, editSVG, removeSVG, importSVG, exportSVG, loadSVG } from "../data/icons.js";
 
@@ -113,6 +112,15 @@ export function openUsernameColors() {
   // Create h2 (main header) and append to usernameColors.
   const header = createElement('h2', null, { text: 'Username Colors' });
   usernameColors.appendChild(header);
+
+  // Create close button
+  const closeButton = createElement('button', 'close-btn');
+  closeButton.innerHTML = removeSVG;
+  closeButton.title = 'Close panel';
+  closeButton.addEventListener('click', () => {
+    adjustVisibility(container, 'hide', 0);
+  });
+  container.appendChild(closeButton);
 
   // Create container and blocks.
   const generatedBlock = createElement(
@@ -349,7 +357,7 @@ export function openUsernameColors() {
     longPressTimer = setTimeout(() => {
       entry._isLongPress = true;
       showConfirmation(entry, 'color');
-    }, longPressDuration);
+    }, settings.longPressDuration);
     // Save the current entry for pointerup/leave events.
     currentEntry = entry;
   });

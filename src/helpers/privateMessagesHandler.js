@@ -1,6 +1,6 @@
 import { getExactUserIdByName } from "./helpers.js";
 import { showChatAlert } from "./chatHeaderAlert.js";
-import { showAlertDuration } from "../data/definitions.js";
+import { settings } from "../data/definitions.js";
 
 // State management for private messaging
 export const privateMessageState = {
@@ -64,7 +64,7 @@ export async function handlePrivateMessageInput(inputElement) {
       enterPrivateMode(username);
       inputElement.value = input.replace(privateModeRegex, ''); // Remove the /pm username part
     } else {
-      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: showAlertDuration });
+      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: settings.showAlertDuration });
       exitPrivateMode();
     }
   } else if (exitPrivateModeRegex.test(input)) {
@@ -113,7 +113,7 @@ function enterPrivateMode(username) {
       exitButton.innerHTML = "🔒";
     });
 
-    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: showAlertDuration });
+    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: settings.showAlertDuration });
     privateMessageState.isPrivateMode = true;
     privateMessageState.targetUsername = username;
 
@@ -124,7 +124,7 @@ function enterPrivateMode(username) {
     }
   } else if (privateMessageState.targetUsername === username) {
     messageInput.placeholder = `️PM to ➡ ${username}`;
-    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: showAlertDuration });
+    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: settings.showAlertDuration });
   }
 }
 
@@ -140,7 +140,7 @@ function exitPrivateMode() {
 
     const username = privateMessageState.targetUsername; // Get username before clearing state
     privateMessageState.exitPrivateMode(); // Only call once
-    showChatAlert(`Exited private chat with ${username}`, { type: 'success', duration: showAlertDuration });
+    showChatAlert(`Exited private chat with ${username}`, { type: 'success', duration: settings.showAlertDuration });
 
     // Remove ESC key event listener when exiting private mode
     if (escKeyHandler) {

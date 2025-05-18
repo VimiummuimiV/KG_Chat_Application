@@ -13,26 +13,18 @@ export const BASE_URL = 'https://klavogonki.ru';
 export const GAME_URL = `${BASE_URL}/g/?gmid=`;
 export const XMPP_BIND_URL = `${BASE_URL}/xmpp-httpbind/`;
 
-// Sleep time
-export const connectionDelay = 100;
-export const reconnectionDelay = 3000;
-
-// Delay values for various UI interactions
-export const pendingUserDelay = 500;
-
-/*
-1. Delay for private mode activation from the user list username press (userManager.js)
-2. Delay for the selection activation (on mobile devices) for the message removal (chatMessagesRemover.js)
-3. Delay for the hex input field to be (shown) and filled with the color code (chatUsernameColorsPanel.js)
-*/
-export const longPressDuration = 300;
-
-// Delay for the selection clearance for the message removal (chatMessagesRemover.js)
-export const clearSelectionDelay = 500;
-
-export const revealUserListDelay = 150;
-export const themePreviewDelay = 150;
-export const showAlertDuration = 2000;
+export const settings = {
+  connectionDelay: 100,
+  reconnectionDelay: 3000,
+  pendingUserDelay: 500,
+  longPressDuration: 300,
+  clearSelectionDelay: 500,
+  revealUserListDelay: 150,
+  themePreviewDelay: 150,
+  showAlertDuration: 2000,
+  pingInterval: 60000,
+  deduplicationDelay: 2000
+};
 
 export const connectionMessages = {
   chat: {

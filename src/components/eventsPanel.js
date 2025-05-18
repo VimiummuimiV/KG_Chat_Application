@@ -1,7 +1,7 @@
 import { eventsColorMap } from "../data/definitions.js";
 import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 import { addShakeEffect } from "../data/animations.js";
-import { infoSVG, warningSVG, errorSVG, successSVG, removeSVG } from "../data/icons.js";
+import { infoSVG, warningSVG, errorSVG, successSVG, clearSVG, removeSVG } from "../data/icons.js";
 
 const EVENTS_STORAGE_KEY = 'chatEvents';
 const LAST_VIEWED_KEY = 'lastViewedEventTime';
@@ -96,9 +96,10 @@ export class EventsPanel {
     this.panel.appendChild(header);
     this.panel.appendChild(this.eventsList);
 
+    // Create clear button
     const clearButton = document.createElement('button');
-    clearButton.className = 'clear-events-btn';
-    clearButton.innerHTML = removeSVG;
+    clearButton.className = 'clear-btn';
+    clearButton.innerHTML = clearSVG;
     clearButton.title = 'Clear all events';
     clearButton.addEventListener('click', () => {
       const events = getSavedEvents();
@@ -108,6 +109,16 @@ export class EventsPanel {
       this.hide(); // Close the panel
     });
     this.panel.appendChild(clearButton);
+
+    // Create close button
+    const closeButton = document.createElement('button');
+    closeButton.className = 'close-btn';
+    closeButton.innerHTML = removeSVG;
+    closeButton.title = 'Close panel';
+    closeButton.addEventListener('click', () => {
+      this.hide();
+    });
+    this.panel.appendChild(closeButton);
 
     // Load saved events for the current day
     const events = getSavedEvents();
