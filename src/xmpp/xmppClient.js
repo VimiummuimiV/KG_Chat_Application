@@ -61,7 +61,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       try {
         const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
         await xmppConnection.sendRequestWithRetry(pingPayload);
-        logMessage("Ping successful.", 'info');
       } catch (error) {
         logMessage("Ping failed.", 'warning');
         xmppClient.isConnected = false;

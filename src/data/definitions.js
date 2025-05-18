@@ -22,7 +22,7 @@ export const settings = {
   revealUserListDelay: 150,
   themePreviewDelay: 150,
   showAlertDuration: 2000,
-  pingInterval: 60000,
+  pingInterval: 10000,
   deduplicationDelay: 2000
 };
 
