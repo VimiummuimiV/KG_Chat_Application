@@ -27,7 +27,7 @@ export function getSavedEvents() {
   } catch (error) {
     logMessage(`Error loading events: ${error.message}`, 'error');
     localStorage.removeItem(EVENTS_STORAGE_KEY);
-    return [];
+    throw error;
   }
 }
 
