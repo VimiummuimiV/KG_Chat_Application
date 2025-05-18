@@ -25,7 +25,6 @@ export default class XMPPConnection {
       body: payload
     });
     if (!response.ok) {
-      logMessage(`Error: ${response.status} - ${response.statusText}`, 'error');
       throw new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.text();
