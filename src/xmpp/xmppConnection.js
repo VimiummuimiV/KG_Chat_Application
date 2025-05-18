@@ -25,8 +25,8 @@ export default class XMPPConnection {
       body: payload
     });
     if (!response.ok) {
-      logMessage(`Request failed: Received status code ${response.status}.`, 'error');
-      return null;
+      logMessage(`Error: ${response.status} - ${response.statusText}`, 'error');
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
     return await response.text();
   }
@@ -41,15 +41,15 @@ export default class XMPPConnection {
         lastError = error;
         if (error.message.includes('429')) {
           const waitTime = baseWaitTime * Math.pow(2, attempt);
-          logMessage(`Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`);
+          logMessage(`Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`, 'warning');
           await sleep(waitTime);
         } else {
-          throw new Error(`Error occurred: ${error.message}`);
+          throw error;
         }
       }
     }
     logMessage(`Max retries reached. Last error: ${lastError.message}`, 'error');
-    return null;
+    throw new Error(`Max retries reached. Last error: ${lastError.message}`);
   }
 
   async connect() {
