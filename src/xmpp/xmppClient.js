@@ -328,15 +328,20 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     messageManager.refreshMessages(true, 'network');
   });
 
-  // Clean up on page unload
+  // Add a flag to track page reload
+  let isPageReloading = false;
+
+  // Set the flag on page unload
   window.addEventListener('beforeunload', () => {
+    isPageReloading = true;
     xmppClient.stopHttpBinding();
   });
+
   // --- End network handling ---
 
-  // Listen for visibility change events to check connection status
+  // Modify visibility change event to avoid reconnecting on page reload
   document.addEventListener('visibilitychange', async () => {
-    if (document.visibilityState === 'visible') {
+    if (document.visibilityState === 'visible' && !isPageReloading) {
       try {
         // Send a minimal ping payload to check if the connection is alive
         const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;

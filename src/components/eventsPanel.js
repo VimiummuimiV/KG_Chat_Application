@@ -1,7 +1,7 @@
 import { eventsColorMap } from "../data/definitions.js";
 import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 import { addShakeEffect } from "../data/animations.js";
-import { infoSVG, warningSVG, errorSVG, successSVG } from "../data/icons.js";
+import { infoSVG, warningSVG, errorSVG, successSVG, removeSVG } from "../data/icons.js";
 
 const EVENTS_STORAGE_KEY = 'chatEvents';
 const LAST_VIEWED_KEY = 'lastViewedEventTime';
@@ -95,6 +95,19 @@ export class EventsPanel {
     header.textContent = 'Events';
     this.panel.appendChild(header);
     this.panel.appendChild(this.eventsList);
+
+    const clearButton = document.createElement('button');
+    clearButton.className = 'clear-events-btn';
+    clearButton.innerHTML = removeSVG;
+    clearButton.title = 'Clear all events';
+    clearButton.addEventListener('click', () => {
+      const events = getSavedEvents();
+      if (events.length === 0) return; // Do nothing if no events exist
+
+      localStorage.removeItem(EVENTS_STORAGE_KEY);
+      this.hide(); // Close the panel
+    });
+    this.panel.appendChild(clearButton);
 
     // Load saved events for the current day
     const events = getSavedEvents();
@@ -197,6 +210,9 @@ export class EventsPanel {
   }
 
   show() {
+    const events = getSavedEvents();
+    if (!events || events.length === 0) return; // Do nothing if no events exist
+
     document.body.appendChild(this.panel);
     adjustVisibility(this.panel, 'show', 1);
     toggleEventsNotification(false); // Remove highlight when panel is shown

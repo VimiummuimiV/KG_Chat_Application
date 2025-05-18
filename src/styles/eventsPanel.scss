@@ -58,4 +58,29 @@
       }
     }
   }
+
+  .clear-events-btn {
+    position: absolute !important;
+    top: 0.5em !important;
+    right: 1em !important;
+    cursor: pointer;
+    padding: 0.6em;
+    background-color: var(--second-accent-color) !important;
+    border: none;
+    border-radius: 0.2em !important;
+    filter: brightness(1);
+    transition: filter 0.3s ease;
+
+    svg {
+      stroke: color-mix(
+        in srgb,
+        var(--second-accent-color) 20%,
+        var(--background-color) 80%
+      ) !important;
+    }
+
+    &:hover {
+      filter: brightness(1.2);
+    }
+  }
 }
