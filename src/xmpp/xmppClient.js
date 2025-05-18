@@ -348,7 +348,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
         await xmppConnection.sendRequestWithRetry(pingPayload);
       } catch (error) {
-        logMessage("Ping failed. Reconnecting...", 'warning');
+        logMessage("Ping failed.", 'warning');
         xmppClient.isConnected = false;
         xmppClient.isReconnecting = true;
         xmppClient.connect();

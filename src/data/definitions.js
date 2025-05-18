@@ -36,11 +36,11 @@ export const showAlertDuration = 2000;
 
 export const connectionMessages = {
   chat: {
-    online: 'Chat connection established. ✓',
-    offline: 'Chat connection lost. Reconnecting...'
+    online: 'Chat connection established.',
+    offline: 'Chat connection lost.'
   },
   network: {
-    online: 'Network connection restored. ✓',
+    online: 'Network connection restored.',
     offline: 'Network connection lost.'
   }
 };
