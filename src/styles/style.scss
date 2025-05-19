@@ -1169,14 +1169,12 @@ $mix-for-brightness: #d2d2d2;
   box-shadow: $slight-box-shadow !important;
 
   .image-info-username {
+    color: var(--fourth-accent-color);
     font-weight: 500;
   }
 
   .image-info-time {
-    opacity: 0.8;
-  }
-
-  .image-info {
     cursor: pointer;
+    opacity: 0.8;
   }
 }

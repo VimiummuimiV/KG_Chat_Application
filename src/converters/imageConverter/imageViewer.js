@@ -59,8 +59,8 @@ function updateImageInfo(index) {
   if (!info) return;
 
   imageInfoContainer.innerHTML = `
-    <div class="image-info image-info-time">${info.time}</div>
-    <div class="image-info image-info-username">${info.username}</div>
+    <div class="image-info-time">${info.time}</div>
+    <div class="image-info-username">${info.username}</div>
   `;
 
   // Add click event to time element
