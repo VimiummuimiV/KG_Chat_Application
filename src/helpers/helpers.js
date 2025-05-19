@@ -1,5 +1,5 @@
-import { convertImageLinksToImage } from "../converters/image-converter.js";
-import { convertVideoLinksToPlayer } from "../converters/video-converter.js";
+import { convertImageLinksToImage } from "../converters/imageConverter/imageConverter.js";
+import { convertVideoLinksToPlayer } from "../converters/videoConverter.js";
 import { handleLayoutBehavior } from "./layoutBehavior.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 
