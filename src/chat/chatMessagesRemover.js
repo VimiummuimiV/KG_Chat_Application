@@ -1,6 +1,8 @@
 import { settings } from "../data/definitions.js";
 import { checkIsMobile, isTextSelected } from "../helpers/helpers.js";
 
+const DELETED_MESSAGES_KEY = "deletedChatAppMessages";
+
 export default class ChatMessagesRemover {
   constructor() {
     this.selected = new Set();
@@ -273,15 +275,15 @@ export default class ChatMessagesRemover {
 
   storeDeleted(ids) {
     const stored = new Set(
-      JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]")
+      JSON.parse(localStorage.getItem(DELETED_MESSAGES_KEY) || "[]")
     );
     ids.forEach((id) => stored.add(id));
-    localStorage.setItem("deletedChatMessagesContent", JSON.stringify([...stored]));
+    localStorage.setItem(DELETED_MESSAGES_KEY, JSON.stringify([...stored]));
   }
 
   updateDeletedMessages() {
     const stored = new Set(
-      JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]")
+      JSON.parse(localStorage.getItem(DELETED_MESSAGES_KEY) || "[]")
     );
 
     const messages = document.querySelectorAll(".messages-panel .message");
@@ -295,11 +297,11 @@ export default class ChatMessagesRemover {
       msg.classList.toggle("hidden-message", stored.has(id));
     });
 
-    localStorage.setItem("deletedChatMessagesContent", JSON.stringify([...stored]));
+    localStorage.setItem(DELETED_MESSAGES_KEY, JSON.stringify([...stored]));
   }
 
   renderToggle() {
-    const storedItems = JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]");
+    const storedItems = JSON.parse(localStorage.getItem(DELETED_MESSAGES_KEY) || "[]");
     const hasDeleted = storedItems.length > 0;
 
     if (!hasDeleted) {
@@ -326,7 +328,7 @@ export default class ChatMessagesRemover {
 
         const shouldShow = this.toggleBtn.textContent === "Show";
         const storedIds = JSON.parse(
-          localStorage.getItem("deletedChatMessagesContent") || "[]"
+          localStorage.getItem(DELETED_MESSAGES_KEY) || "[]"
         );
 
         document.querySelectorAll(".messages-panel .message").forEach((msg) => {
@@ -398,7 +400,7 @@ export default class ChatMessagesRemover {
 
       msg.classList.remove("hidden-message", "shown-message");
     });
-    localStorage.setItem("deletedChatMessagesContent", JSON.stringify([]));
+    localStorage.setItem(DELETED_MESSAGES_KEY, JSON.stringify([]));
     this.selected.clear();
     this.updateDeletedMessages();
     this.renderToggle();
@@ -436,10 +438,10 @@ export function pruneDeletedMessages() {
     Array.from(messages).map((msg) => getMessageId(msg))
   );
 
-  const storedItems = JSON.parse(localStorage.getItem("deletedChatMessagesContent") || "[]");
+  const storedItems = JSON.parse(localStorage.getItem(DELETED_MESSAGES_KEY) || "[]");
   const filteredItems = storedItems.filter((id) => currentIds.has(id));
 
-  localStorage.setItem("deletedChatMessagesContent", JSON.stringify(filteredItems));
+  localStorage.setItem(DELETED_MESSAGES_KEY, JSON.stringify(filteredItems));
 
   // Remove the toggle button if no items remain
   if (filteredItems.length === 0) {
