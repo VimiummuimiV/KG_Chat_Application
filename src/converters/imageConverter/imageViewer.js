@@ -1,6 +1,7 @@
 import {
   adjustVisibility,
-  checkIsMobile
+  checkIsMobile,
+  calibrateToMoscowTime
 } from "../../helpers/helpers.js";
 import { getThumbnailLinks } from "./imageConverter.js";
 
@@ -58,9 +59,22 @@ function updateImageInfo(index) {
   if (!info) return;
 
   imageInfoContainer.innerHTML = `
-    <div class="image-info-time">${info.time}</div>
-    <div class="image-info-username">${info.username}</div>
+    <div class="image-info image-info-time">${info.time}</div>
+    <div class="image-info image-info-username">${info.username}</div>
   `;
+
+  // Add click event to time element
+  const timeEl = imageInfoContainer.querySelector('.image-info-time');
+  if (timeEl) {
+    timeEl.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const localTime = timeEl.textContent.trim();
+      const moscowTime = calibrateToMoscowTime(localTime);
+      const today = new Intl.DateTimeFormat('en-CA').format(new Date());
+      const url = `https://klavogonki.ru/chatlogs/${today}.html#${moscowTime}`;
+      window.open(url, '_blank');
+    });
+  }
 }
 
 function removeImageInfo() {
@@ -89,8 +103,11 @@ const navigateImages = (direction) => {
   if (newIndex >= 0 && newIndex < thumbnailLinks.length && !isChangingImage) {
     isChangingImage = true;
     if (expandedImage) expandedImage.src = thumbnailLinks[newIndex].imgSrc;
-    setTimeout(() => (isChangingImage = false), navigationDelay);
-    currentIndex = newIndex;
+    setTimeout(() => {
+      isChangingImage = false;
+      currentIndex = newIndex;
+      updateImageInfo(currentIndex); // Ensure info updates on navigation
+    }, navigationDelay);
   }
 };
 
