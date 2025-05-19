@@ -12,7 +12,7 @@ $slight-box-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
 $mix-for-brightness: #d2d2d2;
 
 @mixin global-button($side: right) {
-  position: absolute !important;
+  position: fixed !important;
   top: 0 !important;
 
   @if $side == right {
