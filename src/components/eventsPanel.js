@@ -15,12 +15,16 @@ function loadEventsCache() {
       if (cache.date === new Date().toDateString()) {
         return cache.events || [];
       } else {
+        // Set localSorage to empty array if the date doesn't match
+        localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify({
+          date: new Date().toDateString(),
+          events: []
+        }));
         logMessage("Events cache expired, creating fresh cache.", 'info');
-        return [];
       }
     }
   } catch (error) {
-    logMessage(`Error loading events cache: ${error.message}`, 'error');
+    logMessage("Error loading events cache, creating fresh cache.", 'error');
   }
   return [];
 }
@@ -32,7 +36,7 @@ function saveEventsCache(events) {
       events: events
     }));
   } catch (error) {
-    logMessage(`Error saving events cache: ${error.message}`, 'error');
+    logMessage("Error saving events cache.", 'error');
   }
 }
 
