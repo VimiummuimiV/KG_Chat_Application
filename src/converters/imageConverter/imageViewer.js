@@ -105,35 +105,57 @@ export const createExpandedView = (src, clickedThumbnailIndex) => {
   bigImageEvents.wheel = (event) => {
     event.preventDefault();
     const rect = imageElement.getBoundingClientRect();
-    // Mouse position relative to image center (account for scale)
     const mouseX = (event.clientX - rect.left) - rect.width / 2;
     const mouseY = (event.clientY - rect.top) - rect.height / 2;
-    // Calculate new scale
     const direction = event.deltaY < 0 ? 1 : -1;
     const oldScale = zoomScale;
-    zoomScale += direction * zoomLimits.factor * zoomScale;
-    zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
-    // Adjust translation so the point under the cursor stays fixed
-    translateX -= (mouseX / oldScale) * (zoomScale - oldScale);
-    translateY -= (mouseY / oldScale) * (zoomScale - oldScale);
-    imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+    let newScale = zoomScale + direction * zoomLimits.factor * zoomScale;
+    newScale = Math.max(zoomLimits.min, Math.min(newScale, zoomLimits.max));
+
+    ({ translateX, translateY } = zoomAtPoint({
+      imageElement,
+      anchorX: mouseX,
+      anchorY: mouseY,
+      oldScale,
+      newScale,
+      translateX,
+      translateY
+    }));
+
+    zoomScale = newScale;
   };
 
   bigImageEvents.mousemove = (event) => {
     if (isMMBPressed) {
       if (event.ctrlKey) {
+        const rect = imageElement.getBoundingClientRect();
+        const mouseX = (event.clientX - rect.left) - rect.width / 2;
+        const mouseY = (event.clientY - rect.top) - rect.height / 2;
         const deltaY = event.clientY - lastMouseY;
         const zoomDirection = deltaY < 0 ? 1 : -1;
         const zoomAmount = Math.abs(deltaY) * zoomLimits.factor * 0.05;
-        zoomScale += zoomDirection * zoomAmount * zoomScale;
-        zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
+        const oldScale = zoomScale;
+        let newScale = zoomScale + zoomDirection * zoomAmount * zoomScale;
+        newScale = Math.max(zoomLimits.min, Math.min(newScale, zoomLimits.max));
+
+        ({ translateX, translateY } = zoomAtPoint({
+          imageElement,
+          anchorX: mouseX,
+          anchorY: mouseY,
+          oldScale,
+          newScale,
+          translateX,
+          translateY
+        }));
+
+        zoomScale = newScale;
       } else {
         const deltaX = (event.clientX - lastMouseX) / zoomScale * movementSpeed;
         const deltaY = (event.clientY - lastMouseY) / zoomScale * movementSpeed;
         translateX += deltaX;
         translateY += deltaY;
+        imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
       }
-      imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
       lastMouseX = event.clientX;
       lastMouseY = event.clientY;
     }
@@ -182,6 +204,23 @@ export const createExpandedView = (src, clickedThumbnailIndex) => {
   return imageElement;
 };
 
+function zoomAtPoint({
+  imageElement,
+  anchorX,
+  anchorY,
+  oldScale,
+  newScale,
+  translateX,
+  translateY
+}) {
+  // anchorX, anchorY are relative to image center (in px, not scaled)
+  const deltaScale = newScale - oldScale;
+  translateX -= (anchorX / oldScale) * deltaScale;
+  translateY -= (anchorY / oldScale) * deltaScale;
+  imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${newScale})`;
+  return { translateX, translateY };
+}
+
 // Setup mobile touch handlers
 function setupMobileTouchHandlers(imageElement, zoomScale, translateX, translateY) {
   // Variables to track touch state
@@ -217,16 +256,26 @@ function setupMobileTouchHandlers(imageElement, zoomScale, translateX, translate
         touch1.clientX - touch2.clientX,
         touch1.clientY - touch2.clientY
       );
-
       if (prevTouches === 2) {
-        // Apply zoom only if previous event also had 2 touches
+        const rect = imageElement.getBoundingClientRect();
+        const pinchX = (centerX - rect.left) - rect.width / 2;
+        const pinchY = (centerY - rect.top) - rect.height / 2;
+        const oldScale = zoomScale;
         const zoomFactor = currentDistance / prevDistance;
-        zoomScale *= zoomFactor;
-        zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
-        // Adjust translation so the pinch center stays fixed
-        translateX -= (pinchX / oldScale) * (zoomScale - oldScale);
-        translateY -= (pinchY / oldScale) * (zoomScale - oldScale);
-        imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
+        let newScale = zoomScale * zoomFactor;
+        newScale = Math.max(zoomLimits.min, Math.min(newScale, zoomLimits.max));
+
+        ({ translateX, translateY } = zoomAtPoint({
+          imageElement,
+          anchorX: pinchX,
+          anchorY: pinchY,
+          oldScale,
+          newScale,
+          translateX,
+          translateY
+        }));
+
+        zoomScale = newScale;
       }
       prevDistance = currentDistance;
       prevPinchCenter.x = centerX;
