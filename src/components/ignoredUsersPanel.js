@@ -1,7 +1,5 @@
 import { adjustVisibility, logMessage } from "../helpers/helpers.js";
-import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
-import { settings } from "../data/definitions.js";
 
 // Centralized storage wrapper for ignored users.
 export const storageWrapper = {
@@ -109,14 +107,21 @@ export const openIgnoredUsersPanel = () => {
     if (username && !ignoredUsers.includes(username)) {
       const userId = await getExactUserIdByName(username);
       if (!userId) {
-        showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: settings.showAlertDuration });
+        logMessage({
+          en: `Could not find user "${username}"`,
+          ru: `Не удалось найти пользователя "${username}"`
+        }, 'error');
+        inputField.value = '';
         inputField.classList.add('field-error');
         setTimeout(() => inputField.classList.remove('field-error'), 500);
         return;
       }
       ignoredUsers.push(username);
       storageWrapper.set(ignoredUsers);
-      showChatAlert(`Added "${username}" to the ignore list`, { type: 'success', duration: settings.showAlertDuration });
+      logMessage({
+        en: `Added "${username}" to the ignore list`,
+        ru: `"${username}" добавлен(а) в список игнорируемых`
+      }, 'info');
       if (!userList.querySelector(`.username[text="${username}"]`)) {
         const entry = createEntry(username);
         userList.appendChild(entry);

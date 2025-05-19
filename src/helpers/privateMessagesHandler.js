@@ -1,4 +1,4 @@
-import { getExactUserIdByName } from "./helpers.js";
+import { getExactUserIdByName, logMessage } from "./helpers.js";
 
 // State management for private messaging
 export const privateMessageState = {

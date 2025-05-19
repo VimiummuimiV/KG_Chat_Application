@@ -5,8 +5,7 @@ import {
 } from "../components/chatUsernameColorsPanel.js";
 import { openThemesPanel } from "../components/themesPanel.js";
 import { createEventsPanel } from "../components/eventsPanel.js";
-import { removeChatTraces } from "./helpers.js";
-import { showChatAlert } from "../helpers/chatHeaderAlert.js";
+import { logMessage, removeChatTraces } from "./helpers.js";
 import { removeChatParams } from "../auth.js";
 import { HelpPanel } from "../components/helpPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
@@ -20,7 +19,10 @@ const chatCommands = [
     handler: () => {
       removeChatParams();
       removeChatTraces();
-      showChatAlert('Chat settings have been reset. Reloading...', { type: 'info', duration: settings.showAlertDuration });
+      logMessage({
+        en: 'Chat settings have been reset. Reloading...',
+        ru: 'Настройки чата сброшены. Перезагрузка...'
+      }, 'info');
       return true;
     }
   },
