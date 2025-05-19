@@ -6,29 +6,39 @@ import { infoSVG, warningSVG, errorSVG, successSVG, clearSVG, removeSVG } from "
 const EVENTS_STORAGE_KEY = 'chatEvents';
 const LAST_VIEWED_KEY = 'lastViewedEventTime';
 
-// Retrieve events from localStorage for the current day
-export function getSavedEvents() {
+// Events cache refresh system (like avatar refresh)
+function loadEventsCache() {
   try {
-    const stored = localStorage.getItem(EVENTS_STORAGE_KEY);
-    if (!stored) return [];
-
-    const eventsData = JSON.parse(stored);
-    const today = new Date().toDateString();
-
-    // Check if the stored events are from today
-    if (eventsData.date === today) {
-      return eventsData.events || [];
-    } else {
-      // If events are from a different day, clear them and start fresh
-      logMessage("Events cache expired, creating fresh cache.", 'info');
-      localStorage.removeItem(EVENTS_STORAGE_KEY);
-      return [];
+    const cacheData = localStorage.getItem(EVENTS_STORAGE_KEY);
+    if (cacheData) {
+      const cache = JSON.parse(cacheData);
+      if (cache.date === new Date().toDateString()) {
+        return cache.events || [];
+      } else {
+        logMessage("Events cache expired, creating fresh cache.", 'info');
+        return [];
+      }
     }
   } catch (error) {
-    logMessage(`Error loading events: ${error.message}`, 'error');
-    localStorage.removeItem(EVENTS_STORAGE_KEY);
-    throw error;
+    logMessage(`Error loading events cache: ${error.message}`, 'error');
   }
+  return [];
+}
+
+function saveEventsCache(events) {
+  try {
+    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify({
+      date: new Date().toDateString(),
+      events: events
+    }));
+  } catch (error) {
+    logMessage(`Error saving events cache: ${error.message}`, 'error');
+  }
+}
+
+// Retrieve events from localStorage for the current day
+export function getSavedEvents() {
+  return loadEventsCache();
 }
 
 // Handle events notification state
@@ -41,18 +51,10 @@ function toggleEventsNotification(highlight = true) {
 
 // Save an event to localStorage
 export function saveEvent(event) {
-  try {
-    const events = getSavedEvents();
-    events.push({ ...event, date: new Date().toISOString() });
-
-    localStorage.setItem(EVENTS_STORAGE_KEY, JSON.stringify({
-      date: new Date().toDateString(),
-      events: events
-    }));
-    toggleEventsNotification(true); // Highlight the button if new events are added
-  } catch (error) {
-    logMessage(`Error saving events: ${error.message}`, 'error');
-  }
+  const events = loadEventsCache();
+  events.push({ ...event, date: new Date().toISOString() });
+  saveEventsCache(events);
+  toggleEventsNotification(true); // Highlight the button if new events are added
 }
 
 // Format timestamp
