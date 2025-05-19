@@ -103,9 +103,19 @@ export const createExpandedView = (src, clickedThumbnailIndex) => {
   };
 
   bigImageEvents.wheel = (event) => {
+    event.preventDefault();
+    const rect = imageElement.getBoundingClientRect();
+    // Mouse position relative to image center (account for scale)
+    const mouseX = (event.clientX - rect.left) - rect.width / 2;
+    const mouseY = (event.clientY - rect.top) - rect.height / 2;
+    // Calculate new scale
     const direction = event.deltaY < 0 ? 1 : -1;
+    const oldScale = zoomScale;
     zoomScale += direction * zoomLimits.factor * zoomScale;
     zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
+    // Adjust translation so the point under the cursor stays fixed
+    translateX -= (mouseX / oldScale) * (zoomScale - oldScale);
+    translateY -= (mouseY / oldScale) * (zoomScale - oldScale);
     imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
   };
 
@@ -179,9 +189,17 @@ function setupMobileTouchHandlers(imageElement, zoomScale, translateX, translate
   let prevDistance = 0;
   let prevTouchX = 0;
   let prevTouchY = 0;
+  let prevPinchCenter = { x: 0, y: 0 };
 
   const handleTouchStart = (event) => {
     event.preventDefault();
+    if (event.touches.length === 2) {
+      // Store initial pinch center
+      const touch1 = event.touches[0];
+      const touch2 = event.touches[1];
+      prevPinchCenter.x = (touch1.clientX + touch2.clientX) / 2;
+      prevPinchCenter.y = (touch1.clientY + touch2.clientY) / 2;
+    }
   };
 
   const handleTouchMove = (event) => {
@@ -193,6 +211,8 @@ function setupMobileTouchHandlers(imageElement, zoomScale, translateX, translate
       // Pinch zoom with two fingers
       const touch1 = event.touches[0];
       const touch2 = event.touches[1];
+      const centerX = (touch1.clientX + touch2.clientX) / 2;
+      const centerY = (touch1.clientY + touch2.clientY) / 2;
       const currentDistance = Math.hypot(
         touch1.clientX - touch2.clientX,
         touch1.clientY - touch2.clientY
@@ -203,9 +223,14 @@ function setupMobileTouchHandlers(imageElement, zoomScale, translateX, translate
         const zoomFactor = currentDistance / prevDistance;
         zoomScale *= zoomFactor;
         zoomScale = Math.max(zoomLimits.min, Math.min(zoomScale, zoomLimits.max));
+        // Adjust translation so the pinch center stays fixed
+        translateX -= (pinchX / oldScale) * (zoomScale - oldScale);
+        translateY -= (pinchY / oldScale) * (zoomScale - oldScale);
         imageElement.style.transform = `translate(-50%, -50%) translate(${translateX}px, ${translateY}px) scale(${zoomScale})`;
       }
       prevDistance = currentDistance;
+      prevPinchCenter.x = centerX;
+      prevPinchCenter.y = centerY;
     } else if (currentTouches === 1) {
       // Pan with one finger
       const touch = event.touches[0];
