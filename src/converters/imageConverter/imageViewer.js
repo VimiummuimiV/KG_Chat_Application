@@ -9,6 +9,7 @@ let currentIndex = 0;
 let isChangingImage = false;
 let expandedImage = null;
 let bigImageEvents = {}; // Object to store event handlers
+let imageInfoContainer = null; // Container for image info
 
 // Constants for image viewer
 const zoomLimits = { min: 0.2, max: 10, factor: 0.1 };
@@ -26,6 +27,49 @@ function removeBigImageEventListeners() {
   });
 }
 
+function getImageInfo(index) {
+  const thumbnails = document.querySelectorAll('.clickable-thumbnail');
+  const thumbnail = Array.from(thumbnails)[index];
+  if (!thumbnail) return null;
+
+  // Find the message container that contains this thumbnail
+  let messageContainer = thumbnail.closest('.message');
+  if (!messageContainer) return null;
+
+  // Get the message info elements
+  const messageInfo = messageContainer.querySelector('.message-info');
+  if (!messageInfo) return null;
+
+  const time = messageInfo.querySelector('.time')?.textContent || '';
+  const username = messageInfo.querySelector('.username')?.textContent || '';
+
+  return { time, username };
+}
+
+function createImageInfo() {
+  const container = document.createElement('div');
+  container.className = 'image-info-container';
+  return container;
+}
+
+function updateImageInfo(index) {
+  if (!imageInfoContainer) return;
+  const info = getImageInfo(index);
+  if (!info) return;
+
+  imageInfoContainer.innerHTML = `
+    <div class="image-info-time">${info.time}</div>
+    <div class="image-info-username">${info.username}</div>
+  `;
+}
+
+function removeImageInfo() {
+  if (imageInfoContainer && imageInfoContainer.parentNode) {
+    imageInfoContainer.parentNode.removeChild(imageInfoContainer);
+    imageInfoContainer = null;
+  }
+}
+
 // Close the expanded view
 const closeExpandedView = (img) => {
   adjustVisibility(img, 'hide', '0');
@@ -34,6 +78,7 @@ const closeExpandedView = (img) => {
     adjustVisibility(dimmingElement, 'hide', '0');
   }
   removeBigImageEventListeners();
+  removeImageInfo();
 };
 
 // Navigate between images
@@ -60,6 +105,11 @@ export const createExpandedView = (src, clickedThumbnailIndex) => {
   expandedImage = imageElement;
 
   currentIndex = clickedThumbnailIndex;
+
+  // Create and add info container
+  imageInfoContainer = createImageInfo();
+  document.body.appendChild(imageInfoContainer);
+  updateImageInfo(currentIndex);
 
   // Zoom and movement variables
   let zoomScale = 1;
