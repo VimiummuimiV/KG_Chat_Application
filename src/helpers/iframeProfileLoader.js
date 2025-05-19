@@ -76,7 +76,10 @@ export const loadProfileIntoIframe = (url) => {
       }).observe(document.body, { childList: true, subtree: true });
 
     } catch (error) {
-      logMessage("Unable to access iframe contents. This may be due to cross-origin restrictions.", 'error');
+      logMessage({
+        en: "Unable to access iframe contents. This may be due to cross-origin restrictions.",
+        ru: "Невозможно получить доступ к содержимому iframe. Возможно, это связано с ограничениями кросс-домена."
+      }, 'error');
     }
   };
 };

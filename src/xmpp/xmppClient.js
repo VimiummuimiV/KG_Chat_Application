@@ -62,7 +62,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
         await xmppConnection.sendRequestWithRetry(pingPayload);
       } catch (error) {
-        logMessage("Ping failed.", 'warning');
+        logMessage({
+          en: "Ping failed.",
+          ru: "Пинг не удался."
+        }, 'warning');
         xmppClient.isConnected = false;
         xmppClient.isReconnecting = true;
         xmppClient.connect();
@@ -135,7 +138,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           messageManager.updatePendingStatus(msg.id, false);
           safeProcessMessages(null);
         } catch (error) {
-          logMessage(`Failed to send queued message (${msg.id}): ${error.message}`, 'error');
+          logMessage({
+            en: `Failed to send queued message (${msg.id}): ${error.message}`,
+            ru: `Не удалось отправить сообщение из очереди (${msg.id}): ${error.message}`
+          }, 'error');
           // Stop processing; the message remains in the queue for later retry.
           break;
         }
@@ -197,7 +203,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
             this.isConnected = true;
             if (this.isReconnecting) {
-              logMessage("Chat connected successfully.", 'success');
+              logMessage({
+                en: "Chat connected successfully.",
+                ru: "Чат успешно подключён."
+              }, 'success');
               messageManager.refreshMessages(true);
               this.isReconnecting = false;
             }
@@ -207,23 +216,38 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             this.processQueue(); // Process the message queue
             break; // Exit the retry loop on success
           } catch (error) {
-            logMessage(`XMPP Client: Connection error: ${error.message}`, 'error');
+            logMessage({
+              en: `XMPP Client: Connection error: ${error.message}`,
+              ru: `XMPP клиент: ошибка соединения: ${error.message}`
+            }, 'error');
             retries--;
             if (retries === 0) {
-              logMessage(`Scheduling reconnection attempt in ${settings.reconnectionDelay / 1000} seconds...`, 'warning');
+              logMessage({
+                en: `Scheduling reconnection attempt in ${settings.reconnectionDelay / 1000} seconds...`,
+                ru: `Переподключение через ${settings.reconnectionDelay / 1000} секунд...`
+              }, 'warning');
               this.isReconnecting = true;
               setTimeout(() => this.connect(), settings.reconnectionDelay);
             } else {
-              logMessage(`Retrying connection... (${retries} attempts left)`, 'warning');
+              logMessage({
+                en: `Retrying connection... (${retries} attempts left)`,
+                ru: `Повторное подключение... (осталось попыток: ${retries})`
+              }, 'warning');
               await new Promise(resolve => setTimeout(resolve, settings.reconnectionDelay));
             }
           }
         }
       } catch (error) {
-        logMessage(`XMPP Client: Final connection error: ${error.message}`, 'error');
+        logMessage({
+          en: `XMPP Client: Final connection error: ${error.message}`,
+          ru: `XMPP клиент: окончательная ошибка соединения: ${error.message}`
+        }, 'error');
         this.isConnected = false;
         if (!this.isReconnecting) {
-          logMessage(`Scheduling reconnection attempt in ${settings.reconnectionDelay / 1000} seconds...`, 'warning');
+          logMessage({
+            en: `Scheduling reconnection attempt in ${settings.reconnectionDelay / 1000} seconds...`,
+            ru: `Переподключение через ${settings.reconnectionDelay / 1000} секунд...`
+          }, 'warning');
           this.isReconnecting = true;
           setTimeout(() => this.connect(), settings.reconnectionDelay);
         }
@@ -259,7 +283,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           }
         } catch (error) {
           if (error.message.includes('404') && !this.isReconnecting) {
-            logMessage("Chat connection lost.", 'warning');
+            logMessage({
+              en: "Chat connection lost.",
+              ru: "Соединение с чатом потеряно."
+            }, 'warning');
             messageManager.refreshMessages(false);
             this.isReconnecting = true;
             this.isConnected = false;
@@ -307,13 +334,19 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
       // Check against the last sent message.
       if (this.lastSentMessage && this.lastSentMessage.text === text && (now - this.lastSentMessage.timestamp) < settings.deduplicationDelay) {
-        logMessage(`Duplicate message prevented: ${text}`, 'warning');
+        logMessage({
+          en: `Duplicate message prevented: ${text}`,
+          ru: `Дублирующее сообщение предотвращено: ${text}`
+        }, 'warning');
         return;
       }
 
       // Prevent duplicate messages in the queue
       if (this.messageQueue.has(messageId)) {
-        logMessage(`Message already in queue: ${messageId}`, 'warning');
+        logMessage({
+          en: `Message already in queue: ${messageId}`,
+          ru: `Сообщение уже в очереди: ${messageId}`
+        }, 'warning');
         return;
       }
 
@@ -349,7 +382,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
   // --- Network connectivity handling ---
   // Listen for offline events to stop HTTP binding.
   window.addEventListener('offline', () => {
-    logMessage("Network connection lost.", 'warning');
+    logMessage({
+      en: "Network connection lost.",
+      ru: "Сетевое соединение потеряно."
+    }, 'warning');
     xmppClient.stopHttpBinding();
     xmppClient.isConnected = false;
     messageManager.refreshMessages(false, 'network');
@@ -357,7 +393,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
   // Listen for online events to attempt reconnection immediately.
   window.addEventListener('online', () => {
-    logMessage("Network connection restored.", 'success');
+    logMessage({
+      en: "Network connection restored.",
+      ru: "Сетевое соединение восстановлено."
+    }, 'success');
     if (!xmppClient.isConnected && !xmppClient.isReconnecting) {
       xmppClient.connect();
     }

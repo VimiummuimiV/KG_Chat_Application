@@ -40,14 +40,20 @@ export default class XMPPConnection {
         lastError = error;
         if (error.message.includes('429')) {
           const waitTime = baseWaitTime * Math.pow(2, attempt);
-          logMessage(`Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`, 'warning');
+          logMessage({
+            en: `Rate limited (attempt ${attempt}/${maxRetries}). Waiting ${waitTime}ms...`,
+            ru: `Превышен лимит (попытка ${attempt}/${maxRetries}). Ожидание ${waitTime}мс...`
+          }, 'warning');
           await sleep(waitTime);
         } else {
           throw error;
         }
       }
     }
-    logMessage(`Max retries reached. Last error: ${lastError.message}`, 'error');
+    logMessage({
+      en: `Max retries reached. Last error: ${lastError.message}`,
+      ru: `Достигнут лимит попыток. Последняя ошибка: ${lastError.message}`
+    }, 'error');
     throw new Error(`Max retries reached. Last error: ${lastError.message}`);
   }
 

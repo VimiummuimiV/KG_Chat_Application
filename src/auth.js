@@ -50,7 +50,10 @@ export function getAuthData() {
       }, 500);
     }
   } catch (e) {
-    logMessage(`Authentication error: ${e.message}`, 'error');
+    logMessage({
+      en: `Authentication error: ${e.message}`,
+      ru: `Ошибка аутентификации: ${e.message}`
+    }, 'error');
     removeChatParams();
   }
 }

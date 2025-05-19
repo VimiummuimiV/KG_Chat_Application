@@ -59,12 +59,18 @@ export default class UserManager {
           console.log("🗃️ Loaded avatar cache from localStorage");
           return cache.avatars || {};
         } else {
-          logMessage("Avatar cache expired, creating fresh cache.", 'info');
+          logMessage({
+            en: "Avatar cache expired, creating fresh cache.",
+            ru: "Кэш аватаров устарел, создаётся новый."
+          }, 'info');
           return {};
         }
       }
     } catch (error) {
-      logMessage(`Error loading avatar cache: ${error.message}`, 'error');
+      logMessage({
+        en: `Error loading avatar cache: ${error.message}`,
+        ru: `Ошибка загрузки кэша аватаров: ${error.message}`
+      }, 'error');
     }
     return {};
   }
@@ -76,7 +82,10 @@ export default class UserManager {
         avatars: this.avatarCache
       }));
     } catch (error) {
-      logMessage(`Error saving avatar cache: ${error.message}`, 'error');
+      logMessage({
+        en: `Error saving avatar cache: ${error.message}`,
+        ru: `Ошибка сохранения кэша аватаров: ${error.message}`
+      }, 'error');
     }
   }
 
@@ -136,7 +145,7 @@ export default class UserManager {
 
         timer = setTimeout(startLongPress, settings.longPressDuration);
 
-        const endEvents = eventType === 'mouse' 
+        const endEvents = eventType === 'mouse'
           ? ['mouseup', 'mouseleave']
           : ['touchend', 'touchmove'];
 

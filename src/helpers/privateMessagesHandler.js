@@ -1,6 +1,4 @@
 import { getExactUserIdByName } from "./helpers.js";
-import { showChatAlert } from "./chatHeaderAlert.js";
-import { settings } from "../data/definitions.js";
 
 // State management for private messaging
 export const privateMessageState = {
@@ -26,7 +24,10 @@ export const privateMessageState = {
 
       return true;
     } catch (error) {
-      logMessage(`Error setting private target: ${error.message}`, 'error');
+      logMessage({
+        en: `Error setting private target: ${error.message}`,
+        ru: `Ошибка установки приватной цели: ${error.message}`
+      }, 'error');
       return false;
     }
   },
@@ -64,7 +65,10 @@ export async function handlePrivateMessageInput(inputElement) {
       enterPrivateMode(username);
       inputElement.value = input.replace(privateModeRegex, ''); // Remove the /pm username part
     } else {
-      showChatAlert(`Could not find user "${username}"`, { type: 'error', duration: settings.showAlertDuration });
+      logMessage({
+        en: `Could not find user "${username}"`,
+        ru: `Не удалось найти пользователя "${username}"`
+      }, 'error');
       exitPrivateMode();
     }
   } else if (exitPrivateModeRegex.test(input)) {
@@ -113,7 +117,10 @@ function enterPrivateMode(username) {
       exitButton.innerHTML = "🔒";
     });
 
-    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: settings.showAlertDuration });
+    logMessage({
+      en: `Entered private chat with ${username}`,
+      ru: `Вошли в приватный чат с ${username}`
+    }, 'warning');
     privateMessageState.isPrivateMode = true;
     privateMessageState.targetUsername = username;
 
@@ -124,7 +131,10 @@ function enterPrivateMode(username) {
     }
   } else if (privateMessageState.targetUsername === username) {
     messageInput.placeholder = `️PM to ➡ ${username}`;
-    showChatAlert(`Entered private chat with ${username}`, { type: 'warning', duration: settings.showAlertDuration });
+    logMessage({
+      en: `Entered private chat with ${username}`,
+      ru: `Вошли в приватный чат с ${username}`
+    }, 'warning');
   }
 }
 
@@ -140,7 +150,10 @@ function exitPrivateMode() {
 
     const username = privateMessageState.targetUsername; // Get username before clearing state
     privateMessageState.exitPrivateMode(); // Only call once
-    showChatAlert(`Exited private chat with ${username}`, { type: 'success', duration: settings.showAlertDuration });
+    logMessage({
+      en: `Exited private chat with ${username}`,
+      ru: `Вышли из приватного чата с ${username}`
+    }, 'success');
 
     // Remove ESC key event listener when exiting private mode
     if (escKeyHandler) {

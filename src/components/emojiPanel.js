@@ -552,7 +552,10 @@ export class EmojiPanel {
     try {
       localStorage.setItem('recentEmojis', JSON.stringify(this.recentEmojis));
     } catch (e) {
-      logMessage('Failed to save recent emojis:', e.message);
+      logMessage({
+        en: 'Failed to save recent emojis:',
+        ru: 'Не удалось сохранить последние эмодзи:'
+      }, e.message);
     }
   }
 

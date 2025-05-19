@@ -10,7 +10,10 @@ export const storageWrapper = {
       const stored = localStorage.getItem('ignored');
       return stored ? JSON.parse(stored) : [];
     } catch (e) {
-      logMessage(`Error parsing ignored users data: ${e.message}`, 'error');
+      logMessage({
+        en: `Error parsing ignored users data: ${e.message}`,
+        ru: `Ошибка разбора данных игнорируемых пользователей: ${e.message}`
+      }, 'error');
       return [];
     }
   },
@@ -19,7 +22,10 @@ export const storageWrapper = {
       localStorage.setItem('ignored', JSON.stringify(data));
       return true;
     } catch (e) {
-      logMessage(`Error saving ignored users data: ${e.message}`, 'error');
+      logMessage({
+        en: `Error saving ignored users data: ${e.message}`,
+        ru: `Ошибка сохранения данных игнорируемых пользователей: ${e.message}`
+      }, 'error');
       return false;
     }
   }

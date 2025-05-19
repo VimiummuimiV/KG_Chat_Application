@@ -98,7 +98,10 @@ export const isTrustedDomain = url => {
     const domain = hostname.toLowerCase().split('.').slice(-2).join('.');
     return { isTrusted: trustedDomains.includes(domain), domain };
   } catch (err) {
-    logMessage(`Error in isTrustedDomain: ${err.message}`, 'error');
+    logMessage({
+      en: `Error in isTrustedDomain: ${err.message}`,
+      ru: `Ошибка в isTrustedDomain: ${err.message}`
+    }, 'error');
     return { isTrusted: false, domain: url };
   }
 };

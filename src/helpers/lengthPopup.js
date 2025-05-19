@@ -26,7 +26,10 @@ let hidePopupTimeout;
 
 function updateLengthPopupColor(length) {
   if (!lengthPopup) {
-    logMessage("Length popup: Popup element is not defined.", 'error');
+    logMessage({
+      en: "Length popup: Popup element is not defined.",
+      ru: "Длинномер сообщения: Элемент всплывающего окна не определён."
+    }, 'error');
     return;
   }
 
@@ -62,7 +65,10 @@ function updateLengthPopupColor(length) {
 
 function updatePopupMetrics(text) {
   if (!chatField) {
-    logMessage("Length popup: Chat field is not defined for updating metrics.", 'error');
+    logMessage({
+      en: "Length popup: Chat field is not defined for updating metrics.",
+      ru: "Длинномер сообщения: Поле чата не определено для обновления метрик."
+    }, 'error');
     return;
   }
   // Get current font from input field.
@@ -125,11 +131,17 @@ function handleKeydownEvent(e) {
 export function initChatLengthPopupEvents(field) {
   chatField = field;
   if (!chatField) {
-    logMessage("Length popup: Chat field is null during initialization.", 'error');
+    logMessage({
+      en: "Length popup: Chat field is null during initialization.",
+      ru: "Длинномер сообщения: Поле чата равно null при инициализации."
+    }, 'error');
     return;
   }
   if (!lengthPopup) {
-    logMessage("Length popup: Popup element is not created, skipping event listeners.", 'warning');
+    logMessage({
+      en: "Length popup: Popup element is not created, skipping event listeners.",
+      ru: "Длинномер сообщения: Всплывающее окно не создано, обработчики событий не добавлены."
+    }, 'warning');
     return;
   }
   // Only attach event listeners if the popup was created.

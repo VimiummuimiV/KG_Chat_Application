@@ -24,7 +24,10 @@ export function highlightMentionWords() {
       }
     }
   } catch (e) {
-    logMessage(`Mention watcher: Error parsing auth data: ${e.message}`, 'error');
+    logMessage({
+      en: `Mention watcher: Error parsing auth data: ${e.message}`,
+      ru: `Ошибка парсинга данных авторизации в отслеживателе упоминаний: ${e.message}`
+    }, 'error');
   }
 
   // Don't proceed if no username to check

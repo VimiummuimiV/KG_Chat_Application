@@ -219,7 +219,10 @@ export class EventsPanel {
           navigator.clipboard.writeText(messageElement.textContent).then(() => {
             addShakeEffect(listItem);
           }).catch((error) => {
-            logMessage(`Failed to copy event message: ${error.message}`, 'error');
+            logMessage({
+              en: `Failed to copy event message: ${error.message}`,
+              ru: `Не удалось скопировать сообщение события: ${error.message}`
+            }, 'error');
           });
         }
       }
