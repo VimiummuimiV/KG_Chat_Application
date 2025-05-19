@@ -5,11 +5,7 @@
   top: 50%;
   transform: translate(-50%, -50%);
   height: fit-content;
-  max-height: 70vh !important;
-  min-width: 350px !important;
   width: fit-content;
-  overflow-y: auto;
-  scrollbar-width: none;
   background-color: var(--background-color) !important;
   border: 1px solid var(--border-color) !important;
   padding: 1em;
@@ -18,6 +14,13 @@
   color: var(--main-text-color) !important;
   font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
   z-index: 1100;
+
+  .help-content {
+    max-height: 70vh !important;
+    min-width: 350px !important;
+    overflow-y: auto;
+    scrollbar-width: none;
+  }
 
   .help-header {
     margin-top: 0;
@@ -76,9 +79,6 @@
 
 @media (max-width: 768px) {
   .help-panel {
-    top: 2em !important;
-    transform: translate(-50%, 0) !important;
-    max-height: 80vh !important;
 
     .help-section-header {
       margin-bottom: 1em !important;

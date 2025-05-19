@@ -21,7 +21,7 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
         left: 50% !important;
         right: unset !important;
       }
-
+      .help-panel,
       .ignored-users-panel,
       .chat-username-color-picker {
         top: 80px !important;
