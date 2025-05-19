@@ -20,11 +20,17 @@ function loadEventsCache() {
           date: new Date().toDateString(),
           events: []
         }));
-        logMessage("Events cache expired, creating fresh cache.", 'info');
+        logMessage({
+          en: "Events cache expired, creating fresh cache.",
+          ru: "Кэш событий устарел, создается новый."
+        }, 'info');
       }
     }
   } catch (error) {
-    logMessage("Error loading events cache, creating fresh cache.", 'error');
+    logMessage({
+      en: "Error loading events cache, creating fresh cache.",
+      ru: "Ошибка загрузки кэша событий, создается новый."
+    }, 'error');
   }
   return [];
 }
@@ -36,7 +42,10 @@ function saveEventsCache(events) {
       events: events
     }));
   } catch (error) {
-    logMessage("Error saving events cache.", 'error');
+    logMessage({
+      en: "Error saving events cache.",
+      ru: "Ошибка сохранения кэша событий."
+    }, 'error');
   }
 }
 

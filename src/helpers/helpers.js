@@ -326,18 +326,28 @@ export function isTextSelected() {
 
 // ==================================================================================================
 
-// Console logging and chat alert helper with consistent styling
-export function logMessage(message, type = 'info', showAlert = true) {
+// Function to log messages with different types and show alerts
+// Accepts: message (string or {en,ru}), type, showAlert, lang
+export function logMessage(message, type = 'info', showAlert = true, lang = null) {
   const styles = {
     info: `color: ${eventsColorMap.info}`,
     warning: `color: ${eventsColorMap.warning}`,
     error: `color: ${eventsColorMap.error}`,
     success: `color: ${eventsColorMap.success}`
   };
-
   const style = styles[type] || styles.info;
 
-  // Console logging with appropriate method and color
+  // Language detection: use param, else localStorage, else 'en'
+  lang = lang || localStorage.getItem('emojiPanelLanguage') || 'en';
+
+  // If message is an object with en/ru, pick the right one for alert, always use en/raw for console
+  let alertMsg = message;
+  if (typeof message === 'object' && message !== null && (message.en || message.ru)) {
+    alertMsg = message[lang] || message.en || message.ru;
+    message = message.en || message.ru || '';
+  }
+
+  // Console logging with appropriate method and color (always EN/RAW)
   switch (type) {
     case 'error':
       console.error(`%c${message}`, style);
@@ -355,6 +365,6 @@ export function logMessage(message, type = 'info', showAlert = true) {
   }
 
   if (showAlert) {
-    showChatAlert(message, { type, duration: settings.showAlertDuration });
+    showChatAlert(alertMsg, { type, duration: settings.showAlertDuration });
   }
 }
