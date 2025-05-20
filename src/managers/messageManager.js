@@ -440,9 +440,9 @@ export default class MessageManager {
 
   refreshMessages(connectionStatus = false, connectionType = 'chat') {
     const messageId = 'connection-status';
-    const messageText = connectionStatus
-      ? connectionMessages[connectionType].online
-      : connectionMessages[connectionType].offline;
+    // Get language from localStorage, default to 'en'
+    const lang = localStorage.getItem('emojiPanelLanguage') === 'ru' ? 'ru' : 'en';
+    const messageText = connectionMessages[connectionType][lang][connectionStatus ? 'online' : 'offline'];
 
     // Remove the specific system connection message from our map and from our in‑memory rendered IDs.
     this.messageMap.delete(messageId);

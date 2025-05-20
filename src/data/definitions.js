@@ -28,12 +28,24 @@ export const settings = {
 
 export const connectionMessages = {
   chat: {
-    online: 'Chat connection established.',
-    offline: 'Chat connection lost.'
+    en: {
+      online: 'Chat connection established.',
+      offline: 'Chat connection lost.'
+    },
+    ru: {
+      online: 'Соединение с чатом установлено.',
+      offline: 'Соединение с чатом потеряно.'
+    }
   },
   network: {
-    online: 'Network connection restored.',
-    offline: 'Network connection lost.'
+    en: {
+      online: 'Network connection restored.',
+      offline: 'Network connection lost.'
+    },
+    ru: {
+      online: 'Сетевое соединение восстановлено.',
+      offline: 'Сетевое соединение потеряно.'
+    }
   }
 };
 
