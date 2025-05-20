@@ -41,6 +41,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     messageQueue: new Map(),
     lastSentMessage: null,
     isReloading: false,
+    shouldCheckConnection: false,
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
@@ -161,6 +162,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             console.log('🚀 Step 10: Connected!');
 
             this.isConnected = true;
+            this.shouldCheckConnection = true;
             if (this.isReconnecting) {
               logMessage({
                 en: "Chat connected successfully.",
@@ -172,6 +174,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
             this.startHttpBinding(); // Start HTTP binding
             this.processQueue(); // Process the message queue
+            this.checkConnection(); // Start the periodic connection check
             break; // Exit the retry loop on success
           } catch (error) {
             logMessage({
@@ -246,6 +249,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
               ru: "Соединение с чатом потеряно."
             }, 'warning');
             messageManager.refreshMessages(false);
+            this.shouldCheckConnection = false;
             this.isReconnecting = true;
             this.isConnected = false;
             this.isHttpBindingActive = false;
@@ -327,6 +331,25 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       if (this.isConnected && !this.isReconnecting) {
         this.processQueue();
       }
+    },
+
+    async checkConnection() {
+      if (!this.shouldCheckConnection) return; // Prevent multiple checks
+      try {
+        const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
+        await xmppConnection.sendRequestWithRetry(pingPayload);
+      } catch (error) {
+        logMessage({ en: "Ping failed.", ru: "Пинг не удался." }, 'warning');
+        // Prevent multiple reconnections
+        if (!this.isReconnecting) {
+          this.shouldCheckConnection = false;
+          this.isReconnecting = true;
+          this.isConnected = false;
+          this.isHttpBindingActive = false;
+          this.connect();
+        }
+      }
+      setTimeout(() => this.checkConnection(), settings.pingInterval);
     }
   };
 
