@@ -330,11 +330,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     }
   };
 
-  window.addEventListener('beforeunload', () => {
-    xmppClient.isReloading = true;
-    xmppClient.stopHttpBinding();
-  });
-
   // --- Network connectivity handling ---
   // Listen for offline events to stop HTTP binding.
   window.addEventListener('offline', () => {
@@ -357,28 +352,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       xmppClient.connect();
     }
     messageManager.refreshMessages(true, 'network');
-  });
-
-  // Add visibilitychange event to trigger a manual ping when page becomes visible
-  document.addEventListener('visibilitychange', async () => {
-    if (!document.hidden && xmppClient.isConnected && !xmppClient.isReconnecting && !xmppClient.isReloading) {
-      try {
-        const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
-        await xmppConnection.sendRequestWithRetry(pingPayload);
-        logMessage({
-          en: "Ping successful.",
-          ru: "Пинг успешен."
-        }, 'success');
-      } catch (error) {
-        logMessage({
-          en: "Ping failed.",
-          ru: "Пинг не удался."
-        }, 'error');
-        xmppClient.isConnected = false;
-        xmppClient.isReconnecting = true;
-        xmppClient.connect();
-      }
-    }
   });
 
   return xmppClient;

@@ -45,6 +45,11 @@ export default class XMPPConnection {
             ru: `Превышен лимит (попытка ${attempt}/${maxRetries}). Ожидание ${waitTime}мс...`
           }, 'warning');
           await sleep(waitTime);
+        } else if (error.message.includes('404')) {
+          logMessage({
+            en: `Error (404) on retrying request. ${error.message}`,
+            ru: `Ошибка (404) при отправке повторного запроса. ${error.message}`
+          }, 'error');
         } else {
           throw error;
         }
