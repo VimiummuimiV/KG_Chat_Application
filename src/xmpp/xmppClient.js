@@ -42,6 +42,14 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     lastSentMessage: null,
     isReloading: false,
     shouldCheckConnection: false,
+    checkConnectionTimeoutId: null,
+
+    clearCheckConnectionTimeout() {
+      if (this.checkConnectionTimeoutId) {
+        clearTimeout(this.checkConnectionTimeoutId);
+        this.checkConnectionTimeoutId = null;
+      }
+    },
 
     // Helper: Create the XML stanza for a message.
     _createMessageStanza(text, messageId, isPrivate, fullJid) {
@@ -250,6 +258,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
             }, 'warning');
             messageManager.refreshMessages(false);
             this.shouldCheckConnection = false;
+            this.clearCheckConnectionTimeout();
             this.isReconnecting = true;
             this.isConnected = false;
             this.isHttpBindingActive = false;
@@ -343,13 +352,16 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         // Prevent multiple reconnections
         if (!this.isReconnecting) {
           this.shouldCheckConnection = false;
+          this.clearCheckConnectionTimeout();
           this.isReconnecting = true;
           this.isConnected = false;
           this.isHttpBindingActive = false;
           this.connect();
         }
       }
-      setTimeout(() => this.checkConnection(), settings.pingInterval);
+      if (this.shouldCheckConnection) {
+        this.checkConnectionTimeoutId = setTimeout(() => this.checkConnection(), settings.pingInterval);
+      }
     }
   };
 
@@ -375,6 +387,14 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       xmppClient.connect();
     }
     messageManager.refreshMessages(true, 'network');
+  });
+
+  // Listen for visibility change to trigger a connection check when document becomes visible
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'visible' && xmppClient.shouldCheckConnection && !xmppClient.isReconnecting) {
+      xmppClient.clearCheckConnectionTimeout();
+      xmppClient.checkConnection();
+    }
   });
 
   return xmppClient;
