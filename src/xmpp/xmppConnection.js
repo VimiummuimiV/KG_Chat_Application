@@ -8,7 +8,7 @@ export default class XMPPConnection {
     this.bindUrl = bindUrl;
     this.delay = delay;
     this.sid = null;
-    this.rid = Math.floor(Date.now() / 1000);
+    this.rid = 0;
   }
 
   nextRid() {
