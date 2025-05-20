@@ -32,47 +32,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
 
   let userInfo = getUserInfo(); // Initialize user info
 
-  // ─── Inline Web Worker for steady pings ───
-  const workerBlob = new Blob([`
-    const PING_INTERVAL = ${settings.pingInterval};
-    let isRunning = false;
-
-    function schedulePing() {
-      if (!isRunning) return;
-      // send a tick back to the main thread
-      self.postMessage('tick');
-      // schedule the next ping
-      setTimeout(schedulePing, PING_INTERVAL);
-    }
-
-    self.onmessage = messageEvent => {
-      if (messageEvent.data === 'start' && !isRunning) {
-        isRunning = true;
-        schedulePing();
-      } else if (messageEvent.data === 'stop' && isRunning) {
-        isRunning = false;
-      }
-    };
-  `], { type: 'text/javascript' });
-  const pingWorker = new Worker(URL.createObjectURL(workerBlob));
-
-  pingWorker.onmessage = async ({ data }) => {
-    if (data === 'tick' && xmppClient.isConnected && !xmppClient.isReconnecting && !xmppClient.isReloading) {
-      try {
-        const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
-        await xmppConnection.sendRequestWithRetry(pingPayload);
-      } catch (error) {
-        logMessage({
-          en: "Ping failed.",
-          ru: "Пинг не удался."
-        }, 'warning');
-        xmppClient.isConnected = false;
-        xmppClient.isReconnecting = true;
-        xmppClient.connect();
-      }
-    }
-  };
-
   const xmppClient = {
     userManager,
     messageManager,
@@ -211,7 +170,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
               this.isReconnecting = false;
             }
 
-            pingWorker.postMessage('start'); // Start the ping worker
             this.startHttpBinding(); // Start HTTP binding
             this.processQueue(); // Process the message queue
             break; // Exit the retry loop on success
@@ -304,8 +262,6 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       if (this.isHttpBindingActive) {
         this.isHttpBindingActive = false;
       }
-      // Stop inline worker pinger
-      pingWorker.postMessage('stop');
     },
 
     sendMessage(text) {
@@ -401,6 +357,28 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       xmppClient.connect();
     }
     messageManager.refreshMessages(true, 'network');
+  });
+
+  // Add visibilitychange event to trigger a manual ping when page becomes visible
+  document.addEventListener('visibilitychange', async () => {
+    if (!document.hidden && xmppClient.isConnected && !xmppClient.isReconnecting && !xmppClient.isReloading) {
+      try {
+        const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
+        await xmppConnection.sendRequestWithRetry(pingPayload);
+        logMessage({
+          en: "Ping successful.",
+          ru: "Пинг успешен."
+        }, 'success');
+      } catch (error) {
+        logMessage({
+          en: "Ping failed.",
+          ru: "Пинг не удался."
+        }, 'error');
+        xmppClient.isConnected = false;
+        xmppClient.isReconnecting = true;
+        xmppClient.connect();
+      }
+    }
   });
 
   return xmppClient;
