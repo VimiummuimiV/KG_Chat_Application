@@ -54,11 +54,21 @@ export function getSavedEvents() {
   return loadEventsCache();
 }
 
-// Handle events notification state
-function toggleEventsNotification(highlight = true) {
+// Handle events notification state - always call this to keep button updated
+export function updateEventsButtonState() {
   const eventsButton = document.querySelector('.chat-events-button');
   if (eventsButton) {
-    eventsButton.classList.toggle('new-events', highlight);
+    const events = getSavedEvents();
+    const lastViewed = localStorage.getItem(LAST_VIEWED_KEY) || '0';
+    const hasNewEvents = events.some(event => 
+      new Date(event.date).getTime() > parseInt(lastViewed)
+    );
+    
+    // Update highlight based on new events
+    eventsButton.classList.toggle('new-events', hasNewEvents);
+    
+    // Add no-events class if there are no events
+    eventsButton.classList.toggle('no-events', !events || events.length === 0);
   }
 }
 
@@ -67,7 +77,7 @@ export function saveEvent(event) {
   const events = loadEventsCache();
   events.push({ ...event, date: new Date().toISOString() });
   saveEventsCache(events);
-  toggleEventsNotification(true); // Highlight the button if new events are added
+  updateEventsButtonState();
 }
 
 // Format timestamp
@@ -122,6 +132,7 @@ export class EventsPanel {
       if (events.length === 0) return; // Do nothing if no events exist
 
       localStorage.removeItem(EVENTS_STORAGE_KEY);
+      updateEventsButtonState();
       this.hide(); // Close the panel
     });
     this.panel.appendChild(clearButton);
@@ -245,8 +256,9 @@ export class EventsPanel {
 
     document.body.appendChild(this.panel);
     adjustVisibility(this.panel, 'show', 1);
-    toggleEventsNotification(false); // Remove highlight when panel is shown
+    
     localStorage.setItem(LAST_VIEWED_KEY, new Date().getTime().toString());
+    updateEventsButtonState();
     this.scrollToBottom();
   }
 

@@ -728,6 +728,11 @@ $mix-for-brightness: #d2d2d2;
     fill: var(--first-accent-color) !important;
   }
 
+  // No events notification styling
+  .chat-events-button.no-events {
+    fill: var(--second-accent-color) !important;
+  }
+
   .chat-drag-area {
     display: flex;
     flex-direction: row;
