@@ -28,7 +28,7 @@ import { EmojiPanel } from "../components/emojiPanel.js";
 import { openThemesPanel } from "../components/themesPanel.js";
 import { openUsernameColors } from "../components/chatUsernameColorsPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
-import { createEventsPanel } from "../components/eventsPanel.js";
+import { createEventsPanel, updateEventsButtonState } from "../components/eventsPanel.js";
 
 // Apply the UI theme to the chat
 export function applyUITheme() {
@@ -253,5 +253,6 @@ export function createChatUI() {
     createLengthPopup(messagesPanel);
     initChatLengthPopupEvents(messageInput);
     handleMobileLayout(chatContainer, chatContent, messagesPanel, dragArea, inputContainer);
+    updateEventsButtonState();
   });
 }
