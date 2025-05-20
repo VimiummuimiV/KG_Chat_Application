@@ -374,6 +374,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
     }, 'warning');
     xmppClient.stopHttpBinding();
     xmppClient.isConnected = false;
+    xmppClient.shouldCheckConnection = false;
+    xmppClient.clearCheckConnectionTimeout();
     messageManager.refreshMessages(false, 'network');
   });
 
@@ -395,6 +397,12 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       xmppClient.clearCheckConnectionTimeout();
       xmppClient.checkConnection();
     }
+  });
+
+  // Prevent connection checks during page reload or navigation
+  window.addEventListener('beforeunload', () => {
+    xmppClient.shouldCheckConnection = false;
+    xmppClient.clearCheckConnectionTimeout();
   });
 
   return xmppClient;
