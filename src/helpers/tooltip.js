@@ -1,17 +1,39 @@
+import { settings } from "../data/definitions.js";
+
 let tooltipEl = null, tooltipHideTimer = null, tooltipShowTimer = null;
-let tooltipIsVisible = false, tooltipIsShown = false, tooltipCurrentTarget = null;
+let tooltipIsVisible = false, tooltipCurrentTarget = null;
 
 const positionTooltip = (clientX, clientY) => {
   if (!tooltipEl) return;
   let leftPos = clientX + 10;
   const tooltipWidth = tooltipEl.offsetWidth;
+  const tooltipHeight = tooltipEl.offsetHeight;
   const screenWidth = window.innerWidth;
+  const screenHeight = window.innerHeight;
 
-  // Adjust position if overflowing
+  // Adjust position if overflowing horizontally
   leftPos = Math.min(Math.max(leftPos, 10), screenWidth - tooltipWidth - 10);
 
+  // Use separate margins for top and bottom
+  const topMargin = 18, bottomMargin = 0;
+  let topPos = clientY + topMargin;
+
+  // If tooltip would overflow at the bottom, try above the cursor
+  if (topPos + tooltipHeight > screenHeight - bottomMargin) {
+    const above = clientY - tooltipHeight - topMargin;
+    if (above >= topMargin) {
+      topPos = above;
+    } else {
+      // Clamp to bottom margin if above is not possible
+      topPos = screenHeight - tooltipHeight - bottomMargin;
+    }
+  }
+
+  // Clamp to always respect top margin
+  topPos = Math.max(topMargin, topPos);
+
   tooltipEl.style.left = `${leftPos}px`;
-  tooltipEl.style.top = `${clientY + 18}px`;
+  tooltipEl.style.top = `${topPos}px`;
 };
 
 const tooltipTrackMouse = e => tooltipEl && positionTooltip(e.clientX, e.clientY);
@@ -25,13 +47,12 @@ const hideTooltipElement = () => {
   tooltipHideTimer = setTimeout(() => {
     if (!tooltipEl) return;
     tooltipEl.style.opacity = '0';
-    tooltipIsShown = false;
 
     setTimeout(() => {
       if (!tooltipIsVisible && tooltipEl) {
         tooltipEl.style.display = 'none';
-        tooltipEl.textContent = ''; // Clear tooltip content
         document.removeEventListener('mousemove', tooltipTrackMouse);
+        tooltipEl.textContent = '';
       }
     }, 50);
   }, 100);
@@ -81,10 +102,12 @@ export function createCustomTooltip(element, tooltipContent) {
 
       tooltipShowTimer = setTimeout(() => {
         tooltipEl.style.opacity = '1';
-        tooltipIsShown = true;
-      }, 600);
+      }, settings.tooltipLifeTime);
     });
 
-    element.addEventListener('mouseleave', hideTooltipElement);
+    element.addEventListener('mouseleave', e => {
+      hideTooltipElement();
+      document.removeEventListener('mousemove', tooltipTrackMouse);
+    });
   }
 }

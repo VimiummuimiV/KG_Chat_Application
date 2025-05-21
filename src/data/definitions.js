@@ -23,7 +23,8 @@ export const settings = {
   themePreviewDelay: 150,
   showAlertDuration: 2000,
   pingInterval: 10000,
-  deduplicationDelay: 2000
+  deduplicationDelay: 2000,
+  tooltipLifeTime: 200
 };
 
 export const connectionMessages = {
