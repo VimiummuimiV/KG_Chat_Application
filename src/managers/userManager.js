@@ -562,22 +562,37 @@ export default class UserManager {
   }
 
   updateGameIndicator(userElement, user) {
-    let gameIndicatorElement = userElement.querySelector('.game-indicator');
+    const userInfoContainer = userElement.querySelector('.user-info');
+    let gameIndicator = userElement.querySelector('.game-indicator');
+
+    // Helper to set both attributes in one place
+    function setAttributes(indicator, gameId) {
+      indicator.setAttribute('data-game-id', gameId);
+      indicator.title = gameId;
+    }
 
     if (user.gameId) {
-      if (!gameIndicatorElement || gameIndicatorElement.getAttribute('data-game-id') !== user.gameId) {
-        const newIndicatorHTML = `<span class="game-indicator" title="${user.gameId}" data-game-id="${user.gameId}">
-                                    <span class="traffic-icon">🚦</span>
-                                  </span>`;
-        if (gameIndicatorElement) {
-          gameIndicatorElement.outerHTML = newIndicatorHTML;
-        } else {
-          const userInfoContainer = userElement.querySelector('.user-info');
-          userInfoContainer.insertAdjacentHTML('beforeend', newIndicatorHTML);
+      if (gameIndicator) {
+        // Update existing indicator only if the ID changed
+        if (gameIndicator.getAttribute('data-game-id') !== user.gameId) {
+          setAttributes(gameIndicator, user.gameId);
         }
+      } else {
+        // Create new indicator
+        gameIndicator = document.createElement('span');
+        gameIndicator.className = 'game-indicator';
+        setAttributes(gameIndicator, user.gameId);
+
+        const trafficIcon = document.createElement('span');
+        trafficIcon.className = 'traffic-icon';
+        trafficIcon.textContent = '🚦';
+
+        gameIndicator.appendChild(trafficIcon);
+        userInfoContainer.appendChild(gameIndicator);
       }
-    } else if (gameIndicatorElement && gameIndicatorElement.parentNode) {
-      gameIndicatorElement.remove();
+    } else if (gameIndicator) {
+      // Remove indicator if there's no gameId
+      gameIndicator.remove();
     }
   }
 
