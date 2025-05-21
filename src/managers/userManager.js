@@ -16,6 +16,7 @@ import { usernameColors } from "../helpers/chatUsernameColors.js";
 import { storageWrapper } from "../components/ignoredUsersPanel.js";
 import { loadProfileIntoIframe } from "../helpers/iframeProfileLoader.js";
 import { handlePrivateMessageInput } from "../helpers/privateMessagesHandler.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 // Utility function to generate a dynamic timestamp for the rand parameter
 const generateRandomParam = () => `rand=${Date.now()}`;
@@ -568,7 +569,7 @@ export default class UserManager {
     // Helper to set both attributes in one place
     function setAttributes(indicator, gameId) {
       indicator.setAttribute('data-game-id', gameId);
-      indicator.title = gameId;
+      createCustomTooltip(indicator, `🚦 ${gameId}`);
     }
 
     if (user.gameId) {
