@@ -102,7 +102,7 @@ export function createChatUI() {
           }
         },
         onDestroy: () => {
-          createCustomTooltip(emojiButton, 'Open emoji picker');
+          // Removed redundant tooltip reset; emojiPanel.js already handles this
           emojiPanelInstance = null;
         }
       });
