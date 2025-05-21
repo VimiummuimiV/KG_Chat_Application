@@ -2,6 +2,7 @@ import { adjustVisibility, debounce, logMessage } from "../helpers/helpers.js";
 import { loadUsernameColorsUrl, settings } from "../data/definitions.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
 import { addSVG, editSVG, removeSVG, importSVG, exportSVG, loadSVG } from "../data/icons.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 // Centralized storage wrapper.
 const storageKey = 'usernameColors';
@@ -122,7 +123,7 @@ export function openUsernameColors() {
   // Create close button
   const closeButton = createElement('button', 'close-btn');
   closeButton.innerHTML = removeSVG;
-  closeButton.title = 'Close panel';
+  createCustomTooltip(closeButton, 'Close panel');
   closeButton.addEventListener('click', () => {
     adjustVisibility(container, 'hide', 0);
   });
@@ -255,7 +256,7 @@ export function openUsernameColors() {
   function createEditButton(entry, _username, color) {
     const editBtn = createElement('div', 'entry-btn edit-btn');
     editBtn.innerHTML = editSVG;
-    editBtn.title = "Edit username";
+    createCustomTooltip(editBtn, "Edit username");
     Object.assign(editBtn.style, {
       backgroundColor: hexWithAlpha(color, 0.4),
       color
@@ -391,8 +392,8 @@ export function openUsernameColors() {
     const entry = createElement('div', 'username-entry');
 
     const removeAllBtn = createElement('div', 'entry-btn remove-all-btn');
-    removeAllBtn.innerHTML = removeSVG; // or your preferred “trash” icon
-    removeAllBtn.title = "Remove all saved colors";
+    removeAllBtn.innerHTML = removeSVG;
+    createCustomTooltip(removeAllBtn, "Remove all saved colors");
     removeAllBtn.addEventListener('click', e => {
       e.stopPropagation();
 
@@ -413,7 +414,7 @@ export function openUsernameColors() {
     // LOAD button (new)
     const loadBtn = createElement('div', 'entry-btn load-btn');
     loadBtn.innerHTML = loadSVG;
-    loadBtn.title = "Load colors from URL";
+    createCustomTooltip(loadBtn, "Load colors from URL");
     loadBtn.addEventListener('click', e => {
       e.stopPropagation();
       loadUsernameColors(loadUsernameColorsUrl);
@@ -422,7 +423,7 @@ export function openUsernameColors() {
     // IMPORT button
     const importBtn = createElement('div', 'entry-btn import-btn');
     importBtn.innerHTML = importSVG;
-    importBtn.title = "Import colors";
+    createCustomTooltip(importBtn, "Import colors");
     importBtn.addEventListener('click', e => {
       e.stopPropagation();
       importUsernameColors();
@@ -431,7 +432,7 @@ export function openUsernameColors() {
     // EXPORT button
     const exportBtn = createElement('div', 'entry-btn export-btn');
     exportBtn.innerHTML = exportSVG;
-    exportBtn.title = "Export colors";
+    createCustomTooltip(exportBtn, "Export colors");
     exportBtn.addEventListener('click', e => {
       e.stopPropagation();
       exportUsernameColors();
@@ -440,7 +441,7 @@ export function openUsernameColors() {
     // ADD button
     const addBtn = createElement('div', 'entry-btn add-btn');
     addBtn.innerHTML = addSVG;
-    addBtn.title = "Add username";
+    createCustomTooltip(addBtn, "Add username");
     addBtn.addEventListener('click', e => {
       e.stopPropagation();
       showConfirmation({ _confirmation: false, _add: true }, 'username');
@@ -599,7 +600,7 @@ export function openUsernameColors() {
     // build new one
     removeBtn = createElement('div', 'entry-btn remove-btn');
     removeBtn.innerHTML = removeSVG;
-    removeBtn.title = "Remove entry";
+    createCustomTooltip(removeBtn, "Remove entry");
     Object.assign(removeBtn.style, {
       backgroundColor: hexWithAlpha(color, 0.4),
       color

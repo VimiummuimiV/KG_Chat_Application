@@ -9,6 +9,8 @@ import {
   logMessage
 } from "../helpers/helpers.js";
 
+import { createCustomTooltip } from "../helpers/tooltip.js";
+
 // Create a single global shortcut handler
 const setupGlobalEmojiShortcut = (() => {
   let isSetup = false;
@@ -166,7 +168,7 @@ export class EmojiPanel {
       categoryBtn.className = 'emoji-category-btn';
       categoryBtn.dataset.category = key;
       categoryBtn.innerHTML = category.icon;
-      categoryBtn.title = this.getLocalizedCategoryName(key);
+      createCustomTooltip(categoryBtn, this.getLocalizedCategoryName(key));
       this.categoryNav.appendChild(categoryBtn);
     });
 
@@ -484,7 +486,7 @@ export class EmojiPanel {
     Object.keys(this.categories).forEach(category => {
       const localizedName = this.getLocalizedCategoryName(category);
       const btn = this.categoryNav.querySelector(`[data-category="${category}"]`);
-      if (btn) btn.title = localizedName;
+      if (btn) createCustomTooltip(btn, localizedName);
       if (this.categorySections[category] && this.categorySections[category].header) {
         this.categorySections[category].header.textContent = localizedName;
       }
@@ -593,7 +595,7 @@ export class EmojiPanel {
     this.languageSelect = null;
     EmojiPanel.instance = null;
     if (this.options.emojiButton) {
-      this.options.emojiButton.title = 'Open emoji picker';
+      createCustomTooltip(this.options.emojiButton, 'Open emoji picker');
     }
     if (typeof this.options.onDestroy === 'function') {
       this.options.onDestroy();

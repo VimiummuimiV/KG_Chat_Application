@@ -5,6 +5,7 @@ import {
   scrollToBottom,
   logMessage
 } from "../helpers/helpers.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 // Constants
 const emojis = {
@@ -151,7 +152,7 @@ export function convertVideoLinksToPlayer() {
     wrapper.classList.add("video-wrapper");
 
     link.textContent = `${emojis.type} ${videoType} ${emojis.domain} ${domain}`;
-    link.title = isEncodedURL(url) ? decodeURL(url) : url;
+    createCustomTooltip(link, isEncodedURL(url) ? decodeURL(url) : url);
     link.style.display = 'inline-flex';
 
     if (youtubeMatch) {

@@ -11,15 +11,16 @@ import {
 } from "../helpers/helpers.js";
 
 import { handleLayoutBehavior } from "../helpers/layoutBehavior.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 function updateToggleButton(toggleButton, isVisible) {
   toggleButton.innerHTML = isVisible ? closeSVG : openSVG;
-  toggleButton.title = isVisible ? 'Hide chat' : 'Show chat';
+  createCustomTooltip(toggleButton, isVisible ? 'Hide chat' : 'Show chat');
 }
 
 function updateMaximizeButton(maximizeButton, isMaximized) {
   maximizeButton.innerHTML = isMaximized ? collapseSVG : expandSVG;
-  maximizeButton.title = isMaximized ? 'Collapse chat' : 'Expand chat';
+  createCustomTooltip(maximizeButton, isMaximized ? 'Collapse chat' : 'Expand chat');
 }
 
 export function restoreChatState() {

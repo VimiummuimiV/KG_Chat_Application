@@ -6,6 +6,7 @@ import {
   scrollToBottom,
   logMessage
 } from "../../helpers/helpers.js";
+import { createCustomTooltip } from "../../helpers/tooltip.js";
 import { createExpandedView } from "./imageViewer.js";
 
 // Image constants
@@ -146,7 +147,7 @@ export function convertImageLinksToImage() {
 
     link.classList.add("media");
     const { isTrusted, domain } = isTrustedDomain(link.href);
-    link.title = isEncodedURL(link.href) ? decodeURL(link.href) : link.href;
+    createCustomTooltip(link, isEncodedURL(link.href) ? decodeURL(link.href) : link.href);
 
     isTrusted
       ? handleTrustedLink(link, extension, domain)

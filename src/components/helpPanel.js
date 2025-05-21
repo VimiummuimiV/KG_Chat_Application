@@ -1,5 +1,6 @@
 import { removeSVG } from "../data/icons.js";
 import { adjustVisibility } from "../helpers/helpers.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 export class HelpPanel {
   constructor(options = {}) {
@@ -31,7 +32,7 @@ export class HelpPanel {
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
     closeButton.innerHTML = removeSVG;
-    closeButton.title = 'Close panel';
+    createCustomTooltip(closeButton, 'Close panel');
     closeButton.addEventListener('click', () => {
       this.remove();
     });

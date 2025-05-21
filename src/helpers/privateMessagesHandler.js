@@ -1,4 +1,5 @@
 import { getExactUserIdByName, logMessage } from "./helpers.js";
+import { createCustomTooltip } from "./tooltip.js";
 
 // State management for private messaging
 export const privateMessageState = {
@@ -104,9 +105,9 @@ function enterPrivateMode(username) {
       inputContainer.insertBefore(exitButton, messageInput.nextSibling);
     }
 
-    // Set default closed lock emoji and title
+    // Set default closed lock emoji and custom tooltip
     exitButton.innerHTML = "🔒";
-    exitButton.title = "Exit private mode";
+    createCustomTooltip(exitButton, "Exit private mode");
 
     // Change emoji on hover: open lock on mouseenter, closed lock on mouseleave
     exitButton.addEventListener('mouseenter', () => {

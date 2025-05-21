@@ -29,6 +29,7 @@ import { openThemesPanel } from "../components/themesPanel.js";
 import { openUsernameColors } from "../components/chatUsernameColorsPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
 import { createEventsPanel, updateEventsButtonState } from "../components/eventsPanel.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 // Apply the UI theme to the chat
 export function applyUITheme() {
@@ -75,10 +76,9 @@ export function createChatUI() {
   // Create emoji button
   const emojiButton = document.createElement('button');
   emojiButton.className = 'emoji-trigger button';
-  // emojiButton.innerHTML = "🙂";
   emojiButton.innerHTML = smileSVG;
   emojiButton.classList.add('emoji-button');
-  emojiButton.title = 'Open emoji picker';
+  createCustomTooltip(emojiButton, 'Open emoji picker');
 
   // Setup emoji panel toggle functionality
   let emojiPanelInstance = null;
@@ -102,12 +102,12 @@ export function createChatUI() {
           }
         },
         onDestroy: () => {
-          emojiButton.title = 'Open emoji picker';
+          createCustomTooltip(emojiButton, 'Open emoji picker');
           emojiPanelInstance = null;
         }
       });
       emojiPanelInstance.init();
-      emojiButton.title = 'Close emoji picker';
+      createCustomTooltip(emojiButton, 'Close emoji picker');
     } else {
       emojiPanelInstance.destroy();
     }
@@ -148,7 +148,7 @@ export function createChatUI() {
   const eventsButton = document.createElement('button');
   eventsButton.className = 'button header-button chat-events-button';
   eventsButton.innerHTML = eventsSVG;
-  eventsButton.title = 'Show events';
+  createCustomTooltip(eventsButton, 'Show events');
   eventsButton.addEventListener("click", () => {
     createEventsPanel();
   });
@@ -157,7 +157,7 @@ export function createChatUI() {
   const blockedUsersButton = document.createElement('button');
   blockedUsersButton.className = 'button header-button chat-blocked-button';
   blockedUsersButton.innerHTML = blockedUsersSVG;
-  blockedUsersButton.title = 'Block user';
+  createCustomTooltip(blockedUsersButton, 'Block user');
   blockedUsersButton.addEventListener("click", () => {
     openIgnoredUsersPanel();
   });
@@ -166,7 +166,7 @@ export function createChatUI() {
   const userColorsButton = document.createElement('button');
   userColorsButton.className = 'button header-button chat-colors-button';
   userColorsButton.innerHTML = userColorsSVG;
-  userColorsButton.title = 'Set username color';
+  createCustomTooltip(userColorsButton, 'Set username color');
   userColorsButton.addEventListener("click", () => {
     openUsernameColors();
   });
@@ -175,7 +175,7 @@ export function createChatUI() {
   const themeButton = document.createElement('button');
   themeButton.className = 'button header-button chat-theme-button';
   themeButton.innerHTML = magicWandSVG;
-  themeButton.title = 'Change theme';
+  createCustomTooltip(themeButton, 'Change theme');
   themeButton.addEventListener("click", () => {
     openThemesPanel();
   });
@@ -183,8 +183,8 @@ export function createChatUI() {
   // Help button next to maximize button
   const helpButton = document.createElement('button');
   helpButton.className = 'button header-button chat-help-button';
-  helpButton.innerHTML = helpSVG; // Replace with desired icon if available
-  helpButton.title = 'Show chat help';
+  helpButton.innerHTML = helpSVG;
+  createCustomTooltip(helpButton, 'Show chat help');
 
   // Declare a variable to track the help panel instance.
   let helpPanelInstance = null;
@@ -195,7 +195,7 @@ export function createChatUI() {
     // If a help panel exists, remove it and exit.
     if (helpPanelInstance && document.querySelector('.help-panel')) {
       helpPanelInstance.remove();
-      helpButton.title = 'Show chat help';
+      createCustomTooltip(helpButton, 'Show chat help');
       helpPanelInstance = null;
       return;
     }
@@ -204,13 +204,13 @@ export function createChatUI() {
     helpPanelInstance = new HelpPanel({
       helpButton: helpButton,
       onDestroy: () => {
-        helpButton.title = 'Show chat help';
+        createCustomTooltip(helpButton, 'Show chat help');
         helpPanelInstance = null;
       }
     });
     helpPanelInstance.init();
     helpPanelInstance.show();
-    helpButton.title = 'Hide chat help';
+    createCustomTooltip(helpButton, 'Hide help panel');
   });
 
 

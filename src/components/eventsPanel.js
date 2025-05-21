@@ -2,6 +2,7 @@ import { eventsColorMap } from "../data/definitions.js";
 import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 import { addShakeEffect } from "../data/animations.js";
 import { infoSVG, warningSVG, errorSVG, successSVG, clearSVG, removeSVG } from "../data/icons.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 const EVENTS_STORAGE_KEY = 'chatEvents';
 const LAST_VIEWED_KEY = 'lastViewedEventTime';
@@ -60,13 +61,13 @@ export function updateEventsButtonState() {
   if (eventsButton) {
     const events = getSavedEvents();
     const lastViewed = localStorage.getItem(LAST_VIEWED_KEY) || '0';
-    const hasNewEvents = events.some(event => 
+    const hasNewEvents = events.some(event =>
       new Date(event.date).getTime() > parseInt(lastViewed)
     );
-    
+
     // Update highlight based on new events
     eventsButton.classList.toggle('new-events', hasNewEvents);
-    
+
     // Add no-events class if there are no events
     eventsButton.classList.toggle('no-events', !events || events.length === 0);
   }
@@ -126,7 +127,7 @@ export class EventsPanel {
     const clearButton = document.createElement('button');
     clearButton.className = 'clear-btn';
     clearButton.innerHTML = clearSVG;
-    clearButton.title = 'Clear all events';
+    createCustomTooltip(clearButton, 'Clear all events');
     clearButton.addEventListener('click', () => {
       const events = getSavedEvents();
       if (events.length === 0) return; // Do nothing if no events exist
@@ -141,7 +142,7 @@ export class EventsPanel {
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
     closeButton.innerHTML = removeSVG;
-    closeButton.title = 'Close panel';
+    createCustomTooltip(closeButton, 'Close panel');
     closeButton.addEventListener('click', () => {
       this.hide();
     });
@@ -256,7 +257,7 @@ export class EventsPanel {
 
     document.body.appendChild(this.panel);
     adjustVisibility(this.panel, 'show', 1);
-    
+
     localStorage.setItem(LAST_VIEWED_KEY, new Date().getTime().toString());
     updateEventsButtonState();
     this.scrollToBottom();
