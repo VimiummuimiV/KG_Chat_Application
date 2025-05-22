@@ -1,4 +1,4 @@
-import { settings } from "../data/definitions.js";
+import { settings, defaultLanguage } from "../data/definitions.js";
 
 let tooltipEl = null, tooltipHideTimer = null, tooltipShowTimer = null;
 let tooltipIsVisible = false, tooltipCurrentTarget = null;
@@ -62,11 +62,20 @@ new MutationObserver(() => {
   if (tooltipCurrentTarget && !document.contains(tooltipCurrentTarget)) hideTooltipElement();
 }).observe(document, { childList: true, subtree: true });
 
-export function createCustomTooltip(element, tooltipContent) {
+export function createCustomTooltip(element, tooltipContent, lang = null) {
   if (tooltipContent == null) return; // Skip if content is null/undefined
 
+  // Determine language: use param, else imported default, else 'en'
+  lang = lang || defaultLanguage || 'en';
+
+  // If tooltipContent is an object with language keys, pick the right one
+  let content = tooltipContent;
+  if (typeof tooltipContent === 'object' && (tooltipContent.en || tooltipContent.ru)) {
+    content = tooltipContent[lang] || tooltipContent.en || tooltipContent.ru;
+  }
+
   // Always update the tooltip content stored on the element.
-  element._tooltipContent = tooltipContent;
+  element._tooltipContent = content;
 
   // If tooltip event listeners haven't been attached, attach them once.
   if (!element._tooltipInitialized) {
