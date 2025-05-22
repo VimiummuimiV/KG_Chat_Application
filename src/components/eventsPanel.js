@@ -1,4 +1,4 @@
-import { eventsColorMap } from "../data/definitions.js";
+import { eventsColorMap, uiStrings, defaultLanguage } from "../data/definitions.js";
 import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 import { addShakeEffect } from "../data/animations.js";
 import { infoSVG, warningSVG, errorSVG, successSVG, clearSVG, removeSVG } from "../data/icons.js";
@@ -119,7 +119,7 @@ export class EventsPanel {
 
   init() {
     const header = document.createElement('h2');
-    header.textContent = 'Events';
+    header.textContent = uiStrings.eventsHeader[defaultLanguage];
     this.panel.appendChild(header);
     this.panel.appendChild(this.eventsList);
 

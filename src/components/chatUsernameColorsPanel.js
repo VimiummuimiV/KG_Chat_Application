@@ -1,5 +1,5 @@
 import { adjustVisibility, debounce, logMessage } from "../helpers/helpers.js";
-import { loadUsernameColorsUrl, settings } from "../data/definitions.js";
+import { loadUsernameColorsUrl, settings, uiStrings, defaultLanguage } from "../data/definitions.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
 import { addSVG, editSVG, removeSVG, importSVG, exportSVG, loadSVG } from "../data/icons.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
@@ -117,7 +117,7 @@ export function openUsernameColors() {
   container.appendChild(usernameColors);
 
   // Create h2 (main header) and append to usernameColors.
-  const header = createElement('h2', null, { text: 'Username Colors' });
+  const header = createElement('h2', null, { text: uiStrings.usernameColorsHeader[defaultLanguage] });
   usernameColors.appendChild(header);
 
   // Create close button
@@ -136,7 +136,7 @@ export function openUsernameColors() {
   const generatedBlock = createElement(
     'div',
     'generated-username-colors',
-    { html: '<h3>Generated Colors <span class="counter">0</span></h3>' }
+    { html: `<h3>${uiStrings.generatedColorsHeader[defaultLanguage]} <span class="counter">0</span></h3>` }
   );
 
   // Create saved colors block if needed.
@@ -145,7 +145,7 @@ export function openUsernameColors() {
       savedBlock = createElement(
         'div',
         'saved-username-colors',
-        { html: '<h3>Saved Colors <span class="counter">0</span></h3>' }
+        { html: `<h3>${uiStrings.savedColorsHeader[defaultLanguage]} <span class="counter">0</span></h3>` }
       );
       const header = container.querySelector('h2');
       header.nextSibling ? container.insertBefore(savedBlock, header.nextSibling) : usernameColors.appendChild(savedBlock);
@@ -285,7 +285,7 @@ export function openUsernameColors() {
   function renderSavedBlock() {
     if (!savedBlock) return;
     const localColors = storageWrapper.get(localStorage);
-    savedBlock.innerHTML = '<h3>Saved Colors <span class="counter">0</span></h3>';
+    savedBlock.innerHTML = `<h3>${uiStrings.savedColorsHeader[defaultLanguage]} <span class="counter">0</span></h3>`;
     // prepend add button as first entry
     savedBlock.appendChild(createFirstEntryButtons());
     Object.entries(localColors).forEach(([username, color]) => {

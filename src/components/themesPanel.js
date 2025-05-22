@@ -1,7 +1,8 @@
 import { adjustVisibility, debounce } from "../helpers/helpers.js";
 import { lightThemes } from "../data/themes/lightThemes.js";
 import { darkThemes } from "../data/themes/darkThemes.js";
-import { settings } from "../data/definitions.js";
+import { settings, uiStrings, defaultLanguage } from "../data/definitions.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 // DOM element creation helper.
 const createElement = (tag, className, attributes = {}) => {
@@ -59,16 +60,18 @@ export const openThemesPanel = () => {
     return existingContainer;
   }
 
-  // Create container with main header
-  const container = createElement('div', 'themes-panel', { html: '<h2>Themes</h2>' });
+  // Create container with main header (replace static HTML header)
+  const container = createElement('div', 'themes-panel');
+  const header = createElement('h2', null, { text: uiStrings.themesPanelHeader[defaultLanguage] });
+  container.appendChild(header);
 
   // Create blocks for both theme types
   const darkThemesBlock = createElement('div', 'dark-themes');
   const lightThemesBlock = createElement('div', 'light-themes');
 
-  // Add headers with counters
-  darkThemesBlock.innerHTML = `<h3>Dark Themes <span class="counter">${Object.keys(darkThemes['--background-color']).length}</span></h3>`;
-  lightThemesBlock.innerHTML = `<h3>Light Themes <span class="counter">${Object.keys(lightThemes['--background-color']).length}</span></h3>`;
+  // Add headers with counters using localized strings
+  darkThemesBlock.innerHTML = `<h3>${uiStrings.themesDarkHeader[defaultLanguage]} <span class="counter">${Object.keys(darkThemes['--background-color']).length}</span></h3>`;
+  lightThemesBlock.innerHTML = `<h3>${uiStrings.themesLightHeader[defaultLanguage]} <span class="counter">${Object.keys(lightThemes['--background-color']).length}</span></h3>`;
 
   // Store original theme for preview restoration
   let originalTheme = localStorage.getItem('selectedTheme') || 'dark-soul';
@@ -80,6 +83,10 @@ export const openThemesPanel = () => {
   const createThemeButton = (themeName, themeKey) => {
     const button = createElement('button', 'theme-button', {
       text: themeName.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase())
+    });
+    createCustomTooltip(button, {
+      en: `[Hover] Preview theme ${button.textContent} [Click] Apply theme`,
+      ru: `[Наведение] Предпросмотр темы ${button.textContent} [Клик] Применить тему`
     });
     button.dataset.theme = themeKey;
 

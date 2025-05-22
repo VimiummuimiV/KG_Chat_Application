@@ -1,5 +1,7 @@
 import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
+import { uiStrings, defaultLanguage } from "../data/definitions.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 // Centralized storage wrapper for ignored users.
 export const storageWrapper = {
@@ -94,13 +96,17 @@ export const openIgnoredUsersPanel = () => {
   container.appendChild(userList);
 
   // Create h2 (main header) and append to usernameColors.
-  const header = createElement('h2', null, { text: 'Ignored users' });
+  const header = createElement('h2', null, { text: uiStrings.ignoredUsersHeader[defaultLanguage] });
   userList.appendChild(header);
 
   // Add input field and button for adding new ignored users
   const inputContainer = createElement('div', 'ignored-users-input-container');
-  const inputField = createElement('input', 'ignored-users-input', { type: 'search', placeholder: 'Enter username to ignore' });
-  const addButton = createElement('button', 'ignored-users-add-btn', { text: 'Block' });
+  const inputField = createElement('input', 'ignored-users-input', { type: 'search', placeholder: uiStrings.ignoredUsersPlaceholder[defaultLanguage] });
+  const addButton = createElement('button', 'ignored-users-add-btn', { text: uiStrings.ignoredBlockButton[defaultLanguage] });
+  createCustomTooltip(addButton, {
+    en: 'Add to ignored',
+    ru: 'Добавить в игнорируемые'
+  });
 
   const handleAddIgnoredUser = async () => {
     const username = inputField.value.trim();
@@ -148,6 +154,10 @@ export const openIgnoredUsersPanel = () => {
     const entry = createElement('div', 'ignored-user-entry');
     const label = createElement('div', 'username', { text: username });
     const removeBtn = createElement('button', 'remove-btn');
+    createCustomTooltip(removeBtn, {
+      en: 'Remove from ignored',
+      ru: 'Удалить из игнорируемых'
+    });
 
     // Add SVG cross icon to the remove button
     const removeIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");

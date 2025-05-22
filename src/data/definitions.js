@@ -100,3 +100,25 @@ export const eventsColorMap = {
 };
 
 export const defaultLanguage = localStorage.getItem('emojiPanelLanguage') || 'en';
+
+// UI strings for headers and placeholders only
+export const uiStrings = {
+  // Events panel
+  eventsHeader: { en: "Events", ru: "События" },
+  // Ignored users panel
+  ignoredUsersHeader: { en: "Ignored Users", ru: "Игнорируемые пользователи" },
+  ignoredUsersPlaceholder: { en: "Enter username", ru: "Введите никнейм" },
+  ignoredBlockButton: { en: "Block", ru: "Бан" },
+  // Username colors panel
+  usernameColorsHeader: { en: "Username Colors", ru: "Цвета имён пользователей" },
+  generatedColorsHeader: { en: "Generated Colors", ru: "Сгенерированные цвета" },
+  savedColorsHeader: { en: "Saved Colors", ru: "Сохранённые цвета" },
+  // Themes panel
+  themesPanelHeader: { en: "Themes Panel", ru: "Панель тем" },
+  themesLightHeader: { en: "Light Themes", ru: "Светлые темы" },
+  themesDarkHeader: { en: "Dark Themes", ru: "Тёмные темы" },
+  // Help panel
+  helpPanelHeader: { en: "Help Panel", ru: "Панель помощи" },
+  // Emoji panel
+  emojiPanelHeader: { en: "Emoji Panel", ru: "Панель эмодзи" },
+};
