@@ -92,9 +92,7 @@ async function initializeApp() {
     const messageManager = new MessageManager('messages-panel', parseUsername(klavoauth.username));
     const xmppConnection = new XMPPConnection({
       username: klavoauth.username,
-      password: klavoauth.password,
-      bindUrl: XMPP_BIND_URL,
-      connectionDelay: settings.connectionDelay
+      password: klavoauth.password
     });
 
     const xmppClient = createXMPPClient(
