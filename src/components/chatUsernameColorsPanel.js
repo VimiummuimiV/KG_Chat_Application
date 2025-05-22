@@ -123,7 +123,10 @@ export function openUsernameColors() {
   // Create close button
   const closeButton = createElement('button', 'close-btn');
   closeButton.innerHTML = removeSVG;
-  createCustomTooltip(closeButton, 'Close panel');
+  createCustomTooltip(closeButton, {
+    en: 'Close panel',
+    ru: 'Закрыть панель'
+  });
   closeButton.addEventListener('click', () => {
     adjustVisibility(container, 'hide', 0);
   });
@@ -256,7 +259,10 @@ export function openUsernameColors() {
   function createEditButton(entry, _username, color) {
     const editBtn = createElement('div', 'entry-btn edit-btn');
     editBtn.innerHTML = editSVG;
-    createCustomTooltip(editBtn, "Edit username");
+    createCustomTooltip(editBtn, {
+      en: 'Edit username',
+      ru: 'Редактировать имя пользователя'
+    });
     Object.assign(editBtn.style, {
       backgroundColor: hexWithAlpha(color, 0.4),
       color
@@ -393,7 +399,10 @@ export function openUsernameColors() {
 
     const removeAllBtn = createElement('div', 'entry-btn remove-all-btn');
     removeAllBtn.innerHTML = removeSVG;
-    createCustomTooltip(removeAllBtn, "Remove all saved colors");
+    createCustomTooltip(removeAllBtn, {
+      en: 'Remove all saved colors',
+      ru: 'Удалить все сохранённые цвета'
+    });
     removeAllBtn.addEventListener('click', e => {
       e.stopPropagation();
 
@@ -414,7 +423,10 @@ export function openUsernameColors() {
     // LOAD button (new)
     const loadBtn = createElement('div', 'entry-btn load-btn');
     loadBtn.innerHTML = loadSVG;
-    createCustomTooltip(loadBtn, "Load colors from URL");
+    createCustomTooltip(loadBtn, {
+      en: 'Load colors from URL',
+      ru: 'Загрузить цвета из URL'
+    });
     loadBtn.addEventListener('click', e => {
       e.stopPropagation();
       loadUsernameColors(loadUsernameColorsUrl);
@@ -423,7 +435,10 @@ export function openUsernameColors() {
     // IMPORT button
     const importBtn = createElement('div', 'entry-btn import-btn');
     importBtn.innerHTML = importSVG;
-    createCustomTooltip(importBtn, "Import colors");
+    createCustomTooltip(importBtn, {
+      en: 'Import colors',
+      ru: 'Импортировать цвета'
+    });
     importBtn.addEventListener('click', e => {
       e.stopPropagation();
       importUsernameColors();
@@ -432,7 +447,10 @@ export function openUsernameColors() {
     // EXPORT button
     const exportBtn = createElement('div', 'entry-btn export-btn');
     exportBtn.innerHTML = exportSVG;
-    createCustomTooltip(exportBtn, "Export colors");
+    createCustomTooltip(exportBtn, {
+      en: 'Export colors',
+      ru: 'Экспортировать цвета'
+    });
     exportBtn.addEventListener('click', e => {
       e.stopPropagation();
       exportUsernameColors();
@@ -441,7 +459,10 @@ export function openUsernameColors() {
     // ADD button
     const addBtn = createElement('div', 'entry-btn add-btn');
     addBtn.innerHTML = addSVG;
-    createCustomTooltip(addBtn, "Add username");
+    createCustomTooltip(addBtn, {
+      en: 'Add username',
+      ru: 'Добавить имя пользователя'
+    });
     addBtn.addEventListener('click', e => {
       e.stopPropagation();
       showConfirmation({ _confirmation: false, _add: true }, 'username');
@@ -600,7 +621,10 @@ export function openUsernameColors() {
     // build new one
     removeBtn = createElement('div', 'entry-btn remove-btn');
     removeBtn.innerHTML = removeSVG;
-    createCustomTooltip(removeBtn, "Remove entry");
+    createCustomTooltip(removeBtn, {
+      en: 'Remove entry',
+      ru: 'Удалить запись'
+    });
     Object.assign(removeBtn.style, {
       backgroundColor: hexWithAlpha(color, 0.4),
       color

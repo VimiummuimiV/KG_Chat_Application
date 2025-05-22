@@ -32,7 +32,10 @@ export class HelpPanel {
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
     closeButton.innerHTML = removeSVG;
-    createCustomTooltip(closeButton, 'Close panel');
+    createCustomTooltip(closeButton, {
+      en: 'Close panel',
+      ru: 'Закрыть панель'
+    });
     closeButton.addEventListener('click', () => {
       this.remove();
     });

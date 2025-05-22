@@ -107,7 +107,10 @@ function enterPrivateMode(username) {
 
     // Set default closed lock emoji and custom tooltip
     exitButton.innerHTML = "🔒";
-    createCustomTooltip(exitButton, "Exit private mode");
+    createCustomTooltip(exitButton, {
+      en: "Exit private mode",
+      ru: "Выйти из приватного режима"
+    });
 
     // Change emoji on hover: open lock on mouseenter, closed lock on mouseleave
     exitButton.addEventListener('mouseenter', () => {

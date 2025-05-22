@@ -127,7 +127,10 @@ export class EventsPanel {
     const clearButton = document.createElement('button');
     clearButton.className = 'clear-btn';
     clearButton.innerHTML = clearSVG;
-    createCustomTooltip(clearButton, 'Clear all events');
+    createCustomTooltip(clearButton, {
+      en: 'Clear all events',
+      ru: 'Очистить все события'
+    });
     clearButton.addEventListener('click', () => {
       const events = getSavedEvents();
       if (events.length === 0) return; // Do nothing if no events exist
@@ -142,7 +145,10 @@ export class EventsPanel {
     const closeButton = document.createElement('button');
     closeButton.className = 'close-btn';
     closeButton.innerHTML = removeSVG;
-    createCustomTooltip(closeButton, 'Close panel');
+    createCustomTooltip(closeButton, {
+      en: 'Close panel',
+      ru: 'Закрыть панель'
+    });
     closeButton.addEventListener('click', () => {
       this.hide();
     });

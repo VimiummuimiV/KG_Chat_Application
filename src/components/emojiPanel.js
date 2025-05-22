@@ -595,7 +595,10 @@ export class EmojiPanel {
     this.languageSelect = null;
     EmojiPanel.instance = null;
     if (this.options.emojiButton) {
-      createCustomTooltip(this.options.emojiButton, 'Open emoji picker');
+      createCustomTooltip(this.options.emojiButton, {
+        en: 'Open emoji picker',
+        ru: 'Открыть панель эмодзи'
+      });
     }
     if (typeof this.options.onDestroy === 'function') {
       this.options.onDestroy();
