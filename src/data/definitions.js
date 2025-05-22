@@ -97,3 +97,5 @@ export const eventsColorMap = {
   error: '#F44336',
   success: '#4CAF50'
 };
+
+export const defaultLanguage = localStorage.getItem('emojiPanelLanguage') || 'en';

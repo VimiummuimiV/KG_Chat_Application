@@ -7,7 +7,8 @@ import {
   emojiFaces,
   settings,
   trustedDomains,
-  eventsColorMap
+  eventsColorMap,
+  defaultLanguage
 } from "../data/definitions.js";
 
 // ==================================================================================================
@@ -339,8 +340,8 @@ export function logMessage(message, type = 'info', showAlert = true, lang = null
   };
   const style = styles[type] || styles.info;
 
-  // Language detection: use param, else localStorage, else 'en'
-  lang = lang || localStorage.getItem('emojiPanelLanguage') || 'en';
+  // Language detection: use param, else imported default, else 'en'
+  lang = lang || defaultLanguage || 'en';
 
   // If message is an object with en/ru, pick the right one for alert, always use en/raw for console
   let alertMsg = message;
