@@ -24,7 +24,8 @@ export const settings = {
   showAlertDuration: 2000,
   pingInterval: 10000,
   deduplicationDelay: 2000,
-  tooltipLifeTime: 200
+  tooltipLifeTime: 200,
+  tooltipVisibleTime: 100,
 };
 
 export const connectionMessages = {

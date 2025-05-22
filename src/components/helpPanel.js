@@ -74,7 +74,7 @@ export class HelpPanel {
               { key: "Ctrl + Space", desc: "Hide/Show the chat" },
               { key: "Shift + Ctrl + Space", desc: "Expand/Collapse the chat" },
               { key: "Ctrl + Click", desc: "Activate private chat mode with the clicked user" },
-              { key: "Long Press (LMB)", desc: "Activate private chat mode with the clicked user (Userlist)" },
+              { key: "Hold (LMB)", desc: "Activate private chat mode with the clicked user (Userlist)" },
               { key: "Double Click (LMB)", desc: "Replace selected users with one in the input field (Messages)" },
               { key: "Shift + Click", desc: "Open the user profile by nickname in the message" }
             ]
@@ -196,7 +196,7 @@ export class HelpPanel {
               { key: "Ctrl + Space", desc: "Скрыть/Показать чат" },
               { key: "Shift + Ctrl + Space", desc: "Развернуть/Свернуть чат" },
               { key: "Ctrl + Click", desc: "Активировать приватный чат для выбранного пользователя" },
-              { key: "Долгое нажатие (ЛКМ)", desc: "Активировать приватный чат для выбранного пользователя (Пользователи)" },
+              { key: "Удерживание (ЛКМ)", desc: "Активировать приватный чат для выбранного пользователя (Пользователи)" },
               { key: "Двойной клик (ЛКМ)", desc: "Замена выбранных пользователей одним в поле ввода (Сообщения)" },
               { key: "Shift + Click", desc: "Открыть профиль пользователя по никнейму в сообщении" }
             ]

@@ -175,6 +175,10 @@ export class EventsPanel {
   renderEvent(event, isNew = false) {
     const listItem = document.createElement('div');
     listItem.className = `list-item ${isNew ? 'new-event' : 'old-event'}`;
+    createCustomTooltip(listItem, {
+      en: 'Click to copy message',
+      ru: 'Нажмите, чтобы скопировать сообщение'
+    });
 
     const iconWrapper = document.createElement('span');
     iconWrapper.className = "event-icon icon-wrapper";

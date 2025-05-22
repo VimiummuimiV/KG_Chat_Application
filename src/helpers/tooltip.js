@@ -54,13 +54,35 @@ const hideTooltipElement = () => {
         document.removeEventListener('mousemove', tooltipTrackMouse);
         tooltipEl.textContent = '';
       }
-    }, 50);
-  }, 100);
+    }, settings.tooltipVisibleTime / 2);
+  }, settings.tooltipVisibleTime);
 };
 
 new MutationObserver(() => {
   if (tooltipCurrentTarget && !document.contains(tooltipCurrentTarget)) hideTooltipElement();
 }).observe(document, { childList: true, subtree: true });
+
+// Highlight [Action]Message pairs in the tooltip content
+function highlightTooltipActions(str) {
+  // Match [Action]Message pairs
+  const regex = /\[([^\]]+)\]([^\[]*)/g;
+  let result = '';
+  let lastEnd = 0;
+  let match;
+  while ((match = regex.exec(str)) !== null) {
+    // Add any text before the first match (shouldn't happen in normal usage)
+    if (match.index > lastEnd) result += str.slice(lastEnd, match.index);
+    result += `
+    <div class="tooltip-item">
+      <span class="tooltip-action">${match[1]}</span>&nbsp;
+      <span class="tooltip-message">${match[2].trim()}</span>
+    </div>`;
+    lastEnd = regex.lastIndex;
+  }
+  // Add any trailing text after the last match
+  if (lastEnd < str.length) result += str.slice(lastEnd);
+  return result;
+}
 
 export function createCustomTooltip(element, tooltipContent, lang = null) {
   if (tooltipContent == null) return; // Skip if content is null/undefined
@@ -73,6 +95,9 @@ export function createCustomTooltip(element, tooltipContent, lang = null) {
   if (typeof tooltipContent === 'object' && (tooltipContent.en || tooltipContent.ru)) {
     content = tooltipContent[lang] || tooltipContent.en || tooltipContent.ru;
   }
+
+  // Highlight [action] words
+  content = highlightTooltipActions(content);
 
   // Always update the tooltip content stored on the element.
   element._tooltipContent = content;
@@ -100,7 +125,7 @@ export function createCustomTooltip(element, tooltipContent, lang = null) {
       clearTimeout(tooltipShowTimer);
 
       // Use the latest stored tooltip content
-      tooltipEl.textContent = element._tooltipContent;
+      tooltipEl.innerHTML = element._tooltipContent;
       tooltipEl.style.display = 'flex';
       tooltipEl.style.opacity = '0';
 

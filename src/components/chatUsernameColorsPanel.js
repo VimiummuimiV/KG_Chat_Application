@@ -178,7 +178,11 @@ export function openUsernameColors() {
   function createEntry(username, color, isSaved = false) {
     const entry = createElement('div', 'username-entry');
     const label = createElement('div', 'username', { text: username });
-    const colorBox = createElement('div', 'color-box', { title: 'Change hex' });
+    const colorBox = createElement('div', 'color-box');
+    createCustomTooltip(colorBox, {
+      en: '[Click] Select new color [Hold (LMB)] Set hex color value',
+      ru: '[Клик] Выбрать новый цвет [Удерживание (ЛКМ)] Установить hex значение цвета'
+    });
     updateStyles(label, colorBox, color);
     const colorInput = createElement('input', null, { type: 'color', value: color });
 
@@ -424,8 +428,8 @@ export function openUsernameColors() {
     const loadBtn = createElement('div', 'entry-btn load-btn');
     loadBtn.innerHTML = loadSVG;
     createCustomTooltip(loadBtn, {
-      en: 'Load colors from URL',
-      ru: 'Загрузить цвета из URL'
+      en: 'Load colors from GitHub',
+      ru: 'Загрузить цвета из GitHub'
     });
     loadBtn.addEventListener('click', e => {
       e.stopPropagation();
