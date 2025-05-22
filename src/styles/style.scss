@@ -1186,4 +1186,20 @@ $mix-for-brightness: #d2d2d2;
 
 .custom-tooltip-popup {
   font-family: "Montserrat", $emoji-font, sans-serif !important;
+  position: fixed;
+  background: rgb(22, 22, 22);
+  color: rgb(222, 222, 222);
+  padding: 0.5em;
+  z-index: 1200;
+  font-size: 0.9em;
+  pointer-events: none;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.1s;
+  display: none;
+  left: 0;
+  top: 0;
+  border: 1px solid rgb(60, 60, 60) !important;
+  border-radius: 4px !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3) !important;
 }
