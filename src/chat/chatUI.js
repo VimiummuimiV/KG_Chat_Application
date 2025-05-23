@@ -79,8 +79,8 @@ export function createChatUI() {
   emojiButton.innerHTML = smileSVG;
   emojiButton.classList.add('emoji-button');
   createCustomTooltip(emojiButton, {
-    en: 'Open emoji picker',
-    ru: 'Открыть панель эмодзи'
+    en: '[Ctrl + ;] Open emoji picker',
+    ru: '[Ctrl + ;] Открыть панель эмодзи'
   });
 
   // Setup emoji panel toggle functionality
@@ -111,8 +111,8 @@ export function createChatUI() {
       });
       emojiPanelInstance.init();
       createCustomTooltip(emojiButton, {
-        en: 'Close emoji picker',
-        ru: 'Закрыть панель эмодзи'
+        en: '[Esc, qq] Close emoji picker',
+        ru: '[Esc, qq] Закрыть панель эмодзи'
       });
     } else {
       emojiPanelInstance.destroy();
@@ -131,6 +131,10 @@ export function createChatUI() {
   sendButton.id = 'send-button';
   sendButton.className = 'button send-button';
   sendButton.innerHTML = sendSVG;
+  createCustomTooltip(sendButton, {
+    en: '[Enter] Send message',
+    ru: '[Enter] Отправить сообщение'
+  });
 
   // Append elements in order
   inputContainer.append(emojiButton, messageInput, sendButton);
@@ -155,8 +159,8 @@ export function createChatUI() {
   eventsButton.className = 'button header-button chat-events-button';
   eventsButton.innerHTML = eventsSVG;
   createCustomTooltip(eventsButton, {
-    en: 'Show events',
-    ru: 'Показать события'
+    en: '[/events] Show events',
+    ru: '[/events] Показать события'
   });
   eventsButton.addEventListener("click", () => {
     createEventsPanel();
@@ -167,8 +171,8 @@ export function createChatUI() {
   blockedUsersButton.className = 'button header-button chat-blocked-button';
   blockedUsersButton.innerHTML = blockedUsersSVG;
   createCustomTooltip(blockedUsersButton, {
-    en: 'Block user',
-    ru: 'Заблокировать пользователя'
+    en: '[/ignored] Block user',
+    ru: '[/ignored] Заблокировать пользователя'
   });
   blockedUsersButton.addEventListener("click", () => {
     openIgnoredUsersPanel();
@@ -179,8 +183,8 @@ export function createChatUI() {
   userColorsButton.className = 'button header-button chat-colors-button';
   userColorsButton.innerHTML = userColorsSVG;
   createCustomTooltip(userColorsButton, {
-    en: 'Set username color',
-    ru: 'Установить цвет имени пользователя'
+    en: '[/colors] Set username color',
+    ru: '[/colors] Установить цвет имени пользователя'
   });
   userColorsButton.addEventListener("click", () => {
     openUsernameColors();
@@ -191,8 +195,8 @@ export function createChatUI() {
   themeButton.className = 'button header-button chat-theme-button';
   themeButton.innerHTML = magicWandSVG;
   createCustomTooltip(themeButton, {
-    en: 'Change theme',
-    ru: 'Сменить тему'
+    en: '[/themes] Change theme',
+    ru: '[/themes] Сменить тему'
   });
   themeButton.addEventListener("click", () => {
     openThemesPanel();
@@ -203,8 +207,8 @@ export function createChatUI() {
   helpButton.className = 'button header-button chat-help-button';
   helpButton.innerHTML = helpSVG;
   createCustomTooltip(helpButton, {
-    en: 'Show chat help',
-    ru: 'Показать справку чата'
+    en: '[/help] Show chat help',
+    ru: '[/help] Показать справку чата'
   });
 
   // Declare a variable to track the help panel instance.
@@ -217,8 +221,8 @@ export function createChatUI() {
     if (helpPanelInstance && document.querySelector('.help-panel')) {
       helpPanelInstance.remove();
       createCustomTooltip(helpButton, {
-        en: 'Show chat help',
-        ru: 'Показать справку чата'
+        en: '[/help] Show chat help',
+        ru: '[/help] Показать справку чата'
       });
       helpPanelInstance = null;
       return;
@@ -229,8 +233,8 @@ export function createChatUI() {
       helpButton: helpButton,
       onDestroy: () => {
         createCustomTooltip(helpButton, {
-          en: 'Show chat help',
-          ru: 'Показать справку чата'
+          en: '[/help] Show chat help',
+          ru: '[/help] Показать справку чата'
         });
         helpPanelInstance = null;
       }
@@ -238,8 +242,8 @@ export function createChatUI() {
     helpPanelInstance.init();
     helpPanelInstance.show();
     createCustomTooltip(helpButton, {
-      en: 'Hide help panel',
-      ru: 'Скрыть справку чата'
+      en: '[/help] Hide chat help',
+      ru: '[/help] Скрыть справку чата'
     });
   });
 

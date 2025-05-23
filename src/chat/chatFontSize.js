@@ -1,4 +1,5 @@
 import { getChatState, saveChatState } from "./chatState.js";
+import { createCustomTooltip } from "../helpers/tooltip.js";
 
 export function applyFontSize(multiplier) {
   const chatContainer = document.getElementById('app-chat-container');
@@ -51,10 +52,21 @@ export function createFontSizeControl() {
     e.stopPropagation();
   });
 
+  // Add custom tooltip to the slider (create only once)
+  createCustomTooltip(fontSlider, {
+    en: `Adjust chat font size. Current: ${fontSlider.value}x`,
+    ru: `Изменить размер шрифта чата. Текущий: ${fontSlider.value}x`
+  });
+
   // Update font size on input change
   fontSlider.addEventListener('input', (e) => {
     const value = parseFloat(e.target.value);
     applyFontSize(value);
+    // Update tooltip by calling createCustomTooltip again
+    createCustomTooltip(fontSlider, {
+      en: `Adjust chat font size. Current: ${value}x`,
+      ru: `Изменить размер шрифта чата. Текущий: ${value}x`
+    });
   });
 
   // Append the slider to the control container
@@ -71,7 +83,7 @@ export function createFontSizeControl() {
 export function initFontSizeControls() {
   createFontSizeControl();
   restoreFontSize();
-  
+
   // Add event listener for when the chat container is resized or repositioned
   const chatContainer = document.getElementById('app-chat-container');
   if (chatContainer) {
@@ -80,10 +92,10 @@ export function initFontSizeControls() {
       const chatState = getChatState();
       applyFontSize(chatState.fontSizeMultiplier);
     });
-    
-    observer.observe(chatContainer, { 
-      attributes: true, 
-      attributeFilter: ['style', 'class'] 
+
+    observer.observe(chatContainer, {
+      attributes: true,
+      attributeFilter: ['style', 'class']
     });
   }
 }
@@ -95,17 +107,17 @@ export function updateElementFontSizes(multiplier) {
     userList: document.getElementById('user-list'),
     messageInput: document.getElementById('message-input')
   };
-  
+
   // For any element that needs special handling beyond the container's em scaling
   if (elements.messageInput) {
     elements.messageInput.style.fontSize = `${multiplier}em`;
   }
-  
+
   // Ensure time elements maintain their relative size (0.9em)
   document.querySelectorAll('.time').forEach(el => {
     el.style.fontSize = '0.9em';
   });
-  
+
   // Ensure username elements maintain their size (1em)
   document.querySelectorAll('.username').forEach(el => {
     el.style.fontSize = '1em';

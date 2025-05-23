@@ -16,16 +16,16 @@ import { createCustomTooltip } from "../helpers/tooltip.js";
 function updateToggleButton(toggleButton, isVisible) {
   toggleButton.innerHTML = isVisible ? closeSVG : openSVG;
   createCustomTooltip(toggleButton, {
-    en: isVisible ? 'Hide chat' : 'Show chat',
-    ru: isVisible ? 'Скрыть чат' : 'Показать чат'
+    en: `[Ctrl + Space] ${isVisible ? 'Hide chat' : 'Show chat'}`,
+    ru: `[Ctrl + Space] ${isVisible ? 'Скрыть чат' : 'Показать чат'}`
   });
 }
 
 function updateMaximizeButton(maximizeButton, isMaximized) {
   maximizeButton.innerHTML = isMaximized ? collapseSVG : expandSVG;
   createCustomTooltip(maximizeButton, {
-    en: isMaximized ? 'Collapse chat' : 'Expand chat',
-    ru: isMaximized ? 'Свернуть чат' : 'Развернуть чат'
+    en: `[Ctrl + Shift + Space] ${isMaximized ? 'Collapse chat' : 'Expand chat'}`,
+    ru: `[Ctrl + Shift + Space] ${isMaximized ? 'Свернуть чат' : 'Развернуть чат'}`
   });
 }
 

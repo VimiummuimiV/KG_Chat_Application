@@ -600,8 +600,8 @@ export class EmojiPanel {
     EmojiPanel.instance = null;
     if (this.options.emojiButton) {
       createCustomTooltip(this.options.emojiButton, {
-        en: 'Open emoji picker',
-        ru: 'Открыть панель эмодзи'
+        en: '[Ctrl + ;] Open emoji picker',
+        ru: '[Ctrl + ;] Открыть панель эмодзи'
       });
     }
     if (typeof this.options.onDestroy === 'function') {
