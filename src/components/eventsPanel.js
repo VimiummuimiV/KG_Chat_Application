@@ -1,5 +1,5 @@
 import { eventsColorMap, uiStrings, defaultLanguage } from "../data/definitions.js";
-import { adjustVisibility, logMessage } from "../helpers/helpers.js";
+import { adjustVisibility, logMessage, sleep } from "../helpers/helpers.js";
 import { addShakeEffect } from "../data/animations.js";
 import { infoSVG, warningSVG, errorSVG, successSVG, clearSVG, removeSVG } from "../data/icons.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";

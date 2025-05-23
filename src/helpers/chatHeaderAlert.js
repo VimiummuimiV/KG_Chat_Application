@@ -1,9 +1,36 @@
 import { settings, eventsColorMap } from "../data/definitions.js";
 import { saveEvent } from "../components/eventsPanel.js";
 
+let alertSet = new Set();
+let isAlertShowing = false;
+
 export function showChatAlert(message, options = {}) {
+  const type = options.type || 'info';
+  const key = `${message}|${type}`;
+  if (alertSet.has(key)) return; // Prevent duplicate
+  alertSet.add(key);
+  if (!isAlertShowing) {
+    processQueue();
+  }
+}
+
+function processQueue() {
+  if (isAlertShowing || alertSet.size === 0) return;
+  isAlertShowing = true;
+  // Get the first key from the set
+  const key = alertSet.values().next().value;
+  const [message, type = 'info'] = key.split('|');
+  showSingleAlert(message, { type }, key);
+}
+
+function showSingleAlert(message, options = {}, key) {
   const dragArea = document.querySelector('.chat-drag-area');
-  if (!dragArea) return;
+  if (!dragArea) {
+    alertSet.delete(key);
+    isAlertShowing = false;
+    processQueue();
+    return;
+  }
 
   const existingAlert = dragArea.querySelector('.chat-dynamic-alert');
   if (existingAlert && existingAlert.parentNode === dragArea) {
@@ -59,6 +86,9 @@ export function showChatAlert(message, options = {}) {
           if (alertElement && alertElement.parentNode === dragArea) {
             dragArea.removeChild(alertElement);
           }
+          alertSet.delete(key);
+          isAlertShowing = false;
+          processQueue();
         }, 300);
       }, alertSettings.duration);
     });
