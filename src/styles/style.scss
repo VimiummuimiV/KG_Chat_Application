@@ -647,12 +647,9 @@ $mix-for-brightness: #d2d2d2;
       white-space: nowrap !important;
     }
 
+    .role,
     .game-indicator {
       cursor: pointer !important;
-    }
-
-    .role,
-    .traffic-icon {
       font-family: $emoji-font, sans-serif !important;
     }
   }

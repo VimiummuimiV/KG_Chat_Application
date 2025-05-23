@@ -359,6 +359,20 @@ export default class UserManager {
     }
   }
 
+  updateRoleTooltip(roleElement, role) {
+    if (role === 'moderator') {
+      createCustomTooltip(roleElement, {
+        en: 'Chat Moderator',
+        ru: 'Модератор чата'
+      });
+    } else if (role === 'visitor') {
+      createCustomTooltip(roleElement, {
+        en: 'Banned User',
+        ru: 'Забаненный пользователь'
+      });
+    }
+  }
+
   updateUI() {
     const ignoredUsers = storageWrapper.get();
 
@@ -407,6 +421,10 @@ export default class UserManager {
           <span class="role ${user.role}">${roleIcon}</span>
         `;
 
+        // Add tooltip for role icon
+        const roleEl = userInfo.querySelector('.role');
+        this.updateRoleTooltip(roleEl, user.role);
+
         // Append avatar and user info
         userElement.appendChild(avatarContainer);
         userElement.appendChild(userInfo);
@@ -429,6 +447,8 @@ export default class UserManager {
           roleElement.textContent = newRoleIcon;
           if (!roleElement.classList.contains(user.role)) {
             roleElement.className = `role ${user.role}`;
+            // Update tooltip for changed role
+            this.updateRoleTooltip(roleElement, user.role);
           }
         }
 
