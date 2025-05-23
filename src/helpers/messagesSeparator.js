@@ -1,3 +1,5 @@
+import { createCustomTooltip } from "./tooltip.js";
+
 /**
  * Creates an HR-like separator with an emoji icon.
  * @returns {HTMLElement} The separator element.
@@ -13,6 +15,15 @@ export function createNewMessagesSeparator() {
   const iconContainer = document.createElement('div');
   iconContainer.className = 'separator-icon';
   iconContainer.textContent = '🔥';
+  createCustomTooltip(iconContainer, {
+    en: 'New messages [Click] to remove',
+    ru: 'Новые сообщения [Клик] для удаления'
+  });
+
+  // Add click handler to remove separator
+  iconContainer.addEventListener('click', () => {
+    separator.remove();
+  });
 
   separator.appendChild(hr);
   separator.appendChild(iconContainer);
