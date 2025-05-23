@@ -189,6 +189,10 @@ export class EmojiPanel {
     // Language selector
     this.languageSelect = document.createElement('select');
     this.languageSelect.className = 'emoji-language-select';
+    createCustomTooltip(this.languageSelect, {
+      en: 'Select interface language',
+      ru: 'Выберите язык интерфейса'
+    });
     this.languageSelect.innerHTML = `
       <option value="en">EN</option>
       <option value="ru">RU</option>

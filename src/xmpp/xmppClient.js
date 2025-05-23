@@ -348,6 +348,7 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         const pingPayload = `<body rid='${xmppConnection.nextRid()}' sid='${xmppConnection.sid}' xmlns='http://jabber.org/protocol/httpbind'/>`;
         await xmppConnection.sendRequestWithRetry(pingPayload);
       } catch (error) {
+        if (!this.shouldCheckConnection) return; // Don't log or reconnect if page is unloading
         logMessage({ en: "Ping failed.", ru: "Пинг не удался." }, 'warning');
         // Prevent multiple reconnections
         if (!this.isReconnecting) {
