@@ -1,4 +1,5 @@
 import { settings, defaultLanguage } from "../data/definitions.js";
+import { checkIsMobile } from "./helpers.js";
 
 let tooltipEl = null, tooltipHideTimer = null, tooltipShowTimer = null;
 let tooltipIsVisible = false, tooltipCurrentTarget = null;
@@ -85,6 +86,7 @@ function highlightTooltipActions(str) {
 }
 
 export function createCustomTooltip(element, tooltipContent, lang = null) {
+  if (checkIsMobile()) return; // Prevent tooltips on mobile
   if (tooltipContent == null) return; // Skip if content is null/undefined
 
   // Determine language: use param, else imported default, else 'en'
