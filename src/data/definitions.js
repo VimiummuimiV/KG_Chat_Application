@@ -106,19 +106,15 @@ export const uiStrings = {
   // Events panel
   eventsHeader: { en: "Events", ru: "События" },
   // Ignored users panel
-  ignoredUsersHeader: { en: "Ignored Users", ru: "Игнорируемые пользователи" },
+  ignoredUsersHeader: { en: "Ignored", ru: "Игнорируемые" },
   ignoredUsersPlaceholder: { en: "Enter username", ru: "Введите никнейм" },
   ignoredBlockButton: { en: "Block", ru: "Бан" },
   // Username colors panel
-  usernameColorsHeader: { en: "Username Colors", ru: "Цвета имён пользователей" },
+  usernameColorsHeader: { en: "Username Colors", ru: "Пользовательские цвета" },
   generatedColorsHeader: { en: "Generated Colors", ru: "Сгенерированные цвета" },
   savedColorsHeader: { en: "Saved Colors", ru: "Сохранённые цвета" },
   // Themes panel
-  themesPanelHeader: { en: "Themes Panel", ru: "Панель тем" },
+  themesPanelHeader: { en: "Themes", ru: "Темы" },
   themesLightHeader: { en: "Light Themes", ru: "Светлые темы" },
-  themesDarkHeader: { en: "Dark Themes", ru: "Тёмные темы" },
-  // Help panel
-  helpPanelHeader: { en: "Help Panel", ru: "Панель помощи" },
-  // Emoji panel
-  emojiPanelHeader: { en: "Emoji Panel", ru: "Панель эмодзи" },
+  themesDarkHeader: { en: "Dark Themes", ru: "Тёмные темы" }
 };
