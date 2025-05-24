@@ -33,7 +33,7 @@ export function observeMessagesPanel() {
     handleLayoutBehavior();
     convertVideoLinksToPlayer();
     convertImageLinksToImage();
-    scrollToBottom(250);
+    scrollToBottom(350);
   });
 
   observer.observe(messagesPanel, { childList: true, subtree: true });
@@ -181,7 +181,7 @@ export async function getExactUserIdByName(userName) {
 
     return user.id;
   } catch (error) {
-      console.error(`Error fetching user ID for ${userName}: ${error.message}`);
+    console.error(`Error fetching user ID for ${userName}: ${error.message}`);
     return null;
   }
 }

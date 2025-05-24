@@ -3,7 +3,6 @@ import {
   decodeURL,
   isEncodedURL,
   isTrustedDomain,
-  scrollToBottom,
   logMessage
 } from "../../helpers/helpers.js";
 import { createCustomTooltip } from "../../helpers/tooltip.js";
@@ -72,7 +71,6 @@ function createThumbnail(link, isUntrusted) {
     thumbnail.appendChild(img);
     // Append the thumbnail to the container instead of next to the link.
     container.appendChild(thumbnail);
-    scrollToBottom(600);
   };
 
   img.onerror = () => {

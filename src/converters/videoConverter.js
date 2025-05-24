@@ -2,7 +2,6 @@ import {
   decodeURL,
   isEncodedURL,
   isTrustedDomain,
-  scrollToBottom,
   logMessage
 } from "../helpers/helpers.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
@@ -79,7 +78,6 @@ async function renderYouTubePreview(infoContainer, placeholder, videoId, videoTy
     placeholder.replaceChildren(thumb);
     infoContainer.hidden = false;
     placeholder.hidden = false;
-    scrollToBottom(600);
   });
 
   thumb.addEventListener('error', () => {
@@ -199,7 +197,6 @@ export function convertVideoLinksToPlayer() {
 
       embed.addEventListener('loadeddata', () => {
         embed.hidden = false;
-        scrollToBottom(600);
       });
 
       embed.addEventListener('error', () => {
