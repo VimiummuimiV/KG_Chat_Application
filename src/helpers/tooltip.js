@@ -138,7 +138,7 @@ export function createCustomTooltip(element, tooltipContent, lang = null) {
 
       tooltipShowTimer = setTimeout(() => {
         tooltipEl.style.opacity = '1';
-      }, settings.tooltipLifeTime);
+      }, settings.tooltipShowDelay);
     });
 
     element.addEventListener('mouseleave', e => {
