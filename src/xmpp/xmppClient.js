@@ -304,8 +304,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       // Check against the last sent message.
       if (this.lastSentMessage && this.lastSentMessage.text === text && (now - this.lastSentMessage.timestamp) < settings.deduplicationDelay) {
         logMessage({
-          en: `Duplicate message prevented: ${text}`,
-          ru: `Дублирующее сообщение предотвращено: ${text}`
+          en: `Prevented duplicate message: ${text}`,
+          ru: `Предотвращено дублирование сообщения: ${text}`
         }, 'warning');
         return;
       }
@@ -313,8 +313,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
       // Prevent duplicate messages in the queue
       if (this.messageQueue.has(messageId)) {
         logMessage({
-          en: `Message already in queue: ${messageId}`,
-          ru: `Сообщение уже в очереди: ${messageId}`
+          en: `Message already queued for sending: ${messageId}`,
+          ru: `Сообщение уже в очереди на отправку: ${messageId}`
         }, 'warning');
         return;
       }

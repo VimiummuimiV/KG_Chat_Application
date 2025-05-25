@@ -330,6 +330,22 @@ export default class UserManager {
 
       const cleanLogin = extractUsername(userData.login);
 
+      // Update race stats
+      let stats = this.raceStats.get(userId);
+      if (!stats) {
+        stats = { count: 0, lastGameId: null };
+        this.raceStats.set(userId, stats);
+      }
+      if (userData.gameId) {
+        if (stats.lastGameId !== userData.gameId) {
+          stats.count += 1;
+          stats.lastGameId = userData.gameId;
+        }
+      } else {
+        stats.count = 0;
+        stats.lastGameId = null;
+      }
+
       // Determine if user is new or updated
       if (!this.activeUsers.has(from)) {
         if (!this.isFirstLoad) {
@@ -629,12 +645,8 @@ export default class UserManager {
     let gameIndicator = userElement.querySelector('.game-indicator');
     const userId = extractUserId(user.jid || user.login || '');
 
-    // Get or initialize stats
-    let stats = this.raceStats.get(userId);
-    if (!stats) {
-      stats = { count: 0, lastGameId: null };
-      this.raceStats.set(userId, stats);
-    }
+    // Get current stats
+    const stats = this.raceStats.get(userId) || { count: 0, lastGameId: null };
 
     function setAttributes(indicator, gameId, raceCount) {
       indicator.setAttribute('data-game-id', gameId);
@@ -644,40 +656,27 @@ export default class UserManager {
       });
     }
 
-    if (user.gameId) {
-      if (stats.lastGameId !== user.gameId) {
-        stats.count += 1;
-        stats.lastGameId = user.gameId;
-      }
-      if (gameIndicator) {
-        setAttributes(gameIndicator, user.gameId, stats.count);
-        // Update gamesCount span if it exists
+    if (user.gameId) { // Only show indicator if gameId received by presence 
+      if (!gameIndicator) { // Create if it doesn't exist
+        gameIndicator = document.createElement('span');
+        gameIndicator.className = 'game-indicator';
+        const trafficIcon = document.createElement('span');
+        trafficIcon.className = 'traffic-icon';
+        trafficIcon.textContent = '🚦';
+        const gamesCount = document.createElement('span');
+        gamesCount.className = 'games-count';
+        gamesCount.textContent = stats.count;
+        gameIndicator.append(trafficIcon, gamesCount);
+        userInfoContainer.appendChild(gameIndicator);
+      } else { // Update existing indicator
         const gamesCountSpan = gameIndicator.querySelector('.games-count');
         if (gamesCountSpan) {
           gamesCountSpan.textContent = stats.count;
         }
-      } else {
-        gameIndicator = document.createElement('span');
-        gameIndicator.className = 'game-indicator';
-        setAttributes(gameIndicator, user.gameId, stats.count);
-
-        const trafficIcon = document.createElement('span');
-        trafficIcon.className = 'traffic-icon';
-        trafficIcon.textContent = '🚦';
-
-        const gamesCount = document.createElement('span');
-        gamesCount.className = 'games-count';
-        gamesCount.textContent = stats.count;
-
-        gameIndicator.append(trafficIcon, gamesCount);
-        userInfoContainer.appendChild(gameIndicator);
       }
-    } else if (gameIndicator) {
-      // Remove indicator if there's no gameId
+      setAttributes(gameIndicator, user.gameId, stats.count);
+    } else if (gameIndicator) { // Remove indicator if no gameId received by presence
       gameIndicator.remove();
-      // Reset stats for this user
-      stats.count = 0;
-      stats.lastGameId = null;
     }
   }
 
