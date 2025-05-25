@@ -169,6 +169,14 @@ export default class UserManager {
 
   // Sets up event listeners for user interactions
   setupEventListeners() {
+    // Double-click on the user list container toggles user list mode
+    this.container.addEventListener('dblclick', (event) => {
+      // Only if double-clicked directly on the container (not on a user)
+      if (event.currentTarget === event.target) {
+        UserManager.toggleUserListMode(event.currentTarget);
+      }
+    });
+
     const wasLongPress = this.setupLongPressEvent(this.container, (target) => {
       const username = target.textContent.trim();
       this.handlePrivateMode(username);
@@ -190,6 +198,7 @@ export default class UserManager {
             loadProfileIntoIframe(profileUrl);
           }
         }
+        return;
       }
 
       // Handle game indicator clicks
@@ -200,6 +209,7 @@ export default class UserManager {
           event.stopPropagation();
           window.location.href = `https://klavogonki.ru/g/?gmid=${gameId}`;
         }
+        return;
       }
     });
   }
@@ -399,6 +409,37 @@ export default class UserManager {
     if (UserManager.instance) {
       UserManager.instance.updateUI();
     }
+  }
+
+  /**
+   * Cycles the user list mode between
+   * 'normal', 'race', and 'chat',
+   * updates localStorage, and refreshes the UI.
+   */
+  static toggleUserListMode() {
+    const modes = ['normal', 'race', 'chat'];
+    const userListModeMessages = {
+      normal: {
+        en: 'User list mode set to normal',
+        ru: 'Список пользователей: обычный режим'
+      },
+      race: {
+        en: 'User list mode set to race',
+        ru: 'Список пользователей: заезды сверху'
+      },
+      chat: {
+        en: 'User list mode set to general chat',
+        ru: 'Список пользователей: общий чат сверху'
+      }
+    };
+    const current = localStorage.getItem('userlistMode') || 'normal';
+    const idx = modes.indexOf(current);
+    const next = modes[(idx + 1) % modes.length];
+    localStorage.setItem('userlistMode', next);
+    UserManager.forceUpdateUI();
+    // Log the change
+    logMessage(userListModeMessages[next], 'info');
+    return next;
   }
 
   updateUI() {

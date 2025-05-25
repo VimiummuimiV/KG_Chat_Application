@@ -79,7 +79,8 @@ export class HelpPanel {
               { key: "Ctrl + Click", desc: "Activate private chat mode with the clicked user" },
               { key: "Hold (LMB)", desc: "Activate private chat mode with the clicked user (Userlist)" },
               { key: "Double Click (LMB)", desc: "Replace selected users with one in the input field (Messages)" },
-              { key: "Shift + Click", desc: "Open the user profile by nickname in the message" }
+              { key: "Shift + Click", desc: "Open the user profile by nickname in the message" },
+              { key: "List + Double Click (LMB)", desc: "Toggle between user list modes (Normal/Race/Chat)" }
             ]
           },
 
@@ -204,7 +205,8 @@ export class HelpPanel {
               { key: "Ctrl + Click", desc: "Активировать приватный чат для выбранного пользователя" },
               { key: "Удерживание (ЛКМ)", desc: "Активировать приватный чат для выбранного пользователя (Пользователи)" },
               { key: "Двойной клик (ЛКМ)", desc: "Замена выбранных пользователей одним в поле ввода (Сообщения)" },
-              { key: "Shift + Click", desc: "Открыть профиль пользователя по никнейму в сообщении" }
+              { key: "Shift + Click", desc: "Открыть профиль пользователя по никнейму в сообщении" },
+              { key: "List + Двойной клик (ЛКМ)", desc: "Переключение между режимами списка пользователей (Обычный/Заезд/Чат)" }
             ]
           },
 
