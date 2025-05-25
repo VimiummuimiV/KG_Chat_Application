@@ -610,6 +610,11 @@ export default class UserManager {
       }
       if (gameIndicator) {
         setAttributes(gameIndicator, user.gameId, stats.count);
+        // Update gamesCount span if it exists
+        const gamesCountSpan = gameIndicator.querySelector('.games-count');
+        if (gamesCountSpan) {
+          gamesCountSpan.textContent = stats.count;
+        }
       } else {
         gameIndicator = document.createElement('span');
         gameIndicator.className = 'game-indicator';
@@ -619,7 +624,11 @@ export default class UserManager {
         trafficIcon.className = 'traffic-icon';
         trafficIcon.textContent = '🚦';
 
-        gameIndicator.appendChild(trafficIcon);
+        const gamesCount = document.createElement('span');
+        gamesCount.className = 'games-count';
+        gamesCount.textContent = stats.count;
+
+        gameIndicator.append(trafficIcon, gamesCount);
         userInfoContainer.appendChild(gameIndicator);
       }
     } else if (gameIndicator) {

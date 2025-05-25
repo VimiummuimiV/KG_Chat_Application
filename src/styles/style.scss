@@ -651,6 +651,12 @@ $mix-for-brightness: #d2d2d2;
     .game-indicator {
       cursor: pointer !important;
       font-family: $emoji-font, sans-serif !important;
+
+      .games-count {
+        font-family: "Montserrat", sans-serif !important;
+        color: var(--third-accent-color) !important;
+        opacity: 0.8 !important;
+      }
     }
   }
 

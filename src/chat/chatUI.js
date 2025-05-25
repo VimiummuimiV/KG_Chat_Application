@@ -159,8 +159,8 @@ export function createChatUI() {
   eventsButton.className = 'button header-button chat-events-button';
   eventsButton.innerHTML = eventsSVG;
   createCustomTooltip(eventsButton, {
-    en: '[/events] Show events',
-    ru: '[/events] Показать события'
+    en: '[/events] View events',
+    ru: '[/events] Просмотреть события'
   });
   eventsButton.addEventListener("click", () => {
     createEventsPanel();
@@ -184,7 +184,7 @@ export function createChatUI() {
   userColorsButton.innerHTML = userColorsSVG;
   createCustomTooltip(userColorsButton, {
     en: '[/colors] Set username color',
-    ru: '[/colors] Установить цвет имени пользователя'
+    ru: '[/colors] Задать цвет пользователю'
   });
   userColorsButton.addEventListener("click", () => {
     openUsernameColors();
