@@ -433,6 +433,21 @@ export default class UserManager {
     return next;
   }
 
+  sortByRoleAndName(users) {
+    return users.sort((a, b) => {
+      const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
+      return priorityDiff !== 0 ? priorityDiff : extractUsername(a.login).localeCompare(extractUsername(b.login));
+    });
+  }
+
+  sortByRaceCount(users) {
+    return users.sort((a, b) => {
+      const ac = this.raceStats.get(extractUserId(a.jid))?.count || 0;
+      const bc = this.raceStats.get(extractUserId(b.jid))?.count || 0;
+      return bc - ac;
+    });
+  }
+
   updateUI() {
     const ignoredUsers = storageWrapper.get();
 
@@ -451,38 +466,22 @@ export default class UserManager {
       return !ignoredUsers.includes(cleanLogin);
     });
 
+    const usersInRace = sortedUsers.filter(u => u.gameId);
+    const usersNotInRace = sortedUsers.filter(u => !u.gameId);
+
     if (userlistMode === 'race') {
-      // Users in race at top (by race count desc), others below
       sortedUsers = [
-        ...sortedUsers.filter(u => u.gameId).sort((a, b) => {
-          const ac = this.raceStats.get(extractUserId(a.jid))?.count || 0;
-          const bc = this.raceStats.get(extractUserId(b.jid))?.count || 0;
-          return bc - ac;
-        }),
-        ...sortedUsers.filter(u => !u.gameId).sort((a, b) => {
-          const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
-          return priorityDiff !== 0 ? priorityDiff : extractUsername(a.login).localeCompare(extractUsername(b.login));
-        })
+        ...this.sortByRaceCount(usersInRace),
+        ...this.sortByRoleAndName(usersNotInRace)
       ];
     } else if (userlistMode === 'chat') {
-      // Users not in race at top, race users at bottom (race users sorted by count desc)
       sortedUsers = [
-        ...sortedUsers.filter(u => !u.gameId).sort((a, b) => {
-          const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
-          return priorityDiff !== 0 ? priorityDiff : extractUsername(a.login).localeCompare(extractUsername(b.login));
-        }),
-        ...sortedUsers.filter(u => u.gameId).sort((a, b) => {
-          const ac = this.raceStats.get(extractUserId(a.jid))?.count || 0;
-          const bc = this.raceStats.get(extractUserId(b.jid))?.count || 0;
-          return bc - ac;
-        })
+        ...this.sortByRoleAndName(usersNotInRace),
+        ...this.sortByRaceCount(usersInRace)
       ];
     } else {
       // normal: by role and username
-      sortedUsers = sortedUsers.sort((a, b) => {
-        const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
-        return priorityDiff !== 0 ? priorityDiff : extractUsername(a.login).localeCompare(extractUsername(b.login));
-      });
+      sortedUsers = this.sortByRoleAndName(sortedUsers);
     }
 
     // Build the updated list
