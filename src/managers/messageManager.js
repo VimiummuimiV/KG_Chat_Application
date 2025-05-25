@@ -477,4 +477,18 @@ export default class MessageManager {
     // Re-render messages (using the updated DOM as the source of rendered IDs).
     this.updatePanel();
   }
+
+  removePrivateMessages() {
+    // Remove private messages from messageMap and renderedMessageIds
+    for (const [id, message] of this.messageMap.entries()) {
+      if (message.isPrivate) {
+        this.messageMap.delete(id);
+        this.renderedMessageIds.delete(id);
+      }
+    }
+
+    // Remove private message elements from DOM
+    const privateMessageElements = this.panel.querySelectorAll('.message.private');
+    privateMessageElements.forEach(element => element.remove());
+  }
 }

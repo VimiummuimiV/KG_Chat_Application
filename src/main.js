@@ -1,8 +1,3 @@
-import {
-  settings,
-  XMPP_BIND_URL
-} from "./data/definitions.js";
-
 import XMPPConnection from "./xmpp/xmppConnection.js";
 import UserManager from "./managers/userManager.js";
 import MessageManager from "./managers/messageManager.js";
@@ -89,7 +84,9 @@ async function initializeApp() {
 
     // Initialize managers and XMPP connection
     const userManager = new UserManager('user-list');
+    window.userManager = userManager; // Make userManager globally accessible
     const messageManager = new MessageManager('messages-panel', parseUsername(klavoauth.username));
+    window.messageManager = messageManager; // Make messageManager globally accessible
     const xmppConnection = new XMPPConnection({
       username: klavoauth.username,
       password: klavoauth.password

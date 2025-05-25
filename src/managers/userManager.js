@@ -22,8 +22,6 @@ import { createCustomTooltip } from "../helpers/tooltip.js";
 const generateRandomParam = () => `rand=${Date.now()}`;
 
 export default class UserManager {
-  static instance = null;
-
   constructor(containerId = 'user-list') {
     this.container = document.getElementById(containerId);
     this.activeUsers = new Map();
@@ -52,8 +50,6 @@ export default class UserManager {
 
     // Attach event listeners
     this.setupEventListeners();
-
-    UserManager.instance = this;
   }
 
   loadAvatarCache() {
@@ -404,13 +400,6 @@ export default class UserManager {
     }
   }
 
-  // Force UI update from outside (e.g., after changing userlistMode)
-  static forceUpdateUI() {
-    if (UserManager.instance) {
-      UserManager.instance.updateUI();
-    }
-  }
-
   /**
    * Cycles the user list mode between
    * 'normal', 'race', and 'chat',
@@ -436,7 +425,9 @@ export default class UserManager {
     const idx = modes.indexOf(current);
     const next = modes[(idx + 1) % modes.length];
     localStorage.setItem('userlistMode', next);
-    UserManager.forceUpdateUI();
+    if (window.userManager) {
+      window.userManager.updateUI();
+    }
     // Log the change
     logMessage(userListModeMessages[next], 'info');
     return next;

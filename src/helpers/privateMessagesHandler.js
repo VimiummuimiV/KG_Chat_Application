@@ -153,6 +153,12 @@ function exitPrivateMode() {
     if (exitButton) exitButton.remove();
 
     const username = privateMessageState.targetUsername; // Get username before clearing state
+    
+    // Use the global messageManager reference to remove private messages
+    if (window.messageManager) {
+      window.messageManager.removePrivateMessages();
+    }
+    
     privateMessageState.exitPrivateMode(); // Only call once
     logMessage({
       en: `Exited private chat with ${username}`,
