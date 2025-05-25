@@ -9,8 +9,6 @@ import { logMessage, removeChatTraces } from "./helpers.js";
 import { removeChatParams } from "../auth.js";
 import { HelpPanel } from "../components/helpPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
-import { settings } from "../data/definitions.js";
-import UserManager from '../managers/userManager.js';
 
 // Define available commands with their handlers
 const chatCommands = [
@@ -94,7 +92,7 @@ const chatCommands = [
     pattern: /^\/list\s+normal\s*$/,
     handler: () => {
       localStorage.setItem('userlistMode', 'normal');
-      UserManager.forceUpdateUI();
+      updateUserListUI(); 
       logMessage({
         en: 'User list mode set to normal',
         ru: 'Список пользователей: обычный режим'
@@ -107,7 +105,7 @@ const chatCommands = [
     pattern: /^\/list\s+race\s*$/,
     handler: () => {
       localStorage.setItem('userlistMode', 'race');
-      UserManager.forceUpdateUI();
+      updateUserListUI();
       logMessage({
         en: 'User list mode set to race',
         ru: 'Список пользователей: заезды сверху'
@@ -120,7 +118,7 @@ const chatCommands = [
     pattern: /^\/list\s+chat\s*$/,
     handler: () => {
       localStorage.setItem('userlistMode', 'chat');
-      UserManager.forceUpdateUI();
+      updateUserListUI();
       logMessage({
         en: 'User list mode set to general chat',
         ru: 'Список пользователей: общий чат сверху'
@@ -161,4 +159,13 @@ function handleCommands(inputElement) {
   }
 
   return false; // Return false if no command matched
+}
+
+function updateUserListUI() {
+  const userManager = window.userManager;
+  if (userManager) {
+    userManager.updateUI();
+  } else {
+    console.warn('UserManager is not initialized');
+  }
 }
