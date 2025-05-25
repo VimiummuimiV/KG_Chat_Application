@@ -10,6 +10,7 @@ import { removeChatParams } from "../auth.js";
 import { HelpPanel } from "../components/helpPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
 import { settings } from "../data/definitions.js";
+import UserManager from '../managers/userManager.js';
 
 // Define available commands with their handlers
 const chatCommands = [
@@ -85,6 +86,45 @@ const chatCommands = [
     pattern: /^\/events\s*$/,
     handler: () => {
       createEventsPanel();
+      return true;
+    }
+  },
+  {
+    name: 'list normal',
+    pattern: /^\/list\s+normal\s*$/,
+    handler: () => {
+      localStorage.setItem('userlistMode', 'normal');
+      UserManager.forceUpdateUI();
+      logMessage({
+        en: 'User list mode set to normal',
+        ru: 'Список пользователей: обычный режим'
+      }, 'info');
+      return true;
+    }
+  },
+  {
+    name: 'list race',
+    pattern: /^\/list\s+race\s*$/,
+    handler: () => {
+      localStorage.setItem('userlistMode', 'race');
+      UserManager.forceUpdateUI();
+      logMessage({
+        en: 'User list mode set to race',
+        ru: 'Список пользователей: заезды сверху'
+      }, 'info');
+      return true;
+    }
+  },
+  {
+    name: 'list chat',
+    pattern: /^\/list\s+chat\s*$/,
+    handler: () => {
+      localStorage.setItem('userlistMode', 'chat');
+      UserManager.forceUpdateUI();
+      logMessage({
+        en: 'User list mode set to general chat',
+        ru: 'Список пользователей: общий чат сверху'
+      }, 'info');
       return true;
     }
   }

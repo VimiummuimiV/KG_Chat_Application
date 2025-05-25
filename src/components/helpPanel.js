@@ -65,7 +65,10 @@ export class HelpPanel {
               { key: "/export colors", desc: "Export user colors to a json file" },
               { key: "/ignored", desc: "Show the ignored users panel" },
               { key: "/themes", desc: "Show the themes panel" },
-              { key: "/events", desc: "Show the events panel" }
+              { key: "/events", desc: "Show the events panel" },
+              { key: "/list normal", desc: "User list: Normal mode (sorted by role, not by race count)" },
+              { key: "/list race", desc: "User list: Users in a race at the top (sorted by race count)" },
+              { key: "/list chat", desc: "User list: General chat users at the top, others (sorted by race count)" }
             ]
           },
           {
@@ -187,7 +190,10 @@ export class HelpPanel {
               { key: "/export colors", desc: "Экспортировать цвета пользователей в json файл" },
               { key: "/ignored", desc: "Показать панель игнорируемых пользователей" },
               { key: "/themes", desc: "Показать панель тем" },
-              { key: "/events", desc: "Показать панель событий" }
+              { key: "/events", desc: "Показать панель событий" },
+              { key: "/list normal", desc: "Список пользователей: Обычный режим (сортировка по роли, без сортировки по колличеству заездов)" },
+              { key: "/list race", desc: "Список пользователей: Пользователи в игре сверху (сортировка по колличеству заездов)" },
+              { key: "/list chat", desc: "Список пользователей: Пользователи общего чата сверху, остальные (сортированные по колличеству заездов)" }
             ]
           },
           {

@@ -22,6 +22,8 @@ import { createCustomTooltip } from "../helpers/tooltip.js";
 const generateRandomParam = () => `rand=${Date.now()}`;
 
 export default class UserManager {
+  static instance = null;
+
   constructor(containerId = 'user-list') {
     this.container = document.getElementById(containerId);
     this.activeUsers = new Map();
@@ -50,6 +52,8 @@ export default class UserManager {
 
     // Attach event listeners
     this.setupEventListeners();
+
+    UserManager.instance = this;
   }
 
   loadAvatarCache() {
@@ -374,6 +378,13 @@ export default class UserManager {
     }
   }
 
+  // Force UI update from outside (e.g., after changing userlistMode)
+  static forceUpdateUI() {
+    if (UserManager.instance) {
+      UserManager.instance.updateUI();
+    }
+  }
+
   updateUI() {
     const ignoredUsers = storageWrapper.get();
 
@@ -383,18 +394,48 @@ export default class UserManager {
       existingElements.set(el.getAttribute('data-jid'), el);
     });
 
-    // Sort users by role and username
-    const sortedUsers = Array.from(this.activeUsers.values()).filter(user => {
+    // --- Userlist mode logic ---
+    const userlistMode = localStorage.getItem('userlistMode') || 'normal';
+    let sortedUsers = Array.from(this.activeUsers.values()).filter(user => {
       const cleanLogin = extractUsername(user.login);
 
       // Ignore users in the ignored list to avoid displaying them in the user list
       return !ignoredUsers.includes(cleanLogin);
-
-    }).sort((a, b) => {
-      const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
-      return priorityDiff !== 0 ? priorityDiff :
-        extractUsername(a.login).localeCompare(extractUsername(b.login));
     });
+
+    if (userlistMode === 'race') {
+      // Users in race at top (by race count desc), others below
+      sortedUsers = [
+        ...sortedUsers.filter(u => u.gameId).sort((a, b) => {
+          const ac = this.raceStats.get(extractUserId(a.jid))?.count || 0;
+          const bc = this.raceStats.get(extractUserId(b.jid))?.count || 0;
+          return bc - ac;
+        }),
+        ...sortedUsers.filter(u => !u.gameId).sort((a, b) => {
+          const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
+          return priorityDiff !== 0 ? priorityDiff : extractUsername(a.login).localeCompare(extractUsername(b.login));
+        })
+      ];
+    } else if (userlistMode === 'chat') {
+      // Users not in race at top, race users at bottom (race users sorted by count desc)
+      sortedUsers = [
+        ...sortedUsers.filter(u => !u.gameId).sort((a, b) => {
+          const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
+          return priorityDiff !== 0 ? priorityDiff : extractUsername(a.login).localeCompare(extractUsername(b.login));
+        }),
+        ...sortedUsers.filter(u => u.gameId).sort((a, b) => {
+          const ac = this.raceStats.get(extractUserId(a.jid))?.count || 0;
+          const bc = this.raceStats.get(extractUserId(b.jid))?.count || 0;
+          return bc - ac;
+        })
+      ];
+    } else {
+      // normal: by role and username
+      sortedUsers = sortedUsers.sort((a, b) => {
+        const priorityDiff = this.rolePriority[a.role] - this.rolePriority[b.role];
+        return priorityDiff !== 0 ? priorityDiff : extractUsername(a.login).localeCompare(extractUsername(b.login));
+      });
+    }
 
     // Build the updated list
     const fragment = document.createDocumentFragment();
