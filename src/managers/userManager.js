@@ -32,6 +32,7 @@ export default class UserManager {
     this.pendingUserJIDs = new Set(); // For tracking new users
     this.updatedUserJIDs = new Set(); // For tracking updated users
     this.updateUITimeout = null; // For debouncing UI updates
+    this.raceStats = new Map(); // Track race stats per userId: { count, lastGameId }
 
     // Role-based icons
     this.roleIcons = {
@@ -585,24 +586,34 @@ export default class UserManager {
   updateGameIndicator(userElement, user) {
     const userInfoContainer = userElement.querySelector('.user-info');
     let gameIndicator = userElement.querySelector('.game-indicator');
+    const userId = extractUserId(user.jid || user.login || '');
 
-    // Helper to set both attributes in one place
-    function setAttributes(indicator, gameId) {
+    // Get or initialize stats
+    let stats = this.raceStats.get(userId);
+    if (!stats) {
+      stats = { count: 0, lastGameId: null };
+      this.raceStats.set(userId, stats);
+    }
+
+    function setAttributes(indicator, gameId, raceCount) {
       indicator.setAttribute('data-game-id', gameId);
-      createCustomTooltip(indicator, `🚦 ${gameId}`);
+      createCustomTooltip(indicator, {
+        en: `[Game ID] ${gameId} [Races] ${raceCount}`,
+        ru: `[Игра] ${gameId} [Заездов] ${raceCount}`
+      });
     }
 
     if (user.gameId) {
+      if (stats.lastGameId !== user.gameId) {
+        stats.count += 1;
+        stats.lastGameId = user.gameId;
+      }
       if (gameIndicator) {
-        // Update existing indicator only if the ID changed
-        if (gameIndicator.getAttribute('data-game-id') !== user.gameId) {
-          setAttributes(gameIndicator, user.gameId);
-        }
+        setAttributes(gameIndicator, user.gameId, stats.count);
       } else {
-        // Create new indicator
         gameIndicator = document.createElement('span');
         gameIndicator.className = 'game-indicator';
-        setAttributes(gameIndicator, user.gameId);
+        setAttributes(gameIndicator, user.gameId, stats.count);
 
         const trafficIcon = document.createElement('span');
         trafficIcon.className = 'traffic-icon';
@@ -614,6 +625,9 @@ export default class UserManager {
     } else if (gameIndicator) {
       // Remove indicator if there's no gameId
       gameIndicator.remove();
+      // Reset stats for this user
+      stats.count = 0;
+      stats.lastGameId = null;
     }
   }
 
