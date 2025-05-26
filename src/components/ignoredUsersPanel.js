@@ -3,23 +3,27 @@ import { getExactUserIdByName } from "../helpers/helpers.js";
 import { uiStrings, defaultLanguage } from "../data/definitions.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
 
+// Storage keys for ignored users
+const IGNORED_USERS_KEY = 'ignored';
+const TEMP_IGNORED_USERS_KEY = 'tempIgnored';
+
 // Centralized storage wrapper for ignored users.
 export const storageWrapper = {
-  get: () => {
+  get: (key, fallback) => {
     try {
-      const stored = localStorage.getItem('ignored');
-      return stored ? JSON.parse(stored) : [];
+      const stored = localStorage.getItem(key);
+      return stored ? JSON.parse(stored) : fallback;
     } catch (e) {
       logMessage({
         en: `Error parsing ignored users data: ${e.message}`,
         ru: `Ошибка разбора данных игнорируемых пользователей: ${e.message}`
       }, 'error');
-      return [];
+      return fallback;
     }
   },
-  set: (data) => {
+  set: (key, data) => {
     try {
-      localStorage.setItem('ignored', JSON.stringify(data));
+      localStorage.setItem(key, JSON.stringify(data));
       return true;
     } catch (e) {
       logMessage({
@@ -80,6 +84,17 @@ const purgeUserFromChat = (username) => {
   }
 };
 
+// Helper to get all ignored users (permanent and non-expired temporary)
+export function getAllIgnoredUsers() {
+  const forever = storageWrapper.get(IGNORED_USERS_KEY, []);
+  const temp = storageWrapper.get(TEMP_IGNORED_USERS_KEY, {});
+  const now = Date.now();
+  const temporary = Object.entries(temp)
+    .filter(([_, expiry]) => expiry > now)
+    .map(([username]) => username);
+  return { forever, temporary };
+}
+
 // The main exported function.
 export const openIgnoredUsersPanel = () => {
   // Prevent duplicate container creation.
@@ -88,16 +103,60 @@ export const openIgnoredUsersPanel = () => {
     return existingContainer;
   }
 
-  const ignoredUsers = storageWrapper.get();
+  // Use the helper to get both lists
+  const { forever, temporary } = getAllIgnoredUsers();
 
   // Create container and ignored-users container.
   const container = createElement('div', 'ignored-users-panel');
   const userList = createElement('div', 'ignored-users-list');
   container.appendChild(userList);
 
-  // Create h2 (main header) and append to usernameColors.
+  // Create h2 (main header) and append to userList.
   const header = createElement('h2', null, { text: uiStrings.ignoredUsersHeader[defaultLanguage] });
   userList.appendChild(header);
+
+  // Helper to create a section (forever or temporary)
+  function createIgnoredSection({
+    type,
+    users,
+    userList,
+    uiStrings,
+    defaultLanguage,
+    createEntry
+  }) {
+    if (!users.length) return null;
+    const header = document.createElement('h3');
+    header.className = 'ignored-users-subheader';
+    header.innerHTML = `${uiStrings[type === 'forever' ? 'ignoredUsersSubheaderForever' : 'ignoredUsersSubheaderTemporary'][defaultLanguage]} <span class="counter">${users.length}</span>`;
+    const sectionClass = type === 'forever' ? 'ignored-users-forever-section' : 'ignored-users-temporary-section';
+    const section = createElement('div', sectionClass);
+    userList.append(header, section);
+    users.forEach(username => {
+      const entry = createEntry(username, type);
+      section.appendChild(entry);
+    });
+    return section;
+  }
+
+  // Forever section
+  const foreverSection = createIgnoredSection({
+    type: 'forever',
+    users: forever,
+    userList,
+    uiStrings,
+    defaultLanguage,
+    createEntry
+  });
+
+  // Temporary section
+  const temporarySection = createIgnoredSection({
+    type: 'temporary',
+    users: temporary,
+    userList,
+    uiStrings,
+    defaultLanguage,
+    createEntry
+  });
 
   // Add input field and button for adding new ignored users
   const inputContainer = createElement('div', 'ignored-users-input-container');
@@ -110,33 +169,30 @@ export const openIgnoredUsersPanel = () => {
 
   const handleAddIgnoredUser = async () => {
     const username = inputField.value.trim();
-    if (username && !ignoredUsers.includes(username)) {
-      const userId = await getExactUserIdByName(username);
-      if (!userId) {
-        logMessage({
-          en: `Could not find user "${username}"`,
-          ru: `Не удалось найти пользователя "${username}"`
-        }, 'error');
-        inputField.value = '';
-        inputField.classList.add('field-error');
-        setTimeout(() => inputField.classList.remove('field-error'), 500);
-        return;
-      }
-      ignoredUsers.push(username);
-      storageWrapper.set(ignoredUsers);
+    if (!username) return;
+    // Check if already ignored
+    if (forever.includes(username) || temporary.includes(username)) return;
+    const userId = await getExactUserIdByName(username);
+    if (!userId) {
       logMessage({
-        en: `Added "${username}" to the ignore list`,
-        ru: `"${username}" добавлен(а) в список игнорируемых`
-      }, 'info');
-      if (!userList.querySelector(`.username[text="${username}"]`)) {
-        const entry = createEntry(username);
-        userList.appendChild(entry);
-      }
+        en: `Could not find user "${username}"`,
+        ru: `Не удалось найти пользователя "${username}"`
+      }, 'error');
       inputField.value = '';
-
-      // Remove messages and user from the user list
-      purgeUserFromChat(username);
+      inputField.classList.add('field-error');
+      setTimeout(() => inputField.classList.remove('field-error'), 500);
+      return;
     }
+    // Always add as permanent ban (forever)
+    forever.push(username);
+    storageWrapper.set(IGNORED_USERS_KEY, forever);
+    logMessage({
+      en: `Added "${username}" to the ignore list`,
+      ru: `"${username}" добавлен(а) в список игнорируемых`
+    }, 'info');
+    foreverSection.appendChild(createEntry(username, 'forever'));
+    inputField.value = '';
+    purgeUserFromChat(username);
   };
 
   addButton.addEventListener('click', handleAddIgnoredUser);
@@ -150,9 +206,14 @@ export const openIgnoredUsersPanel = () => {
   container.insertBefore(inputContainer, userList);
 
   // Create an entry element.
-  const createEntry = (username) => {
+  function createEntry(username, type = 'forever') {
     const entry = createElement('div', 'ignored-user-entry');
     const label = createElement('div', 'username', { text: username });
+    if (type === 'temporary') {
+      label.classList.add('temporary-banned');
+    } else {
+      label.classList.add('forever-banned');
+    }
     const removeBtn = createElement('button', 'remove-btn');
     createCustomTooltip(removeBtn, {
       en: 'Remove from ignored',
@@ -179,22 +240,37 @@ export const openIgnoredUsersPanel = () => {
 
     removeBtn.appendChild(removeIcon);
 
-    removeBtn.addEventListener('click', () => {
-      const updatedUsers = ignoredUsers.filter(user => user !== username);
-      storageWrapper.set(updatedUsers);
-      ignoredUsers.splice(ignoredUsers.indexOf(username), 1); // Ensure the in-memory array is updated
+    // Helper to remove entry and, if last, remove section (and header if present)
+    function removeSectionIfEmpty(entry) {
+      const section = entry.parentElement;
       entry.remove();
+      if (section && section.children.length === 0) {
+        // Remove the section and its previous sibling (header) if present
+        const header = section.previousElementSibling;
+        section.remove();
+        if (header) header.remove();
+      }
+    }
+
+    removeBtn.addEventListener('click', () => {
+      if (type === 'temporary') {
+        // Remove from temp ignored
+        const temp = storageWrapper.get(TEMP_IGNORED_USERS_KEY, {});
+        delete temp[username];
+        storageWrapper.set(TEMP_IGNORED_USERS_KEY, temp);
+        removeSectionIfEmpty(entry);
+      } else {
+        // Remove from permanent ignored
+        const forever = storageWrapper.get(IGNORED_USERS_KEY, []);
+        const updatedUsers = forever.filter(user => user !== username);
+        storageWrapper.set(IGNORED_USERS_KEY, updatedUsers);
+        removeSectionIfEmpty(entry);
+      }
     });
 
     entry.append(label, removeBtn);
     return entry;
-  };
-
-  // Render ignored users.
-  ignoredUsers.forEach(username => {
-    const entry = createEntry(username);
-    userList.appendChild(entry);
-  });
+  }
 
   document.body.appendChild(container);
 

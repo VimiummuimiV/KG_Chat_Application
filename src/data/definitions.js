@@ -107,6 +107,8 @@ export const uiStrings = {
   eventsHeader: { en: "Events", ru: "События" },
   // Ignored users panel
   ignoredUsersHeader: { en: "Ignored", ru: "Игнорируемые" },
+  ignoredUsersSubheaderForever: { en: "Forever", ru: "Навсегда" },
+  ignoredUsersSubheaderTemporary: { en: "Temporary", ru: "Временно" },
   ignoredUsersPlaceholder: { en: "Enter username", ru: "Введите никнейм" },
   ignoredBlockButton: { en: "Block", ru: "Бан" },
   // Username colors panel

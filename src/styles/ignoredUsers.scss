@@ -18,11 +18,25 @@
   .ignored-users-list {
     max-width: 360px;
     min-width: 220px;
-    min-height: 50px;
     max-height: 70vh;
     overflow-y: auto;
     overflow-x: hidden;
     scrollbar-width: none;
+
+    h3 {
+      font-size: 1em !important;
+      margin: 0.5em 0 !important;
+      text-align: center !important;
+      color: var(--first-accent-color) !important;
+      border-bottom: 1px dashed var(--border-color) !important;
+      padding-bottom: 0.3em !important;
+
+      .counter {
+        font-size: 0.8em !important;
+        color: var(--fourth-accent-color) !important;
+        margin-left: 0.5em !important;
+      }
+    }
   }
 
   .ignored-users-input-container {
@@ -85,7 +99,7 @@
 
     .username {
       flex: 1;
-      color: var(--main-text-color) !important;
+      color: var(--second-accent-color) !important;
     }
 
     .remove-btn {

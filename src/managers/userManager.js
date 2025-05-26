@@ -13,7 +13,7 @@ import {
 
 import { addShakeEffect } from "../data/animations.js";
 import { usernameColors } from "../helpers/chatUsernameColors.js";
-import { storageWrapper } from "../components/ignoredUsersPanel.js";
+import { getAllIgnoredUsers } from "../components/ignoredUsersPanel.js";
 import { loadProfileIntoIframe } from "../helpers/iframeProfileLoader.js";
 import { handlePrivateMessageInput } from "../helpers/privateMessagesHandler.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
@@ -449,7 +449,9 @@ export default class UserManager {
   }
 
   updateUI() {
-    const ignoredUsers = storageWrapper.get();
+    // Use centralized helper for ignored users
+    const { forever, temporary } = getAllIgnoredUsers();
+    const ignoredUsers = [...forever, ...temporary];
 
     // Build map of existing DOM elements
     const existingElements = new Map();
