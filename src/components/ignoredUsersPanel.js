@@ -165,8 +165,9 @@ export const openIgnoredUsersPanel = () => {
     }
 
     // If foreverSection doesn't exist yet, create it now
-    if (!document.querySelector('.ignored-users-forever-section')) {
-      createIgnoredSection({
+    let foreverSection = document.querySelector('.ignored-users-forever-section');
+    if (!foreverSection) {
+      foreverSection = createIgnoredSection({
         type: 'forever',
         users: [username],
         userList,
