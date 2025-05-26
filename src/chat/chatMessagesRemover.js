@@ -1,4 +1,4 @@
-import { settings } from "../data/definitions.js";
+import { settings, uiStrings, defaultLanguage } from "../data/definitions.js";
 import { checkIsMobile, isTextSelected } from "../helpers/helpers.js";
 
 const DELETED_MESSAGES_KEY = "deletedChatAppMessages";
@@ -210,7 +210,7 @@ export default class ChatMessagesRemover {
 
     const deleteBtn = document.createElement("button");
     deleteBtn.className = "delete-btn";
-    deleteBtn.textContent = "Delete";
+    deleteBtn.textContent = uiStrings.deleteButton[defaultLanguage];
     deleteBtn.onclick = () => this.deleteSelectedMessages(container);
     container.appendChild(deleteBtn);
 
@@ -221,7 +221,7 @@ export default class ChatMessagesRemover {
         if (username) {
           const ignoreBtn = document.createElement("button");
           ignoreBtn.className = "ignore-btn";
-          ignoreBtn.textContent = "Ignore";
+          ignoreBtn.textContent = uiStrings.ignoreButton[defaultLanguage];
           ignoreBtn.onclick = () => this.showIgnoreOptions(ignoreBtn, username);
           container.appendChild(ignoreBtn);
         }
@@ -281,9 +281,9 @@ export default class ChatMessagesRemover {
     popup.className = "ignore-options-popup";
 
     const options = [
-      { text: "1 Hour", duration: 60 * 60 * 1000 },
-      { text: "1 Day", duration: 24 * 60 * 60 * 1000 },
-      { text: "Forever", duration: null }
+      { text: uiStrings.ignore1Hour[defaultLanguage], duration: 60 * 60 * 1000 },
+      { text: uiStrings.ignore1Day[defaultLanguage], duration: 24 * 60 * 60 * 1000 },
+      { text: uiStrings.ignoreForever[defaultLanguage], duration: null }
     ];
 
     options.forEach(option => {
@@ -343,19 +343,19 @@ export default class ChatMessagesRemover {
 
   // Clean up expired temporary ignores
   cleanupExpiredIgnores() {
-    const tempIgnored = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
+    const tempIgnoredData = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
     const now = Date.now();
     let hasChanges = false;
 
-    Object.keys(tempIgnored).forEach(username => {
-      if (tempIgnored[username] <= now) {
-        delete tempIgnored[username];
+    Object.keys(tempIgnoredData).forEach(username => {
+      if (tempIgnoredData[username] <= now) {
+        delete tempIgnoredData[username];
         hasChanges = true;
       }
     });
 
     if (hasChanges) {
-      localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnored));
+      localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnoredData));
     }
   }
 
@@ -366,8 +366,8 @@ export default class ChatMessagesRemover {
       return true;
     }
 
-    const tempIgnored = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
-    if (tempIgnored[username] && tempIgnored[username] > Date.now()) {
+    const tempIgnoredData = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
+    if (tempIgnoredData[username] && tempIgnoredData[username] > Date.now()) {
       return true;
     }
 

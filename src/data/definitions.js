@@ -118,5 +118,11 @@ export const uiStrings = {
   // Themes panel
   themesPanelHeader: { en: "Themes", ru: "Темы" },
   themesLightHeader: { en: "Light Themes", ru: "Светлые темы" },
-  themesDarkHeader: { en: "Dark Themes", ru: "Тёмные темы" }
+  themesDarkHeader: { en: "Dark Themes", ru: "Тёмные темы" },
+  // Message remover buttons
+  deleteButton: { en: "Delete", ru: "Удалить" },
+  ignoreButton: { en: "Ignore", ru: "Игнорировать" },
+  ignore1Hour: { en: "1 Hour", ru: "1 час" },
+  ignore1Day: { en: "1 Day", ru: "1 день" },
+  ignoreForever: { en: "Forever", ru: "Навсегда" },
 };
