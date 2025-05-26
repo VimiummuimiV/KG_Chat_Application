@@ -336,6 +336,10 @@ export default class ChatMessagesRemover {
     }
 
     // Only update via messageManager, do not call purgeUserFromChat
+    logMessage({
+      en: `Added "${username}" to the ignore list`,
+      ru: `"${username}" добавлен(а) в список игнорируемых`
+    }, 'info');
     if (window.messageManager && typeof window.messageManager.removeIgnoredMessages === 'function') {
       window.messageManager.removeIgnoredMessages();
     }
@@ -346,16 +350,24 @@ export default class ChatMessagesRemover {
     const tempIgnoredData = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
     const now = Date.now();
     let hasChanges = false;
+    let liberatedUsers = [];
 
     Object.keys(tempIgnoredData).forEach(username => {
       if (tempIgnoredData[username] <= now) {
         delete tempIgnoredData[username];
         hasChanges = true;
+        liberatedUsers.push(username);
       }
     });
 
     if (hasChanges) {
       localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnoredData));
+      liberatedUsers.forEach(username => {
+        logMessage({
+          en: `User "${username}" was automatically removed from the temporary ignore list`,
+          ru: `Пользователь "${username}" автоматически удалён из временного игнора`
+        }, 'info');
+      });
     }
   }
 
