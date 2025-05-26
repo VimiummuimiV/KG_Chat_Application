@@ -155,7 +155,7 @@ function exitPrivateMode() {
     const username = privateMessageState.targetUsername; // Get username before clearing state
     
     // Use the global messageManager reference to remove private messages
-    if (window.messageManager) {
+    if (window.messageManager && typeof window.messageManager.removePrivateMessages === 'function') {
       window.messageManager.removePrivateMessages();
     }
     

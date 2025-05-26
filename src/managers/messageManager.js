@@ -65,7 +65,7 @@ export default class MessageManager {
       const now = Date.now(); // milliseconds since epoch
       return `private-${now}`;
     }
-    return `${time}-${username}-${text}`;
+    return `${time}-[${username}]-${text}`;
   }
 
   addMessage(messageObj) {
@@ -491,4 +491,36 @@ export default class MessageManager {
     const privateMessageElements = this.panel.querySelectorAll('.message.private');
     privateMessageElements.forEach(element => element.remove());
   }
+
+  removeIgnoredMessages() {
+    // Get all ignored users
+    const { forever, temporary } = getAllIgnoredUsers();
+    const ignoredUsers = [...forever, ...temporary];
+
+    // Remove messages from ignored users
+    for (const [id, message] of this.messageMap.entries()) {
+      if (ignoredUsers.includes(message.from)) {
+        this.messageMap.delete(id);
+        this.renderedMessageIds.delete(id);
+      }
+    }
+
+    // Remove ignored user message elements from DOM
+    const ignoredMessageElements = Array.from(this.panel.querySelectorAll('.message'))
+      .filter(el => ignoredUsers.includes(el.querySelector('.username').textContent.trim()));
+    ignoredMessageElements.forEach(element => element.remove());
+
+    // Remove ignored users from the user list in the DOM based on the new HTML structure.
+    const userList = document.getElementById("user-list");
+    if (userList) {
+      const userItems = userList.querySelectorAll(".user-item");
+      userItems.forEach(item => {
+        const itemUsername = item.querySelector(".username")?.textContent;
+        if (ignoredUsers.includes(itemUsername)) {
+          item.remove();
+        }
+      });
+    }
+  }
+
 }

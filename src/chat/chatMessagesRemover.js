@@ -303,7 +303,7 @@ export default class ChatMessagesRemover {
     const rect = ignoreBtn.getBoundingClientRect();
     const popupWidth = 100; // Approximate width
     const left = Math.max(0, Math.min(rect.left, window.innerWidth - popupWidth));
-    
+
     popup.style.top = `${rect.bottom + 5}px`;
     popup.style.left = `${left}px`;
 
@@ -335,34 +335,9 @@ export default class ChatMessagesRemover {
       localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnored));
     }
 
-    this.purgeUserFromChat(username);
-  }
-
-  // Remove all messages and user list entries for a specific user
-  purgeUserFromChat(username) {
-    if (!username || typeof username !== 'string') return;
-
-    const messagesPanel = document.querySelector(".messages-panel");
-    const userList = document.getElementById("user-list");
-
-    if (messagesPanel) {
-      const messages = messagesPanel.querySelectorAll(".message");
-      messages.forEach(msg => {
-        const messageUsername = msg.querySelector(".username")?.textContent;
-        if (messageUsername === username) {
-          msg.remove();
-        }
-      });
-    }
-
-    if (userList) {
-      const userItems = userList.querySelectorAll(".user-item");
-      userItems.forEach(item => {
-        const itemUsername = item.querySelector(".username")?.textContent;
-        if (itemUsername === username) {
-          item.remove();
-        }
-      });
+    // Only update via messageManager, do not call purgeUserFromChat
+    if (window.messageManager && typeof window.messageManager.removeIgnoredMessages === 'function') {
+      window.messageManager.removeIgnoredMessages();
     }
   }
 

@@ -50,41 +50,6 @@ const createElement = (tag, className, attributes = {}) => {
   return element;
 };
 
-// Helper function to remove a user from both the chat messages and the user list
-const purgeUserFromChat = (username) => {
-  // Early validation with more robust check
-  if (!username || typeof username !== 'string') {
-    console.warn('Invalid username provided to purgeUserFromChat');
-    return;
-  }
-
-  // Cache DOM elements once
-  const messagesPanel = document.querySelector(".messages-panel");
-  const userList = document.getElementById("user-list");
-
-  // Remove user messages
-  if (messagesPanel) {
-    const messages = messagesPanel.querySelectorAll(".message");
-    messages.forEach(msg => {
-      const messageUsername = msg.querySelector(".username")?.textContent;
-      if (messageUsername === username) {
-        msg.remove();
-      }
-    });
-  }
-
-  // Remove from user list
-  if (userList) {
-    const userItems = userList.querySelectorAll(".user-item");
-    userItems.forEach(item => {
-      const itemUsername = item.querySelector(".username")?.textContent;
-      if (itemUsername === username) {
-        item.remove();
-      }
-    });
-  }
-};
-
 // Helper to get all ignored users (permanent and non-expired temporary)
 export function getAllIgnoredUsers() {
   const forever = storageWrapper.get(IGNORED_USERS_KEY, []);
@@ -195,7 +160,9 @@ export const openIgnoredUsersPanel = () => {
       ru: `"${username}" добавлен(а) в список игнорируемых`
     }, 'info');
     inputField.value = '';
-    purgeUserFromChat(username);
+    if (window.messageManager && typeof window.messageManager.removeIgnoredMessages === 'function') {
+      window.messageManager.removeIgnoredMessages();
+    }
 
     // If foreverSection doesn't exist yet, create it now
     if (!document.querySelector('.ignored-users-forever-section')) {
