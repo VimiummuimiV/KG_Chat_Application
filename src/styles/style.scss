@@ -35,6 +35,27 @@ $mix-for-brightness: #d2d2d2;
   }
 }
 
+@mixin floating-buttons-container {
+  position: absolute !important;
+  display: flex;
+  gap: 0.5em !important;
+  top: 0;
+  left: 0;
+  z-index: 1020 !important;
+}
+
+@mixin floating-button {
+  padding: 8px 16px;
+  transition: all 0.3s;
+  cursor: pointer;
+  filter: brightness(1);
+  border-radius: 0.2em !important;
+
+  &:hover {
+    filter: brightness(1.5);
+  }
+}
+
 // Main Chat Container
 #app-chat-container {
   border-radius: 0.4em 0.4em 0 0 !important;
@@ -875,32 +896,38 @@ $mix-for-brightness: #d2d2d2;
   box-shadow: $slight-box-shadow !important;
 }
 
-.delete-btn {
-  z-index: 1020 !important;
-  padding: 8px 16px;
-  transition: all 0.3s;
-  cursor: pointer;
-  filter: brightness(1);
-  border-radius: 0.2em !important;
+.ignore-options-popup {
+  @include floating-buttons-container;
 
-  &:hover {
-    filter: brightness(1.5);
+  .ignore-option-btn {
+    @include floating-button;
   }
 }
 
-.delete-btn.message-mode {
+.action-buttons-container {
+  @include floating-buttons-container;
+
+  .delete-btn,
+  .ignore-btn {
+    @include floating-button;
+  }
+}
+
+.message-mode .delete-btn,
+.username-mode .ignore-btn,
+.ignore-option-btn {
   background-color: hsl(0, 50%, 20%);
   color: hsl(0, 60%, 70%);
   border: 1px solid hsl(0, 50%, 35%);
 }
 
-.delete-btn.username-mode {
+.username-mode .delete-btn {
   background-color: hsl(145, 50%, 20%);
   color: hsl(145, 60%, 70%);
   border: 1px solid hsl(145, 50%, 35%);
 }
 
-.delete-btn.time-mode {
+.time-mode .delete-btn {
   background-color: hsl(200, 50%, 20%);
   color: hsl(200, 60%, 70%);
   border: 1px solid hsl(200, 50%, 35%);

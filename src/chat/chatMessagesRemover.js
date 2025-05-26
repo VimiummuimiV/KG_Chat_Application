@@ -2,6 +2,8 @@ import { settings } from "../data/definitions.js";
 import { checkIsMobile, isTextSelected } from "../helpers/helpers.js";
 
 const DELETED_MESSAGES_KEY = "deletedChatAppMessages";
+const IGNORED_USERS_KEY = "ignored";
+const TEMP_IGNORED_USERS_KEY = "tempIgnored";
 
 export default class ChatMessagesRemover {
   constructor() {
@@ -15,12 +17,15 @@ export default class ChatMessagesRemover {
     this.init();
   }
 
+  // Initialize the class by attaching events and rendering UI elements
   init() {
     this.attachEvents();
     this.updateDeletedMessages();
     this.renderToggle();
+    this.cleanupExpiredIgnores();
   }
 
+  // Attach event listeners for desktop and mobile interactions
   attachEvents() {
     document.addEventListener("mousedown", (e) => {
       const msgEl = e.target.closest(".messages-panel .message");
@@ -99,6 +104,7 @@ export default class ChatMessagesRemover {
     }
   }
 
+  // Handle selection logic based on target type (time, username, or message)
   handleSelection(target, msgEl, isCtrlKey) {
     // Prevent selection if text is already selected in the message
     if (isTextSelected()) return;
@@ -116,6 +122,7 @@ export default class ChatMessagesRemover {
     }
   }
 
+  // Select messages based on time criteria
   handleTimeSelection(msgEl, isCtrlKey) {
     const messages = Array.from(
       document.querySelectorAll(".messages-panel .message")
@@ -147,6 +154,7 @@ export default class ChatMessagesRemover {
     }
   }
 
+  // Select all messages from a specific user
   handleUsernameSelection(usernameEl) {
     const usernameText = usernameEl.textContent.trim();
     document.querySelectorAll(".messages-panel .message").forEach((msg) => {
@@ -161,6 +169,7 @@ export default class ChatMessagesRemover {
     });
   }
 
+  // Toggle selection state of a message element
   toggleSelect(el, state, mode = "message-mode") {
     if (!el) return;
 
@@ -176,15 +185,16 @@ export default class ChatMessagesRemover {
     state ? this.selected.add(id) : this.selected.delete(id);
   }
 
+  // Display delete and ignore buttons at the correct position
   showDeleteButton(e, msg) {
     // Prevent showing the delete button if text is already selected in the message
     if (isTextSelected()) return;
 
-    const existingBtn = document.querySelector(".delete-btn");
-    if (existingBtn) existingBtn.remove();
+    const existingContainer = document.querySelector(".action-buttons-container");
+    if (existingContainer) existingContainer.remove();
 
-    const btn = document.createElement("button");
-    btn.className = "delete-btn";
+    const container = document.createElement("div");
+    container.className = "action-buttons-container";
 
     let modeClass = "message-mode";
     if (msg.classList.contains("time-mode")) {
@@ -192,59 +202,205 @@ export default class ChatMessagesRemover {
     } else if (msg.classList.contains("username-mode")) {
       modeClass = "username-mode";
     }
-    btn.classList.add(modeClass);
+    container.classList.add(modeClass);
 
     if (this.isMobile) {
-      btn.classList.add("mobile-delete-btn");
+      container.classList.add("mobile-container");
     }
 
-    btn.textContent = "Delete";
+    const deleteBtn = document.createElement("button");
+    deleteBtn.className = "delete-btn";
+    deleteBtn.textContent = "Delete";
+    deleteBtn.onclick = () => this.deleteSelectedMessages(container);
+    container.appendChild(deleteBtn);
 
-    // Prevent touch events on the button from bubbling up to any global "outside tap" handlers.
-    btn.addEventListener("touchstart", (e) => {
+    if (modeClass === "username-mode") {
+      const usernameEl = msg.querySelector(".username");
+      if (usernameEl) {
+        const username = usernameEl.textContent.trim();
+        if (username) {
+          const ignoreBtn = document.createElement("button");
+          ignoreBtn.className = "ignore-btn";
+          ignoreBtn.textContent = "Ignore";
+          ignoreBtn.onclick = () => this.showIgnoreOptions(ignoreBtn, username);
+          container.appendChild(ignoreBtn);
+        }
+      }
+    }
+
+    container.addEventListener("touchstart", (e) => {
       e.stopPropagation();
     });
 
-    document.body.append(btn);
-    const { offsetWidth: w, offsetHeight: h } = btn;
-    btn.remove();
+    // Temporarily append to body to measure dimensions
+    document.body.append(container);
+    const { offsetWidth: w, offsetHeight: h } = container;
+    container.remove();
 
-    Object.assign(btn.style, {
+    // Calculate position ensuring the container stays within viewport bounds
+    const left = Math.max(0, Math.min(e.clientX - w / 2, window.innerWidth - w));
+    const top = Math.max(0, Math.min(e.clientY - h / 2, window.innerHeight - h));
+
+    Object.assign(container.style, {
       position: "fixed",
-      top: `${e.clientY - h / 2}px`,
-      left: `${e.clientX - w / 2}px`,
+      top: `${top}px`,
+      left: `${left}px`,
+      zIndex: "10000"
     });
-
-    btn.onclick = () => this.deleteSelectedMessages(btn);
 
     if (this.isMobile) {
       const handleOutsideTap = (event) => {
-        if (!btn.contains(event.target)) {
+        if (!container.contains(event.target)) {
           this.clearSelection();
-          btn.remove();
+          container.remove();
           document.removeEventListener('touchstart', handleOutsideTap);
         }
       };
       document.addEventListener('touchstart', handleOutsideTap);
-      btn.outsideTapHandler = handleOutsideTap;
+      container.outsideTapHandler = handleOutsideTap;
     }
 
     let timeoutId;
-    btn.addEventListener("mouseenter", () => {
+    container.addEventListener("mouseenter", () => {
       if (timeoutId) clearTimeout(timeoutId);
     });
 
-    btn.addEventListener("mouseleave", () => {
+    container.addEventListener("mouseleave", () => {
       timeoutId = setTimeout(() => {
-        btn.remove();
+        container.remove();
         this.clearSelection();
       }, settings.clearSelectionDelay);
     });
 
-    document.body.append(btn);
+    document.body.append(container);
   }
 
-  deleteSelectedMessages(btn) {
+  // Show popup with ignore duration options
+  showIgnoreOptions(ignoreBtn, username) {
+    const popup = document.createElement("div");
+    popup.className = "ignore-options-popup";
+
+    const options = [
+      { text: "1 Hour", duration: 60 * 60 * 1000 },
+      { text: "1 Day", duration: 24 * 60 * 60 * 1000 },
+      { text: "Forever", duration: null }
+    ];
+
+    options.forEach(option => {
+      const optionBtn = document.createElement("button");
+      optionBtn.className = "ignore-option-btn";
+      optionBtn.textContent = option.text;
+      optionBtn.onclick = () => {
+        this.ignoreUser(username, option.duration);
+        popup.remove();
+        this.clearSelection();
+        const existingContainer = document.querySelector(".action-buttons-container");
+        if (existingContainer) existingContainer.remove();
+      };
+      popup.appendChild(optionBtn);
+    });
+
+    const rect = ignoreBtn.getBoundingClientRect();
+    const popupWidth = 100; // Approximate width
+    const left = Math.max(0, Math.min(rect.left, window.innerWidth - popupWidth));
+    
+    popup.style.top = `${rect.bottom + 5}px`;
+    popup.style.left = `${left}px`;
+
+    document.body.appendChild(popup);
+
+    const handleOutsideClick = (event) => {
+      if (!popup.contains(event.target) && !ignoreBtn.contains(event.target)) {
+        popup.remove();
+        document.removeEventListener('click', handleOutsideClick);
+      }
+    };
+    document.addEventListener('click', handleOutsideClick);
+  }
+
+  // Ignore a user for a specified duration
+  ignoreUser(username, duration) {
+    if (duration === null) {
+      // Forever - add to permanent ignore list
+      const ignoredUsers = JSON.parse(localStorage.getItem(IGNORED_USERS_KEY) || "[]");
+      if (!ignoredUsers.includes(username)) {
+        ignoredUsers.push(username);
+        localStorage.setItem(IGNORED_USERS_KEY, JSON.stringify(ignoredUsers));
+      }
+    } else {
+      // Temporary ignore - add to temp ignore list with expiry time
+      const tempIgnored = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
+      const expiryTime = Date.now() + duration;
+      tempIgnored[username] = expiryTime;
+      localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnored));
+    }
+
+    this.purgeUserFromChat(username);
+  }
+
+  // Remove all messages and user list entries for a specific user
+  purgeUserFromChat(username) {
+    if (!username || typeof username !== 'string') return;
+
+    const messagesPanel = document.querySelector(".messages-panel");
+    const userList = document.getElementById("user-list");
+
+    if (messagesPanel) {
+      const messages = messagesPanel.querySelectorAll(".message");
+      messages.forEach(msg => {
+        const messageUsername = msg.querySelector(".username")?.textContent;
+        if (messageUsername === username) {
+          msg.remove();
+        }
+      });
+    }
+
+    if (userList) {
+      const userItems = userList.querySelectorAll(".user-item");
+      userItems.forEach(item => {
+        const itemUsername = item.querySelector(".username")?.textContent;
+        if (itemUsername === username) {
+          item.remove();
+        }
+      });
+    }
+  }
+
+  // Clean up expired temporary ignores
+  cleanupExpiredIgnores() {
+    const tempIgnored = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
+    const now = Date.now();
+    let hasChanges = false;
+
+    Object.keys(tempIgnored).forEach(username => {
+      if (tempIgnored[username] <= now) {
+        delete tempIgnored[username];
+        hasChanges = true;
+      }
+    });
+
+    if (hasChanges) {
+      localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnored));
+    }
+  }
+
+  // Check if a user is currently ignored
+  isUserIgnored(username) {
+    const ignoredUsers = JSON.parse(localStorage.getItem(IGNORED_USERS_KEY) || "[]");
+    if (ignoredUsers.includes(username)) {
+      return true;
+    }
+
+    const tempIgnored = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
+    if (tempIgnored[username] && tempIgnored[username] > Date.now()) {
+      return true;
+    }
+
+    return false;
+  }
+
+  // Delete selected messages and update UI
+  deleteSelectedMessages(container) {
     document.querySelectorAll(".selected-message").forEach((msg) => {
       if (!msg) return;
 
@@ -252,15 +408,16 @@ export default class ChatMessagesRemover {
       if (msg.classList.length === 0) msg.removeAttribute("class");
     });
     this.storeDeleted([...this.selected]);
-    btn.remove();
-    if (this.isMobile && btn.outsideTapHandler) {
-      document.removeEventListener('touchstart', btn.outsideTapHandler);
+    container.remove();
+    if (this.isMobile && container.outsideTapHandler) {
+      document.removeEventListener('touchstart', container.outsideTapHandler);
     }
     this.selected.clear();
     this.updateDeletedMessages();
     this.renderToggle();
   }
 
+  // Clear all selected messages without deleting
   clearSelection() {
     document.querySelectorAll(".selected-message").forEach((msg) => {
       if (!msg) return;
@@ -273,6 +430,7 @@ export default class ChatMessagesRemover {
     this.selected.clear();
   }
 
+  // Store deleted message IDs in localStorage
   storeDeleted(ids) {
     const stored = new Set(
       JSON.parse(localStorage.getItem(DELETED_MESSAGES_KEY) || "[]")
@@ -281,6 +439,7 @@ export default class ChatMessagesRemover {
     localStorage.setItem(DELETED_MESSAGES_KEY, JSON.stringify([...stored]));
   }
 
+  // Update visibility of messages based on deleted status
   updateDeletedMessages() {
     const stored = new Set(
       JSON.parse(localStorage.getItem(DELETED_MESSAGES_KEY) || "[]")
@@ -300,6 +459,7 @@ export default class ChatMessagesRemover {
     localStorage.setItem(DELETED_MESSAGES_KEY, JSON.stringify([...stored]));
   }
 
+  // Render toggle button to show/hide deleted messages
   renderToggle() {
     const storedItems = JSON.parse(localStorage.getItem(DELETED_MESSAGES_KEY) || "[]");
     const hasDeleted = storedItems.length > 0;
@@ -394,6 +554,7 @@ export default class ChatMessagesRemover {
     }
   }
 
+  // Restore all deleted messages
   restoreAllMessages() {
     document.querySelectorAll(".messages-panel .message").forEach((msg) => {
       if (!msg) return;
@@ -407,6 +568,7 @@ export default class ChatMessagesRemover {
   }
 }
 
+// Generate a unique ID for a message element
 function getMessageId(el) {
   if (!el) return '';
   if (el.dataset.messageId) return el.dataset.messageId;
@@ -430,6 +592,7 @@ function getMessageId(el) {
   return id;
 }
 
+// Prune deleted message IDs that no longer exist in the DOM
 export function pruneDeletedMessages() {
   const messages = document.querySelectorAll(".messages-panel .message");
   if (messages.length === 0) return;
