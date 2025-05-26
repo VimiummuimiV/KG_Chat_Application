@@ -1,4 +1,4 @@
-import { logMessage } from "./helpers/helpers";
+import { logMessage } from "./helpers/helpers.js";
 
 export function removeChatParams() {
   localStorage.removeItem('klavoauth');

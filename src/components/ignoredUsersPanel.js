@@ -72,6 +72,9 @@ export const openIgnoredUsersPanel = () => {
   // Use the helper to get both lists
   const { forever, temporary } = getAllIgnoredUsers();
 
+  // Retrieve tempIgnored ONCE for this panel render
+  const tempIgnoredMap = storageWrapper.get(TEMP_IGNORED_USERS_KEY, {});
+
   // Create container and ignored-users container.
   const container = createElement('div', 'ignored-users-panel');
   const userList = createElement('div', 'ignored-users-list');
@@ -88,7 +91,8 @@ export const openIgnoredUsersPanel = () => {
     userList,
     uiStrings,
     defaultLanguage,
-    createEntry
+    createEntry,
+    tempIgnoredMap // Pass tempIgnoredMap for temporary users
   }) {
     if (!users.length) return null;
     const header = document.createElement('h3');
@@ -98,7 +102,7 @@ export const openIgnoredUsersPanel = () => {
     const section = createElement('div', sectionClass);
     userList.append(header, section);
     users.forEach(username => {
-      const entry = createEntry(username, type);
+      const entry = createEntry(username, type, tempIgnoredMap);
       section.appendChild(entry);
     });
     return section;
@@ -114,14 +118,15 @@ export const openIgnoredUsersPanel = () => {
     createEntry
   });
 
-  // Temporary section
+  // Temporary section (fetch tempIgnored map once)
   createIgnoredSection({
     type: 'temporary',
     users: temporary,
     userList,
     uiStrings,
     defaultLanguage,
-    createEntry
+    createEntry,
+    tempIgnoredMap
   });
 
   // Add input field and button for adding new ignored users
@@ -191,11 +196,46 @@ export const openIgnoredUsersPanel = () => {
   container.insertBefore(inputContainer, userList);
 
   // Create an entry element.
-  function createEntry(username, type = 'forever') {
+  function createEntry(username, type = 'forever', tempIgnoredMap = null) {
     const entry = createElement('div', 'ignored-user-entry');
     const label = createElement('div', 'username', { text: username });
+    // Use tempIgnoredMap passed in for temporary users
     if (type === 'temporary') {
       label.classList.add('temporary-banned');
+      // Tooltip for temporary ignored users
+      const expiry = tempIgnoredMap ? tempIgnoredMap[username] : null;
+      if (expiry) {
+        const now = Date.now();
+        const msLeft = expiry - now;
+        // Try to infer duration (1h, 1d, etc) by checking common values
+        let durationMs = null;
+        if (msLeft > 0) {
+          // Try to guess duration: check if close to 1h or 1d
+          const diff1h = Math.abs((expiry - msLeft) - (expiry - 60 * 60 * 1000));
+          const diff1d = Math.abs((expiry - msLeft) - (expiry - 24 * 60 * 60 * 1000));
+          if (diff1h < 60000) durationMs = 60 * 60 * 1000;
+          else if (diff1d < 60000) durationMs = 24 * 60 * 60 * 1000;
+        }
+        // Fallback: use expiry - msLeft as addedAt
+        const addedAt = durationMs ? (expiry - durationMs) : (expiry - msLeft);
+        // Format remaining time
+        const totalSeconds = Math.max(0, Math.floor(msLeft / 1000));
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+        // Tooltip text
+        const addedDate = new Date(addedAt);
+        // Compact 24-hour format: YYYY-MM-DD HH:mm:ss
+        const pad = n => n.toString().padStart(2, '0');
+        const addedStr = `${addedDate.getFullYear()}-${pad(addedDate.getMonth() + 1)}-${pad(addedDate.getDate())} ${pad(addedDate.getHours())}:${pad(addedDate.getMinutes())}:${pad(addedDate.getSeconds())}`;
+        // Localized labels in brackets
+        const addedLabel = defaultLanguage === 'ru' ? '[Добавлен]' : '[Added]';
+        const timeLeftLabel = defaultLanguage === 'ru' ? '[Осталось]' : '[Time left]';
+        const tooltipText =
+          `${addedLabel}: ${addedStr}\n` +
+          `${timeLeftLabel}: ${hours}h ${minutes}m ${seconds}s`;
+        createCustomTooltip(label, { en: tooltipText, ru: tooltipText });
+      }
     } else {
       label.classList.add('forever-banned');
     }
@@ -221,9 +261,9 @@ export const openIgnoredUsersPanel = () => {
     removeBtn.addEventListener('click', () => {
       if (type === 'temporary') {
         // Remove from temp ignored
-        const temp = storageWrapper.get(TEMP_IGNORED_USERS_KEY, {});
-        delete temp[username];
-        storageWrapper.set(TEMP_IGNORED_USERS_KEY, temp);
+        // Use tempIgnoredMap already defined above
+        delete tempIgnoredMap[username];
+        storageWrapper.set(TEMP_IGNORED_USERS_KEY, tempIgnoredMap);
         removeSectionIfEmpty(entry);
       } else {
         // Remove from permanent ignored
