@@ -1,5 +1,5 @@
 import { settings, uiStrings, defaultLanguage } from "../data/definitions.js";
-import { checkIsMobile, isTextSelected } from "../helpers/helpers.js";
+import { checkIsMobile, isTextSelected, logMessage } from "../helpers/helpers.js";
 
 const DELETED_MESSAGES_KEY = "deletedChatAppMessages";
 const IGNORED_USERS_KEY = "ignored";
@@ -245,7 +245,6 @@ export default class ChatMessagesRemover {
       position: "fixed",
       top: `${top}px`,
       left: `${left}px`,
-      zIndex: "10000"
     });
 
     if (this.isMobile) {
@@ -280,24 +279,47 @@ export default class ChatMessagesRemover {
     const popup = document.createElement("div");
     popup.className = "ignore-options-popup";
 
+    // Custom minutes input button as the first option
     const options = [
+      { custom: true },
       { text: uiStrings.ignore1Hour[defaultLanguage], duration: 60 * 60 * 1000 },
       { text: uiStrings.ignore1Day[defaultLanguage], duration: 24 * 60 * 60 * 1000 },
       { text: uiStrings.ignoreForever[defaultLanguage], duration: null }
     ];
 
     options.forEach(option => {
-      const optionBtn = document.createElement("button");
-      optionBtn.className = "ignore-option-btn";
-      optionBtn.textContent = option.text;
-      optionBtn.onclick = () => {
-        this.ignoreUser(username, option.duration);
-        popup.remove();
-        this.clearSelection();
-        const existingContainer = document.querySelector(".action-buttons-container");
-        if (existingContainer) existingContainer.remove();
-      };
-      popup.appendChild(optionBtn);
+      if (option.custom) {
+        const customBtn = document.createElement("button");
+        customBtn.className = "ignore-option-btn custom-ignore-minutes";
+        customBtn.textContent = uiStrings.ignoreCustomMinutes[defaultLanguage];
+        customBtn.onclick = () => {
+          let min;
+          while (true) {
+            min = prompt(uiStrings.ignoreCustomPrompt[defaultLanguage]);
+            if (min === null) return; // Cancelled
+            if (/^\d+$/.test(min) && parseInt(min, 10) > 0) break;
+          }
+          const minutes = parseInt(min, 10);
+          this.ignoreUser(username, minutes * 60 * 1000);
+          popup.remove();
+          this.clearSelection();
+          const existingContainer = document.querySelector(".action-buttons-container");
+          if (existingContainer) existingContainer.remove();
+        };
+        popup.appendChild(customBtn);
+      } else {
+        const optionBtn = document.createElement("button");
+        optionBtn.className = "ignore-option-btn";
+        optionBtn.textContent = option.text;
+        optionBtn.onclick = () => {
+          this.ignoreUser(username, option.duration);
+          popup.remove();
+          this.clearSelection();
+          const existingContainer = document.querySelector(".action-buttons-container");
+          if (existingContainer) existingContainer.remove();
+        };
+        popup.appendChild(optionBtn);
+      }
     });
 
     const rect = ignoreBtn.getBoundingClientRect();
@@ -327,19 +349,28 @@ export default class ChatMessagesRemover {
         ignoredUsers.push(username);
         localStorage.setItem(IGNORED_USERS_KEY, JSON.stringify(ignoredUsers));
       }
+      logMessage({
+        en: `Added "${username}" to the ignore list`,
+        ru: `"${username}" добавлен(а) в список игнорируемых`
+      }, 'info');
     } else {
       // Temporary ignore - add to temp ignore list with expiry time
       const tempIgnored = JSON.parse(localStorage.getItem(TEMP_IGNORED_USERS_KEY) || "{}");
       const expiryTime = Date.now() + duration;
       tempIgnored[username] = expiryTime;
       localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnored));
+      const minutes = Math.round(duration / 60000);
+      function getMinuteWordRu(n) {
+        if (n % 10 === 1 && n % 100 !== 11) return 'минуту';
+        if ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100)) return 'минуты';
+        return 'минут';
+      }
+      logMessage({
+        en: `Added "${username}" to the ignore list for ${minutes} minutes`,
+        ru: `"${username}" добавлен(а) в список игнорируемых на ${minutes} ${getMinuteWordRu(minutes)}`
+      }, 'info');
     }
 
-    // Only update via messageManager, do not call purgeUserFromChat
-    logMessage({
-      en: `Added "${username}" to the ignore list`,
-      ru: `"${username}" добавлен(а) в список игнорируемых`
-    }, 'info');
     if (window.messageManager && typeof window.messageManager.removeIgnoredMessages === 'function') {
       window.messageManager.removeIgnoredMessages();
     }

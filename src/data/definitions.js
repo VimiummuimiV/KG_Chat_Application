@@ -125,4 +125,6 @@ export const uiStrings = {
   ignore1Hour: { en: "1 Hour", ru: "1 час" },
   ignore1Day: { en: "1 Day", ru: "1 день" },
   ignoreForever: { en: "Forever", ru: "Навсегда" },
+  ignoreCustomMinutes: { en: "Minutes", ru: "Минуты" },
+  ignoreCustomPrompt: { en: "Enter minutes to ignore:", ru: "Введите количество минут для игнора:" },
 };
