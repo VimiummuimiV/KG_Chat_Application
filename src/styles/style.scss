@@ -326,6 +326,10 @@ $mix-for-brightness: #d2d2d2;
     #user-list {
       padding: 1em !important;
       user-select: none !important;
+
+      .separation {
+        margin-bottom: 1.5em !important;
+      }
     }
 
     &::-webkit-scrollbar-thumb {

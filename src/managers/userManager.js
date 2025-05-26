@@ -466,9 +466,11 @@ export default class UserManager {
       return !ignoredUsers.includes(cleanLogin);
     });
 
+    // Separate users into those in a game and those not in a game
     const usersInRace = sortedUsers.filter(u => u.gameId);
     const usersNotInRace = sortedUsers.filter(u => !u.gameId);
 
+    // Sort users based on the mode
     if (userlistMode === 'race') {
       sortedUsers = [
         ...this.sortByRaceCount(usersInRace),
@@ -480,18 +482,29 @@ export default class UserManager {
         ...this.sortByRaceCount(usersInRace)
       ];
     } else {
-      // normal: by role and username
       sortedUsers = this.sortByRoleAndName(sortedUsers);
     }
 
-    // Build the updated list
+    // Calculate the index where the "separation" class should be added
+    let separationIndex = -1;
+    if (userlistMode === 'race' && usersInRace.length > 0) {
+      // In "race" mode, add "separation" to the last user in usersInRace
+      separationIndex = usersInRace.length - 1;
+    } else if (userlistMode === 'chat' && usersNotInRace.length > 0) {
+      // In "chat" mode, add "separation" to the last user in usersNotInRace
+      separationIndex = usersNotInRace.length - 1;
+    }
+    // For "normal" mode, separationIndex remains -1, so no class is added
+
+    // Build the updated user list
     const fragment = document.createDocumentFragment();
-    sortedUsers.forEach(user => {
+
+    sortedUsers.forEach((user, index) => {
       let userElement = existingElements.get(user.jid);
       const userId = extractUserId(user.jid);
       const cleanLogin = extractUsername(user.login);
 
-      // If element doesn't exist, create it
+      // Create new user element if it doesn’t exist
       if (!userElement) {
         userElement = document.createElement('div');
         userElement.classList.add('user-item');
@@ -502,23 +515,20 @@ export default class UserManager {
         avatarContainer.className = 'avatar-container';
         this.setUserAvatar(avatarContainer, user, userId, cleanLogin);
 
-        // Create user info container
         const userInfo = document.createElement('div');
         userInfo.className = 'user-info';
         userInfo.innerHTML = `
-          <span class="username" style="color: ${user.usernameColor}" data-user-id="${user.jid}">${cleanLogin}</span>
-          <span class="role ${user.role}">${roleIcon}</span>
-        `;
+        <span class="username" style="color: ${user.usernameColor}" data-user-id="${user.jid}">${cleanLogin}</span>
+        <span class="role ${user.role}">${roleIcon}</span>
+      `;
 
-        // Add tooltip for role icon
         const roleEl = userInfo.querySelector('.role');
         this.updateRoleTooltip(roleEl, user.role);
 
-        // Append avatar and user info
         userElement.appendChild(avatarContainer);
         userElement.appendChild(userInfo);
       } else {
-        // Update existing element if needed
+        // Update existing element if necessary
         if (!userElement.querySelector('.avatar-container')) {
           const avatarContainer = document.createElement('span');
           avatarContainer.className = 'avatar-container';
@@ -526,36 +536,35 @@ export default class UserManager {
           userElement.insertBefore(avatarContainer, userElement.firstChild);
         }
 
-        // Remove from map so remaining elements are those to be removed
         existingElements.delete(user.jid);
 
-        // Update role icon if changed
         const roleElement = userElement.querySelector('.role');
         const newRoleIcon = this.roleIcons[user.role];
         if (roleElement && roleElement.textContent !== newRoleIcon) {
           roleElement.textContent = newRoleIcon;
           if (!roleElement.classList.contains(user.role)) {
             roleElement.className = `role ${user.role}`;
-            // Update tooltip for changed role
             this.updateRoleTooltip(roleElement, user.role);
           }
         }
 
-        // Update username color if needed
         const usernameElement = userElement.querySelector('.username');
         if (usernameElement && usernameElement.style.color !== user.usernameColor) {
           usernameElement.style.color = user.usernameColor;
         }
       }
 
-      // Handle game indicator
+      // Update game indicator
       this.updateGameIndicator(userElement, user);
 
-      // Append to fragment
+      // Add or remove the "separation" class based on the index
+      userElement.classList.toggle('separation', index === separationIndex);
+
+      // Append the user element to the fragment
       fragment.appendChild(userElement);
     });
 
-    // Clear container and append fragment
+    // Clear the container and append the new fragment
     this.container.innerHTML = '';
     this.container.appendChild(fragment);
 
