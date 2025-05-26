@@ -395,8 +395,8 @@ export default class ChatMessagesRemover {
       localStorage.setItem(TEMP_IGNORED_USERS_KEY, JSON.stringify(tempIgnoredData));
       liberatedUsers.forEach(username => {
         logMessage({
-          en: `User "${username}" was automatically removed from the temporary ignore list`,
-          ru: `Пользователь "${username}" автоматически удалён из временного игнора`
+          en: `User "${username}" was removed from the ignore list`,
+          ru: `Пользователь "${username}" удалён из игнора`
         }, 'info');
       });
     }
