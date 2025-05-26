@@ -2,6 +2,7 @@ import { adjustVisibility, logMessage } from "../helpers/helpers.js";
 import { getExactUserIdByName } from "../helpers/helpers.js";
 import { uiStrings, defaultLanguage } from "../data/definitions.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
+import { removeSVG } from "../data/icons.js";
 
 // Storage keys for ignored users
 const IGNORED_USERS_KEY = 'ignored';
@@ -139,7 +140,7 @@ export const openIgnoredUsersPanel = () => {
   }
 
   // Forever section
-  const foreverSection = createIgnoredSection({
+  createIgnoredSection({
     type: 'forever',
     users: forever,
     userList,
@@ -149,7 +150,7 @@ export const openIgnoredUsersPanel = () => {
   });
 
   // Temporary section
-  const temporarySection = createIgnoredSection({
+  createIgnoredSection({
     type: 'temporary',
     users: temporary,
     userList,
@@ -170,8 +171,10 @@ export const openIgnoredUsersPanel = () => {
   const handleAddIgnoredUser = async () => {
     const username = inputField.value.trim();
     if (!username) return;
+
     // Check if already ignored
     if (forever.includes(username) || temporary.includes(username)) return;
+
     const userId = await getExactUserIdByName(username);
     if (!userId) {
       logMessage({
@@ -183,6 +186,7 @@ export const openIgnoredUsersPanel = () => {
       setTimeout(() => inputField.classList.remove('field-error'), 500);
       return;
     }
+
     // Always add as permanent ban (forever)
     forever.push(username);
     storageWrapper.set(IGNORED_USERS_KEY, forever);
@@ -190,9 +194,22 @@ export const openIgnoredUsersPanel = () => {
       en: `Added "${username}" to the ignore list`,
       ru: `"${username}" добавлен(а) в список игнорируемых`
     }, 'info');
-    foreverSection.appendChild(createEntry(username, 'forever'));
     inputField.value = '';
     purgeUserFromChat(username);
+
+    // If foreverSection doesn't exist yet, create it now
+    if (!document.querySelector('.ignored-users-forever-section')) {
+      createIgnoredSection({
+        type: 'forever',
+        users: [username],
+        userList,
+        uiStrings,
+        defaultLanguage,
+        createEntry
+      });
+    } else {
+      foreverSection.appendChild(createEntry(username, 'forever'));
+    }
   };
 
   addButton.addEventListener('click', handleAddIgnoredUser);
@@ -215,30 +232,11 @@ export const openIgnoredUsersPanel = () => {
       label.classList.add('forever-banned');
     }
     const removeBtn = createElement('button', 'remove-btn');
+    removeBtn.innerHTML = removeSVG;
     createCustomTooltip(removeBtn, {
       en: 'Remove from ignored',
       ru: 'Удалить из игнорируемых'
     });
-
-    // Add SVG cross icon to the remove button
-    const removeIcon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-    removeIcon.setAttribute("viewBox", "0 0 24 24");
-    removeIcon.setAttribute("width", "12");
-    removeIcon.setAttribute("height", "12");
-    removeIcon.setAttribute("fill", "none");
-    removeIcon.setAttribute("stroke", "currentColor");
-    removeIcon.setAttribute("stroke-width", "2");
-    removeIcon.setAttribute("stroke-linecap", "round");
-    removeIcon.setAttribute("stroke-linejoin", "round");
-    removeIcon.classList.add("remove-icon");
-
-    ['M18 6L6 18', 'M6 6L18 18'].forEach(d => {
-      const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-      path.setAttribute("d", d);
-      removeIcon.appendChild(path);
-    });
-
-    removeBtn.appendChild(removeIcon);
 
     // Helper to remove entry and, if last, remove section (and header if present)
     function removeSectionIfEmpty(entry) {
