@@ -318,15 +318,10 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         }, 'warning');
         return;
       }
+      this.lastSentMessage = { text, timestamp: now };
 
-      // Update lastSentMessage info.
-      this.lastSentMessage = {
-        text,
-        timestamp: now
-      };
-
-      // Enqueue the message with timestamp.
-      this.messageQueue.set(messageId, {
+      // Prepare the message object for queueing
+      const msgObj = {
         text,
         id: messageId,
         isPrivate,
@@ -334,11 +329,29 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
         recipient,
         pending: isPending,
         enqueueTime: now
-      });
+      };
 
-      // Process the queue on connection establishment.
+      // If connected, try to send immediately, else queue
       if (this.isConnected && !this.isReconnecting) {
-        this.processQueue();
+        const messageStanza = this._createMessageStanza(text, messageId, isPrivate, fullJid);
+        xmppConnection.sendRequestWithRetry(messageStanza)
+          .then(() => {
+            // Success: update UI, do not queue
+            messageManager.updatePendingStatus(messageId, false);
+          })
+          .catch((error) => {
+            // Failure: queue for retry
+            logMessage({
+              en: `Failed to send message (${messageId}): ${error.message}`,
+              ru: `Не удалось отправить сообщение (${messageId}): ${error.message}`
+            }, 'error');
+            this.messageQueue.set(messageId, msgObj);
+            messageManager.updatePendingStatus(messageId, true);
+          });
+      } else {
+        // Not connected: always queue
+        this.messageQueue.set(messageId, msgObj);
+        messageManager.updatePendingStatus(messageId, true);
       }
     },
 
