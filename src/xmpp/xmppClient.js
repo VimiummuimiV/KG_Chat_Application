@@ -104,7 +104,8 @@ export function createXMPPClient(xmppConnection, userManager, messageManager, us
           this.messageQueue.delete(messageId);
           // Optionally, update the UI to remove the pending flag.
           messageManager.updatePendingStatus(msg.id, false);
-          safeProcessMessages(null);
+          // Optionally, process messages if needed
+          // safeProcessMessages(null);
         } catch (error) {
           logMessage({
             en: `Failed to send queued message (${msg.id}): ${error.message}`,
