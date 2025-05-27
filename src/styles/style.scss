@@ -36,7 +36,7 @@ $mix-for-brightness: #d2d2d2;
 }
 
 @mixin floating-buttons-container {
-  position: absolute !important;
+  position: fixed !important;
   display: flex;
   gap: 0.5em !important;
   top: 0;

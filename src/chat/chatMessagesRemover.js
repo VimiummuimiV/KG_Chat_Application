@@ -49,7 +49,7 @@ export default class ChatMessagesRemover {
 
     document.addEventListener("contextmenu", (e) => {
       const msg = e.target.closest(".messages-panel .message");
-      if (msg) {
+      if (msg && !e.target.closest("a")) {
         if (!isTextSelected()) {
           e.preventDefault();
           this.showDeleteButton(e, msg);
@@ -60,7 +60,7 @@ export default class ChatMessagesRemover {
     if (this.isMobile) {
       document.addEventListener("touchstart", (e) => {
         const msgEl = e.target.closest(".messages-panel .message");
-        if (!msgEl) return;
+        if (!msgEl || e.target.closest("a")) return;
 
         this.touchStartX = e.touches[0].clientX;
         this.touchStartY = e.touches[0].clientY;
@@ -106,8 +106,9 @@ export default class ChatMessagesRemover {
 
   // Handle selection logic based on target type (time, username, or message)
   handleSelection(target, msgEl, isCtrlKey) {
-    // Prevent selection if text is already selected in the message
-    if (isTextSelected()) return;
+    // Prevent message selection if text is already selected or it is target anchor
+    const anchorEl = target.closest("a");
+    if (isTextSelected() || anchorEl) return;
 
     const timeEl = target.closest(".time");
     const usernameEl = target.closest(".username");
