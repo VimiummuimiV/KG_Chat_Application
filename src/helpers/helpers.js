@@ -4,7 +4,7 @@ import { handleLayoutBehavior } from "./layoutBehavior.js";
 import { showChatAlert } from "../helpers/chatHeaderAlert.js";
 
 import {
-  emojiFaces,
+  emojiAvatar,
   settings,
   trustedDomains,
   eventsColorMap,
@@ -17,7 +17,7 @@ let lastEmojiAvatar = null;
 export function getRandomEmojiAvatar() {
   let newEmoji;
   do {
-    newEmoji = emojiFaces[Math.floor(Math.random() * emojiFaces.length)];
+    newEmoji = emojiAvatar[Math.floor(Math.random() * emojiAvatar.length)];
   } while (newEmoji === lastEmojiAvatar);
   lastEmojiAvatar = newEmoji;
   return newEmoji;

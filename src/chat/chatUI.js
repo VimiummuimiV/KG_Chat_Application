@@ -30,6 +30,7 @@ import { openUsernameColors } from "../components/chatUsernameColorsPanel.js";
 import { openIgnoredUsersPanel } from "../components/ignoredUsersPanel.js";
 import { createEventsPanel, updateEventsButtonState } from "../components/eventsPanel.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
+import { emojiPanelButton } from "../data/definitions.js";
 
 // Apply the UI theme to the chat
 export function applyUITheme() {
@@ -39,6 +40,10 @@ export function applyUITheme() {
     localStorage.setItem('selectedTheme', savedTheme);
   }
   document.body.className = savedTheme; // Apply the theme to the body for global panels
+}
+
+function getRandomEmojiFace() {
+  return emojiPanelButton[Math.floor(Math.random() * emojiPanelButton.length)];
 }
 
 export function createChatUI() {
@@ -76,8 +81,8 @@ export function createChatUI() {
   // Create emoji button
   const emojiButton = document.createElement('button');
   emojiButton.className = 'emoji-trigger button';
-  emojiButton.innerHTML = smileSVG;
   emojiButton.classList.add('emoji-button');
+  emojiButton.textContent = getRandomEmojiFace();
   createCustomTooltip(emojiButton, {
     en: '[Ctrl + ;] Open emoji picker',
     ru: '[Ctrl + ;] Открыть панель эмодзи'
