@@ -275,7 +275,6 @@ $mix-for-brightness: #d2d2d2;
   // Input Container
   .input-container {
     display: flex !important;
-    width: 100%;
     align-items: center !important;
     padding: 1em !important;
     gap: 0.5em !important;
@@ -347,6 +346,7 @@ $mix-for-brightness: #d2d2d2;
     #user-list {
       padding: 1em !important;
       user-select: none !important;
+      flex: 1 !important;
 
       .separation {
         margin-bottom: 1.5em !important;
