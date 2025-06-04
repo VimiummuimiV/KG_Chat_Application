@@ -113,7 +113,6 @@ export function createCustomTooltip(element, tooltipContent, lang = null) {
       const tooltipDiv = document.createElement('div');
       tooltipDiv.classList.add("custom-tooltip-popup");
       // Optionally, set positioning styles here:
-      tooltipDiv.style.position = 'absolute';
       tooltipDiv.style.display = 'none';
       tooltipDiv.style.opacity = '0';
       document.body.appendChild(tooltipDiv);
