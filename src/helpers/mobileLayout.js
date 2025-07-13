@@ -11,6 +11,7 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
     globalMobileStyles.textContent = `
       html, body {
         overflow: hidden !important;
+        height: 0 !important;
       }
       #app-chat-container .emoji-panel {
         transform: translate(-50%, 0%) !important;
