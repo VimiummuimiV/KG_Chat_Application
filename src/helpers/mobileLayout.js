@@ -9,9 +9,9 @@ export function handleMobileLayout(chatContainer, chatContent, messagesPanel, dr
     const globalMobileStyles = document.createElement('style');
     globalMobileStyles.classList.add('global-mobile-styles');
     globalMobileStyles.textContent = `
-      body {
-        overflow: hidden !important;
-      } 
+      html {
+        padding-bottom: 100px !important;
+      }
       #app-chat-container .emoji-panel {
         transform: translate(-50%, 0%) !important;
         height: 60vh !important;
