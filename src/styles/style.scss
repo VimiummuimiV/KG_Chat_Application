@@ -348,6 +348,13 @@ $mix-for-brightness: #d2d2d2;
       user-select: none !important;
       flex: 1 !important;
 
+      .user-item {
+        .avatar-container {
+          // Keep avatar above .user-info (Username) on hover zoom
+          z-index: 1 !important;
+        }
+      }
+
       .separation {
         margin-bottom: 1.5em !important;
       }
