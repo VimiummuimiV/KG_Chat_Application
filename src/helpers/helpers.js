@@ -371,3 +371,14 @@ export function logMessage(message, type = 'info', showAlert = true, lang = null
     showChatAlert(alertMsg, { type, duration: settings.showAlertDuration });
   }
 }
+
+// ==================================================================================================
+
+export function setDocumentLock(lock) {
+  if (!checkIsMobile()) return;
+  const style = lock ? 'setProperty' : 'removeProperty';
+  ['overflow', 'height'].forEach(prop => {
+    document.documentElement.style[style](prop, lock ? (prop === 'overflow' ? 'hidden' : '100vh') : '', 'important');
+    document.body.style[style](prop, lock ? (prop === 'overflow' ? 'hidden' : '100vh') : '', 'important');
+  });
+}

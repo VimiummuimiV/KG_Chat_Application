@@ -7,7 +7,8 @@ import {
 
 import {
   clamp,
-  focusTextInput
+  focusTextInput,
+  setDocumentLock
 } from "../helpers/helpers.js";
 
 import { handleLayoutBehavior } from "../helpers/layoutBehavior.js";
@@ -113,6 +114,7 @@ export function toggleChatVisibility() {
       chatContainer.style.display = isVisible ? 'flex' : 'none';
       updateToggleButton(toggleButton, isVisible);
       saveChatState({ ...chatState, isVisible });
+      setDocumentLock(isVisible);
       if (isVisible) focusTextInput();
     }, 300);
   } else {
@@ -120,6 +122,7 @@ export function toggleChatVisibility() {
     chatContainer.classList.toggle('hidden-chat', !isVisible);
     updateToggleButton(toggleButton, isVisible);
     saveChatState({ ...chatState, isVisible });
+    setDocumentLock(isVisible);
     if (isVisible) focusTextInput();
   }
 }
@@ -142,6 +145,9 @@ export function addChatToggleFeature() {
     chatContainer.classList.remove('visible-chat', 'hidden-chat');
     chatContainer.classList.add(isVisible ? 'visible-chat' : 'hidden-chat');
   }
+
+  // Lock/unlock document on initial load
+  setDocumentLock(isVisible);
 
   // Keyboard shortcuts
   document.addEventListener('keydown', (e) => {
