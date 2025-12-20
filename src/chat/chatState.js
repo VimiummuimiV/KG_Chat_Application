@@ -201,21 +201,26 @@ export function toggleChatMaximize() {
 
 // Add extra toggle button to open and close chat
 export function createExtraToggleButton() {
-  if(!checkIsMobile()) return null;
-
+  if (!checkIsMobile()) return null;
   const button = document.createElement('button');
   button.className = 'chat-extra-toggle-btn';
-  
-  const updateButton = () => {
-    const isVisible = getChatState().isVisible !== false;
+
+  const updateButton = (isVisible) => {
     button.innerHTML = isVisible ? closeSVG : openSVG;
+    // Force repaint on mobile (harmless on PC)
+    button.style.opacity = '0.99';
+    requestAnimationFrame(() => { button.style.opacity = ''; });
   };
-  
-  updateButton();
+
+  const getCurrentVisible = () => getChatState().isVisible !== false;
+
+  updateButton(getCurrentVisible()); // Initial
+
   button.addEventListener('click', () => {
+    const newVisible = !getCurrentVisible();
     toggleChatVisibility();
-    updateButton();
+    updateButton(newVisible);
   });
-  
+
   document.body.appendChild(button);
 }
