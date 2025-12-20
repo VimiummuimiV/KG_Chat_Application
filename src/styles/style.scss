@@ -36,7 +36,6 @@
     height: 18px !important;
     width: 18px !important;
     margin: 0.124em !important;
-    fill: var(--third-accent-color) !important;
   }
   
   &:hover {
@@ -1285,4 +1284,10 @@ $mix-for-brightness: #d2d2d2;
 // Extra Chat Options Toggle Button
 .chat-extra-toggle-btn {
   @include side-btn(65%);
+  svg.yes {
+    fill: var(--first-accent-color) !important;
+  }
+  svg.no {
+    fill: var(--second-accent-color) !important;
+  }
 }

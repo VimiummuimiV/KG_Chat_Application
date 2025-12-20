@@ -202,11 +202,19 @@ export function toggleChatMaximize() {
 // Add extra toggle button to open and close chat
 export function createExtraToggleButton() {
   if(!checkIsMobile()) return null;
+
   const button = document.createElement('button');
   button.className = 'chat-extra-toggle-btn';
-  button.innerHTML = openSVG
+  
+  const updateButton = () => {
+    const isVisible = getChatState().isVisible !== false;
+    button.innerHTML = isVisible ? closeSVG : openSVG;
+  };
+  
+  updateButton();
   button.addEventListener('click', () => {
     toggleChatVisibility();
+    updateButton();
   });
   
   document.body.appendChild(button);
