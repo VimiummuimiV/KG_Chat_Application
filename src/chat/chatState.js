@@ -98,6 +98,8 @@ export function getChatState() {
 
 export function saveChatState(state) {
   localStorage.setItem('chatState', JSON.stringify(state));
+  // Dispatch custom event for same-window synchronization
+  window.dispatchEvent(new CustomEvent('chatVisibilityChanged', { detail: state }));
 }
 
 export function toggleChatVisibility() {
@@ -201,7 +203,6 @@ export function toggleChatMaximize() {
 
 // Add extra toggle button to open and close chat
 export function createExtraToggleButton() {
-  if (!checkIsMobile()) return null;
   const button = document.createElement('button');
   button.className = 'chat-extra-toggle-btn';
 
@@ -212,14 +213,20 @@ export function createExtraToggleButton() {
     requestAnimationFrame(() => { button.style.opacity = ''; });
   };
 
-  const getCurrentVisible = () => getChatState().isVisible !== false;
+  // Initial state
+  updateButton(getChatState().isVisible !== false);
 
-  updateButton(getCurrentVisible()); // Initial
+  // Listen for custom event to sync with other toggle methods
+  const syncWithState = () => {
+    const currentState = getChatState();
+    updateButton(currentState.isVisible !== false);
+  };
+
+  // Listen for chat visibility changes (fired by saveChatState)
+  window.addEventListener('chatVisibilityChanged', syncWithState);
 
   button.addEventListener('click', () => {
-    const newVisible = !getCurrentVisible();
     toggleChatVisibility();
-    updateButton(newVisible);
   });
 
   document.body.appendChild(button);
