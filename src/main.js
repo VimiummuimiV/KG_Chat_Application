@@ -27,6 +27,7 @@ import {
 
 import { addChatToggleFeature } from "../src/chat/chatState.js"
 import { setupPrivateMessageEvents } from "./helpers/privateMessagesHandler.js";
+import { createExtraToggleButton } from "../src/chat/chatState.js";
 
 // Function to detect if running in an iframe
 function isInIframe() {
@@ -75,6 +76,7 @@ async function initializeApp() {
     // Initialize UI and features
     createChatUI();
     addChatToggleFeature();
+    createExtraToggleButton();
     setupDragHandlers();
     setupResizeHandlers();
     setupWindowResizeHandler();

@@ -6,6 +6,7 @@ import {
 } from "../data/icons.js";
 
 import {
+  checkIsMobile,
   clamp,
   focusTextInput,
   setDocumentLock
@@ -194,4 +195,19 @@ export function toggleChatMaximize() {
 
     focusTextInput();
   });
+}
+
+// ==================================================================================================
+
+// Add extra toggle button to open and close chat
+export function createExtraToggleButton() {
+  if(!checkIsMobile()) return null;
+  const button = document.createElement('button');
+  button.className = 'chat-extra-toggle-btn';
+  button.innerHTML = openSVG
+  button.addEventListener('click', () => {
+    toggleChatVisibility();
+  });
+  
+  document.body.appendChild(button);
 }
