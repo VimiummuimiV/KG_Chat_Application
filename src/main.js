@@ -47,7 +47,6 @@ function checkAuth() {
     logMessage("Application cannot run in an iframe", 'error');
     return false;
   }
-
   const params = new URLSearchParams(window.location.search);
   if (window.location.pathname === '/g/' && params.has('gmid')) {
     return false;
@@ -56,7 +55,16 @@ function checkAuth() {
     getAuthData();
     return false;
   }
+  
   const authData = localStorage.getItem('klavoauth');
+  const userDropdown = document.querySelector('.user-dropdown');
+  
+  // If user is authorized on the site (has .user-dropdown) but missing klavoauth
+  if (userDropdown && !authData) {
+    window.location.href = 'https://klavogonki.ru/gamelist/';
+    return false;
+  }
+  
   if (!authData || !klavoauth.username || !klavoauth.password) {
     return false;
   }
