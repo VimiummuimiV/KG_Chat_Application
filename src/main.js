@@ -58,8 +58,6 @@ function checkAuth() {
   }
   const authData = localStorage.getItem('klavoauth');
   if (!authData || !klavoauth.username || !klavoauth.password) {
-    localStorage.removeItem('klavoauth');
-    window.location.href = 'https://klavogonki.ru/gamelist/';
     return false;
   }
   return true;

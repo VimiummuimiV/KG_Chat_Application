@@ -36,10 +36,16 @@ export function getAuthData() {
         .replace(/'/g, '"') // Fix string quotes
     );
 
+    // Check if user is logged in (chatParams should be an object, not an empty array)
+    if (Array.isArray(parsedData.chatParams)) {
+      localStorage.removeItem('klavoauth');
+      return;
+    }
+
     const username = `${parsedData.chatParams.user.id}#${parsedData.chatParams.user.login}`;
     const password = parsedData.chatParams.pass;
 
-    // Redirect only if it hasn’t happened before
+    // Redirect only if it hasn't happened before
     if (!localStorage.getItem('klavoauth')) {
       // Always update klavoauth with the latest data
       localStorage.setItem('klavoauth', JSON.stringify({ username, password }));
