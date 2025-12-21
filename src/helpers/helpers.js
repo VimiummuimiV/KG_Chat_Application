@@ -383,3 +383,14 @@ export function setDocumentLock(lock) {
     document.body.style[style](prop, lock ? (prop === 'overflow' ? 'hidden' : '0') : '', 'important');
   });
 }
+
+// ==================================================================================================
+
+// Function to detect if running in an iframe
+export function isInIframe() {
+  try {
+    return window !== window.top;
+  } catch (e) {
+    return true;
+  }
+}

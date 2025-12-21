@@ -2,8 +2,7 @@ import XMPPConnection from "./xmpp/xmppConnection.js";
 import UserManager from "./managers/userManager.js";
 import MessageManager from "./managers/messageManager.js";
 import { createChatUI } from "./chat/chatUI.js";
-import { removeChatParams } from "./auth.js";
-import { getAuthData } from "./auth.js";
+import { removeChatParams, checkAuth, klavoauth } from "./auth.js";
 import { checkForUpdates } from "./components/updateCheck.js";
 import { setupCommandEvents } from "./helpers/commands.js";
 import { pruneDeletedMessages } from "./chat/chatMessagesRemover.js";
@@ -15,7 +14,6 @@ import {
 } from "./chat/chatEvents.js";
 
 import { createXMPPClient } from "./xmpp/xmppClient.js";
-import { klavoauth } from "./auth.js";
 
 import {
   observeMessagesPanel,
@@ -28,48 +26,6 @@ import {
 import { addChatToggleFeature } from "../src/chat/chatState.js"
 import { setupPrivateMessageEvents } from "./helpers/privateMessagesHandler.js";
 import { createExtraToggleButton } from "../src/chat/chatState.js";
-
-// Function to detect if running in an iframe
-function isInIframe() {
-  try {
-    return window !== window.top;
-  } catch (e) {
-    // If there's an error when trying to access window.top, 
-    // it's likely due to cross-origin restrictions, which means we're in an iframe
-    return true;
-  }
-}
-
-// ------------------------- Auth Check ---------------------------
-function checkAuth() {
-  // First check if running in iframe
-  if (isInIframe()) {
-    logMessage("Application cannot run in an iframe", 'error');
-    return false;
-  }
-  const params = new URLSearchParams(window.location.search);
-  if (window.location.pathname === '/g/' && params.has('gmid')) {
-    return false;
-  }
-  if (window.location.href.includes('/gamelist/')) {
-    getAuthData();
-    return false;
-  }
-  
-  const authData = localStorage.getItem('klavoauth');
-  const userDropdown = document.querySelector('.user-dropdown');
-  
-  // If user is authorized on the site (has .user-dropdown) but missing klavoauth
-  if (userDropdown && !authData) {
-    window.location.href = 'https://klavogonki.ru/gamelist/';
-    return false;
-  }
-  
-  if (!authData || !klavoauth.username || !klavoauth.password) {
-    return false;
-  }
-  return true;
-}
 
 // ------------------------- Main App ---------------------------
 async function initializeApp() {
