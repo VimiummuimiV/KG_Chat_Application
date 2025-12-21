@@ -118,7 +118,7 @@ export function toggleChatVisibility() {
       updateToggleButton(toggleButton, isVisible);
       saveChatState({ ...chatState, isVisible });
       setDocumentLock(isVisible);
-      if (isVisible) focusTextInput();
+      if (isVisible && !checkIsMobile()) focusTextInput();
     }, 300);
   } else {
     chatContainer.classList.toggle('visible-chat', isVisible);
@@ -126,7 +126,7 @@ export function toggleChatVisibility() {
     updateToggleButton(toggleButton, isVisible);
     saveChatState({ ...chatState, isVisible });
     setDocumentLock(isVisible);
-    if (isVisible) focusTextInput();
+    if (isVisible && !checkIsMobile()) focusTextInput();
   }
 }
 
