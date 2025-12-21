@@ -83,7 +83,7 @@ export function getAuthData() {
 
     // Check if user is logged in (chatParams should be an object, not an empty array)
     if (Array.isArray(parsedData.chatParams)) {
-      localStorage.removeItem('klavoauth');
+      removeChatParams({ exclude: ['chatUsernameColor'] });
       return;
     }
 
