@@ -83,7 +83,8 @@ export function getAuthData() {
 
     // Check if user is logged in (chatParams should be an object, not an empty array)
     if (Array.isArray(parsedData.chatParams)) {
-      removeChatParams({ exclude: ['chatUsernameColor'] });
+      // User is not logged in - just clean up without redirecting (already on gamelist)
+      localStorage.removeItem('klavoauth');
       return;
     }
 
