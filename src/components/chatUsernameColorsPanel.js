@@ -33,11 +33,26 @@ const storageWrapper = {
   }
 };
 
+// Helper to fetch user ID and create color entry
+async function createColorEntry(username, color) {
+  const userId = await getExactUserIdByName(username);
+  if (!userId) {
+    logMessage({
+      en: `Could not find user ID for "${username}"`,
+      ru: `Не удалось найти ID пользователя "${username}"`
+    }, 'error');
+    return null;
+  }
+  return { id: userId, color: color };
+}
+
 const storageOps = {
   getColors: () => storageWrapper.get(sessionStorage),
-  saveColor: (username, color) => {
+  saveColor: async (username, color) => {
     const localColors = storageWrapper.get(localStorage);
-    localColors[username] = color;
+    const entry = await createColorEntry(username, color);
+    if (!entry) return false;
+    localColors[username] = entry;
     return storageWrapper.set(localStorage, localColors);
   },
   removeColor: (username) => {
@@ -52,11 +67,13 @@ const storageOps = {
     const localColors = storageWrapper.get(localStorage);
     return username in localColors;
   },
-  updateUsername: (oldUsername, newUsername, color) => {
+  updateUsername: async (oldUsername, newUsername, color) => {
     const localColors = storageWrapper.get(localStorage);
     if (oldUsername in localColors) {
       delete localColors[oldUsername];
-      localColors[newUsername] = color;
+      const entry = await createColorEntry(newUsername, color);
+      if (!entry) return false;
+      localColors[newUsername] = entry;
       return storageWrapper.set(localStorage, localColors);
     }
     return false;
@@ -213,18 +230,18 @@ export function openUsernameColors() {
       entry._editBtn = editBtn;
     }
 
-    const debouncedUpdate = debounce(() => {
+    const debouncedUpdate = debounce(async () => {
       const newColor = colorInput.value;
       updateStyles(label, colorBox, newColor);
       if (!isSaved) {
         sessionColors[username] = newColor;
         storageWrapper.set(sessionStorage, sessionColors);
-        storageOps.saveColor(username, newColor);
+        await storageOps.saveColor(username, newColor);
         createSavedBlock();
         renderSavedBlock();
         updateGeneratedBlockStatus();
       } else {
-        storageOps.saveColor(username, newColor);
+        await storageOps.saveColor(username, newColor);
         entry._color = newColor;
 
         // Update or recreate the buttons
@@ -288,7 +305,8 @@ export function openUsernameColors() {
     savedBlock.innerHTML = `<h3>${uiStrings.savedColorsHeader[defaultLanguage]} <span class="counter">0</span></h3>`;
     // prepend add button as first entry
     savedBlock.appendChild(createFirstEntryButtons());
-    Object.entries(localColors).forEach(([username, color]) => {
+    Object.entries(localColors).forEach(([username, data]) => {
+      const color = data.color || data; // Handle both old and new format
       const entry = createEntry(username, color, true);
       savedBlock.appendChild(entry);
     });
@@ -328,7 +346,7 @@ export function openUsernameColors() {
     if (!container.contains(e.target)) {
       adjustVisibility(container, 'hide', 0);
       document.removeEventListener('click', handleOutsideClick, true);
-      document.removeEventListener('keydown', handleEscapeKey); // Remove ESC key listener
+      document.removeEventListener('keydown', handleEscapeKey);
     }
   };
   document.addEventListener('click', handleOutsideClick, true);
@@ -424,7 +442,7 @@ export function openUsernameColors() {
       });
     });
 
-    // LOAD button (new)
+    // LOAD button
     const loadBtn = createElement('div', 'entry-btn load-btn');
     loadBtn.innerHTML = loadSVG;
     createCustomTooltip(loadBtn, {
@@ -578,7 +596,7 @@ export function openUsernameColors() {
         if (entry._add) {
           const username = val;
           const defaultColor = '#cdcdcd';
-          storageOps.saveColor(username, defaultColor);
+          await storageOps.saveColor(username, defaultColor);
           createSavedBlock();
           renderSavedBlock();
           updateGeneratedBlockStatus();
@@ -588,7 +606,7 @@ export function openUsernameColors() {
 
         // Otherwise it's the edit-existing flow
         if (val !== entry._username) {
-          storageOps.updateUsername(entry._username, val, entry._color);
+          await storageOps.updateUsername(entry._username, val, entry._color);
           entry.querySelector('.username').textContent = val;
           entry._username = val;
           updateGeneratedBlockStatus();
