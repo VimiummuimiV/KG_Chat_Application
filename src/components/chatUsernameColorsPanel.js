@@ -239,6 +239,10 @@ export function openUsernameColors() {
                 entry._needsUpdate = false;
                 delete entry._currentUsername; // Clean up
                 label.style.cursor = '';
+                createCustomTooltip(label, {
+                  en: `Username updated to: ${currentUsername}`,
+                  ru: `Имя обновлено на: ${currentUsername}`
+                });
               }
             } catch (error) {
               console.error('Error updating username:', error);
@@ -361,6 +365,10 @@ export function openUsernameColors() {
                 entry._needsUpdate = true;
                 entry._currentUsername = currentUsername;
                 label.style.cursor = 'pointer';
+                createCustomTooltip(label, {
+                  en: `Outdated username: ${username}. Click to update to: ${currentUsername}`,
+                  ru: `Устаревшее имя: ${username}. Нажмите для обновления до: ${currentUsername}`
+                });
               }
             })
             .catch(error => {
