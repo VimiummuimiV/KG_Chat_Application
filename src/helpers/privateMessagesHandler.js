@@ -1,4 +1,5 @@
-import { getExactUserIdByName, logMessage } from "./helpers.js";
+import { logMessage } from "./helpers.js";
+import { getExactUserIdByName } from "./apiData.js";
 import { createCustomTooltip } from "./tooltip.js";
 
 // State management for private messaging

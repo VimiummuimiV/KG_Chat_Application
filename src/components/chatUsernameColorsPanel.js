@@ -1,6 +1,6 @@
 import { adjustVisibility, debounce, logMessage } from "../helpers/helpers.js";
 import { loadUsernameColorsUrl, settings, uiStrings, defaultLanguage } from "../data/definitions.js";
-import { getExactUserIdByName } from "../helpers/helpers.js";
+import { getExactUserIdByName } from "../helpers/apiData.js";
 import { addSVG, editSVG, removeSVG, importSVG, exportSVG, loadSVG } from "../data/icons.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
 

@@ -1,5 +1,5 @@
 import { adjustVisibility, logMessage } from "../helpers/helpers.js";
-import { getExactUserIdByName } from "../helpers/helpers.js";
+import { getExactUserIdByName } from "../helpers/apiData.js";
 import { uiStrings, defaultLanguage } from "../data/definitions.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
 import { removeSVG } from "../data/icons.js";

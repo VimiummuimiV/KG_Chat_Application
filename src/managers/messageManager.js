@@ -1,9 +1,10 @@
 import {
   parseUsername,
   calibrateToMoscowTime,
-  getExactUserIdByName,
   logMessage
 } from "../helpers/helpers.js";
+
+import { getExactUserIdByName } from "../helpers/apiData.js";
 
 import {
   createNewMessagesSeparator,
