@@ -1,6 +1,6 @@
 import { adjustVisibility, debounce, logMessage } from "../helpers/helpers.js";
 import { loadUsernameColorsUrl, settings, uiStrings, defaultLanguage } from "../data/definitions.js";
-import { getExactUserIdByName } from "../helpers/apiData.js";
+import { getExactUserIdByName, getDataById } from "../helpers/apiData.js";
 import { addSVG, editSVG, removeSVG, importSVG, exportSVG, loadSVG } from "../data/icons.js";
 import { createCustomTooltip } from "../helpers/tooltip.js";
 
@@ -211,6 +211,42 @@ export function openUsernameColors() {
     entry.append(label, colorBox, colorInput);
 
     if (isSaved) {
+      // Add click handler for username if it needs update
+      label.addEventListener('click', async (e) => {
+        if (entry._needsUpdate) {
+          e.stopPropagation();
+          const oldUsername = entry._username.replace('⚠️ ', '');
+          const localColors = storageWrapper.get(localStorage);
+          const data = localColors[oldUsername];
+         
+          if (data && data.id) {
+            try {
+              const currentUsername = entry._currentUsername;
+              if (currentUsername && currentUsername !== oldUsername) {
+                // Update localStorage
+                delete localColors[oldUsername];
+                localColors[currentUsername] = data;
+                storageWrapper.set(localStorage, localColors);
+               
+                logMessage({
+                  en: `Username updated: ${oldUsername} → ${currentUsername}`,
+                  ru: `Имя обновлено: ${oldUsername} → ${currentUsername}`
+                }, 'info');
+               
+                // Update this entry in place
+                label.textContent = currentUsername;
+                entry._username = currentUsername;
+                entry._needsUpdate = false;
+                delete entry._currentUsername; // Clean up
+                label.style.cursor = '';
+              }
+            } catch (error) {
+              console.error('Error updating username:', error);
+            }
+          }
+        }
+      });
+     
       // Create remove button on initialization.
       const removeBtn = createOrUpdateRemoveButton(entry, username, color, () => {
         entry.remove();
@@ -305,16 +341,43 @@ export function openUsernameColors() {
     savedBlock.innerHTML = `<h3>${uiStrings.savedColorsHeader[defaultLanguage]} <span class="counter">0</span></h3>`;
     // prepend add button as first entry
     savedBlock.appendChild(createFirstEntryButtons());
-    Object.entries(localColors).forEach(([username, data]) => {
+   
+    const checkPromises = [];
+    for (const [username, data] of Object.entries(localColors)) {
       const color = data.color || data; // Handle both old and new format
-      const entry = createEntry(username, color, true);
+      const displayUsername = username;
+     
+      const entry = createEntry(displayUsername, color, true);
       savedBlock.appendChild(entry);
-    });
+     
+      // Queue background check for username update if ID exists
+      if (typeof data === 'object' && data.id) {
+        checkPromises.push(
+          getDataById(data.id, 'currentLogin')
+            .then(currentUsername => {
+              if (currentUsername && currentUsername !== username) {
+                const label = entry.querySelector('.username');
+                label.textContent = `⚠️ ${username}`;
+                entry._needsUpdate = true;
+                entry._currentUsername = currentUsername;
+                label.style.cursor = 'pointer';
+              }
+            })
+            .catch(error => {
+              console.error(`Error verifying username for ID ${data.id}:`, error);
+            })
+        );
+      }
+    }
+   
     if (!savedBlock.querySelector('.username-entry')) {
       savedBlock.remove();
       savedBlock = null;
     }
     updateCounters();
+   
+    // Run checks in parallel in the background
+    return Promise.all(checkPromises);
   }
 
   // Render generated colors.
@@ -324,9 +387,9 @@ export function openUsernameColors() {
   });
   updateCounters();
   createSavedBlock();
-  renderSavedBlock();
-  updateGeneratedBlockStatus();
-
+  renderSavedBlock().then(() => {
+    updateGeneratedBlockStatus();
+  });
   usernameColors.appendChild(generatedBlock);
   document.body.appendChild(container);
 
