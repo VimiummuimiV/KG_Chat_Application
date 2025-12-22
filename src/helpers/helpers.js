@@ -152,39 +152,39 @@ export function focusTextInput() {
 
 // ==================================================================================================
 
-// Helper to fetch JSON and validate response
-export async function fetchJSON(url) {
-  const response = await fetch(url);
-  if (!response.ok) throw new Error(`Failed to fetch ${url}`);
-  return response.json();
-}
+// // Helper to fetch JSON and validate response
+// export async function fetchJSON(url) {
+//   const response = await fetch(url);
+//   if (!response.ok) throw new Error(`Failed to fetch ${url}`);
+//   return response.json();
+// }
 
-// Helper function to get Exact user ID by username via the search API
-export async function getExactUserIdByName(userName) {
-  // Define the search API URL
-  const searchApiUrl = `https://klavogonki.ru/api/profile/search-users?query=${encodeURIComponent(userName)}`;
+// // Helper function to get Exact user ID by username via the search API
+// export async function getExactUserIdByName(userName) {
+//   // Define the search API URL
+//   const searchApiUrl = `https://klavogonki.ru/api/profile/search-users?query=${encodeURIComponent(userName)}`;
 
-  try {
-    // Get search results from the API
-    const searchResults = await fetchJSON(searchApiUrl);
+//   try {
+//     // Get search results from the API
+//     const searchResults = await fetchJSON(searchApiUrl);
 
-    // Ensure search results exist and contain data
-    if (!searchResults.all?.length) {
-      throw new Error(`User ${userName} not found.`);
-    }
+//     // Ensure search results exist and contain data
+//     if (!searchResults.all?.length) {
+//       throw new Error(`User ${userName} not found.`);
+//     }
 
-    // Return the ID of the user with the exact matching login
-    const user = searchResults.all.find(user => user.login === userName);
-    if (!user) {
-      throw new Error(`Exact match for user ${userName} not found.`);
-    }
+//     // Return the ID of the user with the exact matching login
+//     const user = searchResults.all.find(user => user.login === userName);
+//     if (!user) {
+//       throw new Error(`Exact match for user ${userName} not found.`);
+//     }
 
-    return user.id;
-  } catch (error) {
-    console.error(`Error fetching user ID for ${userName}: ${error.message}`);
-    return null;
-  }
-}
+//     return user.id;
+//   } catch (error) {
+//     console.error(`Error fetching user ID for ${userName}: ${error.message}`);
+//     return null;
+//   }
+// }
 
 // ==================================================================================================
 
