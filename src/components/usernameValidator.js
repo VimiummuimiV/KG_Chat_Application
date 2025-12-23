@@ -31,7 +31,7 @@ export async function checkUsernameValidity() {
     const validationList = validationData.usernames;
     
     // Process validation list: check renames and clean removed entries
-    for (const [username, data] of Object.entries(validationList)) {
+    for (const [username, userId] of Object.entries(validationList)) {
       // Remove entries from validationList that are no longer in colors or ignored
       if (!currentUsernames.has(username)) {
         delete validationList[username];
@@ -39,30 +39,51 @@ export async function checkUsernameValidity() {
       }
       
       // Check if user was renamed by fetching current login via userId
-      const { userId, source } = data;
       const currentLogin = await getDataById(userId, 'currentLogin');
       // Skip if we couldn't get the username OR if the username hasn't changed
       if (!currentLogin || currentLogin === username) continue;
       
-      // User was renamed - log the change
-      const isColors = source === 'usernameColors';
-      logMessage({
-        en: `User renamed in ${isColors ? 'colors' : 'ignored'} panel: "${username}" → "${currentLogin}"`,
-        ru: `Пользователь переименован в ${isColors ? 'панели цветов' : 'панели игнорируемых'}: "${username}" → "${currentLogin}"`
-      }, 'warning');
+      // User was renamed - determine where it exists
+      const inColors = usernameColors.hasOwnProperty(username);
+      const inIgnored = ignored.includes(username);
       
-      // Update localStorage with new username
-      if (isColors) {
+      // Log the change
+      if (inColors && inIgnored) {
+        logMessage({
+          en: `User renamed in both colors and ignored panels: "${username}" → "${currentLogin}"`,
+          ru: `Пользователь переименован в обеих панелях (цветов и игнорируемых): "${username}" → "${currentLogin}"`
+        }, 'warning');
+      } else if (inColors) {
+        logMessage({
+          en: `User renamed in colors panel: "${username}" → "${currentLogin}"`,
+          ru: `Пользователь переименован в панели цветов: "${username}" → "${currentLogin}"`
+        }, 'warning');
+      } else if (inIgnored) {
+        logMessage({
+          en: `User renamed in ignored panel: "${username}" → "${currentLogin}"`,
+          ru: `Пользователь переименован в панели игнорируемых: "${username}" → "${currentLogin}"`
+        }, 'warning');
+      }
+      
+      // Update localStorage in BOTH places regardless of where it exists
+      // This ensures consistency if user exists in both
+      if (inColors) {
         usernameColors[currentLogin] = usernameColors[username];
         delete usernameColors[username];
-        localStorage.setItem('usernameColors', JSON.stringify(usernameColors));
-      } else {
+      }
+      
+      if (inIgnored) {
         ignored[ignored.indexOf(username)] = currentLogin;
+      }
+      
+      // Save both if any changes were made
+      if (inColors || inIgnored) {
+        localStorage.setItem('usernameColors', JSON.stringify(usernameColors));
         localStorage.setItem('ignored', JSON.stringify(ignored));
       }
       
       // Update validation list with new username
-      validationList[currentLogin] = { userId, source };
+      validationList[currentLogin] = userId;
       delete validationList[username];
       currentUsernames.delete(username);
       currentUsernames.add(currentLogin);
@@ -74,10 +95,7 @@ export async function checkUsernameValidity() {
         try {
           const userId = await getDataByName(username, 'userId');
           if (userId) {
-            validationList[username] = { 
-              userId, 
-              source: usernameColors[username] ? 'usernameColors' : 'ignored' 
-            };
+            validationList[username] = userId;
           }
         } catch (error) {}
       }
