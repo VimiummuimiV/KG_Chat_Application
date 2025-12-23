@@ -157,7 +157,7 @@ export class HelpPanel {
                 title: "Deletion",
                 items: [
                   { key: "(RMB) + Message", desc: "Delete message" },
-                  { key: "(RMB) + Nickname", desc: "Delete user's messages" },
+                  { key: "(RMB) + Nickname", desc: "Delete user's messages or ignore" },
                   { key: "(RMB) + Time", desc: "Delete his messages from the selected time" },
                   { key: "Ctrl + (RMB) + Time", desc: "Delete all messages from the selected time" }
                 ]
@@ -283,7 +283,7 @@ export class HelpPanel {
                 title: "Удаление",
                 items: [
                   { key: "(ПКМ) + Сообщение", desc: "Удалить сообщение" },
-                  { key: "(ПКМ) + Никнейм", desc: "Удалить сообщения пользователя" },
+                  { key: "(ПКМ) + Никнейм", desc: "Удалить сообщения пользователя или игнорировать" },
                   { key: "(ПКМ) + Время", desc: "Удалить его сообщения с выбранного времени" },
                   { key: "Ctrl + (ПКМ) + Время", desc: "Удалить все сообщения с выбранного времени" }
                 ]
