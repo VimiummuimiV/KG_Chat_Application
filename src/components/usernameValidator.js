@@ -5,13 +5,30 @@ const USERNAME_IDS_KEY = 'usernameValidationList';
 
 export async function checkUsernameValidity() {
   try {
+    // Load validation data
+    const validationData = JSON.parse(localStorage.getItem(USERNAME_IDS_KEY) || '{"date": null, "usernames": {}}');
+    
+    // Check if we should run the check today
+    const today = new Date().toDateString();
+    
+    if (validationData.date === today) {
+      // Already checked today, skip
+      return;
+    }
+    
+    logMessage({
+      en: 'Starting daily username validation check',
+      ru: 'Запуск ежедневной проверки имён пользователей'
+    }, 'info');
+    
     // Load all data from localStorage
     const usernameColors = JSON.parse(localStorage.getItem('usernameColors') || '{}');
     const ignored = JSON.parse(localStorage.getItem('ignored') || '[]');
-    const validationList = JSON.parse(localStorage.getItem(USERNAME_IDS_KEY) || '{}');
     
     // Collect all current usernames from both colors and ignored
     const currentUsernames = new Set([...Object.keys(usernameColors), ...ignored]);
+    
+    const validationList = validationData.usernames;
     
     // Process validation list: check renames and clean removed entries
     for (const [username, data] of Object.entries(validationList)) {
@@ -66,8 +83,17 @@ export async function checkUsernameValidity() {
       }
     }
     
-    // Save updated validation list
-    localStorage.setItem(USERNAME_IDS_KEY, JSON.stringify(validationList));
+    // Update validation data with new date and usernames
+    validationData.date = today;
+    validationData.usernames = validationList;
+    
+    // Save updated validation data
+    localStorage.setItem(USERNAME_IDS_KEY, JSON.stringify(validationData));
+    
+    logMessage({
+      en: 'Username validation check completed',
+      ru: 'Проверка имён пользователей завершена'
+    }, 'info');
     
   } catch (error) {
     logMessage({
