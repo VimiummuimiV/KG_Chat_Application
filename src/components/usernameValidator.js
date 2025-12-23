@@ -16,17 +16,25 @@ export async function checkUsernameValidity() {
       return;
     }
     
-    logMessage({
-      en: 'Starting daily username validation check',
-      ru: 'Запуск ежедневной проверки имён пользователей'
-    }, 'info');
-    
     // Load all data from localStorage
     const usernameColors = JSON.parse(localStorage.getItem('usernameColors') || '{}');
     const ignored = JSON.parse(localStorage.getItem('ignored') || '[]');
     
     // Collect all current usernames from both colors and ignored
     const currentUsernames = new Set([...Object.keys(usernameColors), ...ignored]);
+    
+    // Skip validation if there are no users to check
+    if (currentUsernames.size === 0 && Object.keys(validationData.usernames).length === 0) {
+      // Update date to prevent checking again today
+      validationData.date = today;
+      localStorage.setItem(USERNAME_IDS_KEY, JSON.stringify(validationData));
+      return;
+    }
+    
+    logMessage({
+      en: 'Starting daily username validation check',
+      ru: 'Запуск ежедневной проверки имён пользователей'
+    }, 'info');
     
     const validationList = validationData.usernames;
     
