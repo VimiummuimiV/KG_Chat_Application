@@ -5,66 +5,68 @@ const USERNAME_IDS_KEY = 'usernameValidationList';
 
 export async function checkUsernameValidity() {
   try {
+    // Load all data from localStorage
     const usernameColors = JSON.parse(localStorage.getItem('usernameColors') || '{}');
     const ignored = JSON.parse(localStorage.getItem('ignored') || '[]');
     const validationList = JSON.parse(localStorage.getItem(USERNAME_IDS_KEY) || '{}');
     
-    // Collect current usernames from both sources
-    const currentUsernames = new Set([
-      ...Object.keys(usernameColors),
-      ...ignored
-    ]);
+    // Collect all current usernames from both colors and ignored
+    const currentUsernames = new Set([...Object.keys(usernameColors), ...ignored]);
     
-    // Clean validation list - remove entries not in colors or ignored
-    for (const username in validationList) {
+    // Process validation list: check renames and clean removed entries
+    for (const [username, data] of Object.entries(validationList)) {
+      // Remove entries from validationList that are no longer in colors or ignored
       if (!currentUsernames.has(username)) {
         delete validationList[username];
+        continue;
       }
+      
+      // Check if user was renamed by fetching current login via userId
+      const { userId, source } = data;
+      const currentLogin = await getDataById(userId, 'currentLogin');
+      // Skip if we couldn't get the username OR if the username hasn't changed
+      if (!currentLogin || currentLogin === username) continue;
+      
+      // User was renamed - log the change
+      const isColors = source === 'usernameColors';
+      logMessage({
+        en: `User renamed in ${isColors ? 'colors' : 'ignored'} panel: "${username}" → "${currentLogin}"`,
+        ru: `Пользователь переименован в ${isColors ? 'панели цветов' : 'панели игнорируемых'}: "${username}" → "${currentLogin}"`
+      }, 'warning');
+      
+      // Update localStorage with new username
+      if (isColors) {
+        usernameColors[currentLogin] = usernameColors[username];
+        delete usernameColors[username];
+        localStorage.setItem('usernameColors', JSON.stringify(usernameColors));
+      } else {
+        ignored[ignored.indexOf(username)] = currentLogin;
+        localStorage.setItem('ignored', JSON.stringify(ignored));
+      }
+      
+      // Update validation list with new username
+      validationList[currentLogin] = { userId, source };
+      delete validationList[username];
+      currentUsernames.delete(username);
+      currentUsernames.add(currentLogin);
     }
     
-    // Add new users to validation list
+    // Add new users that appeared in colors or ignored
     for (const username of currentUsernames) {
       if (!validationList[username]) {
         try {
           const userId = await getDataByName(username, 'userId');
           if (userId) {
-            const source = usernameColors[username] ? 'usernameColors' : 'ignored';
-            validationList[username] = { userId, source };
+            validationList[username] = { 
+              userId, 
+              source: usernameColors[username] ? 'usernameColors' : 'ignored' 
+            };
           }
-        } catch (error) {
-          // Skip users that can't be found
-        }
+        } catch (error) {}
       }
     }
     
-    // Check each user for rename
-    for (const [oldUsername, { userId, source }] of Object.entries(validationList)) {
-      const currentLogin = await getDataById(userId, 'currentLogin');
-      if (!currentLogin || currentLogin === oldUsername) continue;
-      
-      const isColors = source === 'usernameColors';
-      const inStorage = isColors ? usernameColors[oldUsername] : ignored.includes(oldUsername);
-      
-      if (inStorage) {
-        logMessage({
-          en: `User renamed in ${isColors ? 'colors' : 'ignored'} panel: "${oldUsername}" → "${currentLogin}"`,
-          ru: `Пользователь переименован в ${isColors ? 'панели цветов' : 'панели игнорируемых'}: "${oldUsername}" → "${currentLogin}"`
-        }, 'warning');
-        
-        if (isColors) {
-          usernameColors[currentLogin] = usernameColors[oldUsername];
-          delete usernameColors[oldUsername];
-          localStorage.setItem('usernameColors', JSON.stringify(usernameColors));
-        } else {
-          ignored[ignored.indexOf(oldUsername)] = currentLogin;
-          localStorage.setItem('ignored', JSON.stringify(ignored));
-        }
-        
-        validationList[currentLogin] = { userId, source };
-        delete validationList[oldUsername];
-      }
-    }
-    
+    // Save updated validation list
     localStorage.setItem(USERNAME_IDS_KEY, JSON.stringify(validationList));
     
   } catch (error) {
