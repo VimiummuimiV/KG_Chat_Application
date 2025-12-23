@@ -26,6 +26,7 @@ import {
 import { addChatToggleFeature } from "../src/chat/chatState.js"
 import { setupPrivateMessageEvents } from "./helpers/privateMessagesHandler.js";
 import { createExtraToggleButton } from "../src/chat/chatState.js";
+import { checkUsernameValidity } from "./components/Usernamevalidator.js";
 
 // ------------------------- Main App ---------------------------
 async function initializeApp() {
@@ -97,4 +98,5 @@ async function initializeApp() {
 initializeApp().then(() => {
   pruneDeletedMessages(); // Remove unexisting deleted messages IDs from localStorage
   checkForUpdates(); // Check for updates on page load
+  checkUsernameValidity(); // Validate usernames against current logins
 });
