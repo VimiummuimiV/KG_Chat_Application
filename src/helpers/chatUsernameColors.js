@@ -164,8 +164,7 @@ function colorGenerator(config) {
         // Ignore parsing errors
       }
       if (localColors[key]) {
-      // Handle both old format (direct color string) and new format (object with id and color)
-        return typeof localColors[key] === 'string' ? localColors[key] : localColors[key].color;
+        return localColors[key];
       }
 
       // Next, check sessionStorage cache from colorMap
